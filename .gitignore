@@ -1,0 +1,9 @@
+.gradle
+.settings
+.classpath
+.project
+.springBeans
+bin
+build
+target
+*.db

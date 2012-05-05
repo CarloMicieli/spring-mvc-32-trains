@@ -1,0 +1,4 @@
+rootProject.name = 'trenako'
+
+include 'trenako-domain'
+include 'trenako-services'
