@@ -70,4 +70,20 @@ public class RollingStockValidationTests
 		assertEquals(1, errors.size());
 		assertEquals("rs.itemNumber.size.notmet", errors.get("itemNumber"));
 	}
+	
+	@Test
+	public void shouldInitializeTheSlug() {
+		RollingStock rs = new RollingStock(
+				new Brand("ACME", null),
+				"123456", //max = 10
+				"aaaa",
+				new Railway(),
+				new Scale()
+				);
+		assertEquals("acme-123456", rs.getSlug());
+	}
+	
+	
+	
+	
 }

@@ -44,5 +44,23 @@ public enum PowerMethod {
 	/**
 	 * Direct current with digital interface and sound.
 	 */
-	DC_DCC_SOUND,
+	DC_DCC_SOUND;
+	
+	/**
+	 * Returns the category description to be stored in the database.
+	 * @return the category name.
+	 */
+	public String getDescription() {
+		return name().toLowerCase().replace('_', '-');
+	}
+
+	/**
+	 * Parses the category value from the database.
+	 * @param category the category name.
+	 * @return a value from Category enumeration.
+	 */
+	public static PowerMethod parse(String category) {
+		String c = category.toUpperCase().replace('-', '_');
+		return PowerMethod.valueOf(c);
+	}
 }

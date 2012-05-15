@@ -42,6 +42,10 @@ public class Scale {
 	
 	@Range(min = 2, max = 220, message = "scale.ratio.range.notmet")
 	int ratio;
+
+	@Range(min = 0, max = 1000, message = "scale.gauge.range.notmet")
+	double gauge;
+	
 	boolean isNarrow;
 	
 	/**
@@ -131,6 +135,22 @@ public class Scale {
 		this.ratio = ratio;
 	}
 	
+	/**
+	 * Returns the the distance between the two rails forming a railroad track.	
+	 * @return the gauge.
+	 */
+	public double getGauge() {
+		return gauge;
+	}
+
+	/**
+	 * Sets the distance between the two rails forming a railroad track
+	 * @param gauge the gauge.
+	 */
+	public void setGauge(double gauge) {
+		this.gauge = gauge;
+	}
+
 	/**
 	 * Returns whether has track gauge 
 	 * narrower than the standard gauge railways or not.
