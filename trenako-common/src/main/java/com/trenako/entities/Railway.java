@@ -55,11 +55,9 @@ public class Railway {
 	/**
 	 * Create a new railway.
 	 * @param name the railway name.
-	 * @param fullName the complete company name.
 	 */
-	public Railway(String name, String fullName) {
+	public Railway(String name) {
 		this.name = name;
-		this.fullName = fullName;
 	}
 
 	/**

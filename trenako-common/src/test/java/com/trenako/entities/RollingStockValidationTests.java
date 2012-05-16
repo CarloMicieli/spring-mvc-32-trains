@@ -34,13 +34,13 @@ public class RollingStockValidationTests
 	
 	@Test
 	public void shouldValidateRollingStocks() {
-		RollingStock rs = new RollingStock(
-				new Brand(),
-				"12345",
-				"aaaa",
-				new Railway(),
-				new Scale()
-				);
+		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+			.description("AAAA")
+			.era("IV")
+			.category("loco")
+			.scale("H0")
+			.railway("DB")
+			.build();
 		Map<String, String> errors = validate(rs);
 		assertEquals(0, errors.size());
 	}	
@@ -49,23 +49,25 @@ public class RollingStockValidationTests
 	public void shouldValidateInvalidRollingStocks() {
 		RollingStock rs = new RollingStock();
 		Map<String, String> errors = validate(rs);
-		assertEquals(5, errors.size());
+		assertEquals(7, errors.size());
 		assertEquals("rs.itemNumber.required", errors.get("itemNumber"));
 		assertEquals("rs.brand.required", errors.get("brand"));
 		assertEquals("rs.scale.required", errors.get("scale"));
 		assertEquals("rs.railway.required", errors.get("railway"));
 		assertEquals("rs.description.required", errors.get("description"));
+		assertEquals("rs.era.required", errors.get("era"));
+		assertEquals("rs.category.required", errors.get("category"));
 	}
 	
 	@Test
 	public void shouldValidateItemNumberSize() {
-		RollingStock rs = new RollingStock(
-				new Brand(),
-				"12345678901", //max = 10
-				"aaaa",
-				new Railway(),
-				new Scale()
-				);
+		RollingStock rs = new RollingStock.Builder("ACME", "12345678901")
+			.description("AAAA")
+			.scale("H0")
+			.era("IV")
+			.category("loco")
+			.railway("DB")
+			.build();
 		Map<String, String> errors = validate(rs);
 		assertEquals(1, errors.size());
 		assertEquals("rs.itemNumber.size.notmet", errors.get("itemNumber"));
@@ -73,17 +75,8 @@ public class RollingStockValidationTests
 	
 	@Test
 	public void shouldInitializeTheSlug() {
-		RollingStock rs = new RollingStock(
-				new Brand("ACME", null),
-				"123456", //max = 10
-				"aaaa",
-				new Railway(),
-				new Scale()
-				);
+		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+			.build();
 		assertEquals("acme-123456", rs.getSlug());
 	}
-	
-	
-	
-	
 }

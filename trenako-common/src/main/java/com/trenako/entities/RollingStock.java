@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -60,11 +61,8 @@ public class RollingStock {
 	@Size(max = 150, message = "rs.description.size.notmet")
 	private String description;
 
-	@Size(max = 500, message = "rs.modelDescription.size.notmet")
+	@Size(max = 1000, message = "rs.modelDescription.size.notmet")
 	private String modelDescription;
-	
-	@Size(max = 500, message = "rs.prototypeDescription.size.notmet")
-	private String prototypeDescription;
 	
 	@DBRef
 	@NotNull(message = "rs.railway.required")
@@ -79,10 +77,12 @@ public class RollingStock {
 	private String scaleName;
 	
 	@Indexed
+	@NotBlank(message = "rs.era.required")
 	private String era;
 	@Indexed
 	private String powerMethod;
 	@Indexed
+	@NotBlank(message = "rs.category.required")
 	private String category;
 	
 	@Indexed
@@ -106,25 +106,89 @@ public class RollingStock {
 	public RollingStock() { //required
 	}
 	
-	/**
-	 * Creates a new rolling stock.
-	 * @param brand the brand name.
-	 * @param itemNumber the item number.
-	 * @param description the rolling stock description.
-	 * @param railway the railway name.
-	 * @param scale the scale.
-	 */
-	public RollingStock(Brand brand, 
-			String itemNumber, 
-			String description, 
-			Railway railway, 
-			Scale scale) {
+	private RollingStock(Builder b) {
+		this.brand = b.brand;
+		this.itemNumber = b.itemNumber;
+		this.description = b.description;
+		this.tags = b.tags;
+		this.railway = b.railway;
+		this.scale = b.scale;
+		this.era = b.era;
+		this.category = b.category;
+		this.powerMethod = b.powerMethod;
+	}
+	
+	public static class Builder {
+		// required fields
+		private final Brand brand;
+		private final String itemNumber;
 		
-		this.brand = brand;
-		this.itemNumber = itemNumber;
-		this.description = description;
-		this.railway = railway;
-		this.scale = scale;
+		private String description;
+		private Set<String> tags;
+		private Railway railway; 
+		private Scale scale;
+		private String era;
+		private String powerMethod;
+		private String category;
+		
+		public Builder(Brand brand, String itemNumber) {
+			this.brand = brand;
+			this.itemNumber = itemNumber;
+		}
+		
+		public Builder(String brandName, String itemNumber) {
+			this.brand = new Brand(brandName);
+			this.itemNumber = itemNumber;
+		}
+		
+		public RollingStock build() {
+			return new RollingStock(this);
+		}
+		
+		public Builder railway(Railway r) { 
+			railway = r;
+			return this;
+		}
+		
+		public Builder railway(String railwayName) { 
+			railway = new Railway(railwayName);
+			return this;
+		}
+		
+		public Builder description(String d) { 
+			description = d;
+			return this;
+		}
+		
+		public Builder scale(Scale s) { 
+			scale = s;
+			return this;
+		}
+		
+		public Builder scale(String scaleName) { 
+			scale = new Scale(scaleName);
+			return this;
+		}
+
+		public Builder powerMethod(String pm) { 
+			powerMethod = pm;
+			return this;
+		}
+		
+		public Builder era(String e) { 
+			era = e;
+			return this;
+		}
+		
+		public Builder category(String c) { 
+			category = c;
+			return this;
+		}
+		
+		public Builder tags(String... t) { 
+			tags = new HashSet<String>(Arrays.asList(t));
+			return this;
+		}
 	}
 	
 	/**
@@ -234,22 +298,6 @@ public class RollingStock {
 	 */
 	public void setModelDescription(String modelDescription) {
 		this.modelDescription = modelDescription;
-	}
-
-	/**
-	 * Returns the prototype description.
-	 * @return the prototype description.
-	 */
-	public String getPrototypeDescription() {
-		return prototypeDescription;
-	}
-
-	/**
-	 * Sets the prototype description.
-	 * @param prototypeDescription the prototype description.
-	 */
-	public void setPrototypeDescription(String prototypeDescription) {
-		this.prototypeDescription = prototypeDescription;
 	}
 
 	/**

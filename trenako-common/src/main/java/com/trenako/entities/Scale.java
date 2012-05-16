@@ -85,6 +85,10 @@ public class Scale {
 		this.isNarrow = isNarrow;
 	}
 
+	public Scale(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * Returns the unique id for the <em>Scale</em>.
 	 * @return the unique id.

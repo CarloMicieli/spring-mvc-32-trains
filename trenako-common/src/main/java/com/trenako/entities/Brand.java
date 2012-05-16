@@ -67,11 +67,9 @@ public class Brand {
 	/**
 	 * Create a new brand.
 	 * @param name the company name.
-	 * @param website the company website url.
 	 */
-	public Brand(String name, String website) {
+	public Brand(String name) {
 		this.name = name;
-		this.website = website;
 	}
 
 	/**
