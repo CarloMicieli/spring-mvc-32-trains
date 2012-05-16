@@ -50,6 +50,8 @@ public class Brand {
 	@Size(max = 250, message = "brand.description.size.notmet")
 	String description;
 	
+	boolean industrial;
+	
 	/**
 	 * Create a new brand with <em>null</em> value.
 	 */
@@ -72,6 +74,52 @@ public class Brand {
 		this.name = name;
 	}
 
+	private Brand(Builder b) {
+		this.name = b.name;
+		this.website = b.website;
+		this.emailAddress = b.emailAddress;
+		this.description = b.description;
+		this.industrial = b.industrial;
+	}
+	
+	public static class Builder {
+		private final String name;
+		
+		private String website;
+		private String emailAddress;
+		private String description;
+		private boolean industrial;
+		
+		public Builder(String name) {
+			this.name = name;
+		}
+		
+		public Builder emailAddress(String e) {
+			emailAddress = e;
+			return this;
+		}
+
+		public Builder industrial(boolean b) {
+			industrial = b;
+			return this;
+		}
+
+		public Builder description(String d) {
+			description = d;
+			return this;
+		}
+		
+		public Builder website(String w) {
+			website = w;
+			return this;
+		}
+		
+		public Brand build() {
+			return new Brand(this);
+		}
+	}
+	
+	
 	/**
 	 * Returns the unique id for the <em>Brand</em>.
 	 * @return the unique id.
@@ -153,14 +201,33 @@ public class Brand {
 	}
 
 	/**
+	 * Returns true if this is a industrial series producer; false for craftmash brands.	
+	 * @return
+	 */
+	public boolean isIndustrial() {
+		return industrial;
+	}
+
+	public void setIndustrial(boolean industrial) {
+		this.industrial = industrial;
+	}
+
+	/**
 	 * Returns a string representation of this <em>Brand</em>.
 	 * @return a string representation of the object.
 	 */
 	@Override
 	public String toString() {
-		return new StringBuffer()
-			.append(getId() + ": ")
-			.append(getName())
-			.toString();
+		return getName();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( this==obj ) return true;
+		if( !(obj instanceof Brand) ) return false;
+		
+		Brand other = (Brand)obj;
+		return this.name == null 
+			? other.name == null : this.name.equals(other.name);
 	}
 }
