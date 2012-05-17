@@ -17,6 +17,8 @@ package com.trenako.entities;
 
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -26,7 +28,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * It represents a model railways company.
+ * It represents a model railways toy company.
  * @author Carlo Micieli
  *
  */
@@ -83,12 +85,14 @@ public class Brand {
 	}
 	
 	public static class Builder {
+		// required fields
 		private final String name;
 		
-		private String website;
-		private String emailAddress;
-		private String description;
-		private boolean industrial;
+		// optional fields
+		private String website = null;
+		private String emailAddress = null;
+		private String description = null;
+		private boolean industrial = false;
 		
 		public Builder(String name) {
 			this.name = name;
@@ -201,13 +205,17 @@ public class Brand {
 	}
 
 	/**
-	 * Returns true if this is a industrial series producer; false for craftmash brands.	
-	 * @return
+	 * Returns the industrial flag.
+	 * @return <em>true</em> if this is a industrial series producer; <em>false</em> otherwise.
 	 */
 	public boolean isIndustrial() {
 		return industrial;
 	}
 
+	/**
+	 * Sets the industrial flag.
+	 * @param industrial <em>true</em> if this is a industrial series producer; <em>false</em> otherwise.
+	 */
 	public void setIndustrial(boolean industrial) {
 		this.industrial = industrial;
 	}
@@ -221,13 +229,39 @@ public class Brand {
 		return getName();
 	}
 	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * @param obj the reference object with which to compare.
+	 * @return <em>true</em> if this object is the same as the obj argument; 
+	 * <em>false</em> otherwise.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if( this==obj ) return true;
 		if( !(obj instanceof Brand) ) return false;
 		
 		Brand other = (Brand)obj;
-		return this.name == null 
-			? other.name == null : this.name.equals(other.name);
+		return new EqualsBuilder()
+			.append(name, other.name)
+			.append(website, other.website)
+			.append(emailAddress, other.emailAddress)
+			.append(description, other.description)
+			.append(industrial, other.industrial)
+			.isEquals();
 	}
+	
+	/**
+	 * Returns a hash code value for the <strong>Brand</strong>.
+	 * @return a hash code value for this object. 
+	 */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(15, 37)
+			.append(getName())
+			.append(getWebsite())
+			.append(getEmailAddress())
+			.append(getDescription())
+			.append(isIndustrial())
+			.toHashCode();
+	}		
 }
