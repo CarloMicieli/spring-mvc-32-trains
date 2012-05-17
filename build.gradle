@@ -56,6 +56,9 @@ project("trenako-common") {
 		// GCLIB, required for @Configuration usage
 		compile "cglib:cglib-nodep:2.2.2"
 
+		// apache commons
+		compile "org.apache.commons:commons-lang3:3.1"
+
 		// JSR 303 with Hibernate Validator
 		compile "javax.validation:validation-api:1.0.0.GA"
 		compile "org.hibernate:hibernate-validator:4.2.0.Final"	
