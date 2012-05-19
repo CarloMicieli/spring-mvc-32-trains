@@ -17,7 +17,9 @@ package com.trenako.entities;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -32,6 +34,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import org.bson.types.ObjectId;
 
+import com.trenako.AppGlobals;
 import com.trenako.utility.Slug;
 
 /**
@@ -60,9 +63,13 @@ public class RollingStock {
 	@NotBlank(message = "rs.description.required")
 	@Size(max = 150, message = "rs.description.size.notmet")
 	private String description;
+	
+	Map<String, String> localDescriptions;
 
-	@Size(max = 1000, message = "rs.modelDescription.size.notmet")
-	private String modelDescription;
+	@Size(max = 1000, message = "rs.details.size.notmet")
+	private String details;
+	
+	Map<String, String> localDetails;
 	
 	@DBRef
 	@NotNull(message = "rs.railway.required")
@@ -110,6 +117,11 @@ public class RollingStock {
 		this.brand = b.brand;
 		this.itemNumber = b.itemNumber;
 		this.description = b.description;
+		this.localDescriptions = b.localDescs;
+
+		this.details = b.details;
+		this.localDetails = b.localDetails;
+		
 		this.tags = b.tags;
 		this.railway = b.railway;
 		this.scale = b.scale;
@@ -123,13 +135,19 @@ public class RollingStock {
 		private final Brand brand;
 		private final String itemNumber;
 		
-		private String description;
-		private Set<String> tags;
-		private Railway railway; 
-		private Scale scale;
-		private String era;
-		private String powerMethod;
-		private String category;
+		// optional fields
+		private String description = null;
+		private Map<String,String> localDescs = null;
+		
+		private String details = null;
+		private Map<String,String> localDetails = null;	
+		
+		private Set<String> tags = null;
+		private Railway railway = null; 
+		private Scale scale = null;
+		private String era = null;
+		private String powerMethod = null;
+		private String category = null;
 		
 		public Builder(Brand brand, String itemNumber) {
 			this.brand = brand;
@@ -157,6 +175,29 @@ public class RollingStock {
 		
 		public Builder description(String d) { 
 			description = d;
+			return this;
+		}
+
+		public Builder description(String lang, String d) {
+			if( localDescs==null )
+				localDescs = new HashMap<String, String>();
+			
+			localDescs.put(lang, d);
+			
+			return this;
+		}
+
+		public Builder details(String d) { 
+			details = d;
+			return this;
+		}
+
+		public Builder details(String lang, String d) {
+			if( localDetails==null )
+				localDetails = new HashMap<String, String>();
+			
+			localDetails.put(lang, d);
+			
 			return this;
 		}
 		
@@ -269,37 +310,104 @@ public class RollingStock {
 	}
 
 	/**
-	 * Return the rolling stock description.
-	 * @return the rolling stock description.
+	 * Return the rolling stock default description.
+	 * @return the description.
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * Set the rolling stock description.
+	 * Returns the rolling stock localized description.
+	 * 
+	 * Calling this method for the default language (English) will
+	 * return the value from <em>getDescription()</em>.
+	 * 
+	 * If no description exists for the provided language 
+	 * the default description is returned instead.
+	 * 
+	 * @param lang the locale value.
+	 * @return the description.
+	 */
+	public String getDescription(String lang) {
+		if( localDescriptions==null || lang.equals(AppGlobals.DEFAULT_LANGUAGE) ) {
+			return getDescription();
+		}
+		
+		String msg = localDescriptions.get(lang);
+		if( msg==null )
+			msg = getDescription();
+
+		return msg;
+	}
+	
+	/**
+	 * Sets the rolling stock default description.
 	 * @param description the rolling stock description.
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	/**
+	 * Add a localized rolling stock description.
+	 * @param lang the language.
+	 * @param description the description.
+	 */
+	public void setDescription(String lang, String description) {
+		if( localDescriptions==null ) {
+			localDescriptions = new HashMap<String,String>();
+		}
+		
+		localDescriptions.put(lang, description);
 	}
 
 	/**
 	 * Returns the model detailed description.
 	 * @return the model description.
 	 */
-	public String getModelDescription() {
-		return modelDescription;
+	public String getDetails() {
+		return details;
+	}
+	
+	/**
+	 * Returns the localized details for the rolling stock.
+	 * @param lang the language.
+	 * @return the model description.
+	 */
+	public String getDetails(String lang) {
+		if( localDetails==null || lang.equals(AppGlobals.DEFAULT_LANGUAGE) ) {
+			return getDetails();
+		}
+		
+		String d = localDetails.get(lang);
+		if( d==null )
+			d = getDetails();
+		
+		return d;
+	}
+	
+	/**
+	 * Sets the model description.
+	 * @param details the details.
+	 */
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	/**
-	 * Sets the model description.
-	 * @param modelDescription the model description.
+	 * Sets the localized details for the rolling stock.
+	 * @param lang the language.
+	 * @param details the details.
 	 */
-	public void setModelDescription(String modelDescription) {
-		this.modelDescription = modelDescription;
+	public void setDetails(String lang, String details) {
+		if( localDetails==null ) {
+			localDetails = new HashMap<String, String>();
+		}
+		
+		localDetails.put(lang, details);
 	}
-
+	
 	/**
 	 * Return the railway name.
 	 * @return the railway name.
