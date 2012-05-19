@@ -43,6 +43,8 @@ public class Brand {
 	@Indexed(unique = true)
 	String name;
 
+	Address address;
+	
 	@URL(message = "brand.website.url.invalid")
 	String website;
 
@@ -78,6 +80,7 @@ public class Brand {
 
 	private Brand(Builder b) {
 		this.name = b.name;
+		this.address = b.address;
 		this.website = b.website;
 		this.emailAddress = b.emailAddress;
 		this.description = b.description;
@@ -93,6 +96,7 @@ public class Brand {
 		private String emailAddress = null;
 		private String description = null;
 		private boolean industrial = false;
+		private Address address = null;
 		
 		public Builder(String name) {
 			this.name = name;
@@ -110,6 +114,11 @@ public class Brand {
 
 		public Builder description(String d) {
 			description = d;
+			return this;
+		}
+
+		public Builder address(Address a) {
+			address = a;
 			return this;
 		}
 		
@@ -154,6 +163,22 @@ public class Brand {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Returns the address.
+	 * @return the address.
+	 */
+	public Address getAddress() {
+		return address;
+	}
+
+	/**
+	 * Sets the address.
+	 * @param address the address.
+	 */
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	/**
