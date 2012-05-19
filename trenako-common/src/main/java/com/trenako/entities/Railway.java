@@ -15,8 +15,12 @@
  */
 package com.trenako.entities;
 
+import java.util.Date;
+
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
@@ -43,8 +47,11 @@ public class Railway {
 	@Size(max = 3, message = "railway.country.size.notmet")
 	private String country;
 	
-	@Size(max = 100, message = "railway.fullName.size.notmet")
-	private String fullName;
+	@Size(max = 100, message = "railway.companyName.size.notmet")
+	private String companyName;
+	
+	private byte[] image;
+	private Date lastModified;
 	
 	/**
 	 * Create a new railway.
@@ -104,16 +111,16 @@ public class Railway {
 	 * Returns the full company name.
 	 * @return the full company name.
 	 */
-	public String getFullName() {
-		return fullName;
+	public String getCompanyName() {
+		return companyName;
 	}
 
 	/**
 	 * Sets the full company name.
-	 * @param fullName the full company name.
+	 * @param companyName the full company name.
 	 */
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 	
 	/**
@@ -133,6 +140,30 @@ public class Railway {
 	}
 
 	/**
+	 * Returns the railway image.
+	 * @return the image.
+	 */
+	public byte[] getImage() {
+		return image;
+	}
+
+	/**
+	 * Sets the railway image.
+	 * @param image the image.
+	 */
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
+	}
+
+	/**
 	 * Returns a string representation of this <em>Railway</em>.
 	 * @return a string representation of the object.
 	 */
@@ -142,5 +173,37 @@ public class Railway {
 			.append(getId() + ": ")
 			.append(getName())
 			.toString();
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * @param obj the reference object with which to compare.
+	 * @return <em>true</em> if this object is the same as the obj argument; 
+	 * <em>false</em> otherwise.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if( this==obj ) return true;
+		if( !(obj instanceof Railway) ) return false;
+		
+		Railway other = (Railway)obj;
+		return new EqualsBuilder()
+			.append(name, other.name)
+			.append(companyName, other.companyName)
+			.append(country, other.country)
+			.isEquals();
+	}
+	
+	/**
+	 * Returns a hash code value for the <strong>Railway</strong>.
+	 * @return a hash code value for this object. 
+	 */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(15, 37)
+			.append(name)
+			.append(companyName)
+			.append(country)
+			.hashCode();
 	}
 }

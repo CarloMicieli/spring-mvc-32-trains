@@ -17,6 +17,8 @@ package com.trenako.entities;
 
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
@@ -46,7 +48,7 @@ public class Scale {
 	@Range(min = 0, max = 1000, message = "scale.gauge.range.notmet")
 	double gauge;
 	
-	boolean isNarrow;
+	boolean narrow;
 	
 	/**
 	 * Creates a new scale.
@@ -76,13 +78,13 @@ public class Scale {
 	 * Creates a new scale.
 	 * @param name the scale name.
 	 * @param ratio the scale ratio.
-	 * @param isNarrow whether has track gauge 
+	 * @param narrow whether has track gauge 
 	 * narrower than the standard gauge railways or not.
 	 */
-	public Scale(String name, int ratio, boolean isNarrow) {
+	public Scale(String name, int ratio, boolean narrow) {
 		this.name = name;
 		this.ratio = ratio;
-		this.isNarrow = isNarrow;
+		this.narrow = narrow;
 	}
 
 	public Scale(String name) {
@@ -166,7 +168,7 @@ public class Scale {
 	 * @return the narrow flag value. 
 	 */
 	public boolean isNarrow() {
-		return isNarrow;
+		return narrow;
 	}
 
 	/**
@@ -175,7 +177,15 @@ public class Scale {
 	 * @param isNarrow the narrow flag value.
 	 */
 	public void setNarrow(boolean isNarrow) {
-		this.isNarrow = isNarrow;
+		this.narrow = isNarrow;
+	}
+	
+	/**
+	 * Returns the string representation for this scale ratio.
+	 * @return the scale ratio as string.
+	 */
+	public String getRatioText() {
+		return String.format("1:%d", ratio);
 	}
 	
 	/**
@@ -185,8 +195,44 @@ public class Scale {
 	@Override
 	public String toString() {
 		return new StringBuffer()
-			.append(getName() + " (1:")
-			.append(getRatio() + ")")
+			.append(getName())
+			.append(" (")
+			.append(getRatioText())
+			.append(")")
 			.toString();
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * @param obj the reference object with which to compare.
+	 * @return <em>true</em> if this object is the same as the obj argument; 
+	 * <em>false</em> otherwise.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if( this==obj ) return true;
+		if( !(obj instanceof Scale) ) return false;
+		
+		Scale other = (Scale)obj;
+		return new EqualsBuilder()
+			.append(name, other.name)
+			.append(ratio, other.ratio)
+			.append(narrow, other.narrow)
+			.append(gauge, other.gauge)
+			.isEquals();
+	}
+	
+	/**
+	 * Returns a hash code value for the <strong>Scale</strong>.
+	 * @return a hash code value for this object. 
+	 */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(15, 37)
+			.append(name)
+			.append(ratio)
+			.append(narrow)
+			.append(gauge)
+			.hashCode();
 	}
 }

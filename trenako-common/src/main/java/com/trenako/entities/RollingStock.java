@@ -104,8 +104,11 @@ public class RollingStock {
 	@Size(max = 12, message = "rs.upcCode.size.notmet")
 	private String upcCode;
 	
-	@Size(max = 2, message = "rs.country.size.notmet")
+	@Size(max = 3, message = "rs.country.size.notmet")
 	private String country;
+	
+	private byte[] image;
+	private byte[] thumb;
 	
 	private Date lastModified;
 	
@@ -612,6 +615,22 @@ public class RollingStock {
 			tags = new HashSet<String>();
 		}
 		tags.add(tag);
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public byte[] getThumb() {
+		return thumb;
+	}
+
+	public void setThumb(byte[] thumb) {
+		this.thumb = thumb;
 	}
 
 	/**

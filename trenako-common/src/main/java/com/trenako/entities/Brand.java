@@ -15,6 +15,8 @@
  */
 package com.trenako.entities;
 
+import java.util.Date;
+
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -36,25 +38,29 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Brand {
 
 	@Id
-	ObjectId id;
+	private ObjectId id;
 
 	@NotBlank(message = "brand.name.required")
 	@Size(max = 25, message = "brand.name.size.notmet")
 	@Indexed(unique = true)
-	String name;
+	private String name;
 
-	Address address;
+	private Address address;
 	
 	@URL(message = "brand.website.url.invalid")
-	String website;
+	private String website;
 
 	@Email(message = "brand.emailAddress.email.invalid")
-	String emailAddress;
+	private String emailAddress;
 	
 	@Size(max = 250, message = "brand.description.size.notmet")
-	String description;
+	private String description;
 	
-	boolean industrial;
+	private boolean industrial;
+	
+	private byte[] logo;
+	
+	private Date lastModified;
 	
 	/**
 	 * Create a new brand with <em>null</em> value.
@@ -243,6 +249,30 @@ public class Brand {
 	 */
 	public void setIndustrial(boolean industrial) {
 		this.industrial = industrial;
+	}
+
+	/**
+	 * Returns the brand image.
+	 * @return the image.
+	 */
+	public byte[] getLogo() {
+		return logo;
+	}
+
+	/**
+	 * Sets the brand image.
+	 * @param logo the image.
+	 */
+	public void setLogo(byte[] logo) {
+		this.logo = logo;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 
 	/**
