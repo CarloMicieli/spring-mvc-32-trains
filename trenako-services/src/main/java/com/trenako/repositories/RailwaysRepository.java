@@ -21,28 +21,35 @@ import com.trenako.entities.Railway;
 
 public interface RailwaysRepository {
 	/**
-	 * Returns the railway entity with the id.
+	 * Finds the railway document in the collection by id.
 	 * @param id the unique id.
-	 * @return a railway instance. <em>null</em> if no brands are found.
+	 * @return a railway document. <em>null</em> otherwise.
 	 */
 	Railway findById(ObjectId id);
 	
 	/**
-	 * Returns the railway from the name.
+	 * Finds the railway document in the collection by name.
 	 * @param name the railway name.
-	 * @return a brand instance. <em>null</em> if no brands are found.
+	 * @return a railway document. <em>null</em> otherwise.
 	 */
 	Railway findByName(String name);
 	
 	/**
-	 * Persist the railway instance to the data store.
-	 * @param railway a railway.
+	 * Finds all the railway document in the collection by country.
+	 * @param country the country.
+	 * @return the documents.
+	 */
+	Iterable<Railway> findByCountry(String country);
+	
+	/**
+	 * Saves the railway document in the collection.
+	 * @param railway the railway document to be saved.
 	 */
 	void save(Railway railway);
 	
 	/**
-	 * Remove the railway from the data store.
-	 * @param railway a railway.
+	 * Remove the railway document from the collection.
+	 * @param railway the railway document to be deleted.
 	 */
 	void remove(Railway railway);
 }

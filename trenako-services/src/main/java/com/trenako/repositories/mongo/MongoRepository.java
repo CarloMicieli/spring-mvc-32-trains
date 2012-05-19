@@ -23,11 +23,11 @@ import static org.springframework.data.mongodb.core.query.Criteria.*;
 import static org.springframework.data.mongodb.core.query.Query.*;
 
 /**
- * A Mongo database repository.
+ * A Mongo database repository
  * @author Carlo Micieli
  *
  */
-public class MongoRepository<T> {
+public abstract class MongoRepository<T> {
 	
 	protected MongoTemplate mongoOps;
 	protected Class<T> clazz;
@@ -83,6 +83,20 @@ public class MongoRepository<T> {
 	 */
 	public T findOne(String key, Object value) {
 		return mongoOps.findOne(query(where(key).is(value)), clazz);
+	}
+	
+	/**
+	 * Finds all the document in the collection by a given key value.
+	 * @param key the key name.
+	 * @param value the key value.
+	 * @return the documents.
+	 */
+	public Iterable<T> findAll(String key, Object value) {
+		return mongoOps.find(query(where(key).is(value)), clazz);
+	}
+	
+	public Iterable<T> findAll(String key1, Object value1, String key2, Object value2) {
+		return mongoOps.find(query(where(key1).is(value1).and(key2).is(value2)), clazz);
 	}
 	
 	/**

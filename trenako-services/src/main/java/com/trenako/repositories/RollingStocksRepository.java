@@ -21,16 +21,16 @@ import com.trenako.entities.RollingStock;
 
 public interface RollingStocksRepository {
 	/**
-	 * Returns the rolling stock document by the id.
-	 * @param id the document id.
-	 * @return the rolling stock document. <em>null</em> if no rolling stock are found.
+	 * Finds the rolling stock document in the collection by id.
+	 * @param id the rolling stock id.
+	 * @return the rolling stock document if found; <em>null</em> otherwise.
 	 */
 	RollingStock findById(ObjectId id);
 	
 	/**
-	 * Returns the rolling stock document by its slug.
+	 Finds the rolling stock document in the collection by slug.
 	 * @param slug the rolling stock slug.
-	 * @return the rolling stock document. <em>null</em> if no rolling stock are found.
+	 * @return the rolling stock document if found; <em>null</em> otherwise.
 	 */
 	RollingStock findBySlug(String slug);
 	
@@ -39,7 +39,7 @@ public interface RollingStocksRepository {
 	 * @param brandName the brand name.
 	 * @return the rolling stocks list.
 	 */
-	Iterable<RollingStock> findByBrandName(String brandName);
+	Iterable<RollingStock> findByBrand(String brandName);
 	
 	/**
 	 * Returns the rolling stock documents by era.
@@ -53,14 +53,14 @@ public interface RollingStocksRepository {
 	 * @param scale the scale.
 	 * @return the rolling stocks list.
 	 */
-	Iterable<RollingStock> findByScaleName(String scale);
+	Iterable<RollingStock> findByScale(String scale);
 	
 	/**
 	 * Returns the rolling stock documents by category.
 	 * @param category the category.
 	 * @return the rolling stocks list.
 	 */
-	Iterable<RollingStock> findByCategoryName(String category);
+	Iterable<RollingStock> findByCategory(String category);
 	
 	/**
 	 * Returns the rolling stock documents by power method.
@@ -77,9 +77,9 @@ public interface RollingStocksRepository {
 	Iterable<RollingStock> findByRailwayName(String railwayName);
 	
 	Iterable<RollingStock> findByBrandAndEra(String brandName, String era);
-	Iterable<RollingStock> findByBrandAndScaleName(String brandName, String scale);
-	Iterable<RollingStock> findByBrandAndCategoryName(String brandName, String categoryName);
-	Iterable<RollingStock> findByBrandAndRailwayName(String brandName, String railwayName);
+	Iterable<RollingStock> findByBrandAndScale(String brandName, String scale);
+	Iterable<RollingStock> findByBrandAndCategory(String brandName, String categoryName);
+	Iterable<RollingStock> findByBrandAndRailway(String brandName, String railwayName);
 	
 	Iterable<RollingStock> findByTag(String tag);
 	

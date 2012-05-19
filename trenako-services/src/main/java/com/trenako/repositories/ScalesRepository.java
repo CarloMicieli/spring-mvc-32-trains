@@ -39,6 +39,8 @@ public interface ScalesRepository {
 	 */
 	Scale findByName(String name);
 	
+	Iterable<Scale> findAll();
+	
 	/**
 	 * Persist the brand instance to the data store.
 	 * @param brand a brand.

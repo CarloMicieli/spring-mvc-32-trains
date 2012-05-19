@@ -29,6 +29,11 @@ public class RailwaysRepositoryImpl extends MongoRepository<Railway> implements 
 	}
 
 	@Override
+	public Iterable<Railway> findByCountry(String country) {
+		return findAll("country", country);
+	}
+	
+	@Override
 	public Railway findByName(String name) {
 		return findOne("name", name);
 	}	
