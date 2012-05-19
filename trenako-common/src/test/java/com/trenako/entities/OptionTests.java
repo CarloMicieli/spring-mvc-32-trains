@@ -15,8 +15,30 @@
  */
 package com.trenako.entities;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+/**
+ * 
+ * @author Carlo Micieli
+ *
+ */
 public class OptionTests {
 
+	@Test
+	public void equalsShouldReturnTrueForTwoEqualsOptions() {
+		Option x = new Option("AAA", OptionFamily.COUPLER);
+		Option y = new Option("AAA", OptionFamily.COUPLER);
+		
+		assertTrue(x.equals(y));
+	}
 	
-	
+	@Test
+	public void equalsShouldReturnFalseForTwoEqualsOptions() {
+		Option x = new Option("AAA", OptionFamily.COUPLER);
+		Option y = new Option("BBB", OptionFamily.COUPLER);
+		
+		assertFalse(x.equals(y));
+	}
 }

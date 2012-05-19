@@ -170,7 +170,7 @@ public class Option {
 	 * @return the option.
 	 */
 	public static Option WhiteRedAccordingMarchHeadlights() {
-		final Option op = new Option("White-Red", OptionFamily.HEADLIGHTS);
+		final Option op = new Option("White-Red-March", OptionFamily.HEADLIGHTS);
 		return op;
 	}
 	
