@@ -107,6 +107,8 @@ public class RollingStock {
 	@Size(max = 3, message = "rs.country.size.notmet")
 	private String country;
 	
+	private Map<String, String> options;
+	
 	private byte[] image;
 	private byte[] thumb;
 	
@@ -133,6 +135,7 @@ public class RollingStock {
 		this.era = b.era;
 		this.category = b.category;
 		this.powerMethod = b.powerMethod;
+		this.options = b.options;
 	}
 	
 	public static class Builder {
@@ -153,6 +156,8 @@ public class RollingStock {
 		private String era = null;
 		private String powerMethod = null;
 		private String category = null;
+		
+		private Map<String, String> options = null;
 		
 		public Builder(Brand brand, String itemNumber) {
 			this.brand = brand;
@@ -203,6 +208,18 @@ public class RollingStock {
 			
 			localDetails.put(lang, d);
 			
+			return this;
+		}
+
+		public Builder option(Option opt) {
+			return option(opt.getFamily().name(), opt.getName());
+		}
+		
+		public Builder option(String family, String opt) {
+			if( options==null )
+				options = new HashMap<String, String>();
+			
+			options.put(family, opt);
 			return this;
 		}
 		
@@ -617,18 +634,101 @@ public class RollingStock {
 		tags.add(tag);
 	}
 
+	private String optionsKey(Option opt) {
+		return opt.getFamily().name();
+	}
+	
+	/**
+	 * Adds an option to the rolling stock.
+	 * 
+	 * If an option for the same family already exists,
+	 * this method will replace the value.
+	 * 
+	 * @param option the option.
+	 */
+	public void addOption(Option option) {
+		if( options==null ) {
+			options = new HashMap<String, String>();
+		}
+		
+		options.put(optionsKey(option), option.getName());
+	}
+	
+	/**
+	 * Checks if the rolling stock has the provided option.
+	 * @param option the option.
+	 * @return <em>true</em> if the rolling stock contains this option; 
+	 * <em>false</em> otherwise.
+	 */
+	public boolean hasOption(Option option) {
+		final String key = optionsKey(option);
+		if( !options.containsKey(key) )
+			return false;
+		
+		return options.containsValue(option.getName());
+	}
+	
+	/**
+	 * Returns the option by its family.
+	 * 
+	 * Only one option value is possible for each family at the same time.
+	 * 
+	 * @param family the option family.
+	 * @return the option.
+	 */
+	public Option getOption(OptionFamily family) {
+		if( options==null ) return null;
+		
+		String name = options.get(family.name());
+		if( name==null ) return null;
+		
+		return new Option(name, family);
+	}
+	
+	/**
+	 * Returns the options map for the rolling stock.
+	 * @return the options map.
+	 */
+	public Map<String, String> getOptions() {
+		return options;
+	}
+
+	/**
+	 * Sets the options map for the rolling stock.
+	 * @param options the options map.
+	 */
+	public void setOptions(Map<String, String> options) {
+		this.options = options;
+	}
+
+	/**
+	 * Returns the rolling stock image.
+	 * @return the image.
+	 */
 	public byte[] getImage() {
 		return image;
 	}
 
+	/**
+	 * Sets the rolling stock image.
+	 * @param image the image.
+	 */
 	public void setImage(byte[] image) {
 		this.image = image;
 	}
 
+	/**
+	 * Returns the rolling stock thumbnail.
+	 * @return the thumbnail.
+	 */
 	public byte[] getThumb() {
 		return thumb;
 	}
 
+	/**
+	 * Sets the rolling stock thumbnail.
+	 * @param thumb the thumbnail.
+	 */
 	public void setThumb(byte[] thumb) {
 		this.thumb = thumb;
 	}

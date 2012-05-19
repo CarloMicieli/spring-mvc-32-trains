@@ -122,5 +122,34 @@ public class RollingStockTests {
 	public void equalsShouldBeReflexive() {
 		RollingStock x = new RollingStock.Builder("ACME", "123456").build();
 		assertTrue(x.equals(x));
-	}	
+	}
+	
+	@Test
+	public void shouldAssignOptionsToRollingStocks() {
+		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+			.option(Option.Nem651())
+			.build();
+		assertEquals(1, rs.getOptions().size());
+		assertEquals("{DCC_INTERFACE=NEM-651}", rs.getOptions().toString());
+	}
+	
+	@Test
+	public void shouldReturnNullIfTheOptionIsNotFound() {
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		assertEquals(null, rs.getOption(OptionFamily.DCC_INTERFACE));
+	}
+	
+	@Test
+	public void shouldAssignOnly1OptionForEachFamily() {
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		
+		rs.addOption(Option.WhiteRedAccordingMarchHeadlights());
+		assertTrue(rs.hasOption(Option.WhiteRedAccordingMarchHeadlights()));
+		
+		rs.addOption(Option.Nem651());
+		rs.addOption(Option.WhiteRedHeadlights());
+		
+		assertEquals(Option.WhiteRedHeadlights(), rs.getOption(OptionFamily.HEADLIGHTS));
+		assertEquals(Option.Nem651(), rs.getOption(OptionFamily.DCC_INTERFACE));
+	}
 }
