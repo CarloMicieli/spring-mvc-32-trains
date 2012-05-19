@@ -24,6 +24,11 @@ import com.trenako.AbstractValidationTests;
 
 import static org.junit.Assert.*;
 
+/**
+ * 
+ * @author Carlo Micieli
+ *
+ */
 public class ScaleValidationTests extends AbstractValidationTests<Scale> {
 
 	@Before

@@ -19,6 +19,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+/**
+ * 
+ * @author Carlo Micieli
+ *
+ */
 public class PowerMethodTests {
 
 	@Test
