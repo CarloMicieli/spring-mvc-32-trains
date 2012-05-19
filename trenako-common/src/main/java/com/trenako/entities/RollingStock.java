@@ -32,6 +32,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 
 import com.trenako.AppGlobals;
@@ -639,5 +641,45 @@ public class RollingStock {
 			.append(getItemNumber() + ": ")
 			.append(getDescription())
 			.toString();
+	}
+
+	/**
+	 * Indicates whether some other rolling stock is "equal to" this one.
+	 * @param obj the reference rolling stock with which to compare.
+	 * @return <em>true</em> if this object is the same as the obj argument; 
+	 * <em>false</em> otherwise.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if( this==obj ) return true;
+		if( !(obj instanceof RollingStock) ) return false;
+		
+		RollingStock other = (RollingStock)obj;
+		return new EqualsBuilder()
+			.append(brand, other.brand)
+			.append(itemNumber, other.itemNumber)
+			.append(description, other.description)
+			.append(railway, other.railway)
+			.append(scale, other.scale)
+			.append(era, other.era)
+			.append(category, other.category)
+			.isEquals();
+	}
+	
+	/**
+	 * Returns a hash code value for the <strong>RollingStock</strong>.
+	 * @return a hash code value for this object. 
+	 */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(15, 37)
+			.append(brand)
+			.append(itemNumber)
+			.append(description)
+			.append(railway)
+			.append(scale)
+			.append(era)
+			.append(category)
+			.toHashCode();
 	}
 }

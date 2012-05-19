@@ -73,5 +73,34 @@ public class RollingStockTests {
 		
 		rs.setDetails("fr", "French2");
 		assertEquals("French2", rs.getDetails("fr"));
+	}
+	
+	@Test
+	public void equalsShouldReturnsTrueForEqualObjects() {
+		RollingStock x = new RollingStock.Builder("ACME", "123456").build();
+		RollingStock y = new RollingStock.Builder("ACME", "123456").build();
+		assertTrue(x.equals(y));
+	}
+	
+	@Test
+	public void equalsShouldReturnsFalseForEqualObjects() {
+		RollingStock x = new RollingStock.Builder("ACME", "123456").build();
+		RollingStock y = new RollingStock.Builder("ACME", "123456")
+			.description("aaaa")
+			.build();
+		assertFalse(x.equals(y));
+	}
+	
+	@Test
+	public void shouldTwoEqualObjectsHaveTheSameHashcode() {
+		RollingStock x = new RollingStock.Builder("ACME", "123456").build();
+		RollingStock y = new RollingStock.Builder("ACME", "123456").build();
+		assertEquals(x.hashCode(), y.hashCode());
+	}
+		
+	@Test
+	public void equalsShouldBeReflexive() {
+		RollingStock x = new RollingStock.Builder("ACME", "123456").build();
+		assertTrue(x.equals(x));
 	}	
 }
