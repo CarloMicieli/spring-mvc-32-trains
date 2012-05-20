@@ -43,7 +43,7 @@ public class Scale {
 	String name;
 	
 	@Range(min = 2, max = 220, message = "scale.ratio.range.notmet")
-	int ratio;
+	double ratio;
 
 	@Range(min = 0, max = 1000, message = "scale.gauge.range.notmet")
 	double gauge;
@@ -65,32 +65,54 @@ public class Scale {
 	}
 
 	/**
-	 * Creates a new standard gauge scale.
-	 * @param name the scale name.
-	 * @param ratio the scale ratio.
-	 * narrower than the standard gauge railways or not.
-	 */
-	public Scale(String name, int ratio) {
-		this(name, ratio, false);
-	}
-	
-	/**
 	 * Creates a new scale.
 	 * @param name the scale name.
-	 * @param ratio the scale ratio.
-	 * @param narrow whether has track gauge 
-	 * narrower than the standard gauge railways or not.
 	 */
-	public Scale(String name, int ratio, boolean narrow) {
-		this.name = name;
-		this.ratio = ratio;
-		this.narrow = narrow;
-	}
-
 	public Scale(String name) {
 		this.name = name;
 	}
 
+	private Scale(Builder b) {
+		this.name = b.name;
+		this.ratio = b.ratio;
+		this.gauge = b.gauge;
+		this.narrow = b.narrow;
+	}
+	
+	public static class Builder {
+		// required fields
+		private final String name;
+		
+		// optional fields
+		private double ratio = 0;
+		private double gauge = 0;
+		private boolean narrow = false;
+		
+		public Builder(String name) {
+			this.name = name;
+		}
+		
+		public Builder ratio(double r) {
+			ratio = r;
+			return this;
+		}
+		
+		public Builder gauge(double g) {
+			gauge = g;
+			return this;
+		}
+		
+		public Builder narrow(boolean n) {
+			narrow = n;
+			return this;
+		}
+		
+		public Scale build() {
+			return new Scale(this);
+		}
+	}
+	
+	
 	/**
 	 * Returns the unique id for the <em>Scale</em>.
 	 * @return the unique id.
@@ -128,7 +150,7 @@ public class Scale {
 	 * model to the same dimension of the original.
 	 * @return the scale ratio.
 	 */
-	public int getRatio() {
+	public double getRatio() {
 		return ratio;
 	}
 
@@ -137,7 +159,7 @@ public class Scale {
 	 * model to the same dimension of the original.
 	 * @param ratio the scale ratio.
 	 */
-	public void setRatio(int ratio) {
+	public void setRatio(double ratio) {
 		this.ratio = ratio;
 	}
 	
@@ -185,7 +207,12 @@ public class Scale {
 	 * @return the scale ratio as string.
 	 */
 	public String getRatioText() {
-		return String.format("1:%d", ratio);
+		int r = (int)ratio;
+		if( ratio - r!=0 ) {
+			return String.format("1:%.1f", ratio);
+		}
+		
+		return String.format("1:%d", (int)ratio);
 	}
 	
 	/**

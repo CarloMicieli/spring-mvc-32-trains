@@ -29,6 +29,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.utility.Slug;
+
 /**
  * It represents a model railways toy company.
  * @author Carlo Micieli
@@ -85,6 +87,7 @@ public class Brand {
 	 */
 	public Brand(String name) {
 		this.name = name;
+		this.slug = Slug.encode(name);
 	}
 
 	private Brand(Builder b) {

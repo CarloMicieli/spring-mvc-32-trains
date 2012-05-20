@@ -25,17 +25,17 @@ import com.trenako.entities.Scale;
 /**
  * 
  * @author Carlo Micieli
- *
+ * 
  */
 public class ScalesEventListenerTests {
 	@Test
 	public void shouldFillTheValuesBeforeSave() {
 		ScalesEventListener listener = new ScalesEventListener();
-		
-		Scale scale = new Scale("H0", 87);
+
+		Scale scale = new Scale.Builder("H0").ratio(87).build();
 		BasicDBObject dbo = new BasicDBObject();
 		listener.onBeforeSave(scale, dbo);
-		
+
 		assertNotNull(dbo.get("lastModified"));
 	}
 }

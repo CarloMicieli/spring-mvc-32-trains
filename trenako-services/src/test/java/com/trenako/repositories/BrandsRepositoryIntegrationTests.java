@@ -21,16 +21,9 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import com.trenako.TestConfiguration;
+import com.trenako.AbstractMongoIntegrationTests;
 import com.trenako.entities.Brand;
 
 import static org.junit.Assert.*;
@@ -40,16 +33,14 @@ import static org.junit.Assert.*;
  * @author Carlo Micieli
  *
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class,
-	classes = {TestConfiguration.class})
-@ActiveProfiles("test")
-public class BrandsRepositoryIntegrationTests {
+public class BrandsRepositoryIntegrationTests extends AbstractMongoIntegrationTests<Brand> {
 
-	private @Autowired MongoTemplate mongoOps;
 	private @Autowired BrandsRepository repo;
-	
 	private List<Brand> brands;
+
+	public BrandsRepositoryIntegrationTests() {
+		super(Brand.class);
+	}
 	
 	@Before
 	public void setup() {
@@ -83,12 +74,12 @@ public class BrandsRepositoryIntegrationTests {
 				.website("http://www.maerklin.de")
 				.build());
 
-		mongoOps.insert(brands, Brand.class);
+		super.init(brands);
 	}
 	
 	@After
 	public void cleanUp() {
-		mongoOps.remove(new Query(), Brand.class);
+		super.cleanUp();
 	}
 	
 	@Test
@@ -139,7 +130,6 @@ public class BrandsRepositoryIntegrationTests {
 		Brand b = brands.get(0);
 		repo.remove(b);
 		
-		Brand bb = mongoOps.findById(b.getId(), Brand.class);
-		assertNull(bb);
+		assertNull(repo.findById(b.getId()));
 	}
 }

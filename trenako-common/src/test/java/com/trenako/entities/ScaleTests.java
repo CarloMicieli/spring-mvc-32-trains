@@ -28,28 +28,31 @@ public class ScaleTests {
 	
 	@Test
 	public void shouldPrintTheScaleRatio() {
-		Scale s = new Scale("H0", 87);
-		assertEquals("1:87", s.getRatioText());
+		Scale s1 = new Scale.Builder("H0").ratio(87).build();
+		assertEquals("1:87", s1.getRatioText());
+	
+		Scale s2 = new Scale.Builder("0").ratio(43.5).build();
+		assertEquals("1:43.5", s2.getRatioText());
 	}
 	
 	@Test
 	public void equalsShouldFalseForDifferentScales() {
-		Scale x = new Scale("H0", 87);
-		Scale y = new Scale("N", 160);
+		Scale x = new Scale.Builder("H0").ratio(87).build();
+		Scale y = new Scale.Builder("N").ratio(160).build();
 		assertFalse(x.equals(y));
 	}
 	
 	@Test
 	public void equalsShouldTrueForEqualScales() {
-		Scale x = new Scale("H0", 87);
-		Scale y = new Scale("H0", 87);
+		Scale x = new Scale.Builder("H0").ratio(87).build();
+		Scale y = new Scale.Builder("H0").ratio(87).build();
 		assertTrue(x.equals(y));
 	}
 
 	@Test
 	public void hashCodeShouldProduceTheSameHashForEqualScales() {
-		Scale x = new Scale("H0", 87);
-		Scale y = new Scale("H0", 87);
+		Scale x = new Scale.Builder("H0").ratio(87).build();
+		Scale y = new Scale.Builder("H0").ratio(87).build();
 		assertEquals(x.hashCode(), y.hashCode());
 	}
 }

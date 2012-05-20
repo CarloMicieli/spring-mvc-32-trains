@@ -42,6 +42,12 @@ public interface RollingStocksRepository {
 	Iterable<RollingStock> findByBrand(String brandName);
 	
 	/**
+	 * Returns the rolling stock documents in the collection.
+	 * @return the rolling stocks list.
+	 */
+	Iterable<RollingStock> findAll();
+	
+	/**
 	 * Returns the rolling stock documents by era.
 	 * @param era the era.
 	 * @return the rolling stocks list.

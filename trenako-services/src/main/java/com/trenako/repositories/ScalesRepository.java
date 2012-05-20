@@ -39,17 +39,21 @@ public interface ScalesRepository {
 	 */
 	Scale findByName(String name);
 	
+	/**
+	 * 
+	 * @return
+	 */
 	Iterable<Scale> findAll();
 	
 	/**
-	 * Persist the brand instance to the data store.
-	 * @param brand a brand.
+	 * Saves the scale document in the collection.
+	 * @param scale the scale document to be saved.
 	 */
-	void save(Scale brand);
+	void save(Scale scale);
 	
 	/**
-	 * Remove the brand from the data store.
-	 * @param brand a brand.
+	 * Remove the scale document from the collection.
+	 * @param scale the scale document to be removed.
 	 */
-	void remove(Scale brand);
+	void remove(Scale scale);
 }

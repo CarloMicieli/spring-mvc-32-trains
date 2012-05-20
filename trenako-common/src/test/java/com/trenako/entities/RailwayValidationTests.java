@@ -81,6 +81,7 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	@Test
 	public void shouldValidateOperatingSinceYear() {
 		Railway railway = new Railway.Builder("AAA")
+			.country("AAA")
 			.operatingSince(1800)
 			.build();
 
@@ -92,6 +93,7 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	@Test
 	public void shouldValidateOperatingUntilYear() {
 		Railway railway = new Railway.Builder("AAA")
+			.country("AAA")
 			.operatingUntil(9999)
 			.build();
 

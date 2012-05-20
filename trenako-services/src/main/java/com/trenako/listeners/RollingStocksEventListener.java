@@ -30,7 +30,16 @@ import com.trenako.entities.RollingStock;
 public class RollingStocksEventListener extends AbstractMongoEventListener<RollingStock> {
 
 	@Override
-	public void onBeforeSave(RollingStock source, DBObject dbo) {
+	public void onBeforeSave(RollingStock rs, DBObject dbo) {
 		dbo.put("lastModified", new Date());
+		
+		dbo.put("slug", rs.getSlug());
+		dbo.put("brandName", rs.getBrand().getName());
+		dbo.put("railwayName", rs.getRailway().getName());
+		dbo.put("scaleName", rs.getScale().getName());
+
+		if( rs.getRailway().getCountry()!=null ) {
+			dbo.put("country", rs.getRailway().getCountry());
+		}
 	}
 }

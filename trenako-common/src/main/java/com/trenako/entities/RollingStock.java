@@ -45,7 +45,7 @@ import com.trenako.utility.Slug;
  * @author Carlo Micieli
  * 
  */
-@Document(collection = "rolling_stocks")
+@Document(collection = "rollingStocks")
 public class RollingStock {
 
 	@Id
