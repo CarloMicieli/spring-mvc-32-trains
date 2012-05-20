@@ -33,6 +33,13 @@ public interface RailwaysRepository {
 	 * @return a railway document. <em>null</em> otherwise.
 	 */
 	Railway findByName(String name);
+
+	/**
+	 * Finds the railway document in the collection by name slug.
+	 * @param slug the railway name slug.
+	 * @return a railway document. <em>null</em> otherwise.
+	 */
+	Railway findBySlug(String slug);
 	
 	/**
 	 * Finds all the railway document in the collection by country.

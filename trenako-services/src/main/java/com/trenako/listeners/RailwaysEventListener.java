@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 
 import com.mongodb.DBObject;
 import com.trenako.entities.Railway;
+import com.trenako.utility.Slug;
 
 /**
  * 
@@ -31,5 +32,6 @@ public class RailwaysEventListener extends AbstractMongoEventListener<Railway> {
 	@Override
 	public void onBeforeSave(Railway railway, DBObject dbo) {
 		dbo.put("lastModified", new Date());
+		dbo.put("slug", Slug.encode(railway.getName()));
 	}
 }

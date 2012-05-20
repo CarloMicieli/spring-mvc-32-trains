@@ -17,6 +17,7 @@ package com.trenako.repositories.mongo;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 
 import static org.springframework.data.mongodb.core.query.Criteria.*;
@@ -49,7 +50,7 @@ public abstract class MongoRepository<T> {
 	public Iterable<T> findAll() {
 		return mongoOps.findAll(clazz);
 	}
-	
+
 	/**
 	 * Returns the document with the given id.
 	 * @param id the document id.
@@ -95,6 +96,12 @@ public abstract class MongoRepository<T> {
 		return mongoOps.find(query(where(key).is(value)), clazz);
 	}
 	
+	public Iterable<T> findAll(String key, Object value, String sortCriteria, Order order) {
+		final Query q = query(where(key).is(value));
+		q.sort().on(sortCriteria, order);
+		return mongoOps.find(q, clazz);
+	}
+		
 	public Iterable<T> findAll(String key1, Object value1, String key2, Object value2) {
 		return mongoOps.find(query(where(key1).is(value1).and(key2).is(value2)), clazz);
 	}

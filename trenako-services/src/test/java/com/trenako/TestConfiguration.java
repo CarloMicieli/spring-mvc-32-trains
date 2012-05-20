@@ -18,6 +18,7 @@ package com.trenako;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,9 +26,16 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
 import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
+import com.trenako.config.EventListenerConfiguration;
 
+/**
+ * 
+ * @author Carlo Micieli
+ *
+ */
 @Configuration
 @Profile("test")
+@Import(EventListenerConfiguration.class)
 @ComponentScan(basePackages = "com.trenako")
 public class TestConfiguration {
 

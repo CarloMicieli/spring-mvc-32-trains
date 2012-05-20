@@ -15,7 +15,7 @@
  */
 package com.trenako.listeners;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -32,10 +32,11 @@ public class RailwaysEventListenerTests {
 	public void shouldFillTheValuesBeforeSave() {
 		RailwaysEventListener listener = new RailwaysEventListener();
 		
-		Railway railway = new Railway("DB");
+		Railway railway = new Railway("Die Bahn");
 		BasicDBObject dbo = new BasicDBObject();
 		listener.onBeforeSave(railway, dbo);
 		
 		assertNotNull(dbo.get("lastModified"));
+		assertEquals("die-bahn", dbo.get("slug"));
 	}
 }

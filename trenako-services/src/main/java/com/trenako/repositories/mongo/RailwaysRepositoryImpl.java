@@ -17,6 +17,7 @@ package com.trenako.repositories.mongo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Railway;
@@ -32,11 +33,16 @@ public class RailwaysRepositoryImpl extends MongoRepository<Railway> implements 
 
 	@Override
 	public Iterable<Railway> findByCountry(String country) {
-		return findAll("country", country);
+		return findAll("country", country, "name", Order.ASCENDING);
 	}
 	
 	@Override
 	public Railway findByName(String name) {
 		return findOne("name", name);
+	}	
+	
+	@Override
+	public Railway findBySlug(String slug) {
+		return findOne("slug", slug);
 	}	
 }

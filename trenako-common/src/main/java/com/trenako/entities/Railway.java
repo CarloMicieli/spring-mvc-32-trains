@@ -23,6 +23,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -43,12 +44,20 @@ public class Railway {
 	@Indexed(unique = true)
 	private String name;
 	
+	@Indexed(unique = true)
+	private String slug; 
+	
+	@Size(max = 100, message = "railway.companyName.size.notmet")
+	private String companyName;
+	
 	@NotBlank(message = "railway.country.required")
 	@Size(max = 3, message = "railway.country.size.notmet")
 	private String country;
 	
-	@Size(max = 100, message = "railway.companyName.size.notmet")
-	private String companyName;
+	@Range(min = 1829, max = 2999, message = "railway.operatingSince.range.notmet")
+	private Integer operatingSince;
+	@Range(min = 1829, max = 2999, message = "railway.operatingUntil.range.notmet")
+	private Integer operatingUntil;
 	
 	private byte[] image;
 	private Date lastModified;
@@ -74,7 +83,62 @@ public class Railway {
 	public Railway(ObjectId id) {
 		this.id = id;
 	}
-
+	
+	private Railway(Builder b) {
+		this.name = b.name;
+		this.companyName = b.companyName;
+		this.country = b.country;
+		this.operatingSince = b.operatingSince;
+		this.operatingUntil = b.operatingUntil;
+		this.slug = b.slug;
+	}
+		
+	public static class Builder {
+		// required fields
+		private final String name;
+		
+		// optional fields
+		private String companyName = "";
+		private String country = "";
+		private String slug = "";
+		
+		private Integer operatingSince = null;
+		private Integer operatingUntil = null;
+		
+		public Builder(String name) {
+			this.name = name;
+		}
+		
+		public Builder companyName(String cm) {
+			this.companyName = cm;
+			return this;
+		}
+		
+		public Builder country(String c) {
+			this.country = c;
+			return this;
+		}
+		
+		public Builder slug(String s) {
+			this.slug = s;
+			return this;
+		}
+		
+		public Builder operatingSince(int year) {
+			this.operatingSince = year;
+			return this;
+		}
+		
+		public Builder operatingUntil(int year) {
+			this.operatingUntil = year;
+			return this;
+		}
+		
+		public Railway build() {
+			return new Railway(this);
+		}
+	}
+	
 	/**
 	 * Returns the unique id for the <em>Railway</em>.
 	 * @return the unique id.
@@ -138,6 +202,54 @@ public class Railway {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
+	/**
+	 * Returns the starting year of operations.
+	 * @return the year.
+	 */
+	public int getOperatingSince() {
+		return operatingSince;
+	}
+
+	/**
+	 * Sets the starting year of operations.
+	 * @param operatingSince the year.
+	 */
+	public void setOperatingSince(Integer operatingSince) {
+		this.operatingSince = operatingSince;
+	}
+
+	/**
+	 * Returns the finishing year of operations.
+	 * @return the year.
+	 */
+	public int getOperatingUntil() {
+		return operatingUntil;
+	}
+
+	/**
+	 * Sets the finishing year of operations.
+	 * @param operatingUntil the year.
+	 */
+	public void setOperatingUntil(Integer operatingUntil) {
+		this.operatingUntil = operatingUntil;
+	}
+
+	/**
+	 * Returns the railway name slug.
+	 * @return the slug.
+	 */
+	public String getSlug() {
+		return slug;
+	}
+
+	/**
+	 * Sets the railway name slug.
+	 * @param slug the slug.
+	 */
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
 
 	/**
 	 * Returns the railway image.
@@ -155,10 +267,18 @@ public class Railway {
 		this.image = image;
 	}
 
+	/**
+	 * Returns the last modified timestamp.
+	 * @return the timestamp.
+	 */
 	public Date getLastModified() {
 		return lastModified;
 	}
 
+	/**
+	 * Sets the last modified timestamp.
+	 * @param lastModified the timestamp.
+	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}

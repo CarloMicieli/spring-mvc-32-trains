@@ -38,9 +38,9 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	
 	@Test
 	public void shouldValidateRailways() {
-		Railway railway = new Railway();
-		railway.setName("AAA");
-		railway.setCountry("ITA");
+		Railway railway = new Railway.Builder("AAA")
+			.country("DEU")
+			.build();
 		
 		Map<String, String> errors = validate(railway);
 		assertEquals(0, errors.size());
@@ -58,9 +58,9 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	
 	@Test
 	public void shouldValidateRailwayNameSize() {
-		Railway railway = new Railway();
-		railway.setName("12345678901"); //max = 10
-		railway.setCountry("ITA");
+		Railway railway = new Railway.Builder("12345678901") //max = 10
+			.country("DEU")
+			.build();
 		
 		Map<String, String> errors = validate(railway);
 		assertEquals(1, errors.size());
@@ -69,12 +69,35 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	
 	@Test
 	public void shouldValidateRailwayCountrySize() {
-		Railway railway = new Railway();
-		railway.setName("AAA");
-		railway.setCountry("1234"); //max = 3
+		Railway railway = new Railway.Builder("AAA")
+			.country("1234") //max = 3
+			.build();
 		
 		Map<String, String> errors = validate(railway);
 		assertEquals(1, errors.size());
 		assertEquals("railway.country.size.notmet", errors.get("country"));
-	}	
+	}
+	
+	@Test
+	public void shouldValidateOperatingSinceYear() {
+		Railway railway = new Railway.Builder("AAA")
+			.operatingSince(1800)
+			.build();
+
+		Map<String, String> errors = validate(railway);
+		assertEquals(1, errors.size());
+		assertEquals("railway.operatingSince.range.notmet", errors.get("operatingSince"));
+	}
+	
+	@Test
+	public void shouldValidateOperatingUntilYear() {
+		Railway railway = new Railway.Builder("AAA")
+			.operatingUntil(9999)
+			.build();
+
+		Map<String, String> errors = validate(railway);
+		assertEquals(1, errors.size());
+		assertEquals("railway.operatingUntil.range.notmet", errors.get("operatingUntil"));
+	}
+	
 }
