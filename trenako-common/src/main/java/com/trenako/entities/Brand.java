@@ -45,6 +45,9 @@ public class Brand {
 	@Indexed(unique = true)
 	private String name;
 
+	@Indexed(unique = true)
+	private String slug;
+	
 	private Address address;
 	
 	@URL(message = "brand.website.url.invalid")
@@ -91,6 +94,7 @@ public class Brand {
 		this.emailAddress = b.emailAddress;
 		this.description = b.description;
 		this.industrial = b.industrial;
+		this.slug = b.slug;
 	}
 	
 	public static class Builder {
@@ -103,6 +107,7 @@ public class Brand {
 		private String description = null;
 		private boolean industrial = false;
 		private Address address = null;
+		private String slug = null;
 		
 		public Builder(String name) {
 			this.name = name;
@@ -123,6 +128,11 @@ public class Brand {
 			return this;
 		}
 
+		public Builder slug(String s) {
+			slug = s;
+			return this;
+		}
+		
 		public Builder address(Address a) {
 			address = a;
 			return this;
@@ -169,6 +179,22 @@ public class Brand {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * Returns the company name slug.
+	 * @return the company name slug.
+	 */
+	public String getSlug() {
+		return slug;
+	}
+
+	/**
+	 * Sets the company name slug.
+	 * @param slug the company name slug.
+	 */
+	public void setSlug(String slug) {
+		this.slug = slug;
 	}
 
 	/**

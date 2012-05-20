@@ -42,6 +42,12 @@ public interface RailwaysRepository {
 	Iterable<Railway> findByCountry(String country);
 	
 	/**
+	 * Finds all the railway document in the collection.
+	 * @return the documents.
+	 */
+	Iterable<Railway> findAll();
+	
+	/**
 	 * Saves the railway document in the collection.
 	 * @param railway the railway document to be saved.
 	 */

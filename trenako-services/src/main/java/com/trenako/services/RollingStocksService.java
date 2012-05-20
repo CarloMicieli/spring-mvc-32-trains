@@ -1,6 +1,7 @@
 package com.trenako.services;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.RollingStock;
@@ -11,6 +12,7 @@ public class RollingStocksService {
 	
 	private RollingStocksRepository repo;
 	
+	@Autowired
 	public RollingStocksService(RollingStocksRepository repo) {
 		this.repo = repo;
 	}
