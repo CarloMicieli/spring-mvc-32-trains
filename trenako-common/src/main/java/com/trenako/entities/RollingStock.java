@@ -37,6 +37,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 
 import com.trenako.AppGlobals;
+import com.trenako.entities.RollingStock.Builder;
 import com.trenako.utility.Slug;
 
 /**
@@ -112,6 +113,8 @@ public class RollingStock {
 	private byte[] image;
 	private byte[] thumb;
 	
+	private String deliveryDate;
+	
 	private Date lastModified;
 	
 	/**
@@ -136,6 +139,8 @@ public class RollingStock {
 		this.category = b.category;
 		this.powerMethod = b.powerMethod;
 		this.options = b.options;
+		this.deliveryDate = b.deliveryDate;
+		this.totalLength = b.totalLength;
 	}
 	
 	public static class Builder {
@@ -156,6 +161,8 @@ public class RollingStock {
 		private String era = null;
 		private String powerMethod = null;
 		private String category = null;
+		private String deliveryDate = null;
+		private int totalLength = 0;
 		
 		private Map<String, String> options = null;
 		
@@ -197,6 +204,11 @@ public class RollingStock {
 			return this;
 		}
 
+		public Builder deliveryDate(String d) { 
+			deliveryDate = d;
+			return this;
+		}
+		
 		public Builder details(String d) { 
 			details = d;
 			return this;
@@ -250,6 +262,11 @@ public class RollingStock {
 		
 		public Builder tags(String... t) { 
 			tags = new HashSet<String>(Arrays.asList(t));
+			return this;
+		}
+
+		public Builder totalLength(int len) {
+			totalLength = len;
 			return this;
 		}
 	}
@@ -565,6 +582,24 @@ public class RollingStock {
 	 */
 	public void setUpcCode(String upcCode) {
 		this.upcCode = upcCode;
+	}
+
+	/**
+	 * Returns the delivery date.
+	 * 
+	 * The delivery date it usually includes the year and the quarter (Q1, Q2, ...).	
+	 * @return the delivery date.
+	 */
+	public String getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	/**
+	 * Sets the delivery date.
+	 * @param deliveryDate the delivery date.
+	 */
+	public void setDeliveryDate(String deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 
 	/**

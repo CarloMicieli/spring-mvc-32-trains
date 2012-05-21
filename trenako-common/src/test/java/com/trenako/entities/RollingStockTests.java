@@ -25,6 +25,41 @@ import static org.junit.Assert.*;
  *
  */
 public class RollingStockTests {
+	
+	@Test
+	public void builderShouldInizializeRollingStocks() {
+		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+			.category("category")
+			.deliveryDate("2012")
+			.description("Description")
+			.description("fr", "French description")
+			.details("Details")
+			.details("fr", "French details")
+			.era("IV")
+			.powerMethod("DC")
+			.railway("DB")
+			.scale("H0")
+			.tags("tag1", "tag2")
+			.totalLength(123)
+			.build();
+				
+		assertEquals("ACME", rs.getBrand().getName());
+		assertEquals("123456", rs.getItemNumber());
+		assertEquals("category", rs.getCategory());
+		assertEquals("2012", rs.getDeliveryDate());
+		assertEquals("Description", rs.getDescription());
+		assertEquals("French description", rs.getDescription("fr"));
+		assertEquals("Details", rs.getDetails());
+		assertEquals("French details", rs.getDetails("fr"));
+		assertEquals("IV", rs.getEra());
+		assertEquals("DC", rs.getPowerMethod());
+		assertEquals("DB", rs.getRailway().getName());
+		assertEquals("H0", rs.getScale().getName());
+		assertEquals(123, rs.getTotalLength());
+		assertEquals(2, rs.getTags().size());
+	}
+	
+	
 	@Test
 	public void shouldGetLocalizedDescriptions() {
 
