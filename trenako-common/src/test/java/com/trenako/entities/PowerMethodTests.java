@@ -29,10 +29,10 @@ public class PowerMethodTests {
 	@Test
 	public void shouldProduceDescription() {
 		PowerMethod ac = PowerMethod.AC;
-		assertEquals("ac", ac.getDescription());
+		assertEquals("ac", ac.keyValue());
 		
 		PowerMethod ads = PowerMethod.AC_DCC_SOUND;
-		assertEquals("ac-dcc-sound", ads.getDescription());
+		assertEquals("ac-dcc-sound", ads.keyValue());
 	}
 	
 	@Test

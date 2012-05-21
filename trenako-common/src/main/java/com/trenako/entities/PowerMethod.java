@@ -50,7 +50,7 @@ public enum PowerMethod {
 	 * Returns the category description to be stored in the database.
 	 * @return the category name.
 	 */
-	public String getDescription() {
+	public String keyValue() {
 		return name().toLowerCase().replace('_', '-');
 	}
 

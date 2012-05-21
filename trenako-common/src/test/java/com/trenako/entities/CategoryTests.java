@@ -29,10 +29,10 @@ public class CategoryTests {
 	@Test
 	public void shouldProduceDescription() {
 		Category el = Category.ELECTRIC_LOCOMOTIVES;
-		assertEquals("electric-locomotives", el.getDescription());
+		assertEquals("electric-locomotives", el.keyValue());
 		
 		Category emu = Category.ELECTRIC_MULTIPLE_UNIT;
-		assertEquals("electric-multiple-unit", emu.getDescription());
+		assertEquals("electric-multiple-unit", emu.keyValue());
 	}
 	
 	@Test

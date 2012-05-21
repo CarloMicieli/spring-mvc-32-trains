@@ -37,7 +37,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 
 import com.trenako.AppGlobals;
-import com.trenako.entities.RollingStock.Builder;
 import com.trenako.utility.Slug;
 
 /**
@@ -639,7 +638,7 @@ public class RollingStock {
 	 * @param powerMethod the model power method.
 	 */
 	public void setPowerMethod(PowerMethod powerMethod) {
-		setPowerMethod(powerMethod.getDescription());
+		setPowerMethod(powerMethod.keyValue());
 	}
 
 	/**

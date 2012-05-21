@@ -21,21 +21,56 @@ package com.trenako.entities;
  *
  */
 public enum Category {
+	/**
+	 * The steam locomotives category.
+	 */
 	STEAM_LOCOMOTIVES,
+	
+	/**
+	 * The electric locomotives category.
+	 */
 	ELECTRIC_LOCOMOTIVES,
+	
+	/**
+	 * The diesel locomotives category.
+	 */
 	DIESEL_LOCOMOTIVES,
+	
+	/**
+	 * The electric multiple unit category.
+	 */
 	ELECTRIC_MULTIPLE_UNIT,
+	
+	/**
+	 * The train set category.
+	 */
 	TRAIN_SETS,
+	
+	/**
+	 * The railcar category.
+	 */
 	RAILCARS,
+	
+	/**
+	 * The freight cars category.
+	 */
 	FREIGHT_CARS,
+	
+	/**
+	 * The passenger cars category.
+	 */
 	PASSENGER_CARS,
+	
+	/**
+	 * The starter sets (usually includes the tracks) category.
+	 */
 	STARTER_SETS;
 	
 	/**
 	 * Returns the category description to be stored in the database.
 	 * @return the category name.
 	 */
-	public String getDescription() {
+	public String keyValue() {
 		return name().toLowerCase().replace('_', '-');
 	}
 
