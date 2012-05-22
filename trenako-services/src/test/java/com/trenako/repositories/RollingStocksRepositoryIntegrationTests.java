@@ -36,7 +36,7 @@ import com.trenako.entities.Scale;
 
 import static org.junit.Assert.*;
 
-public class RollingStocksRepositoryIntegrationTests 
+public abstract class RollingStocksRepositoryIntegrationTests 
 	extends AbstractMongoIntegrationTests<RollingStock> {
 
 	private @Autowired RollingStocksRepository repo;

@@ -15,6 +15,7 @@
  */
 package com.trenako.repositories.mongo;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,24 +24,52 @@ import com.trenako.entities.Brand;
 import com.trenako.repositories.BrandsRepository;
 
 /**
+ * Concrete implementation for the brands repository for mongodb.
  * @author Carlo Micieli
  *
  */
 @Repository("brandsRepository")
-public class BrandsRepositoryImpl extends MongoRepository<Brand> implements BrandsRepository {
+public class BrandsRepositoryImpl implements BrandsRepository {
+	
+	private final MongoRepository<Brand> mongo;
 	
 	@Autowired
 	public BrandsRepositoryImpl(MongoTemplate mongoOps) {
-		super(mongoOps, Brand.class);
+		this.mongo = new MongoRepository<Brand>(mongoOps, Brand.class);
 	}
 	
+	// constructor: for testing
+	BrandsRepositoryImpl(MongoRepository<Brand> mongo) {
+		this.mongo = mongo;
+	}
+		
 	@Override
 	public Brand findBySlug(String slug) {
-		return findOne("slug", slug);
+		return mongo.findOne("slug", slug);
 	}
 
 	@Override
 	public Brand findByName(String name) {
-		return findOne("name", name);
+		return mongo.findOne("name", name);
+	}
+
+	@Override
+	public Brand findById(ObjectId id) {
+		return mongo.findById(id);
+	}
+
+	@Override
+	public Iterable<Brand> findAll() {
+		return mongo.findAll();
+	}
+
+	@Override
+	public void save(Brand brand) {
+		mongo.save(brand);		
+	}
+
+	@Override
+	public void remove(Brand brand) {
+		mongo.remove(brand);
 	}
 }

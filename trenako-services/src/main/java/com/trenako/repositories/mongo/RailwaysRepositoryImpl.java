@@ -15,6 +15,7 @@
  */
 package com.trenako.repositories.mongo;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Order;
@@ -23,26 +24,57 @@ import org.springframework.stereotype.Repository;
 import com.trenako.entities.Railway;
 import com.trenako.repositories.RailwaysRepository;
 
+/**
+ * A concrete implementation for the railways repository for mongodb.
+ * @author Carlo Micieli
+ *
+ */
 @Repository("railwaysRepository")
-public class RailwaysRepositoryImpl extends MongoRepository<Railway> implements RailwaysRepository {
+public class RailwaysRepositoryImpl implements RailwaysRepository {
 
+	final MongoRepository<Railway> mongo;
+	
 	@Autowired
 	public RailwaysRepositoryImpl(MongoTemplate mongoOps) {
-		super(mongoOps, Railway.class);
+		this.mongo = new MongoRepository<Railway>(mongoOps, Railway.class);
+	}
+
+	RailwaysRepositoryImpl(MongoRepository<Railway> mongo) {
+		this.mongo = mongo;
 	}
 
 	@Override
 	public Iterable<Railway> findByCountry(String country) {
-		return findAll("country", country, "name", Order.ASCENDING);
+		return mongo.findAll("country", country, "name", Order.ASCENDING);
 	}
 	
 	@Override
 	public Railway findByName(String name) {
-		return findOne("name", name);
+		return mongo.findOne("name", name);
 	}	
 	
 	@Override
 	public Railway findBySlug(String slug) {
-		return findOne("slug", slug);
+		return mongo.findOne("slug", slug);
+	}
+
+	@Override
+	public Railway findById(ObjectId id) {
+		return mongo.findById(id);
+	}
+
+	@Override
+	public Iterable<Railway> findAll() {
+		return mongo.findAll();
+	}
+
+	@Override
+	public void save(Railway railway) {
+		mongo.save(railway);
+	}
+
+	@Override
+	public void remove(Railway railway) {
+		mongo.remove(railway);
 	}	
 }

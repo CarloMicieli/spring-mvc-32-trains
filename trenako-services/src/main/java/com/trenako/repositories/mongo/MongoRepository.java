@@ -28,10 +28,10 @@ import static org.springframework.data.mongodb.core.query.Query.*;
  * @author Carlo Micieli
  *
  */
-public abstract class MongoRepository<T> {
+public class MongoRepository<T> {
 	
-	protected MongoTemplate mongoOps;
-	protected Class<T> clazz;
+	private final MongoTemplate mongoOps;
+	private final Class<T> clazz;
 	
 	/**
 	 * Creates a new Mongo repository.

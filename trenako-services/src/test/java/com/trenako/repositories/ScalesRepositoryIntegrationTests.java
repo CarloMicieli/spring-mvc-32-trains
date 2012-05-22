@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
  * @author Carlo Micieli
  *
  */
-public class ScalesRepositoryIntegrationTests extends AbstractMongoIntegrationTests<Scale> {
+public abstract class ScalesRepositoryIntegrationTests extends AbstractMongoIntegrationTests<Scale> {
 	private @Autowired ScalesRepository repo;
 	
 	private List<Scale> scales;

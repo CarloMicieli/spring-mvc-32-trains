@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
  * @author Carlo Micieli
  *
  */
-public class BrandsRepositoryIntegrationTests extends AbstractMongoIntegrationTests<Brand> {
+public abstract class BrandsRepositoryIntegrationTests extends AbstractMongoIntegrationTests<Brand> {
 
 	private @Autowired BrandsRepository repo;
 	private List<Brand> brands;

@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
  * @author Carlo Micieli
  *
  */
-public class RailwaysRepositoryIntegrationTests extends AbstractMongoIntegrationTests<Railway> {
+public abstract class RailwaysRepositoryIntegrationTests extends AbstractMongoIntegrationTests<Railway> {
 	private @Autowired RailwaysRepository repo;
 	
 	private List<Railway> railways;
