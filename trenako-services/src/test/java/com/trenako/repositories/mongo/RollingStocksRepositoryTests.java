@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -174,7 +175,7 @@ public class RollingStocksRepositoryTests {
 	}
 
 	@Test
-	public void testFindByBrandAndCategory() {
+	public void shouldFindRollingStocksByBrandAndCategory() {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
@@ -188,7 +189,7 @@ public class RollingStocksRepositoryTests {
 	}
 
 	@Test
-	public void testFindByBrandAndRailway() {
+	public void shouldFindRollingStocksByBrandAndRailway() {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
@@ -200,23 +201,48 @@ public class RollingStocksRepositoryTests {
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
-	/*
 	
 	@Test
-	public void testFindByTag() {
-		fail("Not yet implemented");
+	public void shouldFindRollingStocksByTag() {
+		List<RollingStock> value = Arrays.asList(
+				new RollingStock.Builder("ACME", "223456").build(),
+				new RollingStock.Builder("ACME", "123456").build());
+		when(mongo.findAll(eq("tag"), eq("tag-value"))).thenReturn(value);
+		
+		List<RollingStock> results = (List<RollingStock>) repo.findByTag("tag-value");
+		
+		verify(mongo, times(1)).findAll(eq("tag"), eq("tag-value"));
+		assertNotNull(results);
+		assertEquals(2, results.size());
+
 	}
 
 	@Test
-	public void testFindAll() {
-		fail("Not yet implemented");
+	public void shouldFindAllTheRollingStocks() {
+		List<RollingStock> value = Arrays.asList(
+				new RollingStock.Builder("ACME", "223456").build(),
+				new RollingStock.Builder("ACME", "123456").build());
+		when(mongo.findAll()).thenReturn(value);
+		
+		List<RollingStock> results = (List<RollingStock>) repo.findAll();
+		
+		verify(mongo, times(1)).findAll();
+		assertNotNull(results);
+		assertEquals(2, results.size());
 	}
 
 	@Test
-	public void testFindById() {
-		fail("Not yet implemented");
+	public void shouldFindRollingStocksById() {
+		ObjectId id = new ObjectId();
+		RollingStock value = new RollingStock.Builder("ACME", "223456").build();
+		when(mongo.findById(eq(id))).thenReturn(value);
+		
+		RollingStock rs = repo.findById(id);
+		
+		verify(mongo, times(1)).findById(eq(id));
+		assertNotNull(rs);
 	}
-*/
+
 	@Test
 	public void shouldSaveRollingStocks() {
 		RollingStock rs = new RollingStock();
