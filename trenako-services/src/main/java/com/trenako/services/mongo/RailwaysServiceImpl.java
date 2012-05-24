@@ -13,50 +13,77 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.services;
+package com.trenako.services.mongo;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Railway;
+import com.trenako.repositories.RailwaysRepository;
+import com.trenako.services.RailwaysService;
 
 /**
- * 
+ * A concrete implementation for the railways service for mongodb.
  * @author Carlo Micieli
  *
  */
-public interface RailwaysService {
-
+@Service("railwaysService")
+public class RailwaysServiceImpl implements RailwaysService {
+	
+	private RailwaysRepository repo;
+	
+	@Autowired
+	public RailwaysServiceImpl(RailwaysRepository repo) {
+		this.repo = repo;
+	}
+	
 	/**
 	 * Finds the railway document in the collection by id.
 	 * @param id the unique id.
 	 * @return a railway document. <em>null</em> otherwise.
 	 */
-	Railway findById(ObjectId id);
-
+	@Override
+	public Railway findById(ObjectId id) {
+		return repo.findById(id);
+	}
+	
 	/**
 	 * Finds the railway document in the collection by name.
 	 * @param name the railway name.
 	 * @return a railway document. <em>null</em> otherwise.
 	 */
-	Railway findByName(String name);
-
+	@Override
+	public Railway findByName(String name) {
+		return repo.findByName(name);
+	}
+	
 	/**
 	 * Finds all the railway document in the collection by country.
 	 * @param country the country.
 	 * @return the documents.
 	 */
-	Iterable<Railway> findByCountry(String country);
-
+	@Override
+	public Iterable<Railway> findByCountry(String country) {
+		return repo.findByCountry(country);
+	}
+	
 	/**
 	 * Saves the railway document in the collection.
 	 * @param railway the railway document to be saved.
 	 */
-	void save(Railway railway);
-
+	@Override
+	public void save(Railway railway) {
+		repo.save(railway);
+	}
+	
 	/**
 	 * Remove the railway document from the collection.
 	 * @param railway the railway document to be deleted.
 	 */
-	void remove(Railway railway);
-
+	@Override
+	public void remove(Railway railway) {
+		repo.remove(railway);
+	}
+	
 }

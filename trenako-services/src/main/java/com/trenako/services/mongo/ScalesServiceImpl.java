@@ -13,50 +13,71 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.services;
+package com.trenako.services.mongo;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.trenako.entities.Brand;
+import com.trenako.entities.Scale;
+import com.trenako.repositories.ScalesRepository;
+import com.trenako.services.ScalesService;
 
 /**
- * 
+ * A concrete implementation for the scales service for mongodb.
  * @author Carlo Micieli
  *
  */
-public interface BrandsService {
-
+@Service("scalesService")
+public class ScalesServiceImpl implements ScalesService {
+	
+	private ScalesRepository repo;
+	
+	@Autowired
+	public ScalesServiceImpl(ScalesRepository repo) {
+		this.repo = repo;
+	}
+	
 	/**
-	 * Returns the brand entity with the id.
+	 * Returns the scale document by the id.
 	 * @param id the unique id.
 	 * @return a brand instance. <em>null</em> if no brands are found.
 	 */
-	Brand findById(ObjectId id);
-
-	/**
-	 * Returns the brand from the slug value.
-	 * @param slug the brand slug.
-	 * @return a brand instance. <em>null</em> if no brands are found.
-	 */
-	Brand findBySlug(String slug);
-
+	@Override
+	public Scale findById(ObjectId id) {
+		return repo.findById(id);
+	}
+		
 	/**
 	 * Returns the brand from the name.
 	 * @param name the brand name.
 	 * @return a brand instance. <em>null</em> if no brands are found.
 	 */
-	Brand findByName(String name);
-
+	@Override
+	public Scale findByName(String name) {
+		return repo.findByName(name);
+	}
+	
+	@Override
+	public Iterable<Scale> findAll() {
+		return repo.findAll();
+	}
+	
 	/**
 	 * Persist the brand instance to the data store.
 	 * @param brand a brand.
 	 */
-	void save(Brand brand);
-
+	@Override
+	public void save(Scale brand) {
+		repo.save(brand);
+	}
+	
 	/**
 	 * Remove the brand from the data store.
 	 * @param brand a brand.
 	 */
-	void remove(Brand brand);
-
+	@Override
+	public void remove(Scale brand) {
+		repo.remove(brand);
+	}
 }

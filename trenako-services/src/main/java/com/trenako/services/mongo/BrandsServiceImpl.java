@@ -13,50 +13,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.services;
+package com.trenako.services.mongo;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Brand;
+import com.trenako.repositories.BrandsRepository;
+import com.trenako.services.BrandsService;
 
 /**
- * 
+ * The brands service.
  * @author Carlo Micieli
  *
  */
-public interface BrandsService {
-
+@Service("brandsService")
+public class BrandsServiceImpl implements BrandsService {
+	private BrandsRepository repo;
+	
+	@Autowired
+	public BrandsServiceImpl(BrandsRepository repo) {
+		this.repo = repo;
+	}
+	
 	/**
 	 * Returns the brand entity with the id.
 	 * @param id the unique id.
 	 * @return a brand instance. <em>null</em> if no brands are found.
 	 */
-	Brand findById(ObjectId id);
-
+	@Override
+	public Brand findById(ObjectId id) {
+		return repo.findById(id);
+	}
+	
 	/**
 	 * Returns the brand from the slug value.
 	 * @param slug the brand slug.
 	 * @return a brand instance. <em>null</em> if no brands are found.
 	 */
-	Brand findBySlug(String slug);
-
+	@Override
+	public Brand findBySlug(String slug) {
+		return repo.findBySlug(slug);
+	}
+	
 	/**
 	 * Returns the brand from the name.
 	 * @param name the brand name.
 	 * @return a brand instance. <em>null</em> if no brands are found.
 	 */
-	Brand findByName(String name);
-
+	@Override
+	public Brand findByName(String name) {
+		return repo.findByName(name);
+	}
+	
 	/**
 	 * Persist the brand instance to the data store.
 	 * @param brand a brand.
 	 */
-	void save(Brand brand);
-
+	@Override
+	public void save(Brand brand) {
+		repo.save(brand);
+	}
+	
 	/**
 	 * Remove the brand from the data store.
 	 * @param brand a brand.
 	 */
-	void remove(Brand brand);
-
+	@Override
+	public void remove(Brand brand) {
+		repo.remove(brand);
+	}
 }

@@ -24,7 +24,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.*;
 import static org.springframework.data.mongodb.core.query.Query.*;
 
 /**
- * A Mongo database repository
+ * A Mongo database repository.
  * @author Carlo Micieli
  *
  */

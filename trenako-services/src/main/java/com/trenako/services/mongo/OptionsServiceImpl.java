@@ -13,57 +13,86 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.services;
+package com.trenako.services.mongo;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Option;
 import com.trenako.entities.OptionFamily;
+import com.trenako.repositories.OptionsRepository;
+import com.trenako.services.OptionsService;
 
 /**
- * 
+ * A concrete implementation for the options service for mongodb.
  * @author Carlo Micieli
  *
  */
-public interface OptionsService {
+@Service("optionsService")
+public class OptionsServiceImpl implements OptionsService {
 
+	private OptionsRepository repo;
+	
+	@Autowired
+	public OptionsServiceImpl(OptionsRepository repo) {
+		this.repo = repo;
+	}
+	
 	/**
 	 * Returns the option document by id.
 	 * @param id the unique id.
 	 * @return an option document; <em>null</em> otherwise.
 	 */
-	Option findById(ObjectId id);
-
+	@Override
+	public Option findById(ObjectId id) {
+		return repo.findById(id);
+	}
+	
 	/**
 	 * Returns the option document by option name.
 	 * @param name the option name.
 	 * @return an option document; <em>null</em> otherwise.
 	 */
-	Option findByName(String name);
-
+	@Override
+	public Option findByName(String name) {
+		return repo.findByName(name);
+	}
+	
 	/**
 	 * Returns the option documents by option family.
 	 * @param family the family.
 	 * @return the option documents.
 	 */
-	Iterable<Option> findByFamily(OptionFamily family);
-
+	@Override
+	public Iterable<Option> findByFamily(OptionFamily family) {
+		return repo.findByFamily(family);
+	}
+	
 	/**
 	 * Returns all the option documents in the collection.
 	 * @return the option documents.
 	 */
-	Iterable<Option> findAll();
-
+	@Override
+	public Iterable<Option> findAll() {
+		return repo.findAll();
+	}
+	
 	/**
 	 * Saves the option document in the collection.
 	 * @param option the option document to be saved.
 	 */
-	void save(Option option);
-
+	@Override
+	public void save(Option option) {
+		repo.save(option);
+	}
+	
 	/**
 	 * Remove the option document from the collection.
 	 * @param option the option document to be deleted.
 	 */
-	void remove(Option option);
-
+	@Override
+	public void remove(Option option) {
+		repo.remove(option);
+	}
 }
