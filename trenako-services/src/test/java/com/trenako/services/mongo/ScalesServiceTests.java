@@ -26,8 +26,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.trenako.entities.Brand;
-import com.trenako.repositories.BrandsRepository;
+import com.trenako.entities.Scale;
+import com.trenako.repositories.ScalesRepository;
 
 /**
  * 
@@ -35,10 +35,10 @@ import com.trenako.repositories.BrandsRepository;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BrandsServiceTests {
+public class ScalesServiceTests {
 
-	@Mock BrandsRepository repo;
-	@InjectMocks public BrandsServiceImpl service;
+	@Mock ScalesRepository repo;
+	@InjectMocks ScalesServiceImpl service;
 	
 	@Before
 	public void setUp() {
@@ -46,36 +46,37 @@ public class BrandsServiceTests {
 	}
 
 	@Test
-	public void shouldFindBrandsById() {
+	public void shouldFindScalesById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);
 		verify(repo, times(1)).findById(eq(id));
 	}
 
 	@Test
-	public void shouldFindBrandsBySlug() {
-		service.findBySlug("slug");
-		verify(repo, times(1)).findBySlug(eq("slug"));
+	public void shouldFindScalesByName() {
+		String name = "H0";
+		service.findByName(name);
+		verify(repo, times(1)).findByName(eq(name));
 	}
 
 	@Test
-	public void shouldFindBrandsByName() {
-		service.findByName("name");
-		verify(repo, times(1)).findByName(eq("name"));
+	public void shouldFindAllScales() {
+		service.findAll();
+		verify(repo, times(1)).findAll();
 	}
 
 	@Test
-	public void shouldSaveBrands() {
-		Brand brand = new Brand();
-		service.save(brand);
-		verify(repo, times(1)).save(eq(brand));
+	public void shouldSaveScales() {
+		Scale scale = new Scale();
+		service.save(scale);
+		verify(repo, times(1)).save(eq(scale));
 	}
 
 	@Test
-	public void shouldRemoveBrands() {
-		Brand brand = new Brand();
-		service.remove(brand);
-		verify(repo, times(1)).remove(eq(brand));
+	public void shouldRemoveScales() {
+		Scale scale = new Scale();
+		service.remove(scale);
+		verify(repo, times(1)).remove(eq(scale));
 	}
 
 }

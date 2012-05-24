@@ -26,8 +26,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.trenako.entities.Brand;
-import com.trenako.repositories.BrandsRepository;
+import com.trenako.entities.Railway;
+import com.trenako.repositories.RailwaysRepository;
 
 /**
  * 
@@ -35,10 +35,10 @@ import com.trenako.repositories.BrandsRepository;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BrandsServiceTests {
+public class RailwaysServiceTests {
 
-	@Mock BrandsRepository repo;
-	@InjectMocks public BrandsServiceImpl service;
+	@Mock RailwaysRepository mock;
+	@InjectMocks RailwaysServiceImpl service;
 	
 	@Before
 	public void setUp() {
@@ -46,36 +46,38 @@ public class BrandsServiceTests {
 	}
 
 	@Test
-	public void shouldFindBrandsById() {
+	public void shouldFindRailwaysById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);
-		verify(repo, times(1)).findById(eq(id));
+		verify(mock, times(1)).findById(eq(id));
 	}
 
 	@Test
-	public void shouldFindBrandsBySlug() {
-		service.findBySlug("slug");
-		verify(repo, times(1)).findBySlug(eq("slug"));
+	public void shouldFindRailwaysByName() {
+		String name = "DB";
+		service.findByName(name);
+		verify(mock, times(1)).findByName(eq(name));
 	}
 
 	@Test
-	public void shouldFindBrandsByName() {
-		service.findByName("name");
-		verify(repo, times(1)).findByName(eq("name"));
+	public void shouldFindRailwaysByCountry() {
+		String country = "DEU";
+		service.findByCountry(country);
+		verify(mock, times(1)).findByCountry(eq(country));
 	}
 
 	@Test
-	public void shouldSaveBrands() {
-		Brand brand = new Brand();
-		service.save(brand);
-		verify(repo, times(1)).save(eq(brand));
+	public void shouldSaveRailways() {
+		Railway railway = new Railway();
+		service.save(railway);
+		verify(mock, times(1)).save(eq(railway));
 	}
 
 	@Test
-	public void shouldRemoveBrands() {
-		Brand brand = new Brand();
-		service.remove(brand);
-		verify(repo, times(1)).remove(eq(brand));
+	public void shouldRemoveRailways() {
+		Railway railway = new Railway();
+		service.remove(railway);
+		verify(mock, times(1)).remove(eq(railway));
 	}
 
 }
