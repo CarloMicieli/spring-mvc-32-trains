@@ -58,6 +58,11 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 		return repo.findBySlug(slug);
 	}
 	
+	@Override
+	public Iterable<RollingStock> findAll() {
+		return repo.findAll();
+	}
+	
 	/**
 	 * Returns the rolling stock documents by brand name.
 	 * @param brandName the brand name.

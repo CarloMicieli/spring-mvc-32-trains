@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 
 import com.mongodb.DBObject;
 import com.trenako.entities.Brand;
+import com.trenako.utility.Slug;
 
 /**
  * The listener to change the document just before the brands are saved.
@@ -32,6 +33,7 @@ public class BrandsEventListener extends AbstractMongoEventListener<Brand> {
 
 	@Override
 	public void onBeforeSave(Brand brand, DBObject dbo) {
+		dbo.put("slug", Slug.encode(brand.getName()));
 		dbo.put("lastModified", new Date());
 	}
 }

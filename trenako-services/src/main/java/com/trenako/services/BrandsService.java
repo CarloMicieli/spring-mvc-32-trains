@@ -48,6 +48,12 @@ public interface BrandsService {
 	Brand findByName(String name);
 
 	/**
+	 * 
+	 * @return
+	 */
+	Iterable<Brand> findAll();
+	
+	/**
 	 * Persist the brand instance to the data store.
 	 * @param brand a brand.
 	 */

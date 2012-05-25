@@ -41,11 +41,20 @@ public interface RailwaysService {
 	Railway findByName(String name);
 
 	/**
+	 * Finds the railway document in the collection by slug.
+	 * @param slug the railway slug.
+	 * @return a railway document. <em>null</em> otherwise.
+	 */
+	Railway findBySlug(String slug);
+	
+	/**
 	 * Finds all the railway document in the collection by country.
 	 * @param country the country.
 	 * @return the documents.
 	 */
 	Iterable<Railway> findByCountry(String country);
+	
+	Iterable<Railway> findAll();
 
 	/**
 	 * Saves the railway document in the collection.

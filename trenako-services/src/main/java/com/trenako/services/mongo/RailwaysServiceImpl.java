@@ -85,5 +85,15 @@ public class RailwaysServiceImpl implements RailwaysService {
 	public void remove(Railway railway) {
 		repo.remove(railway);
 	}
+
+	@Override
+	public Iterable<Railway> findAll() {
+		return repo.findAll();
+	}
+
+	@Override
+	public Railway findBySlug(String slug) {
+		return repo.findBySlug(slug);
+	}
 	
 }

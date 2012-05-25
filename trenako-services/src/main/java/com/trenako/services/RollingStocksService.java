@@ -106,4 +106,6 @@ public interface RollingStocksService {
 	 */
 	void remove(RollingStock rs);
 
+	Iterable<RollingStock> findAll();
+
 }

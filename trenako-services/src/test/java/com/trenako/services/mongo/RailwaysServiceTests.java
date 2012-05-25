@@ -46,6 +46,12 @@ public class RailwaysServiceTests {
 	}
 
 	@Test
+	public void shouldFindAllRailways() {
+		service.findAll();
+		verify(mock, times(1)).findAll();
+	}
+	
+	@Test
 	public void shouldFindRailwaysById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);
@@ -59,6 +65,13 @@ public class RailwaysServiceTests {
 		verify(mock, times(1)).findByName(eq(name));
 	}
 
+	@Test
+	public void shouldFindRailwaysBySlug() {
+		String slug = "die-bahn";
+		service.findBySlug(slug);
+		verify(mock, times(1)).findBySlug(eq(slug));
+	}
+	
 	@Test
 	public void shouldFindRailwaysByCountry() {
 		String country = "DEU";

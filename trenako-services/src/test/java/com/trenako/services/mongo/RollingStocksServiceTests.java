@@ -46,6 +46,12 @@ public class RollingStocksServiceTests {
 	}
 
 	@Test
+	public void shouldFindAllRollingStocks() {
+		service.findAll();
+		verify(repo, times(1)).findAll();
+	}
+	
+	@Test
 	public void shouldFindRollingStocksById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);

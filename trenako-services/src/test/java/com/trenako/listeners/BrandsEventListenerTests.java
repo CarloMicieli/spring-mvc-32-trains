@@ -39,6 +39,7 @@ public class BrandsEventListenerTests {
 		BasicDBObject dbo = new BasicDBObject();
 		listener.onBeforeSave(brand, dbo);
 		
+		assertEquals("acme", dbo.get("slug"));
 		assertNotNull(dbo.get("lastModified"));
 	}
 	

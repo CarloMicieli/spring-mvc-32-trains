@@ -84,4 +84,12 @@ public class BrandsServiceImpl implements BrandsService {
 	public void remove(Brand brand) {
 		repo.remove(brand);
 	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public Iterable<Brand> findAll() {
+		return repo.findAll();
+	}
 }
