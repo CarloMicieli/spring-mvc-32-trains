@@ -26,6 +26,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.utility.Slug;
+
 /**
  * It represents a user account for the application.
  * @author Carlo Micieli
@@ -50,6 +52,9 @@ public class Account implements Serializable {
 	@NotEmpty(message = "account.displayName.required")
 	@Length(min = 3, max = 25, message = "account.displayName.size.notmet")
 	private String displayName;
+	
+	@Indexed(unique = true)
+	private String slug;
 
 	private boolean enabled;
 	private List<String> roles;
@@ -128,6 +133,23 @@ public class Account implements Serializable {
 		this.displayName = displayName;
 	}
 
+	/**
+	 * Returns the user slug.
+	 * @return the slug.
+	 */
+	public String getSlug() {
+		if( slug==null ) slug = Slug.encode(displayName);
+		return slug;
+	}
+
+	/**
+	 * Sets the user slug.
+	 * @param slug the slug.
+	 */
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -142,5 +164,5 @@ public class Account implements Serializable {
 
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
-	}	
+	}
 }
