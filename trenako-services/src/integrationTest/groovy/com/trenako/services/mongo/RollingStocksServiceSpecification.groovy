@@ -123,7 +123,7 @@ class RollingStocksServiceSpecification extends Specification {
 		results.size == 4
 	}
 	
-	def "should find rolling stocks by id"() {
+	def "should find a rolling stock by id"() {
 		given:
 		def id = mongoTemplate.findOne(query(where("slug").is("bemo-1262-256")), rollingStocks).id
 		
@@ -137,7 +137,7 @@ class RollingStocksServiceSpecification extends Specification {
 		rollingStock.itemNumber == "1262 256"
 	}
 	
-	def "should find rolling stocks by slug"() {
+	def "should find a rolling stock by slug"() {
 		when:
 		def rollingStock = service.findBySlug "bemo-1262-256"
 
@@ -256,5 +256,47 @@ class RollingStocksServiceSpecification extends Specification {
 		results != null
 		results.size == 1
 		results.collect{it.slug}.sort() == ['acme-69501']
+	}
+	
+	def "should create new rolling stocks"() {
+		given:
+		def brand = mongoTemplate.findOne query(where("name").is("ACME")), Brand.class
+		def scale = mongoTemplate.findOne query(where("name").is("H0")), Scale.class
+		def railway = mongoTemplate.findOne query(where("name").is("DB")), Railway.class
+		
+		def newRs = new RollingStock(brand: brand, 
+			itemNumber: "123456", 
+			description: 'Description',
+			scale: scale,
+			railway: railway,
+			era: "IV"
+			)
+		
+		when:
+		service.save newRs
+
+		then:
+		newRs.id != null
+		
+		def rs = mongoTemplate.findOne query(where("slug").is("acme-123456")), rollingStocks
+		rs != null
+		rs.brandName == "ACME"
+		rs.itemNumber == "123456"
+		rs.description == "Description"
+		
+		rs.slug == "acme-123456"
+		rs.lastModified != null
+	}
+	
+	def "should remove rolling stocks"() {
+		given:
+		def rs = mongoTemplate.findOne query(where("slug").is("acme-69501")), rollingStocks
+		
+		when:
+		service.remove rs
+		
+		then:
+		def rs2 = mongoTemplate.findOne query(where("slug").is("acme-69501")), rollingStocks
+		rs2 == null
 	}
 }
