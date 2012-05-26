@@ -344,7 +344,7 @@ public class RollingStock {
 
 	/**
 	 * Set the brand name.
-	 * @param brand the brand name.
+	 * @param brandName the brand name.
 	 */
 	public void setBrandName(String brandName) {
 		this.brandName = brandName;
@@ -493,7 +493,7 @@ public class RollingStock {
 
 	/**
 	 * Set the railway name.
-	 * @param railway the railway name.
+	 * @param railwayName the railway name.
 	 */
 	public void setRailwayName(String railwayName) {
 		this.railwayName = railwayName;
@@ -526,7 +526,7 @@ public class RollingStock {
 
 	/**
 	 * Sets the scale name.
-	 * @param scale the scale name.
+	 * @param scaleName the scale name.
 	 */
 	public void setScaleName(String scaleName) {
 		this.scaleName = scaleName;

@@ -41,7 +41,7 @@ public class Option {
 	private OptionFamily family;
 	
 	/**
-	 * 
+	 * Creates a new rolling stock option.
 	 */
 	public Option() {
 	}
@@ -123,8 +123,8 @@ public class Option {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Converts the object to a string.
+	 * @return a string representation of this class object.
 	 */
 	@Override
 	public String toString() {
