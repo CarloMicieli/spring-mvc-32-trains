@@ -103,7 +103,7 @@ public class RollingStocksRepositoryImpl implements RollingStocksRepository {
 
 	@Override
 	public Iterable<RollingStock> findByTag(String tag) {
-		return mongo.findAll("tag", tag);
+		return mongo.findAll("tags", tag);
 	}
 
 	@Override

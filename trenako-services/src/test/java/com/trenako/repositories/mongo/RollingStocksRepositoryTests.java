@@ -207,11 +207,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("tag"), eq("tag-value"))).thenReturn(value);
+		when(mongo.findAll(eq("tags"), eq("tag-value"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByTag("tag-value");
 		
-		verify(mongo, times(1)).findAll(eq("tag"), eq("tag-value"));
+		verify(mongo, times(1)).findAll(eq("tags"), eq("tag-value"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 

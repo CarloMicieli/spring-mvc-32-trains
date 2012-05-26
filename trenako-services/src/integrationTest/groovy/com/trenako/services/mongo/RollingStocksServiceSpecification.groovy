@@ -248,13 +248,13 @@ class RollingStocksServiceSpecification extends Specification {
 		results.collect{it.slug}.sort() == ['acme-69501', 'roco-43858']
 	}
 	
-//	def "should find all rolling stocks by tag"() {
-//		when:
-//		def results = service.findByTag "museum"
-//	
-//		then:
-//		results != null
-//		results.size == 1
-//		results.collect{it.slug}.sort() == ['acme-69501']
-//	}
+	def "should find all rolling stocks by tag"() {
+		when:
+		def results = service.findByTag "museum"
+	
+		then:
+		results != null
+		results.size == 1
+		results.collect{it.slug}.sort() == ['acme-69501']
+	}
 }
