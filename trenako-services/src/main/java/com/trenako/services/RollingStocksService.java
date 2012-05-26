@@ -20,7 +20,7 @@ import org.bson.types.ObjectId;
 import com.trenako.entities.RollingStock;
 
 /**
- * 
+ * The interface for the rolling stocks service.
  * @author Carlo Micieli
  *
  */
@@ -40,6 +40,12 @@ public interface RollingStocksService {
 	 */
 	RollingStock findBySlug(String slug);
 
+	/**
+	 * Returns the rolling stock documents. 
+	 * @return the rolling stocks list.
+	 */
+	Iterable<RollingStock> findAll();
+	
 	/**
 	 * Returns the rolling stock documents by brand name.
 	 * @param brandName the brand name.
@@ -82,16 +88,45 @@ public interface RollingStocksService {
 	 */
 	Iterable<RollingStock> findByRailwayName(String railwayName);
 
+	/**
+	 * Returns the rolling stock documents by brand and era.
+	 * @param brandName the brand name.
+	 * @param era the era.
+	 * @return the rolling stocks list.
+	 */
 	Iterable<RollingStock> findByBrandAndEra(String brandName, String era);
 
+	/**
+	 * Returns the rolling stock documents by brand and scale.
+	 * @param brandName the brand name.
+	 * @param scale the scale.
+	 * @return the rolling stocks list.
+	 */	
 	Iterable<RollingStock> findByBrandAndScale(String brandName, String scale);
 
+	/**
+	 * Returns the rolling stock documents by brand and category.
+	 * @param brandName the brand name.
+	 * @param category the category.
+	 * @return the rolling stocks list.
+	 */
 	Iterable<RollingStock> findByBrandAndCategory(String brandName,
-			String categoryName);
+			String category);
 
+	/**
+	 * Returns the rolling stock documents by brand and railway.
+	 * @param brandName the brand name.
+	 * @param railwayName the railway.
+	 * @return the rolling stocks list.
+	 */
 	Iterable<RollingStock> findByBrandAndRailway(String brandName,
 			String railwayName);
 
+	/**
+	 * Returns the rolling stock documents by tag.
+	 * @param tag the tag.
+	 * @return the rolling stocks list.
+	 */
 	Iterable<RollingStock> findByTag(String tag);
 
 	/**
@@ -105,7 +140,4 @@ public interface RollingStocksService {
 	 * @param rs a brand.
 	 */
 	void remove(RollingStock rs);
-
-	Iterable<RollingStock> findAll();
-
 }

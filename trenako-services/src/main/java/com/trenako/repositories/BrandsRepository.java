@@ -20,7 +20,7 @@ import org.bson.types.ObjectId;
 import com.trenako.entities.Brand;
 
 /**
- * The model railway brands repository.
+ * The interface for the model railway brands repository.
  * @author Carlo Micieli
  *
  */
@@ -47,8 +47,8 @@ public interface BrandsRepository {
 	Brand findByName(String name);
 	
 	/**
-	 * 
-	 * @return
+	 * Returns all the brands.
+	 * @return the brands.
 	 */
 	Iterable<Brand> findAll();
 	

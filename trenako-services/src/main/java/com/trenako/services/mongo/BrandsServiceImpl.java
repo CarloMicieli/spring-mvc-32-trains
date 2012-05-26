@@ -24,12 +24,13 @@ import com.trenako.repositories.BrandsRepository;
 import com.trenako.services.BrandsService;
 
 /**
- * The brands service.
+ * A concrete implementation for the brands service for mongodb.
  * @author Carlo Micieli
  *
  */
 @Service("brandsService")
 public class BrandsServiceImpl implements BrandsService {
+	
 	private BrandsRepository repo;
 	
 	@Autowired
@@ -86,7 +87,8 @@ public class BrandsServiceImpl implements BrandsService {
 	}
 
 	/**
-	 * 
+	 * Finds all brand documents in the collection.
+	 * @return the brand list.
 	 */
 	@Override
 	public Iterable<Brand> findAll() {

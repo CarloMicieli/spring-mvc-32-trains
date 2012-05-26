@@ -24,7 +24,7 @@ import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RollingStocksRepository;
 
 /**
- * A concrete implementation for rolling stocks repository for mongodb.
+ * The concrete implementation for rolling stocks repository for mongodb.
  * @author Carlo Micieli
  *
  */
@@ -38,6 +38,7 @@ public class RollingStocksRepositoryImpl implements RollingStocksRepository {
 		this.mongo = new MongoRepository<RollingStock>(mongoOps, RollingStock.class);
 	}
 	
+	// constructor: for testing
 	RollingStocksRepositoryImpl(MongoRepository<RollingStock> mongo) {
 		this.mongo = mongo;
 	}
@@ -91,7 +92,7 @@ public class RollingStocksRepositoryImpl implements RollingStocksRepository {
 	@Override
 	public Iterable<RollingStock> findByBrandAndCategory(String brandName,
 			String categoryName) {
-		return mongo.findAll("brandName", brandName, "categoryName", categoryName);
+		return mongo.findAll("brandName", brandName, "category", categoryName);
 	}
 
 	@Override

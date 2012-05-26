@@ -19,6 +19,11 @@ import org.bson.types.ObjectId;
 
 import com.trenako.entities.Railway;
 
+/**
+ * The interface for the railways repository.
+ * @author Carlo Micieli
+ *
+ */
 public interface RailwaysRepository {
 	/**
 	 * Finds the railway document in the collection by id.

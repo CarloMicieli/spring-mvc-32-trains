@@ -21,7 +21,7 @@ import com.trenako.entities.Option;
 import com.trenako.entities.OptionFamily;
 
 /**
- * 
+ * The interface for the options service.
  * @author Carlo Micieli
  *
  */

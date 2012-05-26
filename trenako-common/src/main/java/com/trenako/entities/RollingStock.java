@@ -54,6 +54,8 @@ public class RollingStock {
 	@DBRef
 	@NotNull(message = "rs.brand.required")
 	private Brand brand;
+	@Indexed
+	private String brandName;
 	
 	@Indexed(unique = true)
 	private String slug;
@@ -316,19 +318,36 @@ public class RollingStock {
 	}
 
 	/**
-	 * Return the brand name.
-	 * @return the brand name.
+	 * Returns the brand.
+	 * @return the brand.
 	 */
 	public Brand getBrand() {
 		return brand;
 	}
 
 	/**
-	 * Set the brand name.
-	 * @param brand the brand name.
+	 * Sets the brand.
+	 * @param brand the brand.
 	 */
 	public void setBrand(Brand brand) {
 		this.brand = brand;
+	}
+
+	/**
+	 * Returns the brand name.
+	 * @return the brand name.
+	 */		
+	public String getBrandName() {
+		if( brandName==null) brandName = getBrand().getName();
+		return brandName;
+	}
+
+	/**
+	 * Set the brand name.
+	 * @param brand the brand name.
+	 */
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
 	}
 
 	/**
@@ -468,6 +487,7 @@ public class RollingStock {
 	 */
 
 	public String getRailwayName() {
+		if( railwayName==null ) railwayName = getRailway().getName();
 		return railwayName;
 	}
 
@@ -496,16 +516,17 @@ public class RollingStock {
 	}
 
 	/**
-	 * Return the scale.
-	 * @return the scale.
+	 * Returns the scale name.
+	 * @return the scale name.
 	 */
 	public String getScaleName() {
+		if( scaleName==null ) scaleName = getScale().getName();
 		return scaleName;
 	}
 
 	/**
-	 * Set the scale.
-	 * @param scale the scale.
+	 * Sets the scale name.
+	 * @param scale the scale name.
 	 */
 	public void setScaleName(String scaleName) {
 		this.scaleName = scaleName;

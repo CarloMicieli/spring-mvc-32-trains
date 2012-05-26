@@ -20,7 +20,7 @@ import org.bson.types.ObjectId;
 import com.trenako.entities.Scale;
 
 /**
- * The model railway scale repository.
+ * The interface for model railway scales repository.
  * @author Carlo Micieli
  *
  */
@@ -40,8 +40,8 @@ public interface ScalesRepository {
 	Scale findByName(String name);
 	
 	/**
-	 * 
-	 * @return
+	 * Returns all scales in the collection.
+	 * @return the scales list.
 	 */
 	Iterable<Scale> findAll();
 	

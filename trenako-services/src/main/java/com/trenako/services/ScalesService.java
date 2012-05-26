@@ -20,7 +20,7 @@ import org.bson.types.ObjectId;
 import com.trenako.entities.Scale;
 
 /**
- * 
+ * The interface for the scales service.
  * @author Carlo Micieli
  *
  */

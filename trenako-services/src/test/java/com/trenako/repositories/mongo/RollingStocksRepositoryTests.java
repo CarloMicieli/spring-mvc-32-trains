@@ -179,11 +179,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("brandName"), eq("ACME"), eq("categoryName"), eq("electric-locomotives"))).thenReturn(value);
+		when(mongo.findAll(eq("brandName"), eq("ACME"), eq("category"), eq("electric-locomotives"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByBrandAndCategory("ACME", "electric-locomotives");
 		
-		verify(mongo, times(1)).findAll(eq("brandName"), eq("ACME"), eq("categoryName"), eq("electric-locomotives"));
+		verify(mongo, times(1)).findAll(eq("brandName"), eq("ACME"), eq("category"), eq("electric-locomotives"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}

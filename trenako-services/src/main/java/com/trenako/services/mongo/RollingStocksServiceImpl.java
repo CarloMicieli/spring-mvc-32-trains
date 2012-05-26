@@ -58,6 +58,9 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 		return repo.findBySlug(slug);
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public Iterable<RollingStock> findAll() {
 		return repo.findAll();

@@ -19,6 +19,11 @@ import org.bson.types.ObjectId;
 
 import com.trenako.entities.RollingStock;
 
+/**
+ * The interface for the model rolling stocks repository.
+ * @author Carlo Micieli
+ *
+ */
 public interface RollingStocksRepository {
 	/**
 	 * Finds the rolling stock document in the collection by id.
@@ -82,11 +87,43 @@ public interface RollingStocksRepository {
 	 */
 	Iterable<RollingStock> findByRailwayName(String railwayName);
 	
+	/**
+	 * 
+	 * @param brandName
+	 * @param era
+	 * @return the rolling stocks list.
+	 */
 	Iterable<RollingStock> findByBrandAndEra(String brandName, String era);
+	
+	/**
+	 * 
+	 * @param brandName
+	 * @param scale
+	 * @return the rolling stocks list.
+	 */
 	Iterable<RollingStock> findByBrandAndScale(String brandName, String scale);
-	Iterable<RollingStock> findByBrandAndCategory(String brandName, String categoryName);
+	
+	/**
+	 * 
+	 * @param brandName
+	 * @param category
+	 * @return the rolling stocks list.
+	 */
+	Iterable<RollingStock> findByBrandAndCategory(String brandName, String category);
+	
+	/**
+	 * 
+	 * @param brandName
+	 * @param railwayName
+	 * @return the rolling stocks list.
+	 */
 	Iterable<RollingStock> findByBrandAndRailway(String brandName, String railwayName);
 	
+	/**
+	 * 
+	 * @param tag
+	 * @return the rolling stocks list.
+	 */
 	Iterable<RollingStock> findByTag(String tag);
 	
 	/**

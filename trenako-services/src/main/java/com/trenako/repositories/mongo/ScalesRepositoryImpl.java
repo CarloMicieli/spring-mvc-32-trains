@@ -24,7 +24,7 @@ import com.trenako.entities.Scale;
 import com.trenako.repositories.ScalesRepository;
 
 /**
- * 
+ * The concrete implementation for scales repository for mongodb.
  * @author Carlo Micieli
  *
  */
@@ -38,6 +38,7 @@ public class ScalesRepositoryImpl implements ScalesRepository {
 		mongo = new MongoRepository<Scale>(mongoOps, Scale.class);
 	}
 
+	// constructor: for testing
 	ScalesRepositoryImpl(MongoRepository<Scale> mongo) {
 		this.mongo = mongo;
 	}

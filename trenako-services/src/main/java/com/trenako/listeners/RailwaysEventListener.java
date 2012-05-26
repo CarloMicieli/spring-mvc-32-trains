@@ -18,17 +18,20 @@ package com.trenako.listeners;
 import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
+import org.springframework.stereotype.Component;
 
 import com.mongodb.DBObject;
 import com.trenako.entities.Railway;
 import com.trenako.utility.Slug;
 
 /**
- * 
+ * The listener to change the document just before the railways are saved.
  * @author Carlo Micieli
  *
  */
+@Component
 public class RailwaysEventListener extends AbstractMongoEventListener<Railway> {
+	
 	@Override
 	public void onBeforeSave(Railway railway, DBObject dbo) {
 		dbo.put("lastModified", new Date());

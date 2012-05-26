@@ -20,7 +20,7 @@ import org.bson.types.ObjectId;
 import com.trenako.entities.Brand;
 
 /**
- * 
+ * The interface for the brands service.
  * @author Carlo Micieli
  *
  */
@@ -48,8 +48,8 @@ public interface BrandsService {
 	Brand findByName(String name);
 
 	/**
-	 * 
-	 * @return
+	 * Returns the brand documents from the collection.
+	 * @return the brands.
 	 */
 	Iterable<Brand> findAll();
 	
@@ -64,5 +64,4 @@ public interface BrandsService {
 	 * @param brand a brand.
 	 */
 	void remove(Brand brand);
-
 }

@@ -20,7 +20,7 @@ import org.bson.types.ObjectId;
 import com.trenako.entities.Railway;
 
 /**
- * 
+ * The interface for the railways service.
  * @author Carlo Micieli
  *
  */

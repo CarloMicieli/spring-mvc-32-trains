@@ -13,26 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.listeners;
-
-import java.util.Date;
-
-import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
-import org.springframework.stereotype.Component;
-
-import com.mongodb.DBObject;
-import com.trenako.entities.Scale;
 
 /**
- * The listener to change the document just before the scales are saved.
- * @author Carlo Micieli
- *
+ * The package for the service interfaces.
  */
-@Component
-public class ScalesEventListener extends AbstractMongoEventListener<Scale> {
-
-	@Override
-	public void onBeforeSave(Scale source, DBObject dbo) {
-		dbo.put("lastModified", new Date());
-	}	
-}
+package com.trenako.services;

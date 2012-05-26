@@ -19,11 +19,4 @@
   		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
 	</bean>
 	
-	<!-- mongodb listeners -->
-	<bean id="brandEventListener" class="com.trenako.listeners.BrandsEventListenerTests" />
-	<bean id="railwayEventListener" class="com.trenako.listeners.RailwaysEventListenerTests" />
-	<bean id="rsEventListener" class="com.trenako.listeners.RollingStocksEventListenerTests" />
-	<bean id="scaleEventListener" class="com.trenako.listeners.ScalesEventListenerTests" />
-	
-	
 </beans>

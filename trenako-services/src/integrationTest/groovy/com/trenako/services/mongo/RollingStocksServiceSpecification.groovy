@@ -58,14 +58,17 @@ class RollingStocksServiceSpecification extends Specification {
 		def brands = [acme, bemo, roco]
 		mongoTemplate.insert brands, Brand.class
 		
-		def H0m = new Scale(name: "H0m")
-		def H0 = new Scale(name: "H0")
-		def scales = [H0m, H0]
+		def H0m = new Scale(name: "H0m", ratio: 87)
+		def H0 = new Scale(name: "H0", ratio: 87)
+		def N = new Scale(name: "N", ratio: 160)
+		def scales = [H0m, H0, N]
 		mongoTemplate.insert scales, Scale.class
 		
-		def MGB = new Railway(name: "MGB");
-		def DRG = new Railway(name: "DRG");
-		def railways = [MGB, DRG]
+		def MGB = new Railway(name: "MGB", country: 'SWI')
+		def DRG = new Railway(name: "DRG", country: 'DEU')
+		def FS = new Railway(name: "FS", country: 'ITA')
+		def DB = new Railway(name: "DB", country: 'DEU')
+		def railways = [MGB, DRG, FS, DB]
 		mongoTemplate.insert railways, Railway.class
 		
 		def collection = [
@@ -82,7 +85,22 @@ class RollingStocksServiceSpecification extends Specification {
 				category: Category.PASSENGER_CARS.keyValue(),
 				era: Era.V.name(),
 				railway: MGB,
-				scale: H0m)
+				scale: H0m),
+			new RollingStock(brand: acme, itemNumber: "69501",
+				description: "Gr 685 172",
+				category: Category.STEAM_LOCOMOTIVES.keyValue(),
+				powerMethod: PowerMethod.DC_DCC_SOUND.keyValue(),
+				era: Era.III.name(),
+				railway: FS,
+				tags: ['museum'],
+				scale: H0),
+			new RollingStock(brand: roco, itemNumber: "43858",
+				description: "Electric loco 101 0004-0",
+				category: Category.ELECTRIC_LOCOMOTIVES.keyValue(),
+				powerMethod: PowerMethod.AC.keyValue(),
+				era: Era.V.name(),
+				railway: DB,
+				scale: H0)
 			]
 		mongoTemplate.insert collection, rollingStocks
 	}
@@ -102,7 +120,7 @@ class RollingStocksServiceSpecification extends Specification {
 		
 		then:
 		results != null
-		results.size == 2
+		results.size == 4
 	}
 	
 	def "should find rolling stocks by id"() {
@@ -130,4 +148,113 @@ class RollingStocksServiceSpecification extends Specification {
 		rollingStock.itemNumber == "1262 256"
 	}
 	
+	def "should find all rolling stocks for a brand"() {
+		when:
+		def results = service.findByBrand "ACME"
+		
+		then:
+		results != null
+		results.size == 1
+		results.collect{it.slug} == ['acme-69501']		 
+	}
+	
+	def "should find all rolling stocks by railway"() {
+		when:
+		def results = service.findByRailwayName "FS"
+		
+		then:
+		results != null
+		results.size == 1
+		results.collect{it.slug} == ['acme-69501']
+	}
+	
+	def "should find all rolling stocks by brand and category"() {
+		when:
+		def results = service.findByBrandAndCategory "Bemo", "electric-locomotives"
+		
+		then:
+		results != null
+		results.size == 1
+		results.collect{it.slug} == ['bemo-1262-256']
+	}
+	
+	def "should find all rolling stocks by brand and era"() {
+		when:
+		def results = service.findByBrandAndEra "ACME", "III"
+	
+		then:
+		results != null
+		results.size == 1
+		results.collect{it.slug} == ['acme-69501']
+	}
+	
+	def "should find all rolling stocks by brand and railway"() {
+		when:
+		def results = service.findByBrandAndRailway "Roco", "DB"
+	
+		then:
+		results != null
+		results.size == 1
+		results.collect{it.slug} == ['roco-43858']
+	}
+	
+	def "should find all rolling stocks by brand and scale"() {
+		when:
+		def results = service.findByBrandAndScale "Bemo", "H0m"
+	
+		then:
+		results != null
+		results.size == 2
+		results.collect{it.slug}.sort() == ['bemo-1262-256', 'bemo-3267-254']
+	}
+	
+	def "should find all rolling stocks by category"() {
+		when:
+		def results = service.findByCategory "electric-locomotives"
+	
+		then:
+		results != null
+		results.size == 2
+		results.collect{it.slug}.sort() == ['bemo-1262-256', 'roco-43858']
+	}
+	
+	def "should find all rolling stocks by era"() {
+		when:
+		def results = service.findByEra "V"
+	
+		then:
+		results != null
+		results.size == 2
+		results.collect{it.slug}.sort() == ['bemo-3267-254', 'roco-43858']
+	}
+	
+	def "should find all rolling stocks by power method"() {
+		when:
+		def results = service.findByPowerMethod "ac"
+	
+		then:
+		results != null
+		results.size == 1
+		results.collect{it.slug}.sort() == ['roco-43858']
+	}
+	
+	def "should find all rolling stocks by scale"() {
+		when:
+		def results = service.findByScale "H0"
+	
+		then:
+		results != null
+		results.size == 2
+		results.collect{it.slug}.sort() == ['acme-69501', 'roco-43858']
+	}
+	
+//	def "should find all rolling stocks by tag"() {
+//		when:
+//		def results = service.findByTag "museum"
+//	
+//		then:
+//		results != null
+//		results.size == 1
+//		results.collect{it.slug}.sort() == ['acme-69501']
+//	}
 }

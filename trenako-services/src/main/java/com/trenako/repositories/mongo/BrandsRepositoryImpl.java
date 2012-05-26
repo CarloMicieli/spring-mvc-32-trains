@@ -24,7 +24,7 @@ import com.trenako.entities.Brand;
 import com.trenako.repositories.BrandsRepository;
 
 /**
- * Concrete implementation for the brands repository for mongodb.
+ * The concrete implementation for the mongodb brands repository.
  * @author Carlo Micieli
  *
  */
@@ -33,6 +33,10 @@ public class BrandsRepositoryImpl implements BrandsRepository {
 	
 	private final MongoRepository<Brand> mongo;
 	
+	/**
+	 * Creates a new mongodb brands repository.
+	 * @param mongoOps the mongo template.
+	 */
 	@Autowired
 	public BrandsRepositoryImpl(MongoTemplate mongoOps) {
 		this.mongo = new MongoRepository<Brand>(mongoOps, Brand.class);
@@ -42,7 +46,7 @@ public class BrandsRepositoryImpl implements BrandsRepository {
 	BrandsRepositoryImpl(MongoRepository<Brand> mongo) {
 		this.mongo = mongo;
 	}
-		
+	
 	@Override
 	public Brand findBySlug(String slug) {
 		return mongo.findOne("slug", slug);

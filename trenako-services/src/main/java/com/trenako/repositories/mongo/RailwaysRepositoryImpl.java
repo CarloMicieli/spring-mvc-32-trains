@@ -25,7 +25,7 @@ import com.trenako.entities.Railway;
 import com.trenako.repositories.RailwaysRepository;
 
 /**
- * A concrete implementation for the railways repository for mongodb.
+ * The concrete implementation for the railways repository for mongodb.
  * @author Carlo Micieli
  *
  */
@@ -39,6 +39,7 @@ public class RailwaysRepositoryImpl implements RailwaysRepository {
 		this.mongo = new MongoRepository<Railway>(mongoOps, Railway.class);
 	}
 
+	// constructor: for testing
 	RailwaysRepositoryImpl(MongoRepository<Railway> mongo) {
 		this.mongo = mongo;
 	}

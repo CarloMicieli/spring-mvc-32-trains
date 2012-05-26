@@ -18,15 +18,17 @@ package com.trenako.listeners;
 import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
+import org.springframework.stereotype.Component;
 
 import com.mongodb.DBObject;
 import com.trenako.entities.RollingStock;
 
 /**
- * 
+ * The listener to change the document just before the rolling stocks are saved.
  * @author Carlo Micieli
  *
  */
+@Component
 public class RollingStocksEventListener extends AbstractMongoEventListener<RollingStock> {
 
 	@Override
@@ -34,9 +36,9 @@ public class RollingStocksEventListener extends AbstractMongoEventListener<Rolli
 		dbo.put("lastModified", new Date());
 		
 		dbo.put("slug", rs.getSlug());
-		dbo.put("brandName", rs.getBrand().getName());
-		dbo.put("railwayName", rs.getRailway().getName());
-		dbo.put("scaleName", rs.getScale().getName());
+		dbo.put("brandName", rs.getBrandName());
+		dbo.put("railwayName", rs.getRailwayName());
+		dbo.put("scaleName", rs.getScaleName());
 
 		if( rs.getRailway().getCountry()!=null ) {
 			dbo.put("country", rs.getRailway().getCountry());

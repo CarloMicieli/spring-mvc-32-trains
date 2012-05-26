@@ -187,4 +187,27 @@ public class RollingStockTests {
 		assertEquals(Option.WhiteRedHeadlights(), rs.getOption(OptionFamily.HEADLIGHTS));
 		assertEquals(Option.Nem651(), rs.getOption(OptionFamily.DCC_INTERFACE));
 	}
+	
+	@Test
+	public void shouldFillTheBrandName() {
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		assertEquals("ACME", rs.getBrandName());
+	}
+	
+	@Test
+	public void shouldFillTheRailwayName() {
+		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+			.railway("DB")
+			.build();
+		assertEquals("DB", rs.getRailwayName());
+	}
+	
+	@Test
+	public void shouldFillTheScaleName() {
+		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+			.scale("H0")
+			.build();
+		assertEquals("H0", rs.getScaleName());
+	}
+	
 }

@@ -87,21 +87,37 @@ public class MongoRepository<T> {
 	}
 	
 	/**
-	 * Finds all the document in the collection by a given key value.
+	 * Returns all the document in the collection by a given key value.
 	 * @param key the key name.
 	 * @param value the key value.
-	 * @return the documents.
+	 * @return the list of documents.
 	 */
 	public Iterable<T> findAll(String key, Object value) {
 		return mongoOps.find(query(where(key).is(value)), clazz);
 	}
 	
+	/**
+	 * Returns all the sorted document in the collection by a given key value.
+	 * @param key the key name.
+	 * @param value the key value.
+	 * @param sortCriteria
+	 * @param order
+	 * @return the list of documents.
+	 */
 	public Iterable<T> findAll(String key, Object value, String sortCriteria, Order order) {
 		final Query q = query(where(key).is(value));
 		q.sort().on(sortCriteria, order);
 		return mongoOps.find(q, clazz);
 	}
-		
+	
+	/**
+	 * Returns all the document in the collection by two given key values.
+	 * @param key1 the first key name.
+	 * @param value1 the first key value.
+	 * @param key2 the second key name.
+	 * @param value2 the second key value.
+	 * @return the list of documents.
+	 */
 	public Iterable<T> findAll(String key1, Object value1, String key2, Object value2) {
 		return mongoOps.find(query(where(key1).is(value1).and(key2).is(value2)), clazz);
 	}
