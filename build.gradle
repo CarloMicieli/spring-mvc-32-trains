@@ -3,6 +3,7 @@ group = "com.trenako"
 description = "A social network for model railways."
 
 def springVersion = "3.1.1.RELEASE"
+def securityVersion = "3.1.0.RELEASE"
 def slf4jVersion = "1.6.1"
 def spockVersion = "0.6-groovy-1.8"
 
@@ -112,6 +113,14 @@ project("trenako-services") {
 
 	dependencies {
 		compile project(":trenako-common")
+
+		// spring security
+		compile("org.springframework.security:spring-security-core:${securityVersion}") {
+			exclude group: "commons-logging", module: "commons-logging"
+		}
+		compile("org.springframework.security:spring-security-config:${securityVersion}") {
+			exclude group: "commons-logging", module: "commons-logging"
+		}
 	}
 }
 
