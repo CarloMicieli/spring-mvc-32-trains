@@ -15,6 +15,6 @@
  */
 
 /**
- * The package for the service interfaces.
+ * The package for the service layer classes.
  */
 package com.trenako.services;

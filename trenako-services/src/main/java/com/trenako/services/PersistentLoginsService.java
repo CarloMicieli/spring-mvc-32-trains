@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.security;
+package com.trenako.services;
 
-import com.trenako.entities.Account;
+import com.trenako.entities.PersistentLogin;
 
-/**
- * 
- * @author Carlo Micieli
- *
- */
-public interface SecurityService {
-	void authenticate(Account user);
-	AccountDetails getCurrentUser();
+public interface PersistentLoginsService {
+	void save(PersistentLogin pl);
+	void remove(String username);
+	PersistentLogin findBySeries(String seriesId);
 }

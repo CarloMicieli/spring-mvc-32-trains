@@ -37,6 +37,7 @@ import com.trenako.entities.PowerMethod;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
+import com.trenako.services.RollingStocksServiceImpl;
 
 /**
  * 

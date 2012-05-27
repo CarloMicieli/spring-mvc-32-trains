@@ -15,6 +15,7 @@ import static org.springframework.data.mongodb.core.query.Query.*
 import static org.springframework.data.mongodb.core.query.Criteria.*
 
 import com.trenako.entities.Brand;
+import com.trenako.services.BrandsServiceImpl;
 
 /**
  * 
