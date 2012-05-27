@@ -13,29 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.security;
-
-import com.trenako.entities.Account;
 
 /**
- * The interface for the security service.
- * 
- * This interface is working as a wrapper for the Spring security
- * authentication objects.
- * 
- * @author Carlo Micieli
- *
+ * The package for the security services layer.
  */
-public interface SecurityService {
-	/**
-	 * Authenticate the user.
-	 * @param user the user to be authenticate.
-	 */
-	void authenticate(Account user);
-	
-	/**
-	 * Gets the current authenticated user.
-	 * @return user if authenticated, <em>null</em> otherwise.
-	 */
-	AccountDetails getCurrentUser();
-}
+package com.trenako.security;

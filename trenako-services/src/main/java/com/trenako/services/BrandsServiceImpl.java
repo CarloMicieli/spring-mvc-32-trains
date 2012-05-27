@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Brand;
@@ -72,6 +73,7 @@ public class BrandsServiceImpl implements BrandsService {
 	 * @param brand a brand.
 	 */
 	@Override
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save(Brand brand) {
 		repo.save(brand);
 	}
@@ -81,6 +83,7 @@ public class BrandsServiceImpl implements BrandsService {
 	 * @param brand a brand.
 	 */
 	@Override
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void remove(Brand brand) {
 		repo.remove(brand);
 	}

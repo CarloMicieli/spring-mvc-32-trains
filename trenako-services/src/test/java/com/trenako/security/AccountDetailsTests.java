@@ -17,6 +17,8 @@ package com.trenako.security;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import com.trenako.entities.Account;
@@ -39,5 +41,23 @@ public class AccountDetailsTests {
 		assertTrue(userDetails.isAccountNonExpired());
 		assertTrue(userDetails.isAccountNonLocked());
 		assertTrue(userDetails.isCredentialsNonExpired());
+	}
+	
+	@Test
+	public void shouldHaveTheUserRoleByDefault() {
+		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
+		AccountDetails userDetails = new AccountDetails(user);
+
+		assertEquals("[ROLE_USER]", userDetails.getAuthorities().toString());
+	}
+	
+	@Test
+	public void shouldAssignRolesToUsers() {
+		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
+		user.setRoles(Arrays.asList("ROLE_ADMIN", "ROLE_USER"));
+		
+		AccountDetails userDetails = new AccountDetails(user);
+
+		assertEquals("[ROLE_ADMIN, ROLE_USER]", userDetails.getAuthorities().toString());
 	}
 }

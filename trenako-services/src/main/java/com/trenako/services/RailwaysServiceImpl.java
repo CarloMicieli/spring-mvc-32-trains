@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Railway;
@@ -72,6 +73,7 @@ public class RailwaysServiceImpl implements RailwaysService {
 	 * @param railway the railway document to be saved.
 	 */
 	@Override
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save(Railway railway) {
 		repo.save(railway);
 	}
@@ -81,6 +83,7 @@ public class RailwaysServiceImpl implements RailwaysService {
 	 * @param railway the railway document to be deleted.
 	 */
 	@Override
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void remove(Railway railway) {
 		repo.remove(railway);
 	}
