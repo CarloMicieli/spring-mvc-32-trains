@@ -30,7 +30,7 @@ public class RollingStockTests {
 	public void builderShouldInizializeRollingStocks() {
 		RollingStock rs = new RollingStock.Builder("ACME", "123456")
 			.category("category")
-			.deliveryDate("2012")
+			.deliveryDate(new DeliveryDate(2012, 1))
 			.description("Description")
 			.description("fr", "French description")
 			.details("Details")
@@ -46,7 +46,7 @@ public class RollingStockTests {
 		assertEquals("ACME", rs.getBrand().getName());
 		assertEquals("123456", rs.getItemNumber());
 		assertEquals("category", rs.getCategory());
-		assertEquals("2012", rs.getDeliveryDate());
+		assertEquals("2012/Q1", rs.getDeliveryDate().toString());
 		assertEquals("Description", rs.getDescription());
 		assertEquals("French description", rs.getDescription("fr"));
 		assertEquals("Details", rs.getDetails());
@@ -58,7 +58,6 @@ public class RollingStockTests {
 		assertEquals(123, rs.getTotalLength());
 		assertEquals(2, rs.getTags().size());
 	}
-	
 	
 	@Test
 	public void shouldGetLocalizedDescriptions() {
@@ -209,5 +208,4 @@ public class RollingStockTests {
 			.build();
 		assertEquals("H0", rs.getScaleName());
 	}
-	
 }

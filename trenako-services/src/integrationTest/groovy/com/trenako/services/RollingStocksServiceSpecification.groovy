@@ -32,6 +32,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.*
 
 import com.trenako.entities.Brand;
 import com.trenako.entities.Category;
+import com.trenako.entities.DeliveryDate;
 import com.trenako.entities.Era;
 import com.trenako.entities.PowerMethod;
 import com.trenako.entities.Railway;
@@ -268,9 +269,12 @@ class RollingStocksServiceSpecification extends Specification {
 		def newRs = new RollingStock(brand: brand, 
 			itemNumber: "123456", 
 			description: 'Description',
+			category: 'eletric-locomotives',
+			details: 'Details',
 			scale: scale,
 			railway: railway,
-			era: "IV"
+			era: "IV",
+			deliveryDate: new DeliveryDate(2012, 1)
 			)
 		
 		when:
@@ -284,6 +288,7 @@ class RollingStocksServiceSpecification extends Specification {
 		rs.brandName == "ACME"
 		rs.itemNumber == "123456"
 		rs.description == "Description"
+		rs.details == "Details"
 		
 		rs.slug == "acme-123456"
 		rs.lastModified != null

@@ -114,7 +114,7 @@ public class RollingStock {
 	private byte[] image;
 	private byte[] thumb;
 	
-	private String deliveryDate;
+	private DeliveryDate deliveryDate;
 	
 	private Date lastModified;
 	
@@ -162,7 +162,7 @@ public class RollingStock {
 		private String era = null;
 		private String powerMethod = null;
 		private String category = null;
-		private String deliveryDate = null;
+		private DeliveryDate deliveryDate = null;
 		private int totalLength = 0;
 		
 		private Map<String, String> options = null;
@@ -205,7 +205,7 @@ public class RollingStock {
 			return this;
 		}
 
-		public Builder deliveryDate(String d) { 
+		public Builder deliveryDate(DeliveryDate d) { 
 			deliveryDate = d;
 			return this;
 		}
@@ -610,18 +610,18 @@ public class RollingStock {
 	 * The delivery date it usually includes the year and the quarter (Q1, Q2, ...).	
 	 * @return the delivery date.
 	 */
-	public String getDeliveryDate() {
+	public DeliveryDate getDeliveryDate() {
 		return deliveryDate;
 	}
 
 	/**
 	 * Sets the delivery date.
-	 * @param deliveryDate the delivery date.
+	 * @param deliveryDate the delivery date
 	 */
-	public void setDeliveryDate(String deliveryDate) {
+	public void setDeliveryDate(DeliveryDate deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
-
+	
 	/**
 	 * Gets the country code.
 	 * @return the country code.
