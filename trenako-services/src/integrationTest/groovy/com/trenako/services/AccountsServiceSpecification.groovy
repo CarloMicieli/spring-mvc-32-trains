@@ -82,7 +82,10 @@ class AccountsServiceSpecification extends Specification {
 		given:
 		def newUser = new Account(emailAddress: "jane@doe.com",
 			password: "secret",
-			displayName: "Jane Doe")
+			displayName: "Jane Doe",
+			enabled: true,
+			locked: false,
+			expired: true)
 		
 		when:
 		service.save newUser
