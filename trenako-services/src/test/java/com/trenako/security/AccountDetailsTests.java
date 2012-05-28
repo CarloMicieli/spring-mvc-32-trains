@@ -44,6 +44,24 @@ public class AccountDetailsTests {
 	}
 	
 	@Test
+	public void shouldManageLockedAccounts() {
+		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
+		user.setLocked(true);
+		
+		AccountDetails userDetails = new AccountDetails(user);
+		assertFalse(userDetails.isAccountNonLocked());
+	}
+	
+	@Test
+	public void shouldManageExpiredAccounts() {
+		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
+		user.setExpired(true);
+		
+		AccountDetails userDetails = new AccountDetails(user);
+		assertFalse(userDetails.isAccountNonExpired());
+	}
+	
+	@Test
 	public void shouldHaveTheUserRoleByDefault() {
 		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
 		AccountDetails userDetails = new AccountDetails(user);

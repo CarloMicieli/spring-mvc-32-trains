@@ -56,6 +56,8 @@ public class Account implements Serializable {
 	@Indexed(unique = true)
 	private String slug;
 
+	private boolean expired;
+	private boolean locked;
 	private boolean enabled;
 	private List<String> roles;
 	
@@ -156,6 +158,22 @@ public class Account implements Serializable {
 
 	public void setEnabled(boolean isEnabled) {
 		this.enabled = isEnabled;
+	}
+	
+	public boolean isExpired() {
+		return expired;
+	}
+
+	public void setExpired(boolean expired) {
+		this.expired = expired;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 
 	public List<String> getRoles() {

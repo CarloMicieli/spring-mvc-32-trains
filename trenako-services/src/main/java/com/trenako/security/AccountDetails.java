@@ -32,25 +32,25 @@ import com.trenako.entities.Account;
  */
 public class AccountDetails implements UserDetails {
 	private static final long serialVersionUID = 1L;
+
 	private final Account account;
 
+	/**
+	 * Creates a new {@link AccountDetails} instance.
+	 * @param account the account wrapped by this details.
+	 */
 	public AccountDetails(Account account) {
 		this.account = account;
-	}
-	
-	public AccountDetails(String emailAddress, String password) {
-		account = new Account(emailAddress, password, "");
 	}
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<String> l = account.getRoles();
 		String[] roles = l==null ?
-				new String[] {"ROLE_USER"} :
-				l.toArray(new String[l.size()]);
+				new String[] {"ROLE_USER"} : l.toArray(new String[l.size()]);
 
 		return Collections.unmodifiableList(
-				AuthorityUtils.createAuthorityList(roles));
+			AuthorityUtils.createAuthorityList(roles));
 	}
 
 	@Override
@@ -65,12 +65,12 @@ public class AccountDetails implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return true;
+		return !account.isExpired();
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		return !account.isLocked();
 	}
 
 	@Override
