@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * 
+ * It represents a persistent login token.
  * @author Carlo Micieli
  *
  */
@@ -18,7 +18,8 @@ public class PersistentLogin {
 	private String tokenValue;
 	private String username;
 
-	public PersistentLogin() {
+	// required by spring data
+	PersistentLogin() {
 	}
 	
 	/**

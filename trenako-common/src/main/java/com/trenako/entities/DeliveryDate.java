@@ -21,6 +21,10 @@ import java.util.List;
 
 /**
  * It represents a delivery date for a rolling stock.
+ * 
+ * The delivery date has two parts: the <em>year</em> (required) and 
+ * the <em>quarter</em> (optional).
+ * 
  * @author Carlo Micieli
  *
  */
@@ -60,22 +64,35 @@ public class DeliveryDate {
 		this.quarter = quarter;
 	}
 	
-	public void setYear(int year) {
+	void setYear(int year) {
 		this.year = year;
 	}
-	
+
+	/**
+	 * Returns the delivery date year.
+	 * @return the year
+	 */
 	public int getYear() {
 		return year;
 	}
 	
-	public void setQuarter(int quarter) {
+	void setQuarter(int quarter) {
 		this.quarter = quarter;
 	}
 
+	/**
+	 * Returns the delivery date quarter.
+	 * @return the quarter
+	 */
 	public int getQuarter() {
 		return quarter;
 	}
 
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * @param obj the reference object with which to compare.
+	 * @return <em>true</em> if this object is the same as the obj argument; <em>false</em> otherwise.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if( this==obj ) return true;
@@ -86,9 +103,13 @@ public class DeliveryDate {
 				this.year==other.year;
 	}
 	
+	/**
+	 * Returns a string representation of the object.
+	 * @return a string representation of the object.
+	 */
 	@Override
 	public String toString() {
-		if( quarter>=1 && quarter<=4 ) {
+		if( QUARTERS.contains(quarter) ) {
 			return String.format("%d/Q%d", year, quarter);
 		}
 		

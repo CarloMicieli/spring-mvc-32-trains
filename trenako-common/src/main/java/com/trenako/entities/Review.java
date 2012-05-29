@@ -37,11 +37,11 @@ public class Review {
 	private ObjectId id;
 	
 	@Indexed(unique = false)
-	private String author;
+	private String authorName;
 	
 	@DBRef
 	@NotNull(message = "review.author.required")
-	private Account account;
+	private Account author;
 	
 	@Indexed(unique = false)
 	private String rsSlug;
@@ -65,64 +65,142 @@ public class Review {
 	 * @param content the review content
 	 */
 	public Review(Account author, RollingStock rollingStock, String content) {
-		this.account = author;
+		this.author = author;
 		this.rollingStock = rollingStock;
 		this.content = content;
 	}
 
+	/**
+	 * Returns the review unique id.
+	 * @return the id
+	 */
 	public ObjectId getId() {
 		return id;
 	}
 
-	public void setId(ObjectId id) {
+	void setId(ObjectId id) {
 		this.id = id;
 	}
 
-	public String getAuthor() {
+	/**
+	 * Returns the review's author name.
+	 * 
+	 * If the author's name is not provided, this value will be
+	 * filled with the {@link Account#getSlug()} value.
+	 * 
+	 * @return the author's name
+	 */
+	public String getAuthorName() {
+		if( authorName==null ) authorName = author.getSlug();
+		return authorName;
+	}
+
+	/**
+	 * Sets the review's author name.
+	 * @param authorName the author's name
+	 */
+	public void setAuthorName(String authorName) {
+		this.authorName = authorName;
+	}
+
+	/**
+	 * Sets the review's author name.
+	 * @return the author's name
+	 */	
+	public Account getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(String author) {
+	/**
+	 * Sets the review's author name.
+	 * @param author the author's name
+	 */
+	public void setAuthor(Account author) {
 		this.author = author;
 	}
 
-	public Account getAccount() {
-		return account;
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
-	}
-
+	/**
+	 * Returns the rolling stock slug.
+	 * 
+	 * If the rolling stock slug is not provided, this value will be
+	 * filled with the {@link RollingStock#getSlug()} value.
+	 * 
+	 * @return the slug
+	 */
 	public String getRsSlug() {
+		if( rsSlug==null ) rsSlug = rollingStock.getSlug();
 		return rsSlug;
 	}
 
+	/**
+	 * Sets the rolling stock slug.
+	 * @param rsSlug the slug
+	 */
 	public void setRsSlug(String rsSlug) {
 		this.rsSlug = rsSlug;
 	}
 
+	/**
+	 * Returns the rolling stock under review.
+	 * @return the rolling stock
+	 */
 	public RollingStock getRollingStock() {
 		return rollingStock;
 	}
 
+	/**
+	 * Sets the rolling stock under review.
+	 * @param rollingStock the rolling stock
+	 */
 	public void setRollingStock(RollingStock rollingStock) {
 		this.rollingStock = rollingStock;
 	}
 
+	/**
+	 * Returns the review's content.
+	 * @return the content
+	 */
 	public String getContent() {
 		return content;
 	}
 
+	/**
+	 * Sets the review's content.
+	 * @param content the content
+	 */
 	public void setContent(String content) {
 		this.content = content;
 	}
 
+	/**
+	 * Returns the time this review was posted.
+	 * @return the posted time
+	 */
 	public Date getPostedAt() {
 		return postedAt;
 	}
 
+	/**
+	 * Sets the time this review was posted.
+	 * @param postedAt the posted time
+	 */
 	public void setPostedAt(Date postedAt) {
 		this.postedAt = postedAt;
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * @param obj the reference object with which to compare.
+	 * @return <em>true</em> if this object is the same as the obj argument; <em>false</em> otherwise.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if( obj==this ) return true;
+		if( !(obj instanceof Review) ) return false;
+		
+		Review other = (Review) obj;
+		return content.equals(other.content) &&
+				author.equals(other.author) &&
+				rollingStock.equals(other.rollingStock); 
 	}
 }

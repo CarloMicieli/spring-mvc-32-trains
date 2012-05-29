@@ -16,6 +16,7 @@
 package com.trenako.entities;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 /**
@@ -23,47 +24,38 @@ import org.junit.Test;
  * @author Carlo Micieli
  *
  */
-public class CommentTests {
+public class ReviewTests {
 
 	@Test
-	public void shouldReturnsAuthorAndRollingStockSlugs() {
+	public void shouldFillAuthorAndRollingStockSlugs() {
 		Account author = new Account("", "", "User Name");
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		
-		Comment c = new Comment(author, rs, "Comment content");
+		Review r = new Review(author, rs, "Comment content");
 		
-		assertEquals("user-name", c.getAuthorName());
-		assertEquals("acme-123456", c.getRsSlug());
+		assertEquals("user-name", r.getAuthorName());
+		assertEquals("acme-123456", r.getRsSlug());
 	}
-	
+
 	@Test
-	public void shouldReturnsTrueIfTwoCommentsAreEquals() {
+	public void shouldReturnsTrueIfTwoReviewsAreEquals() {
 		Account author = new Account("", "", "User Name");
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
-		Comment x = new Comment(author, rs, "Comment content");
-		Comment y = new Comment(author, rs, "Comment content");
+		Review x = new Review(author, rs, "Review content");
+		Review y = new Review(author, rs, "Review content");
 		
 		assertTrue(x.equals(y));
 	}
 	
 	@Test
-	public void shouldReturnsFalseIfTwoCommentsAreDifferent() {
+	public void shouldReturnsFalseIfTwoReviewsAreDifferent() {
 		Account author = new Account("", "", "User Name");
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
-		Comment x = new Comment(author, rs, "Comment content 1");
-		Comment y = new Comment(author, rs, "Comment content 2");
+		Review x = new Review(author, rs, "Review content 1");
+		Review y = new Review(author, rs, "Review content 2");
 		
 		assertFalse(x.equals(y));
-	}
-	
-	@Test
-	public void shouldReturnAStringForComments() {
-		Account author = new Account("", "", "User Name");
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-
-		Comment c = new Comment(author, rs, "Comment content");
-		assertEquals("user-name posted 'Comment content' on acme-123456", c.toString());
 	}
 }

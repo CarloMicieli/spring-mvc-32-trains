@@ -53,7 +53,7 @@ public class CommentValidationTests extends AbstractValidationTests<Comment> {
 		Map<String, String> errors = validate(c);
 		
 		assertEquals(3, errors.size());
-		assertEquals("comment.author.required", errors.get("account"));
+		assertEquals("comment.author.required", errors.get("author"));
 		assertEquals("comment.rollingStock.required", errors.get("rollingStock"));
 		assertEquals("comment.content.required", errors.get("content"));
 	}

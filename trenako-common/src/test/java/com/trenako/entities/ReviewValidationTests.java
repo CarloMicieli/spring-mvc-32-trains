@@ -53,7 +53,7 @@ public class ReviewValidationTests extends AbstractValidationTests<Review> {
 		Map<String, String> errors = validate(review);
 		
 		assertEquals(3, errors.size());
-		assertEquals("review.author.required", errors.get("account"));
+		assertEquals("review.author.required", errors.get("author"));
 		assertEquals("review.rollingStock.required", errors.get("rollingStock"));
 		assertEquals("review.content.required", errors.get("content"));
 	}
