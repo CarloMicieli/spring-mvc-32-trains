@@ -69,14 +69,14 @@ public class AccountsServiceTests {
 
 	@Test
 	public void shouldSaveAccounts() {
-		Account account = new Account();
+		Account account = new Account.Builder("mail@mail.com").build();
 		service.save(account);
 		verify(repo, times(1)).save(eq(account));
 	}
 	
 	@Test
 	public void shouldRemoveAccounts() {
-		Account account = new Account();
+		Account account = new Account.Builder("mail@mail.com").build();
 		service.remove(account);
 		verify(repo, times(1)).remove(eq(account));
 	}

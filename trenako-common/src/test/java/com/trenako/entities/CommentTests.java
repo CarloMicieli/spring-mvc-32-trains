@@ -27,7 +27,10 @@ public class CommentTests {
 
 	@Test
 	public void shouldReturnsAuthorAndRollingStockSlugs() {
-		Account author = new Account("", "", "User Name");
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
+		
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		
 		Comment c = new Comment(author, rs, "Comment content");
@@ -38,7 +41,9 @@ public class CommentTests {
 	
 	@Test
 	public void shouldReturnsTrueIfTwoCommentsAreEquals() {
-		Account author = new Account("", "", "User Name");
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
 		Comment x = new Comment(author, rs, "Comment content");
@@ -49,7 +54,9 @@ public class CommentTests {
 	
 	@Test
 	public void shouldReturnsFalseIfTwoCommentsAreDifferent() {
-		Account author = new Account("", "", "User Name");
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
 		Comment x = new Comment(author, rs, "Comment content 1");
@@ -60,7 +67,9 @@ public class CommentTests {
 	
 	@Test
 	public void shouldReturnAStringForComments() {
-		Account author = new Account("", "", "User Name");
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
 		Comment c = new Comment(author, rs, "Comment content");

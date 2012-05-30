@@ -32,7 +32,9 @@ public class AccountDetailsTests {
 
 	@Test
 	public void shouldCreateDetailsFromAccount() {
-		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
+		Account user = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
 		AccountDetails userDetails = new AccountDetails(user);
 		
 		assertEquals(user.getEmailAddress(), userDetails.getUsername());
@@ -45,8 +47,10 @@ public class AccountDetailsTests {
 	
 	@Test
 	public void shouldManageLockedAccounts() {
-		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
-		user.setLocked(true);
+		Account user = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.locked(true)
+			.build();
 		
 		AccountDetails userDetails = new AccountDetails(user);
 		assertFalse(userDetails.isAccountNonLocked());
@@ -54,8 +58,10 @@ public class AccountDetailsTests {
 	
 	@Test
 	public void shouldManageExpiredAccounts() {
-		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
-		user.setExpired(true);
+		Account user = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.expired(true)
+			.build();
 		
 		AccountDetails userDetails = new AccountDetails(user);
 		assertFalse(userDetails.isAccountNonExpired());
@@ -63,7 +69,10 @@ public class AccountDetailsTests {
 	
 	@Test
 	public void shouldHaveTheUserRoleByDefault() {
-		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
+		Account user = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
+
 		AccountDetails userDetails = new AccountDetails(user);
 
 		assertEquals("[ROLE_USER]", userDetails.getAuthorities().toString());
@@ -71,7 +80,9 @@ public class AccountDetailsTests {
 	
 	@Test
 	public void shouldAssignRolesToUsers() {
-		Account user = new Account("mail@mail.com", "$ecret", "Nickname");
+		Account user = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
 		user.setRoles(Arrays.asList("ROLE_ADMIN", "ROLE_USER"));
 		
 		AccountDetails userDetails = new AccountDetails(user);

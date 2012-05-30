@@ -51,7 +51,7 @@ public class AccountsRepositoryTests {
 	@Test
 	public void shouldFindAccountsById() {
 		ObjectId id = new ObjectId();
-		Account value = new Account();
+		Account value = new Account.Builder("mail@mail.com").build();
 		when(mongo.findById(eq(id), eq(Account.class))).thenReturn(value);
 		
 		Account user = repo.findById(id);
@@ -63,7 +63,7 @@ public class AccountsRepositoryTests {
 	@Test
 	public void shouldFindAccountsByEmailAddress() {
 		String emailAddress = "mail@mail.com";
-		Account value = new Account();
+		Account value = new Account.Builder("mail@mail.com").build();
 		when(mongo.findOne(isA(Query.class), eq(Account.class))).thenReturn(value);
 		
 		Account user = repo.findByEmailAddress(emailAddress);
@@ -75,7 +75,7 @@ public class AccountsRepositoryTests {
 	@Test
 	public void shouldFindAccountsBySlug() {
 		String slug = "user-slug";
-		Account value = new Account();
+		Account value = new Account.Builder("mail@mail.com").build();
 		when(mongo.findOne(isA(Query.class), eq(Account.class))).thenReturn(value);
 		
 		Account user = repo.findBySlug(slug);
@@ -86,14 +86,14 @@ public class AccountsRepositoryTests {
 	
 	@Test
 	public void shouldSaveAccounts() {
-		Account account = new Account();
+		Account account = new Account.Builder("mail@mail.com").build();
 		repo.save(account);
 		verify(mongo, times(1)).save(eq(account));
 	}
 
 	@Test
 	public void shouldRemoveAccounts() {
-		Account account = new Account();
+		Account account = new Account.Builder("mail@mail.com").build();
 		repo.remove(account);
 		verify(mongo, times(1)).remove(eq(account));
 	}

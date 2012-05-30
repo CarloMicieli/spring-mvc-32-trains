@@ -27,8 +27,29 @@ import static org.junit.Assert.*;
 public class AccountTests {
 	
 	@Test
+	public void shouldCreateNewAccounts() {
+		Account user = new Account.Builder("mail@mail.com")
+			.password("$ecret")
+			.displayName("Nickname")
+			.expired(false)
+			.enabled(true)
+			.locked(false)
+			.build();
+		
+		assertEquals("mail@mail.com", user.getEmailAddress());
+		assertEquals("$ecret", user.getPassword());
+		assertEquals("Nickname", user.getDisplayName());
+		assertFalse(user.isExpired());
+		assertFalse(user.isLocked());
+		assertTrue(user.isEnabled());		
+	}
+	
+	@Test
 	public void shouldFillTheSlug() {
-		Account user = new Account("mail@mail.com", "$ecret", "User name");
+		Account user = new Account.Builder("mail@mail.com")
+			.password("$ecret")
+			.displayName("User name")
+			.build();
 		assertEquals("user-name", user.getSlug());
 	}
 }

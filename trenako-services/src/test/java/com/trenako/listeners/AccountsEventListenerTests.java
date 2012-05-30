@@ -34,7 +34,10 @@ public class AccountsEventListenerTests {
 		AccountsEventListener lis = new AccountsEventListener();
 		
 		DBObject dbo = new BasicDBObject();
-		Account account = new Account("mail@mail.com", "pa$$word", "The User");
+		Account account = new Account.Builder("mail@mail.com")
+			.password("pa$$word")
+			.displayName("The User")
+			.build();
 		
 		lis.onBeforeSave(account, dbo);
 		

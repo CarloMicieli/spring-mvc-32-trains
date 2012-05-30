@@ -68,7 +68,10 @@ public class CommentsRepositoryTests {
 
 	@Test
 	public void shouldFindCommentsByAuthorAccount() {
-		Account author = new Account("", "", "author");
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
+
 		List<Comment> value = 
 				Arrays.asList(newComment(), newComment(), newComment());
 		when(mongo.find(isA(Query.class), eq(Comment.class))).thenReturn(value);
@@ -131,7 +134,9 @@ public class CommentsRepositoryTests {
 	}
 
 	private Comment newComment() {
-		Account author = new Account("", "", "Name");
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
 		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
 		final Comment c = new Comment(author, rollingStock, "Comment");
 		return c;

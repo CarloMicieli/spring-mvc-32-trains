@@ -28,7 +28,9 @@ public class ReviewTests {
 
 	@Test
 	public void shouldFillAuthorAndRollingStockSlugs() {
-		Account author = new Account("", "", "User Name");
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		
 		Review r = new Review(author, rs, "Comment content");
@@ -39,7 +41,9 @@ public class ReviewTests {
 
 	@Test
 	public void shouldReturnsTrueIfTwoReviewsAreEquals() {
-		Account author = new Account("", "", "User Name");
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
 		Review x = new Review(author, rs, "Review content");
@@ -50,7 +54,9 @@ public class ReviewTests {
 	
 	@Test
 	public void shouldReturnsFalseIfTwoReviewsAreDifferent() {
-		Account author = new Account("", "", "User Name");
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
 		Review x = new Review(author, rs, "Review content 1");

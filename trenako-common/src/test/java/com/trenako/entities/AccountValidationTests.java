@@ -38,7 +38,11 @@ public class AccountValidationTests extends AbstractValidationTests<Account> {
 
 	@Test
 	public void shouldValidateValidAccounts() {
-		Account user = new Account("mail@mail.com", "$ecret", "User name");
+		Account user = new Account.Builder("mail@mail.com")
+			.password("$ecret")
+			.displayName("User name")
+			.build();
+
 		Map<String, String> errors = validate(user);
 		
 		assertEquals(0, errors.size());
@@ -57,7 +61,11 @@ public class AccountValidationTests extends AbstractValidationTests<Account> {
 	
 	@Test
 	public void shouldValidatePasswords() {
-		Account user = new Account("mail@mail.com", "p", "User name");
+		Account user = new Account.Builder("mail@mail.com")
+			.password("p")
+			.displayName("User name")
+			.build();
+
 		Map<String, String> errors = validate(user);
 		
 		assertEquals(1, errors.size());
@@ -66,7 +74,10 @@ public class AccountValidationTests extends AbstractValidationTests<Account> {
 	
 	@Test
 	public void shouldValidateEmailAddresses() {
-		Account user = new Account("mail", "$egret", "User name");
+		Account user = new Account.Builder("mail")
+			.password("$ecret")
+			.displayName("User name")
+			.build();
 		Map<String, String> errors = validate(user);
 		
 		assertEquals(1, errors.size());
@@ -75,7 +86,10 @@ public class AccountValidationTests extends AbstractValidationTests<Account> {
 	
 	@Test
 	public void shouldValidateDisplayNames() {
-		Account user = new Account("mail@mail.com", "$egret", "us");
+		Account user = new Account.Builder("mail@mail.com")
+			.password("$ecret")
+			.displayName("un")
+			.build();
 		Map<String, String> errors = validate(user);
 		
 		assertEquals(1, errors.size());

@@ -61,35 +61,90 @@ public class Account implements Serializable {
 	private boolean enabled;
 	private List<String> roles;
 	
-	/**
-	 * Creates a new user account.
-	 */
-	public Account() {
+	// required by spring data
+	Account() {
+	}
+	
+	private Account(Builder b) {
+		this.emailAddress = b.emailAddress;
+		this.password = b.password;
+		this.displayName = b.displayName;
+		this.expired = b.expired;
+		this.enabled = b.enabled;
+		this.locked = b.locked;
+		this.roles = b.roles;
 	}
 	
 	/**
-	 * Creates a new user account.
-	 * @param emailAddress the user email address.
-	 * @param password the password.
-	 * @param displayName the user display name.
+	 * The user account builder class
+	 * @author Carlo Micieli
+	 *
 	 */
-	public Account(String emailAddress, String password, String displayName) {
-		this.emailAddress = emailAddress;
-		this.password = password;
-		this.displayName = displayName;
+	public static class Builder {
+		private final String emailAddress;
+		
+		private String password = null;
+		private String displayName = null;
+		private boolean expired = false;
+		private boolean enabled = true;
+		private boolean locked = false;
+		
+		private List<String> roles = null;
+		
+		public Builder(String emailAddress) {
+			this.emailAddress = emailAddress;
+		}
+
+		public Builder password(String pwd) {
+			password = pwd;
+			return this;
+		}
+
+		public Builder displayName(String dn) {
+			displayName = dn;
+			return this;
+		}
+
+		public Builder expired(boolean b) {
+			expired = b;
+			return this;
+		}
+
+		public Builder enabled(boolean b) {
+			enabled = b;
+			return this;
+		}
+
+		public Builder locked(boolean b) {
+			locked = b;
+			return this;
+		}
+
+		public Builder roles(List<String> lr) {
+			roles = lr;
+			return this;
+		}
+		
+		public Account build() {
+			return new Account(this);
+		}
 	}
 
+	/**
+	 * Returns the account unique id.
+	 * @return the unique id
+	 */
 	public ObjectId getId() {
 		return id;
 	}
 
-	public void setId(ObjectId id) {
+	void setId(ObjectId id) {
 		this.id = id;
 	}
 
 	/**
 	 * Returns the user email address.
-	 * @return the user email address.
+	 * @return the user email address
 	 */
 	public String getEmailAddress() {
 		return emailAddress;
@@ -97,7 +152,7 @@ public class Account implements Serializable {
 
 	/**
 	 * Sets the user email address.
-	 * @param emailAddress the user email address.
+	 * @param emailAddress the user email address
 	 */
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
@@ -105,7 +160,7 @@ public class Account implements Serializable {
 
 	/**
 	 * Returns the password.
-	 * @return the password.
+	 * @return the password
 	 */
 	public String getPassword() {
 		return password;
@@ -113,7 +168,7 @@ public class Account implements Serializable {
 
 	/**
 	 * Sets the password.
-	 * @param password the password.
+	 * @param password the password
 	 */
 	public void setPassword(String password) {
 		this.password = password;
@@ -121,7 +176,7 @@ public class Account implements Serializable {
 
 	/**
 	 * Returns the user display name.
-	 * @return the user display name.
+	 * @return the user display name
 	 */
 	public String getDisplayName() {
 		return displayName;
@@ -129,7 +184,7 @@ public class Account implements Serializable {
 
 	/**
 	 * Sets the user display name.
-	 * @param displayName the user display name.
+	 * @param displayName the user display name
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
@@ -137,7 +192,7 @@ public class Account implements Serializable {
 
 	/**
 	 * Returns the user slug.
-	 * @return the slug.
+	 * @return the slug
 	 */
 	public String getSlug() {
 		if( slug==null ) slug = Slug.encode(displayName);
@@ -146,40 +201,72 @@ public class Account implements Serializable {
 
 	/**
 	 * Sets the user slug.
-	 * @param slug the slug.
+	 * @param slug the slug
 	 */
 	public void setSlug(String slug) {
 		this.slug = slug;
 	}
 
+	/**
+	 * Indicates whether the user is enabled or disabled.
+	 * @return <em>true</em> if the account is enabled; <em>false</em> otherwise
+	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
+	/**
+	 * Indicates whether the user is enabled or disabled.
+	 * @param isEnabled <em>true</em> if the account is enabled; <em>false</em> otherwise
+	 */
 	public void setEnabled(boolean isEnabled) {
 		this.enabled = isEnabled;
 	}
 	
+	/**
+	 * Returns if the account is expired.
+	 * @return <em>true</em> if the account is expired; <em>false</em> otherwise
+	 */
 	public boolean isExpired() {
 		return expired;
 	}
 
+	/**
+	 * Indicates whether the account's credentials (password) has expired.
+	 * @param expired <em>true</em> if the account is expired; <em>false</em> otherwise
+	 */
 	public void setExpired(boolean expired) {
 		this.expired = expired;
 	}
 
+	/**
+	 * Indicates whether the user is locked or unlocked.
+	 * @return
+	 */
 	public boolean isLocked() {
 		return locked;
 	}
 
+	/**
+	 * Indicates whether the user is locked or unlocked.
+	 * @param locked
+	 */
 	public void setLocked(boolean locked) {
 		this.locked = locked;
 	}
 
+	/**
+	 * Returns the roles granted to the user.
+	 * @return the roles
+	 */
 	public List<String> getRoles() {
 		return roles;
 	}
 
+	/**
+	 * Sets the roles granted to the user.
+	 * @param roles the roles
+	 */
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
