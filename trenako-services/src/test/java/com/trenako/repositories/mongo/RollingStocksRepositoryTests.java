@@ -245,14 +245,14 @@ public class RollingStocksRepositoryTests {
 
 	@Test
 	public void shouldSaveRollingStocks() {
-		RollingStock rs = new RollingStock();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		repo.save(rs);
 		verify(mongo, times(1)).save(eq(rs));
 	}
 
 	@Test
 	public void shouldRemoveRollingStocks() {
-		RollingStock rs = new RollingStock();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		repo.remove(rs);
 		verify(mongo, times(1)).remove(eq(rs));
 	}

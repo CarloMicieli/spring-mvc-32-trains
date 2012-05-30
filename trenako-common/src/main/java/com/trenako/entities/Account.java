@@ -241,7 +241,7 @@ public class Account implements Serializable {
 
 	/**
 	 * Indicates whether the user is locked or unlocked.
-	 * @return
+	 * @return <em>true</em> if the account is locked; <em>false</em> otherwise
 	 */
 	public boolean isLocked() {
 		return locked;
@@ -249,7 +249,7 @@ public class Account implements Serializable {
 
 	/**
 	 * Indicates whether the user is locked or unlocked.
-	 * @param locked
+	 * @param locked <em>true</em> if the account is locked; <em>false</em> otherwise
 	 */
 	public void setLocked(boolean locked) {
 		this.locked = locked;

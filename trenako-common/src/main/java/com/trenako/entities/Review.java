@@ -190,8 +190,8 @@ public class Review {
 	
 	/**
 	 * Indicates whether some other object is "equal to" this one.
-	 * @param obj the reference object with which to compare.
-	 * @return <em>true</em> if this object is the same as the obj argument; <em>false</em> otherwise.
+	 * @param obj the reference object with which to compare
+	 * @return <em>true</em> if this object is the same as the obj argument; <em>false</em> otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {

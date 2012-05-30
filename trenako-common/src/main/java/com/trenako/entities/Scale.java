@@ -50,20 +50,10 @@ public class Scale {
 	
 	private boolean narrow;
 	
-	/**
-	 * Creates a new scale.
-	 */
-	public Scale() {
+	// required
+	Scale() {
 	}
 	
-	/**
-	 * Creates a new scale.
-	 * @param id the unique scale id.
-	 */
-	public Scale(ObjectId id) {
-		this.id = id;
-	}
-
 	/**
 	 * Creates a new scale.
 	 * @param name the scale name.
@@ -114,24 +104,16 @@ public class Scale {
 	
 	
 	/**
-	 * Returns the unique id for the <em>Scale</em>.
-	 * @return the unique id.
+	 * Returns the unique id.
+	 * @return the unique id
 	 */
 	public ObjectId getId() {
 		return id;
 	}
 
 	/**
-	 * Sets the unique id for the <em>Scale</em>.
-	 * @param id the unique id.
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
-
-	/**
 	 * Returns the scale name.
-	 * @return the scale name.
+	 * @return the name
 	 */
 	public String getName() {
 		return name;
@@ -139,7 +121,7 @@ public class Scale {
 
 	/**
 	 * Sets the scale name.
-	 * @param name the scale name.
+	 * @param name the name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -148,7 +130,7 @@ public class Scale {
 	/**
 	 * Returns the ratio of a linear dimension of the 
 	 * model to the same dimension of the original.
-	 * @return the scale ratio.
+	 * @return the scale ratio
 	 */
 	public double getRatio() {
 		return ratio;
@@ -157,7 +139,7 @@ public class Scale {
 	/**
 	 * Sets the ratio of a linear dimension of the 
 	 * model to the same dimension of the original.
-	 * @param ratio the scale ratio.
+	 * @param ratio the scale ratio
 	 */
 	public void setRatio(double ratio) {
 		this.ratio = ratio;
@@ -173,7 +155,7 @@ public class Scale {
 
 	/**
 	 * Sets the distance between the two rails forming a railroad track
-	 * @param gauge the gauge.
+	 * @param gauge the gauge
 	 */
 	public void setGauge(double gauge) {
 		this.gauge = gauge;
@@ -187,16 +169,17 @@ public class Scale {
 	 * <em>false</em> otherwise.
 	 * </p>
 	 * 
-	 * @return the narrow flag value. 
+	 * @return the narrow flag value
 	 */
 	public boolean isNarrow() {
 		return narrow;
 	}
 
 	/**
-	 * Sets whether has track gauge 
-	 * narrower than the standard gauge railways or not.
-	 * @param isNarrow the narrow flag value.
+	 * Indicates whether has track gauge narrower than the standard 
+	 * gauge railways or not.
+	 * 
+	 * @param isNarrow the narrow flag value
 	 */
 	public void setNarrow(boolean isNarrow) {
 		this.narrow = isNarrow;
@@ -216,7 +199,7 @@ public class Scale {
 	}
 	
 	/**
-	 * Returns a string representation of this <em>Scale</em>.
+	 * Returns a string representation of this object.
 	 * @return a string representation of the object.
 	 */	
 	@Override
@@ -250,7 +233,7 @@ public class Scale {
 	}
 	
 	/**
-	 * Returns a hash code value for the <strong>Scale</strong>.
+	 * Returns a hash code value for the object.
 	 * @return a hash code value for this object. 
 	 */
 	@Override

@@ -208,4 +208,15 @@ public class RollingStockTests {
 			.build();
 		assertEquals("H0", rs.getScaleName());
 	}
+	
+	@Test
+	public void shouldFillTheCountryFromTheRailway() {
+		Railway DB = new Railway.Builder("DB")
+			.country("DEU")
+			.build();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+			.railway(DB)
+			.build();
+		assertEquals("DEU", rs.getCountry());		
+	}
 }

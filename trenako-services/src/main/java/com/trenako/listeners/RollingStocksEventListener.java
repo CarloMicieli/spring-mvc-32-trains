@@ -39,9 +39,6 @@ public class RollingStocksEventListener extends AbstractMongoEventListener<Rolli
 		dbo.put("brandName", rs.getBrandName());
 		dbo.put("railwayName", rs.getRailwayName());
 		dbo.put("scaleName", rs.getScaleName());
-
-		if( rs.getRailway().getCountry()!=null ) {
-			dbo.put("country", rs.getRailway().getCountry());
-		}
+		dbo.put("country", rs.getRailway().getCountry());
 	}
 }

@@ -149,14 +149,14 @@ public class RollingStocksServiceTests {
 
 	@Test
 	public void shouldSaveRollingStocks() {
-		RollingStock rs = new RollingStock();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		service.save(rs);
 		verify(repo, times(1)).save(eq(rs));
 	}
 
 	@Test
 	public void shouldRemoveRollingStocks() {
-		RollingStock rs = new RollingStock();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		service.remove(rs);
 		verify(repo, times(1)).remove(eq(rs));
 	}

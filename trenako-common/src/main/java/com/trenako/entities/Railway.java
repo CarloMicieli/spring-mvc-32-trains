@@ -28,6 +28,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.utility.Slug;
+
 /**
  * It represents a operator of the rail transport.
  * @author Carlo Micieli
@@ -62,10 +64,8 @@ public class Railway {
 	private byte[] image;
 	private Date lastModified;
 	
-	/**
-	 * Create a new railway.
-	 */
-	public Railway() {
+	// required
+	Railway() {
 	}
 	
 	/**
@@ -74,14 +74,6 @@ public class Railway {
 	 */
 	public Railway(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * Create a new railway.
-	 * @param id the unique railway id.
-	 */
-	public Railway(ObjectId id) {
-		this.id = id;
 	}
 	
 	private Railway(Builder b) {
@@ -93,6 +85,11 @@ public class Railway {
 		this.slug = b.slug;
 	}
 		
+	/**
+	 * The railway builder class.
+	 * @author Carlo Micieli
+	 *
+	 */
 	public static class Builder {
 		// required fields
 		private final String name;
@@ -141,31 +138,31 @@ public class Railway {
 	
 	/**
 	 * Returns the unique id for the <em>Railway</em>.
-	 * @return the unique id.
+	 * @return the unique id
 	 */
 	public ObjectId getId() {
 		return id;
 	}
 
 	/**
-	 * Sets the unique id for the <em>Railway</em>.
-	 * @param id the unique id.
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
-
-	/**
 	 * Returns the railway name.
-	 * @return the railway name.
+	 * <p>
+	 * This field contains the acronym from the company name.
+	 * </p>
+	 * 
+	 * @return the railway name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Sets the railway name
-	 * @param name the railway name.
+	 * Sets the railway name.
+	 * <p>
+	 * This field contains the acronym from the company name.
+	 * </p>
+	 * 
+	 * @param name the railway name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -173,7 +170,7 @@ public class Railway {
 
 	/**
 	 * Returns the full company name.
-	 * @return the full company name.
+	 * @return the full company name
 	 */
 	public String getCompanyName() {
 		return companyName;
@@ -181,23 +178,31 @@ public class Railway {
 
 	/**
 	 * Sets the full company name.
-	 * @param companyName the full company name.
+	 * @param companyName the full company name
 	 */
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
 	
 	/**
-	 * Returns the country ISO 3166-1 alpha-3 code.
-	 * @return the country code.
+	 * Returns the country code.
+	 * <p>
+	 * The country is following ISO 3166-1 alpha-3 code standard.
+	 * </p>
+	 * 
+	 * @return the country code
 	 */
 	public String getCountry() {
 		return country;
 	}
 
 	/**
-	 * Sets the country ISO 3166-1 alpha-3 code.
-	 * @param country the country code.
+	 * Sets the country code.
+	 * <p>
+	 * The country is following ISO 3166-1 alpha-3 code standard.
+	 * </p>
+	 * 
+	 * @param country the country code
 	 */
 	public void setCountry(String country) {
 		this.country = country;
@@ -205,7 +210,7 @@ public class Railway {
 	
 	/**
 	 * Returns the starting year of operations.
-	 * @return the year.
+	 * @return the year
 	 */
 	public int getOperatingSince() {
 		return operatingSince;
@@ -213,7 +218,7 @@ public class Railway {
 
 	/**
 	 * Sets the starting year of operations.
-	 * @param operatingSince the year.
+	 * @param operatingSince the year
 	 */
 	public void setOperatingSince(Integer operatingSince) {
 		this.operatingSince = operatingSince;
@@ -221,7 +226,7 @@ public class Railway {
 
 	/**
 	 * Returns the finishing year of operations.
-	 * @return the year.
+	 * @return the year
 	 */
 	public int getOperatingUntil() {
 		return operatingUntil;
@@ -229,39 +234,45 @@ public class Railway {
 
 	/**
 	 * Sets the finishing year of operations.
-	 * @param operatingUntil the year.
+	 * @param operatingUntil the year
 	 */
 	public void setOperatingUntil(Integer operatingUntil) {
 		this.operatingUntil = operatingUntil;
 	}
 
 	/**
-	 * Returns the railway name slug.
-	 * @return the slug.
+	 * Returns the slug for the railway.
+	 * <p>
+	 * If the slug is not set this method will return
+	 * the encoded value for {@link Railway#getName()}.
+	 * </p>
+	 * 
+	 * @return the slug
 	 */
 	public String getSlug() {
+		if( slug==null ) slug = Slug.encode(getName());
 		return slug;
 	}
 
 	/**
-	 * Sets the railway name slug.
-	 * @param slug the slug.
+	 * Sets the slug for the railway.
+	 * @param slug the slug
 	 */
 	public void setSlug(String slug) {
 		this.slug = slug;
 	}
 
 	/**
-	 * Returns the railway image.
-	 * @return the image.
+	 * Returns the railway logo image.
+	 * @return the image
 	 */
 	public byte[] getImage() {
 		return image;
 	}
 
 	/**
-	 * Sets the railway image.
-	 * @param image the image.
+	 * Sets the railway logo image.
+	 * @param image the image
 	 */
 	public void setImage(byte[] image) {
 		this.image = image;
@@ -269,7 +280,7 @@ public class Railway {
 
 	/**
 	 * Returns the last modified timestamp.
-	 * @return the timestamp.
+	 * @return the timestamp
 	 */
 	public Date getLastModified() {
 		return lastModified;
@@ -277,15 +288,15 @@ public class Railway {
 
 	/**
 	 * Sets the last modified timestamp.
-	 * @param lastModified the timestamp.
+	 * @param lastModified the timestamp
 	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
 
 	/**
-	 * Returns a string representation of this <em>Railway</em>.
-	 * @return a string representation of the object.
+	 * Returns a string representation of the object.
+	 * @return a string representation of the object
 	 */
 	@Override
 	public String toString() {
@@ -297,9 +308,9 @@ public class Railway {
 	
 	/**
 	 * Indicates whether some other object is "equal to" this one.
-	 * @param obj the reference object with which to compare.
+	 * @param obj the reference object with which to compare
 	 * @return <em>true</em> if this object is the same as the obj argument; 
-	 * <em>false</em> otherwise.
+	 * <em>false</em> otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -315,8 +326,8 @@ public class Railway {
 	}
 	
 	/**
-	 * Returns a hash code value for the <strong>Railway</strong>.
-	 * @return a hash code value for this object. 
+	 * Returns a hash code value for the object.
+	 * @return a hash code value for this object
 	 */
 	@Override
 	public int hashCode() {

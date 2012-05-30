@@ -86,14 +86,14 @@ public class ScalesRepositoryTests {
 
 	@Test
 	public void shouldSaveScales() {
-		Scale scale = new Scale();
+		Scale scale = new Scale("H0");
 		repo.save(scale);
 		verify(mongo, times(1)).save(eq(scale));
 	}
 
 	@Test
 	public void shouldRemoveScales() {
-		Scale scale = new Scale();
+		Scale scale = new Scale("H0");
 		repo.remove(scale);
 		verify(mongo, times(1)).remove(eq(scale));
 	}

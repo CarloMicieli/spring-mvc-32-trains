@@ -82,14 +82,14 @@ public class RailwaysServiceTests {
 
 	@Test
 	public void shouldSaveRailways() {
-		Railway railway = new Railway();
+		Railway railway = new Railway("DB");
 		service.save(railway);
 		verify(mock, times(1)).save(eq(railway));
 	}
 
 	@Test
 	public void shouldRemoveRailways() {
-		Railway railway = new Railway();
+		Railway railway = new Railway("DB");
 		service.remove(railway);
 		verify(mock, times(1)).remove(eq(railway));
 	}

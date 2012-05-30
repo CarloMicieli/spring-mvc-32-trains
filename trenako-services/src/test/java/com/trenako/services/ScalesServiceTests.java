@@ -68,14 +68,14 @@ public class ScalesServiceTests {
 
 	@Test
 	public void shouldSaveScales() {
-		Scale scale = new Scale();
+		Scale scale = new Scale("H0");
 		service.save(scale);
 		verify(repo, times(1)).save(eq(scale));
 	}
 
 	@Test
 	public void shouldRemoveScales() {
-		Scale scale = new Scale();
+		Scale scale = new Scale("H0");
 		service.remove(scale);
 		verify(repo, times(1)).remove(eq(scale));
 	}

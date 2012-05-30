@@ -47,4 +47,9 @@ public class RailwayTests {
 		assertEquals(x.hashCode(), y.hashCode());
 	}
 
+	@Test
+	public void shouldFillTheSlugValue() {
+		Railway x = new Railway("s.n.c.f.");
+		assertEquals("sncf", x.getSlug());
+	}
 }

@@ -40,7 +40,14 @@ import com.trenako.AppGlobals;
 import com.trenako.utility.Slug;
 
 /**
- * It represents a rolling stock model.
+ * It represents a rolling stock.
+ * <p>
+ * The object represents a model corresponding to a given item number
+ * from a {@link Brand} catalog.
+ * </p>
+ * <p>
+ * This instance can include more items.
+ *</p>
  *
  * @author Carlo Micieli
  * 
@@ -118,10 +125,8 @@ public class RollingStock {
 	
 	private Date lastModified;
 	
-	/**
-	 * Creates a new rolling stock
-	 */
-	public RollingStock() { //required
+	// required
+	RollingStock() {
 	}
 	
 	private RollingStock(Builder b) {
@@ -144,6 +149,11 @@ public class RollingStock {
 		this.totalLength = b.totalLength;
 	}
 	
+	/**
+	 * The rolling stock builder class.
+	 * @author Carlo Micieli
+	 *
+	 */
 	public static class Builder {
 		// required fields
 		private final Brand brand;
@@ -273,32 +283,29 @@ public class RollingStock {
 	}
 	
 	/**
-	 * Creates a new rolling stock.
-	 * @param id
-	 */
-	public RollingStock(ObjectId id) {
-		this.id = id;
-	}
-
-	/**
-	 * Return the unique id.
-	 * @return the unique id.
+	 * Returns the unique id.
+	 * @return the unique id
 	 */
 	public ObjectId getId() {
 		return id;
 	}
-
-	/**
-	 * Set the unique id.
-	 * @param id the unique id.
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
 	
 	/**
 	 * Returns the slug for the rolling stock.
-	 * @return the slug value.
+	 * <p>
+	 * The slug is built encoding {@link RollingStock#getBrand()}
+	 * and {@link RollingStock#getItemNumber()}.
+	 * </p>
+	 * <p>
+	 * If the slug is not already set for the object, this method
+	 * will return the appropriate value.
+	 * </p>
+	 * <p>
+	 * The rolling stocks search must use this field as it is unique for
+	 * the application and therefore indexed.
+	 * </p>
+	 * 
+	 * @return the slug value
 	 */
 	public String getSlug() {
 		if (slug==null && brand!=null) {
@@ -311,7 +318,7 @@ public class RollingStock {
 
 	/**
 	 * Sets the slug for the rolling stock.
-	 * @param slug the slug.
+	 * @param slug the slug
 	 */
 	public void setSlug(String slug) {
 		this.slug = slug;
@@ -319,7 +326,7 @@ public class RollingStock {
 
 	/**
 	 * Returns the brand.
-	 * @return the brand.
+	 * @return the brand
 	 */
 	public Brand getBrand() {
 		return brand;
@@ -327,7 +334,7 @@ public class RollingStock {
 
 	/**
 	 * Sets the brand.
-	 * @param brand the brand.
+	 * @param brand the brand
 	 */
 	public void setBrand(Brand brand) {
 		this.brand = brand;
@@ -335,7 +342,11 @@ public class RollingStock {
 
 	/**
 	 * Returns the brand name.
-	 * @return the brand name.
+	 * <p>
+	 * If the brand name is not set then the class is getting a 
+	 * value from {@link Brand#getName()}.
+	 * </p>
+	 * @return the brand name
 	 */		
 	public String getBrandName() {
 		if( brandName==null) brandName = getBrand().getName();
@@ -344,31 +355,31 @@ public class RollingStock {
 
 	/**
 	 * Set the brand name.
-	 * @param brandName the brand name.
+	 * @param brandName the brand name
 	 */
 	public void setBrandName(String brandName) {
 		this.brandName = brandName;
 	}
 
 	/**
-	 * Return the item number.
-	 * @return the item number.
+	 * Returns the item number.
+	 * @return the item number
 	 */
 	public String getItemNumber() {
 		return itemNumber;
 	}
 
 	/**
-	 * Set the item number.
-	 * @param itemNumber the item number.
+	 * Sets the item number.
+	 * @param itemNumber the item number
 	 */
 	public void setItemNumber(String itemNumber) {
 		this.itemNumber = itemNumber;
 	}
 
 	/**
-	 * Return the rolling stock default description.
-	 * @return the description.
+	 * Returns the rolling stock default description.
+	 * @return the description
 	 */
 	public String getDescription() {
 		return description;
@@ -376,15 +387,17 @@ public class RollingStock {
 
 	/**
 	 * Returns the rolling stock localized description.
+	 * <p>
+	 * Calling this method for the default language (<em>English</em>) 
+	 * will return the text from {@link RollingStock#getDescription()}.
+	 * </p>
+	 * <p>
+	 * If no description exists for the provided language then
+	 * the default description is returned.
+	 * </p>
 	 * 
-	 * Calling this method for the default language (English) will
-	 * return the value from <em>getDescription()</em>.
-	 * 
-	 * If no description exists for the provided language 
-	 * the default description is returned instead.
-	 * 
-	 * @param lang the locale value.
-	 * @return the description.
+	 * @param lang the locale value
+	 * @return the description
 	 */
 	public String getDescription(String lang) {
 		if( localDescriptions==null || lang.equals(AppGlobals.DEFAULT_LANGUAGE) ) {
@@ -400,16 +413,16 @@ public class RollingStock {
 	
 	/**
 	 * Sets the rolling stock default description.
-	 * @param description the rolling stock description.
+	 * @param description the description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 	
 	/**
-	 * Add a localized rolling stock description.
-	 * @param lang the language.
-	 * @param description the description.
+	 * Sets a localized rolling stock description.
+	 * @param lang the language
+	 * @param description the description
 	 */
 	public void setDescription(String lang, String description) {
 		if( localDescriptions==null ) {
@@ -421,7 +434,7 @@ public class RollingStock {
 
 	/**
 	 * Returns the model detailed description.
-	 * @return the model description.
+	 * @return the details
 	 */
 	public String getDetails() {
 		return details;
@@ -429,8 +442,8 @@ public class RollingStock {
 	
 	/**
 	 * Returns the localized details for the rolling stock.
-	 * @param lang the language.
-	 * @return the model description.
+	 * @param lang the language
+	 * @return the details
 	 */
 	public String getDetails(String lang) {
 		if( localDetails==null || lang.equals(AppGlobals.DEFAULT_LANGUAGE) ) {
@@ -445,8 +458,12 @@ public class RollingStock {
 	}
 	
 	/**
-	 * Sets the model description.
-	 * @param details the details.
+	 * Sets the default model details.
+	 * <p>
+	 * This details text is for the default language (<em>English</em>).
+	 * </p>
+	 * 
+	 * @param details the details
 	 */
 	public void setDetails(String details) {
 		this.details = details;
@@ -454,8 +471,8 @@ public class RollingStock {
 
 	/**
 	 * Sets the localized details for the rolling stock.
-	 * @param lang the language.
-	 * @param details the details.
+	 * @param lang the language
+	 * @param details the details
 	 */
 	public void setDetails(String lang, String details) {
 		if( localDetails==null ) {
@@ -466,16 +483,16 @@ public class RollingStock {
 	}
 	
 	/**
-	 * Return the railway name.
-	 * @return the railway name.
+	 * Returns the railway.
+	 * @return the railway
 	 */
 	public Railway getRailway() {
 		return railway;
 	}
 
 	/**
-	 * Set the railway name.
-	 * @param railway the railway name.
+	 * Sets the railway.
+	 * @param railway the railway
 	 */
 	public void setRailway(Railway railway) {
 		this.railway = railway;
@@ -483,7 +500,12 @@ public class RollingStock {
 
 	/**
 	 * Returns the railway name.
-	 * @return the railway name.
+	 * <p>
+	 * If the railway name is not set then this class is getting a value
+	 * from {@link Railway#getName()}.
+	 * </p>
+	 * 
+	 * @return the railway name
 	 */
 
 	public String getRailwayName() {
@@ -492,24 +514,24 @@ public class RollingStock {
 	}
 
 	/**
-	 * Set the railway name.
-	 * @param railwayName the railway name.
+	 * Sets the railway name.
+	 * @param railwayName the railway name
 	 */
 	public void setRailwayName(String railwayName) {
 		this.railwayName = railwayName;
 	}
 	
 	/**
-	 * Return the scale.
-	 * @return the scale.
+	 * Returns the scale.
+	 * @return the scale
 	 */
 	public Scale getScale() {
 		return scale;
 	}
 
 	/**
-	 * Set the scale.
-	 * @param scale the scale.
+	 * Sets the scale.
+	 * @param scale the scale
 	 */
 	public void setScale(Scale scale) {
 		this.scale = scale;
@@ -517,7 +539,12 @@ public class RollingStock {
 
 	/**
 	 * Returns the scale name.
-	 * @return the scale name.
+	 * <p>
+	 * If the scale name is not set then the class is getting a 
+	 * value from {@link Scale#getName()}.
+	 * </p>
+	 * 
+	 * @return the scale name
 	 */
 	public String getScaleName() {
 		if( scaleName==null ) scaleName = getScale().getName();
@@ -526,7 +553,7 @@ public class RollingStock {
 
 	/**
 	 * Sets the scale name.
-	 * @param scaleName the scale name.
+	 * @param scaleName the scale name
 	 */
 	public void setScaleName(String scaleName) {
 		this.scaleName = scaleName;
@@ -534,7 +561,7 @@ public class RollingStock {
 	
 	/**
 	 * Returns the category.
-	 * @return the category.
+	 * @return the category
 	 */
 	public String getCategory() {
 		return category;
@@ -542,47 +569,57 @@ public class RollingStock {
 
 	/**
 	 * Sets the category.
-	 * @param category the category.
+	 * @param category the category
 	 */
 	public void setCategory(String category) {
 		this.category = category;
 	}
 
 	/**
-	 * Returns the model era.
-	 * @return the model era.
+	 * Returns the era for the current rolling stock.
+	 * @return the era
 	 */
 	public String getEra() {
 		return era;
 	}
 
 	/**
-	 * Sets the model era.
-	 * @param era the model era.
+	 * Sets the era for the current rolling stock.
+	 * <p>
+	 * The value must be the String representation of a value
+	 * from {@link Era} enumeration.
+	 * </p>
+	 * 
+	 * @param era the era
 	 */
 	public void setEra(String era) {
 		this.era = era;
 	}
 	
 	/**
-	 * Sets the model era.
-	 * @param era the model era.
+	 * Sets the era.
+	 * @param era the model era
 	 */
 	public void setEra(Era era) {
 		setEra(era.name());
 	}
 	
 	/**
-	 * Gets the total length in millimeters.	
-	 * @return the total length.
+	 * Gets the total length over buffers in millimeters.	
+	 * @return the total length
 	 */
 	public int getTotalLength() {
 		return totalLength;
 	}
 
 	/**
-	 * Sets the total length in millimeters.
-	 * @param totalLength the total length.
+	 * Sets the total length over buffers in millimeters.
+	 * <p>
+	 * If this rolling stock includes more items then
+	 * this represents the overall length.
+	 * </p>
+	 * 
+	 * @param totalLength the total length
 	 */
 	public void setTotalLength(int totalLength) {
 		this.totalLength = totalLength;
@@ -590,7 +627,7 @@ public class RollingStock {
 
 	/**
 	 * Gets the universal product code.
-	 * @return the universal product code.
+	 * @return the universal product code
 	 */
 	public String getUpcCode() {
 		return upcCode;
@@ -598,7 +635,7 @@ public class RollingStock {
 	
 	/**
 	 * Sets the universal product code.
-	 * @param upcCode the universal product code.
+	 * @param upcCode the universal product code
 	 */
 	public void setUpcCode(String upcCode) {
 		this.upcCode = upcCode;
@@ -606,9 +643,12 @@ public class RollingStock {
 
 	/**
 	 * Returns the delivery date.
+	 * <p>
+	 * The delivery date it usually includes the year and the 
+	 * quarter.
+	 * </p>
 	 * 
-	 * The delivery date it usually includes the year and the quarter (Q1, Q2, ...).	
-	 * @return the delivery date.
+	 * @return the delivery date
 	 */
 	public DeliveryDate getDeliveryDate() {
 		return deliveryDate;
@@ -616,6 +656,7 @@ public class RollingStock {
 
 	/**
 	 * Sets the delivery date.
+	 * 
 	 * @param deliveryDate the delivery date
 	 */
 	public void setDeliveryDate(DeliveryDate deliveryDate) {
@@ -624,15 +665,24 @@ public class RollingStock {
 	
 	/**
 	 * Gets the country code.
-	 * @return the country code.
+	 * <p>
+	 * If country code is not set then the railway country code will be
+	 * returned by this method.
+	 * </p>
+	 * <p>
+	 * The country code value is following the ISO 3166-1 alpha-3 standard.
+	 * </p>
+	 * 
+	 * @return the country code
 	 */
 	public String getCountry() {
+		if( country==null ) country = railway.getCountry();
 		return country;
 	}
 
 	/**
 	 * Sets the country code.
-	 * @param country the country code.
+	 * @param country the country
 	 */
 	public void setCountry(String country) {
 		this.country = country;
@@ -640,7 +690,12 @@ public class RollingStock {
 
 	/**
 	 * Returns the model power method.
-	 * @return the model power method.
+	 * <p>
+	 * If the rolling stock is dummy (not motorized) then
+	 * this method will return <em>null</em>.
+	 * </p>
+	 * 
+	 * @return the model power method
 	 */
 	public String getPowerMethod() {
 		return powerMethod;
@@ -648,7 +703,7 @@ public class RollingStock {
 
 	/**
 	 * Sets the model power method.
-	 * @param powerMethod the model power method.
+	 * @param powerMethod the model power method
 	 */
 	public void setPowerMethod(String powerMethod) {
 		this.powerMethod = powerMethod;
@@ -656,7 +711,11 @@ public class RollingStock {
 	
 	/**
 	 * Sets the model power method.
-	 * @param powerMethod the model power method.
+	 * <p>
+	 * This method is getting the value from {@link PowerMethod#keyValue()}.
+	 * </p>
+	 * 
+	 * @param powerMethod the model power method
 	 */
 	public void setPowerMethod(PowerMethod powerMethod) {
 		setPowerMethod(powerMethod.keyValue());
@@ -664,7 +723,7 @@ public class RollingStock {
 
 	/**
 	 * Returns the list of tags for the rolling stock.	
-	 * @return the list of tags.
+	 * @return the list of tags
 	 */
 	public Set<String> getTags() {
 		return tags;
@@ -672,7 +731,7 @@ public class RollingStock {
 
 	/**
 	 * Sets the list of tags for the rolling stock.
-	 * @param tags the list of tags.
+	 * @param tags the list of tags
 	 */
 	public void setTags(Set<String> tags) {
 		this.tags = tags;
@@ -680,7 +739,7 @@ public class RollingStock {
 	
 	/**
 	 * Adds the specified tag for the rolling stock.
-	 * @param tag the tag.
+	 * @param tag the tag
 	 */
 	public void addTag(String tag) {
 		if (tags==null) {
@@ -688,18 +747,15 @@ public class RollingStock {
 		}
 		tags.add(tag);
 	}
-
-	private String optionsKey(Option opt) {
-		return opt.getFamily().name();
-	}
 	
 	/**
 	 * Adds an option to the rolling stock.
-	 * 
+	 * <p>
 	 * If an option for the same family already exists,
 	 * this method will replace the value.
+	 * </p>
 	 * 
-	 * @param option the option.
+	 * @param option the option value
 	 */
 	public void addOption(Option option) {
 		if( options==null ) {
@@ -711,9 +767,10 @@ public class RollingStock {
 	
 	/**
 	 * Checks if the rolling stock has the provided option.
-	 * @param option the option.
-	 * @return <em>true</em> if the rolling stock contains this option; 
-	 * <em>false</em> otherwise.
+	 * 
+	 * @param option the option value
+	 * @return <em>true</em> if the rolling stock contains the option; 
+	 * <em>false</em> otherwise
 	 */
 	public boolean hasOption(Option option) {
 		final String key = optionsKey(option);
@@ -726,10 +783,8 @@ public class RollingStock {
 	/**
 	 * Returns the option by its family.
 	 * 
-	 * Only one option value is possible for each family at the same time.
-	 * 
-	 * @param family the option family.
-	 * @return the option.
+	 * @param family the option family
+	 * @return the option value
 	 */
 	public Option getOption(OptionFamily family) {
 		if( options==null ) return null;
@@ -741,8 +796,8 @@ public class RollingStock {
 	}
 	
 	/**
-	 * Returns the options map for the rolling stock.
-	 * @return the options map.
+	 * Returns the options for the rolling stock.
+	 * @return the options
 	 */
 	public Map<String, String> getOptions() {
 		return options;
@@ -750,7 +805,13 @@ public class RollingStock {
 
 	/**
 	 * Sets the options map for the rolling stock.
-	 * @param options the options map.
+	 * <p>
+	 * The key for the map is one value from the {@link OptionFamily} 
+	 * enumeration. It is possible to have only one value for each
+	 * family.
+	 * </p>
+	 * 
+	 * @param options the options
 	 */
 	public void setOptions(Map<String, String> options) {
 		this.options = options;
@@ -758,7 +819,7 @@ public class RollingStock {
 
 	/**
 	 * Returns the rolling stock image.
-	 * @return the image.
+	 * @return the image
 	 */
 	public byte[] getImage() {
 		return image;
@@ -766,7 +827,7 @@ public class RollingStock {
 
 	/**
 	 * Sets the rolling stock image.
-	 * @param image the image.
+	 * @param image the image
 	 */
 	public void setImage(byte[] image) {
 		this.image = image;
@@ -774,7 +835,7 @@ public class RollingStock {
 
 	/**
 	 * Returns the rolling stock thumbnail.
-	 * @return the thumbnail.
+	 * @return the thumbnail
 	 */
 	public byte[] getThumb() {
 		return thumb;
@@ -782,7 +843,7 @@ public class RollingStock {
 
 	/**
 	 * Sets the rolling stock thumbnail.
-	 * @param thumb the thumbnail.
+	 * @param thumb the thumbnail
 	 */
 	public void setThumb(byte[] thumb) {
 		this.thumb = thumb;
@@ -790,7 +851,7 @@ public class RollingStock {
 
 	/**
 	 * Returns the last modified timestamp.	
-	 * @return the last modified timestamp.
+	 * @return the last modified timestamp
 	 */
 	public Date getLastModified() {
 		return lastModified;
@@ -798,15 +859,15 @@ public class RollingStock {
 
 	/**
 	 * Sets the last modified timestamp.
-	 * @param lastModified the last modified timestamp.
+	 * @param lastModified the timestamp
 	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
 
 	/**
-	 * Return a string representation for the current rolling stock.
-	 * @return the string representation.
+	 * Returns a string representation of the object.
+	 * @return a string representation of the object
 	 */
 	@Override
 	public String toString() {
@@ -818,10 +879,10 @@ public class RollingStock {
 	}
 
 	/**
-	 * Indicates whether some other rolling stock is "equal to" this one.
-	 * @param obj the reference rolling stock with which to compare.
+	 * Indicates whether some other object is "equal to" this one.
+	 * @param obj the reference object with which to compare
 	 * @return <em>true</em> if this object is the same as the obj argument; 
-	 * <em>false</em> otherwise.
+	 * <em>false</em> otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -841,8 +902,8 @@ public class RollingStock {
 	}
 	
 	/**
-	 * Returns a hash code value for the <strong>RollingStock</strong>.
-	 * @return a hash code value for this object. 
+	 * Returns a hash code value for the object.
+	 * @return a hash code value for this object
 	 */
 	@Override
 	public int hashCode() {
@@ -855,5 +916,9 @@ public class RollingStock {
 			.append(era)
 			.append(category)
 			.toHashCode();
+	}
+	
+	private String optionsKey(Option opt) {
+		return opt.getFamily().name();
 	}
 }
