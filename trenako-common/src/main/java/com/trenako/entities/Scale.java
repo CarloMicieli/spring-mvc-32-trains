@@ -35,20 +35,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Scale {
 	
 	@Id
-	ObjectId id;
+	private ObjectId id;
 	
 	@NotBlank(message = "scale.name.required")
 	@Size(max = 10, message = "scale.name.size.notmet")
 	@Indexed(unique = true)
-	String name;
+	private String name;
 	
 	@Range(min = 2, max = 220, message = "scale.ratio.range.notmet")
-	double ratio;
+	private double ratio;
 
 	@Range(min = 0, max = 1000, message = "scale.gauge.range.notmet")
-	double gauge;
+	private double gauge;
 	
-	boolean narrow;
+	private boolean narrow;
 	
 	/**
 	 * Creates a new scale.

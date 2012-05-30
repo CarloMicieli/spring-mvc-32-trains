@@ -55,4 +55,17 @@ public class ScaleTests {
 		Scale y = new Scale.Builder("H0").ratio(87).build();
 		assertEquals(x.hashCode(), y.hashCode());
 	}
+	
+	@Test
+	public void shouldBuildNewScales() {	
+		Scale s = new Scale.Builder("H0")
+			.ratio(87)
+			.gauge(16.5)
+			.narrow(true)
+			.build();
+		assertEquals("H0", s.getName());
+		assertEquals(87, s.getRatio(), 0.1);
+		assertEquals(16.5, s.getGauge(), 0.1);
+		assertEquals(true, s.isNarrow());
+	}
 }

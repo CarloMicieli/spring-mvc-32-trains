@@ -61,4 +61,21 @@ public class BrandTests {
 		assertTrue(x.equals(y));
 		assertEquals(x.hashCode(), y.hashCode());		
 	}
+
+	@Test
+	public void shouldBuildNewBrands() {
+		Brand b = new Brand.Builder("ACME")
+			.website("http://localhost")
+			.emailAddress("mail@mail.com")
+			.description("Description")
+			.industrial(true)
+			.build();
+			
+		assertEquals("ACME", b.getName());
+		assertEquals("http://localhost", b.getWebsite());
+		assertEquals("mail@mail.com", b.getEmailAddress());
+		assertEquals("Description", b.getDescription());
+		assertEquals(true, b.isIndustrial());
+	}
+
 }
