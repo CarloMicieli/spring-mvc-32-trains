@@ -13,73 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.repositories.mongo;
+package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.ReviewsRepository;
 
-import static org.springframework.data.mongodb.core.query.Query.*;
-import static org.springframework.data.mongodb.core.query.Criteria.*;
-
 /**
- * A concrete implementation for the user reviews repository for mongodb.
+ * The interface for the reviews repository.
  * @author Carlo Micieli
  *
  */
-@Repository("reviewsRepository")
-public class ReviewsRepositoryImpl implements ReviewsRepository {
+@Service("reviewsService")
+public class ReviewsServiceImpl implements ReviewsService {
 
-	private final MongoTemplate mongo;
+	private final ReviewsRepository repo;
 	
-	/**
-	 * Creates a new reviews repository for mongodb.
-	 * @param mongo
-	 */
 	@Autowired
-	public ReviewsRepositoryImpl(MongoTemplate mongo) {
-		this.mongo = mongo;
+	public ReviewsServiceImpl(ReviewsRepository repo) {
+		this.repo = repo;
 	}
 	
 	@Override
 	public Review findById(ObjectId id) {
-		return mongo.findById(id, Review.class);
+		return repo.findById(id);
 	}
 
 	@Override
 	public Iterable<Review> findByAuthor(Account author) {
-		return findByAuthor(author.getSlug());
+		return repo.findByAuthor(author);
 	}
 
 	@Override
 	public Iterable<Review> findByAuthor(String authorName) {
-		return mongo.find(query(where("authorName").is(authorName)), Review.class);
+		return repo.findByAuthor(authorName);
 	}
 
 	@Override
 	public Iterable<Review> findByRollingStock(RollingStock rollingStock) {
-		return findByRollingStock(rollingStock.getSlug());
+		return repo.findByRollingStock(rollingStock);
 	}
 
 	@Override
 	public Iterable<Review> findByRollingStock(String rsSlug) {
-		return mongo.find(query(where("rsSlug").is(rsSlug)), Review.class);
+		return repo.findByRollingStock(rsSlug);
 	}
 
 	@Override
 	public void save(Review review) {
-		mongo.save(review);
+		repo.save(review);
 	}
 
 	@Override
 	public void remove(Review review) {
-		mongo.remove(review);
+		repo.remove(review);
 	}
 
 }

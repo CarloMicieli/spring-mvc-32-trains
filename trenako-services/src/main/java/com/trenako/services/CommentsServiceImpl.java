@@ -13,73 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.repositories.mongo;
+package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.CommentsRepository;
 
-import static org.springframework.data.mongodb.core.query.Query.*;
-import static org.springframework.data.mongodb.core.query.Criteria.*;
-
 /**
- * The concrete implementation for the comments mongodb repository.
+ * The interface for the comments service.
  * @author Carlo Micieli
  *
  */
-@Repository("commentsRepository")
-public class CommentsRepositoryImpl implements CommentsRepository {
+@Service("commentsService")
+public class CommentsServiceImpl implements CommentsService {
 
-	private final MongoTemplate mongo;
+	private final CommentsRepository repo;
 	
-	/**
-	 * Creates a new mongodb repository for comments.
-	 * @param mongo the mongodb template
-	 */
 	@Autowired
-	public CommentsRepositoryImpl(MongoTemplate mongo) {
-		this.mongo = mongo;
+	public CommentsServiceImpl(CommentsRepository repo) {
+		this.repo = repo;
 	}
 	
 	@Override
 	public Comment findById(ObjectId id) {
-		return mongo.findById(id, Comment.class);
+		return repo.findById(id);
 	}
 
 	@Override
 	public Iterable<Comment> findByAuthor(Account author) {
-		return findByAuthor(author.getSlug());
+		return repo.findByAuthor(author);
 	}
 
 	@Override
 	public Iterable<Comment> findByAuthor(String authorName) {
-		return mongo.find(query(where("authorName").is(authorName)), Comment.class);
+		return repo.findByAuthor(authorName);
 	}
 
 	@Override
 	public Iterable<Comment> findByRollingStock(RollingStock rollingStock) {
-		return findByRollingStock(rollingStock.getSlug());
+		return repo.findByRollingStock(rollingStock);
 	}
 
 	@Override
 	public Iterable<Comment> findByRollingStock(String rsSlug) {
-		return mongo.find(query(where("rsSlug").is(rsSlug)), Comment.class);
+		return repo.findByRollingStock(rsSlug);
 	}
 
 	@Override
 	public void save(Comment comment) {
-		mongo.save(comment);
+		repo.save(comment);
 	}
 
 	@Override
 	public void remove(Comment comment) {
-		mongo.remove(comment);
+		repo.remove(comment);
 	}
 
 }

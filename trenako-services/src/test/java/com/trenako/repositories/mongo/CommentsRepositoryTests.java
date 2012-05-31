@@ -67,7 +67,7 @@ public class CommentsRepositoryTests {
 	}
 
 	@Test
-	public void shouldFindCommentsByAuthorAccount() {
+	public void shouldFindCommentsByAuthor() {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
@@ -83,7 +83,7 @@ public class CommentsRepositoryTests {
 	}
 
 	@Test
-	public void shouldFindCommentsByAuthorString() {
+	public void shouldFindCommentsByAuthorName() {
 		List<Comment> value = 
 				Arrays.asList(newComment(), newComment(), newComment());
 		when(mongo.find(isA(Query.class), eq(Comment.class))).thenReturn(value);
