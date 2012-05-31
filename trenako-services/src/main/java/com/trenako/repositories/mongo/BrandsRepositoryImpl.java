@@ -35,11 +35,11 @@ public class BrandsRepositoryImpl implements BrandsRepository {
 	
 	/**
 	 * Creates a new mongodb brands repository.
-	 * @param mongoOps the mongo template.
+	 * @param mongo the mongodb template
 	 */
 	@Autowired
-	public BrandsRepositoryImpl(MongoTemplate mongoOps) {
-		this.mongo = new MongoRepository<Brand>(mongoOps, Brand.class);
+	public BrandsRepositoryImpl(MongoTemplate mongo) {
+		this.mongo = new MongoRepository<Brand>(mongo, Brand.class);
 	}
 	
 	// constructor: for testing

@@ -24,7 +24,9 @@ import static org.springframework.data.mongodb.core.query.Criteria.*;
 import static org.springframework.data.mongodb.core.query.Query.*;
 
 /**
- * A Mongo database repository.
+ * A mongodb generic database repository.
+ * @param T the entity type.
+ * 
  * @author Carlo Micieli
  *
  */
@@ -34,9 +36,9 @@ public class MongoRepository<T> {
 	private final Class<T> clazz;
 	
 	/**
-	 * Creates a new Mongo repository.
-	 * @param mongoOps the Mongo template.
-	 * @param clazz the target type.
+	 * Creates a new mongodb repository.
+	 * @param mongoOps the mongodb template
+	 * @param clazz the target type
 	 */
 	public MongoRepository(MongoTemplate mongoOps, Class<T> clazz) {
 		this.clazz = clazz;
@@ -45,16 +47,16 @@ public class MongoRepository<T> {
 	
 	/**
 	 * Finds all the documents in the collection.
-	 * @return the iterator for all the documents in the collection.
+	 * @return the iterator for all the documents in the collection
 	 */
 	public Iterable<T> findAll() {
 		return mongoOps.findAll(clazz);
 	}
 
 	/**
-	 * Returns the document with the given id.
-	 * @param id the document id.
-	 * @return the document with the given id.
+	 * Finds the document with the given id.
+	 * @param id the document id
+	 * @return the document with the given id if found; <em>null</em> otherwise
 	 */
 	public T findById(ObjectId id) {
 		return mongoOps.findById(id, clazz);
@@ -62,8 +64,8 @@ public class MongoRepository<T> {
 	
 	/**
 	 * Save the object to the collection for the entity 
-	 * type of the object to save. 
-	 * @param object the object to save.
+	 * type of the object to save
+	 * @param object the object to save
 	 */
 	public void save(T object) {
 		mongoOps.save(object);
@@ -77,10 +79,14 @@ public class MongoRepository<T> {
 	}
 	
 	/**
-	 * Finds a document in the collection by a given key value.
-	 * @param key the key name.
-	 * @param value the key value.
-	 * @return a document.
+	 * Finds the first document in the collection according to the provided criteria.
+	 * <p>
+	 * Both key name and value are case sensitive.
+	 * </p>
+	 * 
+	 * @param key the key name for the search criteria
+	 * @param value the key value for the search criteria
+	 * @return a document if found; <em>null</em> otherwise
 	 */
 	public T findOne(String key, Object value) {
 		return mongoOps.findOne(query(where(key).is(value)), clazz);
@@ -88,9 +94,10 @@ public class MongoRepository<T> {
 	
 	/**
 	 * Returns all the document in the collection by a given key value.
-	 * @param key the key name.
-	 * @param value the key value.
-	 * @return the list of documents.
+	 * 
+	 * @param key the key name
+	 * @param value the key value
+	 * @return the list of documents
 	 */
 	public Iterable<T> findAll(String key, Object value) {
 		return mongoOps.find(query(where(key).is(value)), clazz);
@@ -98,11 +105,12 @@ public class MongoRepository<T> {
 	
 	/**
 	 * Returns all the sorted document in the collection by a given key value.
-	 * @param key the key name.
-	 * @param value the key value.
-	 * @param sortCriteria
-	 * @param order
-	 * @return the list of documents.
+	 * 
+	 * @param key the key name
+	 * @param value the key value
+	 * @param sortCriteria the key used to sort the documents
+	 * @param order the order
+	 * @return the list of documents
 	 */
 	public Iterable<T> findAll(String key, Object value, String sortCriteria, Order order) {
 		final Query q = query(where(key).is(value));
@@ -112,11 +120,11 @@ public class MongoRepository<T> {
 	
 	/**
 	 * Returns all the document in the collection by two given key values.
-	 * @param key1 the first key name.
-	 * @param value1 the first key value.
-	 * @param key2 the second key name.
-	 * @param value2 the second key value.
-	 * @return the list of documents.
+	 * @param key1 the first key name
+	 * @param value1 the first key value
+	 * @param key2 the second key name
+	 * @param value2 the second key value
+	 * @return the list of documents
 	 */
 	public Iterable<T> findAll(String key1, Object value1, String key2, Object value2) {
 		return mongoOps.find(query(where(key1).is(value1).and(key2).is(value2)), clazz);
@@ -124,7 +132,7 @@ public class MongoRepository<T> {
 	
 	/**
 	 * Remove the document from the collection.
-	 * @param object the document to delete.
+	 * @param object the document to delete
 	 */
 	public void remove(T object) {
 		mongoOps.remove(object);
@@ -132,7 +140,7 @@ public class MongoRepository<T> {
 	
 	/**
 	 * Remove the document from the collection.
-	 * @param id the id for the document to delete.
+	 * @param id the id for the document to delete
 	 */
 	public void removeById(ObjectId id) {
 		mongoOps.remove(query(where("id").is(id)), clazz);

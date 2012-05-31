@@ -27,34 +27,34 @@ import com.trenako.entities.Account;
 public interface AccountsRepository {
 	/**
 	 * Finds a user account by id.
-	 * @param id the user id.
-	 * @return the account.
+	 * @param id the user id
+	 * @return the account
 	 */
 	Account findById(ObjectId id);
 	
 	/**
 	 * Finds a user account by email address.
-	 * @param emailAddress the email address.
-	 * @return the account.
+	 * @param emailAddress the email address
+	 * @return the account
 	 */
 	Account findByEmailAddress(String emailAddress);
 	
 	/**
 	 * Finds a user account by slug.
-	 * @param slug the user slug.
-	 * @return the account.
+	 * @param slug the user slug
+	 * @return the account
 	 */
 	Account findBySlug(String slug);
 	
 	/**
 	 * Saves the account.
-	 * @param account the account to be saved.
+	 * @param account the account to be saved
 	 */
 	void save(Account account);
 	
 	/**
 	 * Removes the account.
-	 * @param account the account to be deleted.
+	 * @param account the account to be deleted
 	 */
 	void remove(Account account);
 }

@@ -28,7 +28,7 @@ import com.trenako.entities.Account;
 import com.trenako.repositories.AccountsRepository;
 
 /**
- * 
+ * The concrete implementation for the accounts repository for mongodb.
  * @author Carlo Micieli
  *
  */
@@ -37,6 +37,10 @@ public class AccountsRepositoryImpl implements AccountsRepository {
 
 	private final MongoTemplate mongo;
 	
+	/**
+	 * Creates a new Accounts repository.
+	 * @param mongo the mongodb template
+	 */
 	@Autowired
 	public AccountsRepositoryImpl(MongoTemplate mongo) {
 		this.mongo = mongo;
