@@ -21,19 +21,19 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.stereotype.Component;
 
 import com.mongodb.DBObject;
-import com.trenako.entities.Comment;
+import com.trenako.entities.Review;
 
 /**
- * The listener to change the document just before the comments are saved.
+ * The listener to change the document just before the reviews are saved.
  * @author Carlo Micieli
  *
  */
 @Component
-public class CommentsEventListener extends AbstractMongoEventListener<Comment> {
+public class ReviewsEventListener extends AbstractMongoEventListener<Review> {
 	@Override
-	public void onBeforeSave(Comment comment, DBObject dbo) {
+	public void onBeforeSave(Review review, DBObject dbo) {
 		dbo.put("postedAt", new Date());
-		dbo.put("authorName", comment.getAuthorName());
-		dbo.put("rsSlug", comment.getRsSlug());
+		dbo.put("authorName", review.getAuthorName());
+		dbo.put("rsSlug", review.getRsSlug());
 	}
 }

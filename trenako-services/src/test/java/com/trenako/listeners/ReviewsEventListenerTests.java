@@ -16,12 +16,13 @@
 package com.trenako.listeners;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.trenako.entities.Account;
-import com.trenako.entities.Comment;
+import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
 
 /**
@@ -29,19 +30,19 @@ import com.trenako.entities.RollingStock;
  * @author Carlo Micieli
  *
  */
-public class CommentsEventListenerTests {
+public class ReviewsEventListenerTests {
 	@Test
-	public void shouldFillTheFieldsBeforeSave() {
-		CommentsEventListener lis = new CommentsEventListener();
+	public void shouldFillFieldsBeforeSave() {
+		ReviewsEventListener lis = new ReviewsEventListener();
 		
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
 		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
-		Comment comment = new Comment(author, rollingStock, "Comment");
+		Review review = new Review(author, rollingStock, "Review");
 	
 		DBObject dbo = new BasicDBObject();
-		lis.onBeforeSave(comment, dbo);
+		lis.onBeforeSave(review, dbo);
 		
 		assertEquals("user-name", dbo.get("authorName"));
 		assertEquals("acme-123456", dbo.get("rsSlug"));
