@@ -63,7 +63,7 @@ public class MongoRepositoryTests {
 	
 	@Test
 	public void shouldSave() {
-		Brand brand = new Brand();
+		Brand brand = new Brand("ACME");
 		repo.save(brand);
 		verify(mongo, times(1)).save(eq(brand));
 	}
@@ -108,7 +108,7 @@ public class MongoRepositoryTests {
 
 	@Test
 	public void shouldRemove() {
-		Brand brand = new Brand();
+		Brand brand = new Brand("ACME");
 		repo.remove(brand);
 		verify(mongo, times(1)).remove(eq(brand));
 	}

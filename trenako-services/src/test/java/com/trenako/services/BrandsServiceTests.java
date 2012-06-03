@@ -67,14 +67,14 @@ public class BrandsServiceTests {
 
 	@Test
 	public void shouldSaveBrands() {
-		Brand brand = new Brand();
+		Brand brand = new Brand("ACME");
 		service.save(brand);
 		verify(repo, times(1)).save(eq(brand));
 	}
 
 	@Test
 	public void shouldRemoveBrands() {
-		Brand brand = new Brand();
+		Brand brand = new Brand("ACME");
 		service.remove(brand);
 		verify(repo, times(1)).remove(eq(brand));
 	}

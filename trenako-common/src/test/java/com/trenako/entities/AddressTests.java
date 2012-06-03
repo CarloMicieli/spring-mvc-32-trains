@@ -35,11 +35,22 @@ public class AddressTests {
 			.country("England")
 			.locality("2A")
 			.build();
-		
+
 		assertEquals("30 Commercial Rd.", a.getStreetAddress());
 		assertEquals("Bristol", a.getCity());
 		assertEquals("PO1 1AA", a.getPostalCode());
 		assertEquals("England", a.getCountry());
 		assertEquals("2A", a.getLocality());
+	}
+	
+	@Test
+	public void shouldConvertAddressToString() {
+		Address a = new Address.Builder()
+			.streetAddress("30 Commercial Rd.")
+			.city("Bristol")
+			.postalCode("PO1 1AA")
+			.country("England")
+			.build();
+		assertEquals("30 Commercial Rd., PO1 1AA Bristol, (England)", a.toString());
 	}
 }

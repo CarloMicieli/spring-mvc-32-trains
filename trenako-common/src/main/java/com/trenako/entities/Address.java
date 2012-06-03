@@ -159,5 +159,30 @@ public class Address {
 	 */
 	public void setCountry(String country) {
 		this.country = country;
-	}	
+	}
+	
+	/**
+	 * Returns a string representation of the object.
+	 * <p>
+	 * This method should returns an address representation like this:
+	 * <pre>
+	 * {@code street name, postal-code city, country}
+	 * </pre>
+	 * </p>
+	 * 
+	 * @return a string representation of the object
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getStreetAddress());
+		sb.append(", ");
+		sb.append(getPostalCode());
+		sb.append(" ");
+		sb.append(getCity());
+		sb.append(", (");
+		sb.append(getCountry());
+		sb.append(")");
+		return sb.toString();
+	}
 }

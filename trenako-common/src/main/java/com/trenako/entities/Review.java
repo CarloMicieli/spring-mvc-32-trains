@@ -88,9 +88,10 @@ public class Review {
 
 	/**
 	 * Returns the review's author name.
-	 * 
+	 * <p>
 	 * If the author's name is not provided, this value will be
 	 * filled with the {@link Account#getSlug()} value.
+	 * </p>
 	 * 
 	 * @return the author's name
 	 */
@@ -125,9 +126,10 @@ public class Review {
 
 	/**
 	 * Returns the rolling stock slug.
-	 * 
+	 * <p>
 	 * If the rolling stock slug is not provided, this value will be
 	 * filled with the {@link RollingStock#getSlug()} value.
+	 * </p>
 	 * 
 	 * @return the slug
 	 */

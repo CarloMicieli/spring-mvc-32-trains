@@ -16,6 +16,8 @@
 package com.trenako.entities;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.constraints.Size;
 
@@ -52,6 +54,8 @@ public class Brand {
 	
 	private Address address;
 	
+	private Map<String, Address> branches;
+	
 	@URL(message = "brand.website.url.invalid")
 	private String website;
 
@@ -67,15 +71,12 @@ public class Brand {
 	
 	private Date lastModified;
 	
-	/**
-	 * Create a new brand with <em>null</em> value.
-	 */
-	public Brand() {
+	Brand() {
 	}
 
 	/**
 	 * Create a new brand.
-	 * @param id the unique id.
+	 * @param id the unique id
 	 */
 	public Brand(ObjectId id) {
 		this.id = id;
@@ -83,7 +84,7 @@ public class Brand {
 	
 	/**
 	 * Create a new brand.
-	 * @param name the company name.
+	 * @param name the company name
 	 */
 	public Brand(String name) {
 		this.name = name;
@@ -98,6 +99,7 @@ public class Brand {
 		this.description = b.description;
 		this.industrial = b.industrial;
 		this.slug = b.slug;
+		this.branches = b.branches;
 	}
 	
 	public static class Builder {
@@ -111,6 +113,7 @@ public class Brand {
 		private boolean industrial = false;
 		private Address address = null;
 		private String slug = null;
+		private HashMap<String, Address> branches = null;
 		
 		public Builder(String name) {
 			this.name = name;
@@ -141,6 +144,12 @@ public class Brand {
 			return this;
 		}
 		
+		public Builder address(String country, Address a) {
+			if( branches==null ) branches = new HashMap<String, Address>();
+			branches.put(country, a);
+			return this;
+		}
+		
 		public Builder website(String w) {
 			website = w;
 			return this;
@@ -150,19 +159,18 @@ public class Brand {
 			return new Brand(this);
 		}
 	}
-	
-	
+		
 	/**
-	 * Returns the unique id for the <em>Brand</em>.
-	 * @return the unique id.
+	 * Returns the unique id for the brand.
+	 * @return the unique id
 	 */
 	public ObjectId getId() {
 		return id;
 	}
 
 	/**
-	 * Sets the unique id for the <em>Brand</em>.
-	 * @param id the unique id.
+	 * Sets the unique id for the brand.
+	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
 		this.id = id;
@@ -170,7 +178,7 @@ public class Brand {
 
 	/**
 	 * Returns the company name.
-	 * @return the company name.
+	 * @return the company name
 	 */
 	public String getName() {
 		return name;
@@ -178,7 +186,7 @@ public class Brand {
 
 	/**
 	 * Sets the company name.
-	 * @param name the company name.
+	 * @param name the company name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -186,7 +194,12 @@ public class Brand {
 	
 	/**
 	 * Returns the company name slug.
-	 * @return the company name slug.
+	 * <p>
+	 * If this property is not set then this method will return
+	 * the encoded value for {@link Brand#getName()}.
+	 * </p>
+	 * 
+	 * @return the slug
 	 */
 	public String getSlug() {
 		return slug;
@@ -194,15 +207,46 @@ public class Brand {
 
 	/**
 	 * Sets the company name slug.
-	 * @param slug the company name slug.
+	 * @param slug the company name slug
 	 */
 	public void setSlug(String slug) {
 		this.slug = slug;
 	}
+	
+	/**
+	 * Returns a local branch address.
+	 * <p>
+	 * If no branch exists for the provided country name then this
+	 * method will return <em>null</em>.
+	 * </p>
+	 * 
+	 * @param country the country name
+	 * @return the address
+	 */
+	public Address getAddress(String country) {
+		if( branches==null ) return null;
+		return branches.get(country);
+	}
+	
+	/**
+	 * Sets a local branch address.
+	 * 
+	 * @param country the country name
+	 * @param a the address
+	 */
+	public void setAddress(String country, Address a) {
+		if( branches==null ) branches = new HashMap<String, Address>();
+		branches.put(country, a);
+	}
 
 	/**
 	 * Returns the address.
-	 * @return the address.
+	 * <p>
+	 * The company can have more local branch, this method will
+	 * return the main address.
+	 * </p>
+	 * 
+	 * @return the address
 	 */
 	public Address getAddress() {
 		return address;
@@ -210,7 +254,11 @@ public class Brand {
 
 	/**
 	 * Sets the address.
-	 * @param address the address.
+	 * <p>
+	 * This method will set the main address for the company.
+	 * </p>
+	 * 
+	 * @param address the address
 	 */
 	public void setAddress(Address address) {
 		this.address = address;
@@ -218,7 +266,7 @@ public class Brand {
 
 	/**
 	 * Returns the company website url.
-	 * @return the company website url.
+	 * @return the company website url
 	 */
 	public String getWebsite() {
 		return website;
@@ -226,23 +274,23 @@ public class Brand {
 
 	/**
 	 * Sets the company website url.
-	 * @param website the company website url.
+	 * @param website the company website url
 	 */
 	public void setWebsite(String website) {
 		this.website = website;
 	}
 
 	/**
-	 * Returns the short description for the <em>Brand</em>.
-	 * @return the short description.
+	 * Returns the brand company description.
+	 * @return the description
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * Sets the short description for the <em>Brand</em>.
-	 * @param description the short description.
+	 * Sets the brand company description.
+	 * @param description the description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -250,7 +298,7 @@ public class Brand {
 
 	/**
 	 * Returns the email address.
-	 * @return the email address.
+	 * @return the email address
 	 */
 	public String getEmailAddress() {
 		return emailAddress;
@@ -258,7 +306,7 @@ public class Brand {
 
 	/**
 	 * Sets the the email address.
-	 * @param emailAddress the email address.
+	 * @param emailAddress the email address
 	 */
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
@@ -266,7 +314,8 @@ public class Brand {
 
 	/**
 	 * Returns the industrial flag.
-	 * @return <em>true</em> if this is a industrial series producer; <em>false</em> otherwise.
+	 * @return <em>true</em> if this is a industrial series producer; 
+	 * <em>false</em> otherwise
 	 */
 	public boolean isIndustrial() {
 		return industrial;
@@ -274,7 +323,8 @@ public class Brand {
 
 	/**
 	 * Sets the industrial flag.
-	 * @param industrial <em>true</em> if this is a industrial series producer; <em>false</em> otherwise.
+	 * @param industrial <em>true</em> if this is a industrial series producer;
+	 * <em>false</em> otherwise
 	 */
 	public void setIndustrial(boolean industrial) {
 		this.industrial = industrial;
@@ -282,7 +332,7 @@ public class Brand {
 
 	/**
 	 * Returns the brand image.
-	 * @return the image.
+	 * @return the image
 	 */
 	public byte[] getLogo() {
 		return logo;
@@ -290,23 +340,31 @@ public class Brand {
 
 	/**
 	 * Sets the brand image.
-	 * @param logo the image.
+	 * @param logo the image
 	 */
 	public void setLogo(byte[] logo) {
 		this.logo = logo;
 	}
 
+	/**
+	 * Returns the last modified timestamp.
+	 * @return the timestamp
+	 */
 	public Date getLastModified() {
 		return lastModified;
 	}
 
+	/**
+	 * Sets the last modified timestamp.
+	 * @param lastModified the timestamp
+	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
 
 	/**
 	 * Returns a string representation of this <em>Brand</em>.
-	 * @return a string representation of the object.
+	 * @return a string representation of the object
 	 */
 	@Override
 	public String toString() {
@@ -315,9 +373,9 @@ public class Brand {
 	
 	/**
 	 * Indicates whether some other object is "equal to" this one.
-	 * @param obj the reference object with which to compare.
+	 * @param obj the reference object with which to compare
 	 * @return <em>true</em> if this object is the same as the obj argument; 
-	 * <em>false</em> otherwise.
+	 * <em>false</em> otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -336,7 +394,7 @@ public class Brand {
 	
 	/**
 	 * Returns a hash code value for the <strong>Brand</strong>.
-	 * @return a hash code value for this object. 
+	 * @return a hash code value for this object
 	 */
 	@Override
 	public int hashCode() {
@@ -347,5 +405,5 @@ public class Brand {
 			.append(getDescription())
 			.append(isIndustrial())
 			.toHashCode();
-	}		
+	}	
 }

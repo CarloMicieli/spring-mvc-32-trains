@@ -78,4 +78,49 @@ public class BrandTests {
 		assertEquals(true, b.isIndustrial());
 	}
 
+	@Test
+	public void shouldManageBrandAddress() {
+		Address a = new Address.Builder()
+			.streetAddress("30 Commercial Rd.")
+			.city("Bristol")
+			.postalCode("PO1 1AA")
+			.country("England")
+			.build();
+		
+		Brand b = new Brand.Builder("ACME")
+			.address(a)
+			.build();
+		
+		assertEquals("30 Commercial Rd., PO1 1AA Bristol, (England)", 
+				b.getAddress().toString());
+	}
+	
+	@Test
+	public void shouldManageLocalBranches() {
+		Address en = new Address.Builder()
+			.streetAddress("30 Commercial Rd.")
+			.city("Bristol")
+			.postalCode("PO1 1AA")
+			.country("England")
+			.build();
+		Address de = new Address.Builder()
+			.streetAddress("Schulstrasse 4")
+			.city("Bad Oyenhausen")
+			.postalCode("32547")
+			.country("Germany")
+			.build();
+			
+		Brand b = new Brand.Builder("ACME")
+			.address("en", en)
+			.address("de", de)
+			.build();
+	
+		assertEquals("30 Commercial Rd., PO1 1AA Bristol, (England)", 
+				b.getAddress("en").toString());
+
+		assertEquals("Schulstrasse 4, 32547 Bad Oyenhausen, (Germany)", 
+				b.getAddress("de").toString());
+		
+		assertEquals(null, b.getAddress("fr"));
+	}
 }
