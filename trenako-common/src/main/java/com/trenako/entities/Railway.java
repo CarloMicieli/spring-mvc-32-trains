@@ -19,11 +19,12 @@ import java.util.Date;
 
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotBlank;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import org.bson.types.ObjectId;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -300,7 +301,7 @@ public class Railway {
 	 */
 	@Override
 	public String toString() {
-		return new StringBuffer()
+		return new StringBuilder()
 			.append(getId() + ": ")
 			.append(getName())
 			.toString();
