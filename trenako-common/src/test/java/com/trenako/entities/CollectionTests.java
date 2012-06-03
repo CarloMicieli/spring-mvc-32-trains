@@ -16,6 +16,7 @@
 package com.trenako.entities;
 
 import static org.junit.Assert.*;
+
 import java.util.Date;
 import java.util.SortedMap;
 
@@ -28,25 +29,6 @@ import org.junit.Test;
  */
 public class CollectionTests {
 
-	@Test
-	public void shouldCreateNewCollectionItems() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		
-		Date now = new Date();
-		CollectionItem item = new CollectionItem.Builder(rs)
-			.addedAt(now)
-			.condition(Condition.NEW)
-			.notes("Notes text")
-			.price(100)
-			.build();
-		
-		assertEquals(rs, item.getRollingStock());
-		assertEquals("new", item.getCondition());
-		assertEquals(now, item.getAddedAt());
-		assertEquals("Notes text", item.getNotes());
-		assertEquals(100, item.getPrice());
-	}
-	
 	@Test
 	public void shouldCreatePublicCollections() {
 		Account owner = new Account.Builder("mail@mail.com").build();

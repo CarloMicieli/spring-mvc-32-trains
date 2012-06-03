@@ -68,7 +68,7 @@ public enum Category {
 	
 	/**
 	 * Returns the category description to be stored in the database.
-	 * @return the category name.
+	 * @return the category value
 	 */
 	public String keyValue() {
 		return name().toLowerCase().replace('_', '-');
@@ -76,8 +76,8 @@ public enum Category {
 
 	/**
 	 * Parses the category value from the database.
-	 * @param category the category name.
-	 * @return a value from Category enumeration.
+	 * @param category the category value
+	 * @return a value from Category enumeration
 	 */
 	public static Category parse(String category) {
 		String c = category.toUpperCase().replace('-', '_');

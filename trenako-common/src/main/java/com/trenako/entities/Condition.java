@@ -21,6 +21,31 @@ package com.trenako.entities;
  *
  */
 public enum Condition {
+	/** 
+	 * New condition.
+	 */
 	NEW,
-	PRE_OWNED,
+	
+	/**
+	 * Pre owned.
+	 */
+	PRE_OWNED;
+	
+	/**
+	 * Returns the condition description to be stored in the database.
+	 * @return the condition value
+	 */
+	public String keyValue() {
+		return name().toLowerCase().replace('_', '-');
+	}
+	
+	/**
+	 * Parses the condition value from the database.
+	 * @param condition the condition value
+	 * @return a value from Condition enumeration
+	 */
+	public static Condition parse(String condition) {
+		String c = condition.toUpperCase().replace('-', '_');
+		return Condition.valueOf(c);
+	}
 }

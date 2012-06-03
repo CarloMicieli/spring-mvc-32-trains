@@ -30,6 +30,7 @@ import com.trenako.AbstractValidationTests;
  *
  */
 public class CollectionValidationTests extends AbstractValidationTests<Collection> {
+	
 	@Before
 	public void initValidator() {
 		super.init(Collection.class);
