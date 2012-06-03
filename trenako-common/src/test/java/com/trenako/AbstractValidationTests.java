@@ -15,6 +15,8 @@
  */
 package com.trenako;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,6 +49,14 @@ public abstract class AbstractValidationTests<T> {
 		validatorFactory.setProviderClass(providerClass);
 		validatorFactory.setTraversableResolver(new DefaultTraversableResolver());
 		validator = validatorFactory.getValidator();
+	}
+	
+	// helper method to return the tomorrow's date
+	protected Date tomorrow() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.DATE, 1);
+		return cal.getTime();
 	}
 	
 	public Map<String, String> validate(T domain) {

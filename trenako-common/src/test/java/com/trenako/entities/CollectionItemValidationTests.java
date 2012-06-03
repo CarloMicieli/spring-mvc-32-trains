@@ -94,13 +94,9 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 	
 	@Test
 	public void shouldValidateAddedAtDate() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
-		cal.add(Calendar.DATE, 1);
-		
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		CollectionItem item = new CollectionItem.Builder(rs)
-			.addedAt(cal.getTime())
+			.addedAt(tomorrow())
 			.build();
 		
 		Map<String, String> errors = validate(item);
