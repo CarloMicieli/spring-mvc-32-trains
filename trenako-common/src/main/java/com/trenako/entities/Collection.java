@@ -3,6 +3,8 @@ package com.trenako.entities;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.NotNull;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -30,6 +32,7 @@ public class Collection {
     private String ownerName;
 
     @DBRef
+    @NotNull(message = "collection.owner.required")
     private Account owner;
 
     private List<CollectionItem> items;
