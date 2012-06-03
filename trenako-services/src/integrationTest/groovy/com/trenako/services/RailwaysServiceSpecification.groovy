@@ -44,13 +44,20 @@ class RailwaysServiceSpecification extends Specification {
 	def railways = Railway.class
 	
 	def setup() {
+		
+		
+		def y1994 = new GregorianCalendar(1994, Calendar.JANUARY, 1).time
+		def y1949 = new GregorianCalendar(1949, Calendar.JANUARY, 1).time
+		def y1938 = new GregorianCalendar(1938, Calendar.JANUARY, 1).time
+		
+		
 		def collection = [
 			new Railway(name: "Die Bahn", companyName: "Deutsche Bahn AG",
-				country: "DEU", operatingSince: 1994),
+				country: "DEU", operatingSince: y1994),
 			new Railway(name: "DB", companyName: "Deutsche Bundesbahn",
-				country: "DEU", operatingSince: 1949, operatingUntil: 1994),
+				country: "DEU", operatingSince: y1949, operatingUntil: y1994),
 			new Railway(name: "Sncf", companyName: "Société Nationale des Chemins de fer Français",
-				country: "FRA", operatingSince: 1938)
+				country: "FRA", operatingSince: y1938)
 			]
 		mongoTemplate.insert collection, railways
 	}
@@ -112,8 +119,9 @@ class RailwaysServiceSpecification extends Specification {
 	
 	def "should create new railways"() {
 		given:
+		def y1903 = new GregorianCalendar(1903, Calendar.JANUARY, 1).time
 		def newRailway = new Railway(name: "FS", companyName: "Ferrovie dello stato",
-			country: "ITA", operatingSince: 1903)
+			country: "ITA", operatingSince: y1903)
 		
 		when:
 		service.save newRailway
@@ -126,7 +134,7 @@ class RailwaysServiceSpecification extends Specification {
 		railway.slug == "fs"
 		railway.companyName == "Ferrovie dello stato"
 		railway.country == "ITA"
-		railway.operatingSince == 1903
+		String.format('%tF', railway.operatingSince) == "1903-01-01"
 	}
 	
 	def "should remove railways"() {

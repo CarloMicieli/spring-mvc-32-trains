@@ -17,13 +17,13 @@ package com.trenako.entities;
 
 import java.util.Date;
 
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -56,10 +56,10 @@ public class Railway {
 	@Size(max = 3, message = "railway.country.size.notmet")
 	private String country;
 	
-	@Range(min = 1829, max = 2999, message = "railway.operatingSince.range.notmet")
-	private Integer operatingSince;
-	@Range(min = 1829, max = 2999, message = "railway.operatingUntil.range.notmet")
-	private Integer operatingUntil;
+	@Past(message = "railway.operatingSince.past.notmet")
+	private Date operatingSince;
+	@Past(message = "railway.operatingUntil.past.notmet")
+	private Date operatingUntil;
 	
 	private byte[] image;
 	private Date lastModified;
@@ -99,8 +99,8 @@ public class Railway {
 		private String country = "";
 		private String slug = "";
 		
-		private Integer operatingSince = null;
-		private Integer operatingUntil = null;
+		private Date operatingSince = null;
+		private Date operatingUntil = null;
 		
 		public Builder(String name) {
 			this.name = name;
@@ -121,13 +121,13 @@ public class Railway {
 			return this;
 		}
 		
-		public Builder operatingSince(int year) {
-			this.operatingSince = year;
+		public Builder operatingSince(Date start) {
+			this.operatingSince = start;
 			return this;
 		}
 		
-		public Builder operatingUntil(int year) {
-			this.operatingUntil = year;
+		public Builder operatingUntil(Date end) {
+			this.operatingUntil = end;
 			return this;
 		}
 		
@@ -212,7 +212,7 @@ public class Railway {
 	 * Returns the starting year of operations.
 	 * @return the year
 	 */
-	public int getOperatingSince() {
+	public Date getOperatingSince() {
 		return operatingSince;
 	}
 
@@ -220,7 +220,7 @@ public class Railway {
 	 * Sets the starting year of operations.
 	 * @param operatingSince the year
 	 */
-	public void setOperatingSince(Integer operatingSince) {
+	public void setOperatingSince(Date operatingSince) {
 		this.operatingSince = operatingSince;
 	}
 
@@ -228,7 +228,7 @@ public class Railway {
 	 * Returns the finishing year of operations.
 	 * @return the year
 	 */
-	public int getOperatingUntil() {
+	public Date getOperatingUntil() {
 		return operatingUntil;
 	}
 
@@ -236,7 +236,7 @@ public class Railway {
 	 * Sets the finishing year of operations.
 	 * @param operatingUntil the year
 	 */
-	public void setOperatingUntil(Integer operatingUntil) {
+	public void setOperatingUntil(Date operatingUntil) {
 		this.operatingUntil = operatingUntil;
 	}
 

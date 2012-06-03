@@ -82,24 +82,24 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	public void shouldValidateOperatingSinceYear() {
 		Railway railway = new Railway.Builder("AAA")
 			.country("AAA")
-			.operatingSince(1800)
+			.operatingSince(tomorrow())
 			.build();
 
 		Map<String, String> errors = validate(railway);
 		assertEquals(1, errors.size());
-		assertEquals("railway.operatingSince.range.notmet", errors.get("operatingSince"));
+		assertEquals("railway.operatingSince.past.notmet", errors.get("operatingSince"));
 	}
 	
 	@Test
 	public void shouldValidateOperatingUntilYear() {
 		Railway railway = new Railway.Builder("AAA")
 			.country("AAA")
-			.operatingUntil(9999)
+			.operatingUntil(tomorrow())
 			.build();
 
 		Map<String, String> errors = validate(railway);
 		assertEquals(1, errors.size());
-		assertEquals("railway.operatingUntil.range.notmet", errors.get("operatingUntil"));
+		assertEquals("railway.operatingUntil.past.notmet", errors.get("operatingUntil"));
 	}
 	
 }

@@ -34,7 +34,22 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.trenako.utility.Slug;
 
 /**
- * It represents a model railways toy company.
+ * It represents a model railways rolling stock manufacturer.
+ * <p>
+ * Two distinct family of manufacturer exists:
+ * <ul>
+ * <li><strong>industrial</strong>: these manufactures produce models using the die casting method;</li>
+ * <li><strong>brass models</strong>: these manufacturers produce models which are made of brass or
+ * similar alloys. They are usually more expensive than the industrial series due to the limited
+ * production quantities and the <em>"hand made"</em> nature of the production.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * This class allows one company to have local branches by country, either a local 
+ * office or a distribution company.
+ * </p>
+ * 
+ * 
  * @author Carlo Micieli
  *
  */
@@ -71,6 +86,7 @@ public class Brand {
 	
 	private Date lastModified;
 	
+	// required by spring data
 	Brand() {
 	}
 
@@ -102,6 +118,11 @@ public class Brand {
 		this.branches = b.branches;
 	}
 	
+	/**
+	 * It represents a brand builder class.
+	 * @author Carlo Micieli
+	 *
+	 */
 	public static class Builder {
 		// required fields
 		private final String name;
@@ -115,46 +136,90 @@ public class Brand {
 		private String slug = null;
 		private HashMap<String, Address> branches = null;
 		
+		/**
+		 * Creates a new brands builder.
+		 * @param name the brand name
+		 */
 		public Builder(String name) {
 			this.name = name;
 		}
 		
+		/**
+		 * The email address.
+		 * @param e the email address
+		 * @return this brand builder
+		 */
 		public Builder emailAddress(String e) {
 			emailAddress = e;
 			return this;
 		}
 
+		/**
+		 * It indicates whether is using the die casting method. 
+		 * @param b the industrial flag
+		 * @return this brand builder
+		 */
 		public Builder industrial(boolean b) {
 			industrial = b;
 			return this;
 		}
 
+		/**
+		 * The description.
+		 * @param d the description
+		 * @return this brand builder
+		 */
 		public Builder description(String d) {
 			description = d;
 			return this;
 		}
 
+		/**
+		 * The brand slug.
+		 * @param s the slug
+		 * @return this brand builder
+		 */
 		public Builder slug(String s) {
 			slug = s;
 			return this;
 		}
 		
+		/**
+		 * The address.
+		 * @param a the address
+		 * @return this brand builder
+		 */
 		public Builder address(Address a) {
 			address = a;
 			return this;
 		}
 		
+		/**
+		 * The local address.
+		 * @param country the country
+		 * @param a the address
+		 * @return this brand builder
+		 */
 		public Builder address(String country, Address a) {
 			if( branches==null ) branches = new HashMap<String, Address>();
 			branches.put(country, a);
 			return this;
 		}
 		
+		/**
+		 * The website url.
+		 * @param w the website url
+		 * @return this brand builder
+		 */
 		public Builder website(String w) {
 			website = w;
 			return this;
 		}
 		
+		/**
+		 * Builds the brand instance.
+		 * @return the brand
+		 */
 		public Brand build() {
 			return new Brand(this);
 		}
@@ -393,7 +458,7 @@ public class Brand {
 	}
 	
 	/**
-	 * Returns a hash code value for the <strong>Brand</strong>.
+	 * Returns a hash code value for this object.
 	 * @return a hash code value for this object
 	 */
 	@Override
