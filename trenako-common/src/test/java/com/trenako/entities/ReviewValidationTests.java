@@ -57,4 +57,18 @@ public class ReviewValidationTests extends AbstractValidationTests<Review> {
 		assertEquals("review.rollingStock.required", errors.get("rollingStock"));
 		assertEquals("review.content.required", errors.get("content"));
 	}
+	
+	@Test
+	public void shouldValidateRatings() {
+		Account author = new Account();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		
+		Review review = new Review(author, rs, "Review content");
+		review.setRating(6);
+		
+		Map<String, String> errors = validate(review);
+
+		assertEquals(1, errors.size());
+		assertEquals("review.rating.range.notmet", errors.get("rating"));
+	}
 }

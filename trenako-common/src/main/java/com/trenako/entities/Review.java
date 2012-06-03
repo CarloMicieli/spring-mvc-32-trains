@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -52,6 +53,9 @@ public class Review {
 	
 	@NotBlank(message = "review.content.required")
 	private String content;
+	
+	@Range(min = 0, max = 5, message = "review.rating.range.notmet")
+	private int rating;
 	
 	private Date postedAt;
 	
@@ -170,6 +174,25 @@ public class Review {
 	 */
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	/**
+	 * Returns the rating value.	
+	 * @return the rating
+	 */
+	public int getRating() {
+		return rating;
+	}
+
+	/**
+	 * Sets the rating value.
+	 * <p>
+	 * The rating value is included in the range between 0 and 5.
+	 * </p>
+	 * @param rating the rating
+	 */
+	public void setRating(int rating) {
+		this.rating = rating;
 	}
 
 	/**
