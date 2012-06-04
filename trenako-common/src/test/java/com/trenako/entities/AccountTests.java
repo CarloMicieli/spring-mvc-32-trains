@@ -45,6 +45,32 @@ public class AccountTests {
 	}
 	
 	@Test
+	public void shouldReturnsTrueWhenTwoAccountsAreEquals() {
+		Account x = new Account.Builder("mail@mail.com")
+			.password("$ecret")
+			.displayName("Bob")
+			.build();
+		Account y = new Account.Builder("mail@mail.com")
+			.password("$ecret")
+			.displayName("Alice")
+			.build();
+		assertTrue(x.equals(y));
+	}
+	
+	@Test
+	public void shouldReturnsFalseWhenTwoAccountsAreEquals() {
+		Account x = new Account.Builder("bob@mail.com")
+			.password("$ecret")
+			.displayName("Bob")
+			.build();
+		Account y = new Account.Builder("alice@mail.com")
+			.password("$ecret")
+			.displayName("Alice")
+			.build();
+		assertFalse(x.equals(y));
+	}
+	
+	@Test
 	public void shouldFillTheSlug() {
 		Account user = new Account.Builder("mail@mail.com")
 			.password("$ecret")

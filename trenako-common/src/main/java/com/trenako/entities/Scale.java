@@ -102,7 +102,6 @@ public class Scale {
 		}
 	}
 	
-	
 	/**
 	 * Returns the unique id.
 	 * @return the unique id

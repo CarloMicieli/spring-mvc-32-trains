@@ -29,7 +29,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.trenako.utility.Slug;
 
 /**
- * It represents a user account for the application.
+ * It represents an account for the application.
+ * <p>
+ * Although the users have to provide their email address during the 
+ * registration to provide a unique value. 
+ * </p>
+ * <p>
+ * The public user name is provided by the {@link Account#getDisplayName()} method, 
+ * there is no guarantee this value is managed online. 
+ * </p>
+ * 
  * @author Carlo Micieli
  *
  */
@@ -76,7 +85,7 @@ public class Account implements Serializable {
 	}
 	
 	/**
-	 * The user account builder class
+	 * The user account builder class.
 	 * @author Carlo Micieli
 	 *
 	 */
@@ -138,10 +147,6 @@ public class Account implements Serializable {
 		return id;
 	}
 
-	void setId(ObjectId id) {
-		this.id = id;
-	}
-
 	/**
 	 * Returns the user email address.
 	 * @return the user email address
@@ -192,6 +197,11 @@ public class Account implements Serializable {
 
 	/**
 	 * Returns the user slug.
+	 * <p>
+	 * If this is empty then the value from {@link Account#getDisplayName()} will be 
+	 * encoded using {@link Slug#encode(String)}.
+	 * </p>
+	 * 
 	 * @return the slug
 	 */
 	public String getSlug() {
@@ -269,5 +279,24 @@ public class Account implements Serializable {
 	 */
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * <p>
+	 * Two accounts are equals if they have the same <em>email address</em>.
+	 * </p>
+	 * 
+	 * @param obj the reference object with which to compare
+	 * @return <em>true</em> if this object is the same as the obj argument;
+	 * <em>false</em> otherwise
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if( obj==this ) return true;
+		if( !(obj instanceof Account) ) return false;
+		
+		Account other = (Account) obj;
+		return this.emailAddress.equals(other.emailAddress);
 	}
 }

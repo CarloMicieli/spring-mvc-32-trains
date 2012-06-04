@@ -75,12 +75,12 @@ public class RollingStock {
 	@Size(max = 150, message = "rs.description.size.notmet")
 	private String description;
 	
-	Map<String, String> localDescriptions;
+	private Map<String, String> localDescriptions;
 
 	@Size(max = 1000, message = "rs.details.size.notmet")
 	private String details;
 	
-	Map<String, String> localDetails;
+	private Map<String, String> localDetails;
 	
 	@DBRef
 	@NotNull(message = "rs.railway.required")

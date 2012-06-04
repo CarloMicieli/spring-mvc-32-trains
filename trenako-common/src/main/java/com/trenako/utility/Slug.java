@@ -23,12 +23,19 @@ import java.util.regex.Pattern;
 /**
  * It converts a string to a "slug".
  * 
- * Original implementation at <http://www.codecodex.com/wiki/Generate_a_url_slug#Java>
+ * @see <a href="http://www.codecodex.com/wiki/Generate_a_url_slug#Java">Original implementation</a>
  */
 public class Slug {
 	private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");  
 	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");  
 
+	private Slug() {}
+	
+	/**
+	 * Encodes this text to a <em>slug</em>.
+	 * @param input the string to be encoded
+	 * @return the slug
+	 */
 	public static String encode(String input) {
 		if(input==null)
 			throw new IllegalArgumentException();
