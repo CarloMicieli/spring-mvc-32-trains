@@ -21,8 +21,38 @@ package com.trenako.entities;
  *
  */
 public enum OptionFamily {
+	/**
+	 * The digital control interface.
+	 */
 	DCC_INTERFACE,
+	/**
+	 * The head lights configuration.
+	 */
 	HEADLIGHTS,
+	/**
+	 * The transmission configuration.
+	 */
 	TRANSMISSION,
-	COUPLER,	
+	/**
+	 * The coupler plug.
+	 */
+	COUPLER;
+
+	/**
+	 * Returns the key value for the current option family.
+	 * @return the key value
+	 */
+	public String keyValue() {
+		return name().toLowerCase().replace('_', '-');
+	}
+
+	/**
+	 * Parses the option family value from the database.
+	 * @param family the family name.
+	 * @return a value from OptionFamily enumeration.
+	 */
+	public static OptionFamily parse(String family) {
+		String f = family.toUpperCase().replace('-', '_');
+		return OptionFamily.valueOf(f);
+	}	
 }
