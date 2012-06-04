@@ -49,7 +49,6 @@ import com.trenako.utility.Slug;
  * office or a distribution company.
  * </p>
  * 
- * 
  * @author Carlo Micieli
  *
  */
@@ -104,7 +103,6 @@ public class Brand {
 	 */
 	public Brand(String name) {
 		this.name = name;
-		this.slug = Slug.encode(name);
 	}
 
 	private Brand(Builder b) {
@@ -267,6 +265,7 @@ public class Brand {
 	 * @return the slug
 	 */
 	public String getSlug() {
+		if( slug==null ) slug = Slug.encode(name);
 		return slug;
 	}
 

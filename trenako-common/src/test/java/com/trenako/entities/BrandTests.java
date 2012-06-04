@@ -27,6 +27,12 @@ import static org.junit.Assert.*;
 public class BrandTests {
 
 	@Test
+	public void shouldFillTheSlugValue() {
+		Brand x = new Brand("Ls Models");
+		assertEquals("ls-models", x.getSlug());
+	}
+	
+	@Test
 	public void equalsShouldFalseForDifferentBrands() {
 		Brand x = new Brand("AAAA");
 		Brand y = new Brand("BBBB");
