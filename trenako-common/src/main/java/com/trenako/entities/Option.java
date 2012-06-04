@@ -40,10 +40,8 @@ public class Option {
 	@NotNull(message = "option.family.required")
 	private OptionFamily family;
 	
-	/**
-	 * Creates a new rolling stock option.
-	 */
-	public Option() {
+	// required by spring data
+	Option() {
 	}
 	
 	/**
@@ -62,14 +60,6 @@ public class Option {
 	 */
 	public ObjectId getId() {
 		return id;
-	}
-
-	/**
-	 * Sets the unique id for this option.
-	 * @param id the id.
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
 	}
 
 	/**
@@ -134,44 +124,5 @@ public class Option {
 			.append(family)
 			.append(")")
 			.toString();
-	}
-	
-	/**
-	 * Creates an option instance for the DCC interface NEM-651.
-	 * @return the option.
-	 */
-	public static Option Nem651() {
-		final Option op = new Option("NEM-651", OptionFamily.DCC_INTERFACE);
-		return op;
-	}
-
-	/**
-	 * Creates an option instance for the DCC interface NEM-652.
-	 * @return the option.
-	 */	
-	public static Option Nem652() {
-		final Option op = new Option("NEM-652", OptionFamily.DCC_INTERFACE);
-		return op;
-	}
-	
-	/**
-	 * Creates an option instance for white/red headlights.
-	 * @return the option.
-	 */
-	public static Option WhiteRedHeadlights() {
-		final Option op = new Option("White-Red", OptionFamily.HEADLIGHTS);
-		return op;
-	}
-	
-	/**
-	 * Creates an option instance for white/red headlights changing according 
-	 * to the route of march.
-	 * 
-	 * @return the option.
-	 */
-	public static Option WhiteRedAccordingMarchHeadlights() {
-		final Option op = new Option("White-Red-March", OptionFamily.HEADLIGHTS);
-		return op;
-	}
-	
+	}	
 }

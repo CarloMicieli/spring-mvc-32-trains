@@ -161,7 +161,7 @@ public class RollingStockTests {
 	@Test
 	public void shouldAssignOptionsToRollingStocks() {
 		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.option(Option.Nem651())
+			.option(new Option("NEM-651", OptionFamily.DCC_INTERFACE))
 			.build();
 		assertEquals(1, rs.getOptions().size());
 		assertEquals("{DCC_INTERFACE=NEM-651}", rs.getOptions().toString());
@@ -177,14 +177,19 @@ public class RollingStockTests {
 	public void shouldAssignOnly1OptionForEachFamily() {
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		
-		rs.addOption(Option.WhiteRedAccordingMarchHeadlights());
-		assertTrue(rs.hasOption(Option.WhiteRedAccordingMarchHeadlights()));
+		Option op1 = new Option("Op1", OptionFamily.HEADLIGHTS);
 		
-		rs.addOption(Option.Nem651());
-		rs.addOption(Option.WhiteRedHeadlights());
+		rs.addOption(op1);
+		assertTrue(rs.hasOption(op1));
 		
-		assertEquals(Option.WhiteRedHeadlights(), rs.getOption(OptionFamily.HEADLIGHTS));
-		assertEquals(Option.Nem651(), rs.getOption(OptionFamily.DCC_INTERFACE));
+		Option op2 = new Option("Op2", OptionFamily.DCC_INTERFACE);
+		Option op3 = new Option("Op3", OptionFamily.HEADLIGHTS);
+		
+		rs.addOption(op2);
+		rs.addOption(op3);
+		
+		assertEquals(op3, rs.getOption(OptionFamily.HEADLIGHTS));
+		assertEquals(op2, rs.getOption(OptionFamily.DCC_INTERFACE));
 	}
 	
 	@Test
