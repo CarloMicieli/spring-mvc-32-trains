@@ -39,7 +39,7 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	@Test
 	public void shouldValidateRailways() {
 		Railway railway = new Railway.Builder("AAA")
-			.country("DEU")
+			.country("DE")
 			.build();
 		
 		Map<String, String> errors = validate(railway);
@@ -59,7 +59,7 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	@Test
 	public void shouldValidateRailwayNameSize() {
 		Railway railway = new Railway.Builder("12345678901") //max = 10
-			.country("DEU")
+			.country("DE")
 			.build();
 		
 		Map<String, String> errors = validate(railway);
@@ -81,7 +81,7 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	@Test
 	public void shouldValidateOperatingSinceYear() {
 		Railway railway = new Railway.Builder("AAA")
-			.country("AAA")
+			.country("DE")
 			.operatingSince(tomorrow())
 			.build();
 
@@ -93,7 +93,7 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	@Test
 	public void shouldValidateOperatingUntilYear() {
 		Railway railway = new Railway.Builder("AAA")
-			.country("AAA")
+			.country("DE")
 			.operatingUntil(tomorrow())
 			.build();
 

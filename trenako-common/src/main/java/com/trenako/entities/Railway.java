@@ -54,7 +54,7 @@ public class Railway {
 	private String companyName;
 	
 	@NotBlank(message = "railway.country.required")
-	@Size(max = 3, message = "railway.country.size.notmet")
+	@Size(max = 2, message = "railway.country.size.notmet")
 	private String country;
 	
 	@Past(message = "railway.operatingSince.past.notmet")

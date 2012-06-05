@@ -113,7 +113,7 @@ public class RollingStock {
 	@Size(max = 12, message = "rs.upcCode.size.notmet")
 	private String upcCode;
 	
-	@Size(max = 3, message = "rs.country.size.notmet")
+	@Size(max = 2, message = "rs.country.size.notmet")
 	private String country;
 	
 	private Map<String, String> options;
