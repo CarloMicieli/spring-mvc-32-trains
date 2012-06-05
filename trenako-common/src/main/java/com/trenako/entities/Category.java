@@ -15,6 +15,9 @@
  */
 package com.trenako.entities;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * The enumeration of the model categories.
  * @author Carlo Micieli
@@ -25,6 +28,11 @@ public enum Category {
 	 * The steam locomotives category.
 	 */
 	STEAM_LOCOMOTIVES,
+
+	/**
+	 * The diesel locomotives category.
+	 */
+	DIESEL_LOCOMOTIVES,
 	
 	/**
 	 * The electric locomotives category.
@@ -32,24 +40,14 @@ public enum Category {
 	ELECTRIC_LOCOMOTIVES,
 	
 	/**
-	 * The diesel locomotives category.
+	 * The railcar category.
 	 */
-	DIESEL_LOCOMOTIVES,
+	RAILCARS,
 	
 	/**
 	 * The electric multiple unit category.
 	 */
 	ELECTRIC_MULTIPLE_UNIT,
-	
-	/**
-	 * The train set category.
-	 */
-	TRAIN_SETS,
-	
-	/**
-	 * The railcar category.
-	 */
-	RAILCARS,
 	
 	/**
 	 * The freight cars category.
@@ -60,6 +58,11 @@ public enum Category {
 	 * The passenger cars category.
 	 */
 	PASSENGER_CARS,
+	
+	/**
+	 * The train set category.
+	 */
+	TRAIN_SETS,
 	
 	/**
 	 * The starter sets (usually includes the tracks) category.
@@ -82,5 +85,24 @@ public enum Category {
 	public static Category parse(String category) {
 		String c = category.toUpperCase().replace('-', '_');
 		return Category.valueOf(c);
+	}
+
+	/**
+	 * Returns the list of category labels by power method.
+	 * @param isDc the power method
+	 * @return the list of categories
+	 */
+	public static Iterable<String> list(boolean isDc) {
+		
+		String pm = isDc ? "dc" : "ac";
+		
+		int i = 0;
+		String[] labels = new String[Category.values().length];
+		for( Category cat : Category.values() ) {
+			labels[i++] = String.format("category-%s-%s", pm, cat.keyValue());
+		}
+
+		return Collections.unmodifiableList(
+				Arrays.asList(labels));
 	}
 }
