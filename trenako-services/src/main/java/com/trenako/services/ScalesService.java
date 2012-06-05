@@ -20,37 +20,56 @@ import org.bson.types.ObjectId;
 import com.trenako.entities.Scale;
 
 /**
- * The interface for the scales service.
+ * The interface for the service to manage the {@link Scale} entity class.
  * @author Carlo Micieli
  *
  */
 public interface ScalesService {
 
 	/**
-	 * Returns the scale document by the id.
-	 * @param id the unique id.
-	 * @return a brand instance. <em>null</em> if no brands are found.
+	 * Returns the scale with the provided id.
+	 * @param id the unique id
+	 * @return a scale if found; <em>null</em> otherwise
 	 */
 	Scale findById(ObjectId id);
 
 	/**
-	 * Returns the brand from the name.
-	 * @param name the brand name.
-	 * @return a brand instance. <em>null</em> if no brands are found.
+	 * Returns the scale with the provided name.
+	 * @param name the scale name
+	 * @return a scale if found; <em>null</em> otherwise
 	 */
 	Scale findByName(String name);
+	
+	/**
+	 * Returns all the scale with the provided {@link Scale#isNarrow()} value.
+	 * @param isNarrow <em>true</em> will returns all the scales with narrow gauges; 
+	 * <em>false</em> will return the scales with standard gauges
+	 * @return the list of scales
+	 */
+	//Iterable<Scale> findAll(boolean isNarrow);
+	
+	/**
+	 * Returns all the scale with the provided {@link Scale#getRatio()} value.
+	 * @param ratio the scale ratio
+	 * @return the list of scales
+	 */
+	//Iterable<Scale> findByRatio(double ratio);
 
+	/**
+	 * Returns all the scale entities.
+	 * @return the list of scales
+	 */
 	Iterable<Scale> findAll();
 
 	/**
-	 * Persist the brand instance to the data store.
-	 * @param brand a brand.
+	 * Saves the changes for the scale.
+	 * @param scale a scale
 	 */
-	void save(Scale brand);
+	void save(Scale scale);
 
 	/**
-	 * Remove the brand from the data store.
-	 * @param brand a brand.
+	 * Deletes the scale.
+	 * @param scale a scale
 	 */
 	void remove(Scale brand);
 
