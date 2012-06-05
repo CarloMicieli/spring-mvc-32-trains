@@ -751,7 +751,7 @@ public class RollingStock {
 	/**
 	 * Adds an option to the rolling stock.
 	 * <p>
-	 * If an option for the same family already exists,
+	 * If an option for the same {@link OptionFamily} already exists,
 	 * this method will replace the value.
 	 * </p>
 	 * 
@@ -867,6 +867,13 @@ public class RollingStock {
 
 	/**
 	 * Returns a string representation of the object.
+	 * <p>
+	 * As reference the method will return a string similar to this:
+	 * <ore>
+	 * {@code brandName + itemNumber + ": " + description }
+	 * </pre>
+	 * </p>
+	 * 
 	 * @return a string representation of the object
 	 */
 	@Override
