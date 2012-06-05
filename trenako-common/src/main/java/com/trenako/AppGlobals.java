@@ -15,7 +15,11 @@
  */
 package com.trenako;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Application constants.
@@ -24,9 +28,54 @@ import java.util.Locale;
  *
  */
 public class AppGlobals {
-	public AppGlobals() {
+	private AppGlobals() {
 		// avoid the constructor calls.
 		throw new AssertionError();
+	}
+	
+	/**
+	 * Returns the list of the locale supported by the application.
+	 * @return the list of locale
+	 */
+	public static Iterable<Locale> languages() {
+		return Collections.unmodifiableList(Arrays.asList(
+			Locale.ENGLISH, Locale.ITALIAN));
+	}
+	
+	/**
+	 * Returns the list of the countries supported by the application.
+	 * <p>
+	 * This method returns a reduced list of all the countries. The map is sorted by the English
+	 * country name. The map key is the two-letter codes as defined by ISO-3166.
+	 * </p>
+	 *
+	 * @return the list of countries
+	 */
+	@SuppressWarnings("serial")
+	public static SortedMap<String, String> countries() {
+		return Collections.unmodifiableSortedMap(new TreeMap<String, String>() {{ 
+			put("AT", "Austria");
+			put("BE", "Belgium");
+			put("CA", "Canada");
+			put("CN", "China");
+			put("DK", "Denmark");
+			put("FI", "Finland");
+			put("FR", "France");
+			put("DE", "Germany");
+			put("IT", "Italy");
+			put("JP", "Japan");
+			put("MX", "Mexico");
+			put("NL", "Netherlands");
+			put("NO", "Norway");
+			put("RO", "Romania");
+			put("RU", "Russian Federation");
+			put("ES", "Spain");
+			put("SE", "Sweden");
+			put("CH", "Switzerland");
+			put("TR", "Turkey");
+			put("UK", "United Kingdom");
+			put("US", "United States");
+		}});
 	}
 	
 	/**
