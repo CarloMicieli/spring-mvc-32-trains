@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 
+import com.trenako.AppGlobals;
 import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
@@ -54,7 +55,7 @@ public interface ReviewsService {
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
-	 * @param authorId the reviews' author
+	 * @param author the reviews' author
 	 * @return a {@code Review} list
 	 */	
 	Iterable<Review> findByAuthor(Account author);
@@ -104,13 +105,13 @@ public interface ReviewsService {
 	 * This method performs a "upsert": if the {@code Review} is not present in the data store
 	 * a new {@code Review} is created; otherwise the method will update the existing {@code Review}. 
 	 * </p>	 
-	 * @param comment the {@code Review} to be saved
+	 * @param review the {@code Review} to be saved
 	 */
 	void save(Review review);
 	
 	/**
 	 * Removes a {@link Review} from the data store.
-	 * @param comment the {@code Review} to be removed
+	 * @param review the {@code Review} to be removed
 	 */
 	void remove(Review review);	
 }

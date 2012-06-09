@@ -18,6 +18,8 @@ package com.trenako.services;
 import org.bson.types.ObjectId;
 
 import com.trenako.SearchCriteria;
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 
 /**
@@ -64,8 +66,8 @@ public interface RollingStocksService {
 	 * </p>
 	 *
 	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
-	 * the results are sort by descending {@link RollingStock#getLastModifiedDate()}.
+	 * This method returns at most a number of items from {@link com.trenako.AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending {@link RollingStock#getLastModified()}.
 	 * </p>
 	 *
 	 * @param criteria the search criteria
@@ -80,7 +82,7 @@ public interface RollingStocksService {
 	 * This method is using the {@link Brand#getSlug()} value as a search key.
 	 * </p>
 	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * This method returns at most a number of items from {@link com.trenako.AppGlobals#MAX_RESULT_SET_SIZE}; 
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
@@ -96,7 +98,7 @@ public interface RollingStocksService {
 	 * This method is performing a case sensitive search (ie {@code iv} and {@code IV} produce different results).
 	 * </p>
 	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * This method returns at most a number of items from {@link com.trenako.AppGlobals#MAX_RESULT_SET_SIZE}; 
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
@@ -112,7 +114,7 @@ public interface RollingStocksService {
 	 * This method is performing a case sensitive search (ie {@code h0} and {@code H0} produce different results).
 	 * </p>
 	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * This method returns at most a number of items from {@link com.trenako.AppGlobals#MAX_RESULT_SET_SIZE}; 
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
@@ -125,7 +127,7 @@ public interface RollingStocksService {
 	/**
 	 * Returns a list of {@link RollingStock} with the same category.
 	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * This method returns at most a number of items from {@link com.trenako.AppGlobals#MAX_RESULT_SET_SIZE}; 
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
@@ -138,7 +140,7 @@ public interface RollingStocksService {
 	/**
 	 * Returns a list of {@link RollingStock} with the same power method.
 	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * This method returns at most a number of items from {@link com.trenako.AppGlobals#MAX_RESULT_SET_SIZE}; 
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
@@ -154,7 +156,7 @@ public interface RollingStocksService {
 	 * This method is using the {@link Railway#getSlug()} value as a search key.
 	 * </p>	 
 	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * This method returns at most a number of items from {@link com.trenako.AppGlobals#MAX_RESULT_SET_SIZE}; 
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
@@ -200,7 +202,7 @@ public interface RollingStocksService {
 	/**
 	 * Returns a list of {@link RollingStock} with the same tag.
 	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * This method returns at most a number of items from {@link com.trenako.AppGlobals#MAX_RESULT_SET_SIZE}; 
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
@@ -215,13 +217,13 @@ public interface RollingStocksService {
 	 * This method performs a "upsert": if the {@code RollingStock} is not present in the data store
 	 * a new {@code RollingStock} is created; otherwise the method will update the existing {@code RollingStock}. 
 	 * </p>	 
-	 * @param comment the {@code RollingStock} to be saved
+	 * @param rs the {@code RollingStock} to be saved
 	 */
 	void save(RollingStock rs);
 
 	/**
 	 * Removes a {@link RollingStock} from the data store.
-	 * @param comment the {@code RollingStock} to be removed
+	 * @param rs the {@code RollingStock} to be removed
 	 */
 	void remove(RollingStock rs);
 }

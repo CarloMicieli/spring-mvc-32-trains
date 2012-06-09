@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 
+import com.trenako.AppGlobals;
 import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
@@ -27,11 +28,11 @@ import com.trenako.entities.RollingStock;
  * The concrete classes that implements the {@code CommentsService} interface will provide
  * the following functionalities:
  * <ul>
- * <li>finds a {@link Comment} by id;</li>
- * <li>returns the {@link Comment} list by author;</li>
- * <li>returns the {@link Comment} list by rolling stock;</li>
- * <li>returns the last posted {@link Comment} list;</li>
- * <li>saves/removes a {@link Comment}.</li>
+ * <li>finds a {@code Comment} by id;</li>
+ * <li>returns the {@code Comment} list by author;</li>
+ * <li>returns the {@code Comment} list by rolling stock;</li>
+ * <li>returns the last posted {@code Comment} list;</li>
+ * <li>saves/removes a {@code Comment}.</li>
  * </ul>
  * </p>
  *
@@ -54,7 +55,7 @@ public interface CommentsService {
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
-	 * @param authorId the comments' author
+	 * @param author the comments' author
 	 * @return a {@code Comment} list
 	 */	 
 	Iterable<Comment> findByAuthor(Account author);
@@ -81,7 +82,7 @@ public interface CommentsService {
 	 * the results are sort by descending posted date. 
 	 * </p>
 	 *
-	 * @param rollingStockId the rolling stock
+	 * @param rollingStock the rolling stock
 	 * @return the list of comments
 	 */	
 	Iterable<Comment> findByRollingStock(RollingStock rollingStock);

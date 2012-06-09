@@ -98,6 +98,6 @@ public interface ScalesService {
 	 * Removes a {@link Scale} from the data store.
 	 * @param scale the scale {@code Scale} to be removed
 	 */
-	void remove(Scale brand);
+	void remove(Scale scale);
 
 }
