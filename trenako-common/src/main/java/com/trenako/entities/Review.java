@@ -23,12 +23,24 @@ import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * It represents a user review to a rolling stock.
+ * 
+ * <p>
+ * A review includes the following components:
+ * <ul>
+ * <li>an {@code author}, usually a {@link Account} instance;</li>
+ * <li>the {@link RollingStock} under review;</li>
+ * <li>a {@code title} that should be a short overview for the content;</li>
+ * <li>the {@code content} text;</li>
+ * <li>a numeric {@code rating} between 0 and 5.</li>
+ * </ul>
+ * </p>
  *
  * @author Carlo Micieli
  */
@@ -51,39 +63,42 @@ public class Review {
 	@NotNull(message = "review.rollingStock.required")
 	private RollingStock rollingStock;
 	
+	@NotBlank(message = "review.title.required")
+	private String title;
+	
 	@NotBlank(message = "review.content.required")
 	private String content;
 	
 	@Range(min = 0, max = 5, message = "review.rating.range.notmet")
 	private int rating;
 	
+	@Indexed(direction = IndexDirection.DESCENDING)
 	private Date postedAt;
 	
+	// required by spring data
 	Review() {
 	}
 	
 	/**
-	 * Creates a new {@link Review} for a rolling stock model.
+	 * Creates a new {@code Review} for a rolling stock model.
 	 * @param author the review's author
 	 * @param rollingStock the rolling stock model under review
+	 * @param title the title
 	 * @param content the review content
 	 */
-	public Review(Account author, RollingStock rollingStock, String content) {
+	public Review(Account author, RollingStock rollingStock, String title, String content) {
 		this.author = author;
 		this.rollingStock = rollingStock;
+		this.title = title;
 		this.content = content;
 	}
 
 	/**
-	 * Returns the review unique id.
+	 * Returns the {@code Review} unique id.
 	 * @return the id
 	 */
 	public ObjectId getId() {
 		return id;
-	}
-
-	void setId(ObjectId id) {
-		this.id = id;
 	}
 
 	/**
@@ -163,6 +178,22 @@ public class Review {
 	}
 
 	/**
+	 * Returns the {@code Review} title.
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * Sets the {@code Review} title.
+	 * @param title the title
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
 	 * Returns the review's content.
 	 * @return the content
 	 */
@@ -214,9 +245,11 @@ public class Review {
 	}
 	
 	/**
-	 * Indicates whether some other object is "equal to" this one.
-	 * @param obj the reference object with which to compare
-	 * @return <em>true</em> if this object is the same as the obj argument; <em>false</em> otherwise
+	 * Indicates whether some other {@code Review} is equal to this one.
+	 * 
+	 * @param obj the reference {@code Account} with which to compare
+	 * @return {@code true} if this object is the same as the {@code obj} 
+	 * argument; {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -227,5 +260,29 @@ public class Review {
 		return content.equals(other.content) &&
 				author.equals(other.author) &&
 				rollingStock.equals(other.rollingStock); 
+	}
+	
+	/**
+	 * Returns a string representation of the {@code Review}.
+     * <p>
+     * This method returns a string equal to the value of:
+	 * <blockquote>
+     * <pre>
+     * getAuthorName() + ': ' + getRsSlug() + ' (' + getTitle() + ')'
+     * </pre>
+     * </blockquote>
+	 * </p>
+	 * @return a string representation of the {@code Review}
+     */
+	@Override
+	public String toString() {
+        return new StringBuilder()
+        	.append(getAuthorName())
+        	.append(": ")
+        	.append(getRsSlug())
+        	.append(" (")
+        	.append(getTitle())
+        	.append(")")
+        	.toString();
 	}
 }

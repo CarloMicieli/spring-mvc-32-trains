@@ -39,7 +39,7 @@ public class ReviewsEventListenerTests {
 			.displayName("User Name")
 			.build();
 		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
-		Review review = new Review(author, rollingStock, "Review");
+		Review review = new Review(author, rollingStock, "Title", "Review");
 	
 		DBObject dbo = new BasicDBObject();
 		lis.onBeforeSave(review, dbo);

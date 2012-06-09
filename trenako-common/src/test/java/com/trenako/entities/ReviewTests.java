@@ -27,13 +27,24 @@ import org.junit.Test;
 public class ReviewTests {
 
 	@Test
+	public void shouldReturnAStringRepresentation() {
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		Review r = new Review(author, rs, "Title", "Comment content");
+	
+		assertEquals("user-name: acme-123456 (Title)", r.toString());
+	}
+	
+	@Test
 	public void shouldFillAuthorAndRollingStockSlugs() {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		
-		Review r = new Review(author, rs, "Comment content");
+		Review r = new Review(author, rs, "Title", "Comment content");
 		
 		assertEquals("user-name", r.getAuthorName());
 		assertEquals("acme-123456", r.getRsSlug());
@@ -46,8 +57,8 @@ public class ReviewTests {
 			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
-		Review x = new Review(author, rs, "Review content");
-		Review y = new Review(author, rs, "Review content");
+		Review x = new Review(author, rs, "Title", "Review content");
+		Review y = new Review(author, rs, "Title", "Review content");
 		
 		assertTrue(x.equals(y));
 	}
@@ -59,8 +70,8 @@ public class ReviewTests {
 			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
-		Review x = new Review(author, rs, "Review content 1");
-		Review y = new Review(author, rs, "Review content 2");
+		Review x = new Review(author, rs, "Title", "Review content 1");
+		Review y = new Review(author, rs, "Title", "Review content 2");
 		
 		assertFalse(x.equals(y));
 	}

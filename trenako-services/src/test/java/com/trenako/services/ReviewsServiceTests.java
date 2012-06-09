@@ -105,7 +105,7 @@ public class ReviewsServiceTests {
 			.displayName("User Name")
 			.build();
 		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
-		final Review c = new Review(author, rollingStock, "Review");
+		final Review c = new Review(author, rollingStock, "Title", "Review");
 		return c;
 	}
 }

@@ -74,7 +74,8 @@ public class ItemsCount implements Comparable<ItemsCount> {
 	/**
 	 * Indicates whether some other object is "equal to" this one.
 	 * @param obj the reference object with which to compare
-	 * @return <em>true</em> if this object is the same as the obj argument; <em>false</em> otherwise
+	 * @return {@code true} if this object is the same as the {@code obj} 
+	 * argument; {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -91,9 +92,11 @@ public class ItemsCount implements Comparable<ItemsCount> {
 	 * Returns a string representation of the object.
 	 * <p>
 	 * This method returns a string equal to the value of:
+	 * <blockquote>
 	 * <pre>
 	 * {@code label + "(" + slug + ", items=" + items + ")" }
 	 * </pre>
+	 * </blockquote>
 	 * </p>
 	 * 
 	 * @return a string representation of the object

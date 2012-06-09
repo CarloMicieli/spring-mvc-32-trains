@@ -41,7 +41,7 @@ public class ReviewValidationTests extends AbstractValidationTests<Review> {
 		Account author = new Account();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		
-		Review review = new Review(author, rs, "Review content");
+		Review review = new Review(author, rs, "Title", "Review content");
 		Map<String, String> errors = validate(review);
 		
 		assertEquals(0, errors.size());
@@ -52,8 +52,9 @@ public class ReviewValidationTests extends AbstractValidationTests<Review> {
 		Review review = new Review();
 		Map<String, String> errors = validate(review);
 		
-		assertEquals(3, errors.size());
+		assertEquals(4, errors.size());
 		assertEquals("review.author.required", errors.get("author"));
+		assertEquals("review.title.required", errors.get("title"));
 		assertEquals("review.rollingStock.required", errors.get("rollingStock"));
 		assertEquals("review.content.required", errors.get("content"));
 	}
@@ -63,7 +64,7 @@ public class ReviewValidationTests extends AbstractValidationTests<Review> {
 		Account author = new Account();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		
-		Review review = new Review(author, rs, "Review content");
+		Review review = new Review(author, rs, "Title", "Review content");
 		review.setRating(6);
 		
 		Map<String, String> errors = validate(review);
