@@ -32,3 +32,6 @@ to run the test suite for the application:
 
     gradle check
 
+to generate the project Javadoc an appropriate Gradle task exists:
+
+    gradle projectDoc
