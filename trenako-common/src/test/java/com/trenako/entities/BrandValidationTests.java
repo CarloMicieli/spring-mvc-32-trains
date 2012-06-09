@@ -38,8 +38,7 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 
 	@Test
 	public void shouldValidateValidBrands() {
-		Brand b = new Brand();
-		b.setName("ACME");
+		Brand b = new Brand.Builder("ACME").build();
 		
 		Map<String, String> errors = validate(b);
 		assertEquals(0, errors.size());
@@ -56,8 +55,8 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 	
 	@Test
 	public void shouldValidateBrandNameSize() {
-		Brand b = new Brand();
-		b.setName("12345678901234567890123456");
+		Brand b = new Brand.Builder("12345678901234567890123456")
+			.build();
 		
 		Map<String, String> errors = validate(b);
 		assertEquals(1, errors.size());
@@ -66,9 +65,9 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 	
 	@Test
 	public void shouldValidateBrandWebsite() {
-		Brand b = new Brand();
-		b.setName("AAA");
-		b.setWebsite("http://localhost");
+		Brand b = new Brand.Builder("AAA")
+			.website("http://localhost")
+			.build();
 		
 		Map<String, String> errors = validate(b);
 		assertEquals(0, errors.size());
@@ -76,9 +75,9 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 	
 	@Test
 	public void shouldValidateInvalidBrandWebsite() {
-		Brand b = new Brand();
-		b.setName("AAA");
-		b.setWebsite("wr0ng$website");
+		Brand b = new Brand.Builder("AAA")
+			.website("wr0ng$website")
+			.build();
 		
 		Map<String, String> errors = validate(b);
 		assertEquals(1, errors.size());
@@ -87,9 +86,9 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 
 	@Test
 	public void shouldValidateBrandEmail() {
-		Brand b = new Brand();
-		b.setName("AAA");
-		b.setEmailAddress("mail@mail.com");
+		Brand b = new Brand.Builder("AAA")
+			.emailAddress("mail@mail.com")
+			.build();
 		
 		Map<String, String> errors = validate(b);
 		assertEquals(0, errors.size());
@@ -97,10 +96,10 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 	
 	@Test
 	public void shouldValidateInvalidBrandEmail() {
-		Brand b = new Brand();
-		b.setName("AAA");
-		b.setEmailAddress("wr0ng$mail");
-		
+		Brand b = new Brand.Builder("AAA")
+			.emailAddress("wr0ng$mail")
+			.build();
+
 		Map<String, String> errors = validate(b);
 		assertEquals(1, errors.size());
 		assertEquals("brand.emailAddress.email.invalid", errors.get("emailAddress"));

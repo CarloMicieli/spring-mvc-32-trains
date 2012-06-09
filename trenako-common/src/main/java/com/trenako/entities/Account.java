@@ -16,6 +16,8 @@
 package com.trenako.entities;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -35,8 +37,12 @@ import com.trenako.utility.Slug;
  * registration to provide a unique value. 
  * </p>
  * <p>
- * The public user name is provided by the {@link Account#getDisplayName()} method, 
- * there is no guarantee this value is managed online. 
+ * The public user name is provided by the 
+ * {@link Account#getDisplayName()} method. 
+ * </p>
+ * <p>
+ * The best way to build new {@code Account} objects is using the 
+ * {@link Account.Builder} methods.
  * </p>
  * 
  * @author Carlo Micieli
@@ -99,48 +105,86 @@ public class Account implements Serializable {
 		private boolean locked = false;
 		
 		private List<String> roles = null;
-		
+		/**
+		 * Creates a new {@code Builder} with the provided email address.
+		 * @param emailAddress the user email address
+		 */
 		public Builder(String emailAddress) {
 			this.emailAddress = emailAddress;
 		}
 
-		public Builder password(String pwd) {
-			password = pwd;
+		/**
+		 * Sets the password.
+		 * @param password the password
+		 * @return an {@code Account} builder
+		 */
+		public Builder password(String password) {
+			this.password = password;
 			return this;
 		}
 
-		public Builder displayName(String dn) {
-			displayName = dn;
+		/**
+		 * Sets the user display name.
+		 * @param displayName the user display name
+		 * @return an {@code Account} builder
+		 */
+		public Builder displayName(String displayName) {
+			this.displayName = displayName;
 			return this;
 		}
 
-		public Builder expired(boolean b) {
-			expired = b;
+		/**
+		 * Indicates whether the account's credentials (password) has expired.
+		 * @param expired {@code true} if the account is expired; {@code false} otherwise
+		 * @return an {@code Account} builder
+		 */		
+		public Builder expired(boolean expired) {
+			this.expired = expired;
 			return this;
 		}
 
-		public Builder enabled(boolean b) {
-			enabled = b;
+		/**
+		 * Indicates whether the user is enabled or disabled.
+		 * @param enabled {@code true} if the account is enabled; {@code false} otherwise
+		 * @return an {@code Account} builder
+		 */
+		public Builder enabled(boolean enabled) {
+			this.enabled = enabled;
 			return this;
 		}
 
-		public Builder locked(boolean b) {
-			locked = b;
+		/**
+		 * Indicates whether the user is locked or unlocked.
+		 * @param locked {@code true} if the account is locked; {@code false} otherwise
+		 * @return an {@code Account} builder
+		 */
+		public Builder locked(boolean locked) {
+			this.locked = locked;
 			return this;
 		}
 
-		public Builder roles(List<String> lr) {
-			roles = lr;
+		/**
+		 * Adds roles to the {@code Account}.
+		 * @param roles the roles to be added
+		 * @return an {@code Account} builder
+		 */
+		public Builder roles(String... roles) {
+			this.roles = Collections.unmodifiableList(
+					Arrays.asList(roles));
 			return this;
 		}
 		
+		/**
+		 * Builds an {@code Account} object using the values for this builder.
+		 * @return the {@code Account} object
+		 */
 		public Account build() {
 			return new Account(this);
 		}
 	}
 
 	/**
-	 * Returns the account unique id.
+	 * Returns the {@code Account} unique id.
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
@@ -148,7 +192,7 @@ public class Account implements Serializable {
 	}
 
 	/**
-	 * Returns the user email address.
+	 * Returns the {@code Account} email address
 	 * @return the user email address
 	 */
 	public String getEmailAddress() {
@@ -156,15 +200,7 @@ public class Account implements Serializable {
 	}
 
 	/**
-	 * Sets the user email address.
-	 * @param emailAddress the user email address
-	 */
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
-
-	/**
-	 * Returns the password.
+	 * Returns the {@code Account} password.
 	 * @return the password
 	 */
 	public String getPassword() {
@@ -172,15 +208,12 @@ public class Account implements Serializable {
 	}
 
 	/**
-	 * Sets the password.
-	 * @param password the password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	/**
-	 * Returns the user display name.
+	 * Returns the {@code Account} display name.
+	 * <p>
+	 * The user's email address is not public, the displayed user name is taken from this field value. 
+	 * It is a free text that contains either the full name or a nickname.
+	 * </p>
+	 *
 	 * @return the user display name
 	 */
 	public String getDisplayName() {
@@ -188,18 +221,9 @@ public class Account implements Serializable {
 	}
 
 	/**
-	 * Sets the user display name.
-	 * @param displayName the user display name
-	 */
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
-
-	/**
-	 * Returns the user slug.
+	 * Returns the {@code Account} slug.
 	 * <p>
-	 * If this is empty then the value from {@link Account#getDisplayName()} will be 
-	 * encoded using {@link Slug#encode(String)}.
+	 * The slug for the {@code Account} is encoded from {@link Account#getDisplayName()} value.
 	 * </p>
 	 * 
 	 * @return the slug
@@ -210,63 +234,31 @@ public class Account implements Serializable {
 	}
 
 	/**
-	 * Sets the user slug.
-	 * @param slug the slug
-	 */
-	public void setSlug(String slug) {
-		this.slug = slug;
-	}
-
-	/**
-	 * Indicates whether the user is enabled or disabled.
-	 * @return <em>true</em> if the account is enabled; <em>false</em> otherwise
+	 * Indicates whether the {@code Account} is enabled or disabled.
+	 * @return {@code true} if the account is enabled; {@code false} otherwise
 	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
 	/**
-	 * Indicates whether the user is enabled or disabled.
-	 * @param isEnabled <em>true</em> if the account is enabled; <em>false</em> otherwise
-	 */
-	public void setEnabled(boolean isEnabled) {
-		this.enabled = isEnabled;
-	}
-	
-	/**
-	 * Returns if the account is expired.
-	 * @return <em>true</em> if the account is expired; <em>false</em> otherwise
+	 * Indicates whether the {@code Account} is expired.
+	 * @return {@code true} if the account is expired; {@code false} otherwise
 	 */
 	public boolean isExpired() {
 		return expired;
 	}
 
 	/**
-	 * Indicates whether the account's credentials (password) has expired.
-	 * @param expired <em>true</em> if the account is expired; <em>false</em> otherwise
-	 */
-	public void setExpired(boolean expired) {
-		this.expired = expired;
-	}
-
-	/**
-	 * Indicates whether the user is locked or unlocked.
-	 * @return <em>true</em> if the account is locked; <em>false</em> otherwise
+	 * Indicates whether the {@code Account} is locked or unlocked.
+	 * @return {@code true} if the account is locked; {@code false} otherwise
 	 */
 	public boolean isLocked() {
 		return locked;
 	}
 
 	/**
-	 * Indicates whether the user is locked or unlocked.
-	 * @param locked <em>true</em> if the account is locked; <em>false</em> otherwise
-	 */
-	public void setLocked(boolean locked) {
-		this.locked = locked;
-	}
-
-	/**
-	 * Returns the roles granted to the user.
+	 * Returns the roles granted to the {@code Account}.
 	 * @return the roles
 	 */
 	public List<String> getRoles() {
@@ -274,22 +266,13 @@ public class Account implements Serializable {
 	}
 
 	/**
-	 * Sets the roles granted to the user.
-	 * @param roles the roles
-	 */
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
-	
-	/**
-	 * Indicates whether some other object is "equal to" this one.
+	 * Indicates whether some other {@code Account} is equal to this one.
 	 * <p>
-	 * Two accounts are equals if they have the same <em>email address</em>.
+	 * Two accounts are equals if they have the same {@code email address}.
 	 * </p>
 	 * 
-	 * @param obj the reference object with which to compare
-	 * @return <em>true</em> if this object is the same as the obj argument;
-	 * <em>false</em> otherwise
+	 * @param obj the reference {@code Account} with which to compare
+	 * @return {@code true} if this object is the same as the {@code obj} argument; {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -299,4 +282,26 @@ public class Account implements Serializable {
 		Account other = (Account) obj;
 		return this.emailAddress.equals(other.emailAddress);
 	}
+	
+	/**
+	 * Returns a string representation of the {@code Account}.
+     * <p>
+     * This method returns a string equal to the value of:
+	 * <blockquote>
+     * <pre>
+     * getEmailAddress() + '(' + getDisplayName() + ')'
+     * </pre>
+     * </blockquote>
+	 * </p>
+	 * @return a string representation of the {@code Account}
+     */
+	@Override
+	public String toString() {
+        return new StringBuilder()
+			.append(getEmailAddress())
+			.append(" (")
+			.append(getDisplayName())
+			.append(")")
+			.toString();
+    }
 }

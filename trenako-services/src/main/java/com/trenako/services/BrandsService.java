@@ -21,47 +21,78 @@ import com.trenako.entities.Brand;
 
 /**
  * The interface for the brands service.
- * @author Carlo Micieli
+ * <p>
+ * The concrete classes that implements the {@code BrandsService} interface will provide
+ * the following functionalities:
+ * <ul>
+ * <li>finds a {@code Brand} by id;</li>
+ * <li>finds a {@code Brand} by slug (unique, URL friendly value);</li>
+ * <li>finds a {@code Brand} by name;</li>
+ * <li>returns the {@code Brand} list;</li>
+ * <li>saves/removes a {@code Brand}.</li>
+ * </ul>
+ * </p>
  *
+ * @author Carlo Micieli
+ * @see com.trenako.entities.Brand
+ * @see com.trenako.repositories.BrandsRepository
  */
 public interface BrandsService {
 
 	/**
-	 * Returns the brand entity with the id.
-	 * @param id the unique id.
-	 * @return a brand instance. <em>null</em> if no brands are found.
+	 * Finds the {@link Brand} with the provided id.
+	 * @param id the unique id
+	 * @return a {@code Brand} if found; {@code null} otherwise
 	 */
 	Brand findById(ObjectId id);
 
 	/**
-	 * Returns the brand from the slug value.
-	 * @param slug the brand slug.
-	 * @return a brand instance. <em>null</em> if no brands are found.
+	 * Finds the {@link Brand} with the provided slug value.
+	 * @param slug the {@code Brand} slug
+	 * @return a {@code Brand} if found; {@code null} otherwise
+	 * @see com.trenako.entities.Brand#getSlug()
 	 */
 	Brand findBySlug(String slug);
 
 	/**
-	 * Returns the brand from the name.
-	 * @param name the brand name.
-	 * @return a brand instance. <em>null</em> if no brands are found.
+	 * Finds the {@link Brand} with the provided name.
+	 * <p>
+	 * Due to possible data store implementation the clients for this method must 
+	 * think this search as case sensitive.
+	 * </p>
+	 *
+	 * @param name the {@code Brand} name
+	 * @return a {@code Brand} if found; {@code null} otherwise
 	 */
 	Brand findByName(String name);
 
 	/**
-	 * Returns the brand documents from the collection.
-	 * @return the brands.
+	 * Returns the list of all {@link Brand} objects.
+	 * <p>
+	 * This methods return all the brands, sort by name.
+	 * </p>
+	 * 
+	 * @return a {@code Brand} list
 	 */
 	Iterable<Brand> findAll();
 	
 	/**
-	 * Persist the brand instance to the data store.
-	 * @param brand a brand.
+	 * Persists the {@link Brand} changes in the data store.
+	 * <p>
+	 * This method performs a "upsert": if the {@code Brand} is not present in the data store
+	 * a new {@code Brand} is created; otherwise the method will update the existing {@code Brand}. 
+	 * </p>	 
+	 * @param brand the {@code Brand} to be saved
 	 */
 	void save(Brand brand);
 
 	/**
-	 * Remove the brand from the data store.
-	 * @param brand a brand.
+	 * Persists the {@link Brand} changes in the data store.
+	 * <p>
+	 * This method performs a "upsert": if the {@code Brand} is not present in the data store
+	 * a new {@code Brand} is created; otherwise the method will update the existing {@code Brand}. 
+	 * </p>	 
+	 * @param brand the {@code Brand} to be saved
 	 */
 	void remove(Brand brand);
 }

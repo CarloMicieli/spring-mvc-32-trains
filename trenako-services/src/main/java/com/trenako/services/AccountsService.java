@@ -20,41 +20,58 @@ import org.bson.types.ObjectId;
 import com.trenako.entities.Account;
 
 /**
- * The interface for the user accounts service.
- * @author Carlo Micieli
+ * The interface for the accounts service.
+ * <p>
+ * The concrete classes that implements the {@code AccountsService} interface will provide
+ * the following functionalities:
+ * <ul>
+ * <li>finds the {@code Account} by id;</li>
+ * <li>finds the {@code Account} by email address;</li>
+ * <li>finds the {@code Account} by slug (unique, URL friendly value);</li>
+ * <li>saves/removes an {@code Account}.</li>
+ * </ul>
+ * </p>
  *
+ * @author Carlo Micieli
+ * @see com.trenako.entities.Account
+ * @see com.trenako.repositories.AccountsRepository
  */
 public interface AccountsService {
 	/**
-	 * Finds a user account by id.
-	 * @param id the user id.
-	 * @return the account.
+	 * Finds the {@link Account} with the provided id.
+	 * @param id the unique id
+	 * @return an {@code Account} if found; {@code null} otherwise
 	 */
 	Account findById(ObjectId id);
 	
 	/**
-	 * Finds a user account by email address.
-	 * @param emailAddress the email address.
-	 * @return the account.
+	 * Finds the {@link Account} with the provided email address.
+	 * @param emailAddress the email address
+	 * @return an {@code Account} if found; {@code null} otherwise
 	 */
 	Account findByEmailAddress(String emailAddress);
 	
 	/**
-	 * Finds a user account by slug.
-	 * @param slug the user slug.
-	 * @return the account.
-	 */
+	 * Finds the {@link Account} with the provided slug.
+	 * @param slug the user slug
+	 * @return an {@code Account} if found; {@code null} otherwise
+	 * @see com.trenako.entities.Account#getSlug()
+	 */	
 	Account findBySlug(String slug);
 	
 	/**
-	 * Saves the account.
-	 * @param account the account to be saved.
+	 * Persists the {@link Account} changes in the data store.
+	 * <p>
+	 * This method performs a "upsert": if the {@code Account} is not present in the data store
+	 * a new {@code Account} is created; otherwise the method will update the existing {@code Account}. 
+	 * </p>	 
+	 * @param account the {@code Account} to be saved
 	 */
 	void save(Account account);
 	
 	/**
-	 * Removes the account.
-	 * @param account the account to be deleted.
+	 * Removes a {@link Account} from the data store.
+	 * @param account the {@code Account} to be removed
 	 */
 	void remove(Account account);
 }

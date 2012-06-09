@@ -95,7 +95,7 @@ public class Brand {
 	}
 
 	/**
-	 * Create a new brand.
+	 * Creates a new {@code Brand}.
 	 * @param id the unique id
 	 */
 	public Brand(ObjectId id) {
@@ -103,7 +103,7 @@ public class Brand {
 	}
 	
 	/**
-	 * Create a new brand.
+	 * Creates a new {@code Brand}.
 	 * @param name the company name
 	 */
 	public Brand(String name) {
@@ -122,7 +122,7 @@ public class Brand {
 	}
 	
 	/**
-	 * It represents a brand builder class.
+	 * It represents a {@code Brand} builder class.
 	 * @author Carlo Micieli
 	 *
 	 */
@@ -140,7 +140,7 @@ public class Brand {
 		private HashMap<String, Address> branches = null;
 		
 		/**
-		 * Creates a new brands builder.
+		 * Creates a new {@code Brand} builder.
 		 * @param name the brand name
 		 */
 		public Builder(String name) {
@@ -149,59 +149,64 @@ public class Brand {
 		
 		/**
 		 * The email address.
-		 * @param e the email address
-		 * @return this brand builder
+		 * @param emailAddress the email address
+		 * @return a {@code Brand} builder
 		 */
-		public Builder emailAddress(String e) {
-			emailAddress = e;
+		public Builder emailAddress(String emailAddress) {
+			this.emailAddress = emailAddress;
 			return this;
 		}
 
 		/**
 		 * It indicates whether is using the die casting method. 
-		 * @param b the industrial flag
-		 * @return this brand builder
+		 * @param industrial the industrial flag
+		 * @return a {@code Brand} builder
 		 */
-		public Builder industrial(boolean b) {
-			industrial = b;
+		public Builder industrial(boolean industrial) {
+			this.industrial = industrial;
 			return this;
 		}
 
 		/**
 		 * The description.
-		 * @param d the description
-		 * @return this brand builder
+		 * @param desc the description
+		 * @return a {@code Brand} builder
 		 */
-		public Builder description(String d) {
-			description = d;
+		public Builder description(String desc) {
+			this.description = desc;
 			return this;
 		}
 
 		/**
 		 * The brand slug.
-		 * @param s the slug
-		 * @return this brand builder
+		 * @param slug the slug
+		 * @return a {@code Brand} builder
 		 */
-		public Builder slug(String s) {
-			slug = s;
+		public Builder slug(String slug) {
+			this.slug = slug;
 			return this;
 		}
 		
 		/**
 		 * The address.
-		 * @param a the address
-		 * @return this brand builder
+		 * @param addr the address
+		 * @return a {@code Brand} builder
 		 */
-		public Builder address(Address a) {
-			address = a;
+		public Builder address(Address addr) {
+			address = addr;
 			return this;
 		}
 		
 		/**
 		 * The local address.
-		 * @param country the country
+		 * <p>
+		 * The country code is one of the {@code ISO 3166-1 alpha-2} 
+		 * standard codes.
+		 * </p>
+		 * 
+		 * @param country the country code
 		 * @param a the address
-		 * @return this brand builder
+		 * @return a {@code Brand} builder
 		 */
 		public Builder address(String country, Address a) {
 			if( branches==null ) branches = new HashMap<String, Address>();
@@ -211,17 +216,17 @@ public class Brand {
 		
 		/**
 		 * The website url.
-		 * @param w the website url
-		 * @return this brand builder
+		 * @param url the website url
+		 * @return a {@code Brand} builder
 		 */
-		public Builder website(String w) {
-			website = w;
+		public Builder website(String url) {
+			website = url;
 			return this;
 		}
 		
 		/**
-		 * Builds the brand instance.
-		 * @return the brand
+		 * Builds a {@code Brand} object using the values for this builder.
+		 * @return a {@code Brand} builder
 		 */
 		public Brand build() {
 			return new Brand(this);
@@ -229,7 +234,7 @@ public class Brand {
 	}
 		
 	/**
-	 * Returns the unique id for the brand.
+	 * Returns the {@code Brand} id.
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
@@ -237,31 +242,15 @@ public class Brand {
 	}
 
 	/**
-	 * Sets the unique id for the brand.
-	 * @param id the unique id
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
-
-	/**
-	 * Returns the company name.
+	 * Returns the {@code Brand} company name.
 	 * @return the company name
 	 */
 	public String getName() {
 		return name;
 	}
-
-	/**
-	 * Sets the company name.
-	 * @param name the company name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
 	
 	/**
-	 * Returns the company name slug.
+	 * Returns the {@code Brand} slug.
 	 * <p>
 	 * If this property is not set then this method will return
 	 * the encoded value for {@link Brand#getName()}.
@@ -273,23 +262,19 @@ public class Brand {
 		if( slug==null ) slug = Slug.encode(name);
 		return slug;
 	}
-
-	/**
-	 * Sets the company name slug.
-	 * @param slug the company name slug
-	 */
-	public void setSlug(String slug) {
-		this.slug = slug;
-	}
 	
 	/**
-	 * Returns a local branch address.
+	 * Returns a {@code Brand} local branch address.
 	 * <p>
-	 * If no branch exists for the provided country name then this
-	 * method will return <em>null</em>.
+	 * If no branch exists for the provided country code then this
+	 * method will return {@code null}.
 	 * </p>
-	 * 
-	 * @param country the country name
+	 * <p>
+	 * The country code is one of the {@code ISO 3166-1 alpha-2} 
+	 * standard codes.
+	 * </p>
+	 *  
+	 * @param country the country code
 	 * @return the address
 	 */
 	public Address getAddress(String country) {
@@ -298,9 +283,13 @@ public class Brand {
 	}
 	
 	/**
-	 * Sets a local branch address.
+	 * Sets a {@code Brand} local branch address.
+	 * <p>
+	 * The country code is one of the {@code ISO 3166-1 alpha-2} 
+	 * standard codes.
+	 * </p>
 	 * 
-	 * @param country the country name
+	 * @param country the country code
 	 * @param a the address
 	 */
 	public void setAddress(String country, Address a) {
@@ -309,7 +298,7 @@ public class Brand {
 	}
 
 	/**
-	 * Returns the address.
+	 * Returns the {@code Brand} address.
 	 * <p>
 	 * The company can have more local branch, this method will
 	 * return the main address.
@@ -322,7 +311,7 @@ public class Brand {
 	}
 
 	/**
-	 * Sets the address.
+	 * Sets the {@code Brand} address.
 	 * <p>
 	 * This method will set the main address for the company.
 	 * </p>
@@ -334,23 +323,23 @@ public class Brand {
 	}
 
 	/**
-	 * Returns the company website url.
-	 * @return the company website url
+	 * Returns the {@code Brand} website url.
+	 * @return the website url
 	 */
 	public String getWebsite() {
 		return website;
 	}
 
 	/**
-	 * Sets the company website url.
-	 * @param website the company website url
+	 * Sets the {@code Brand} website url.
+	 * @param website the website url
 	 */
 	public void setWebsite(String website) {
 		this.website = website;
 	}
 
 	/**
-	 * Returns the brand company description.
+	 * Returns the {@code Brand} company description.
 	 * @return the description
 	 */
 	public String getDescription() {
@@ -358,7 +347,7 @@ public class Brand {
 	}
 
 	/**
-	 * Sets the brand company description.
+	 * Sets the {@code Brand} company description.
 	 * @param description the description
 	 */
 	public void setDescription(String description) {
@@ -366,7 +355,7 @@ public class Brand {
 	}
 
 	/**
-	 * Returns the email address.
+	 * Returns the {@code Brand} email address.
 	 * @return the email address
 	 */
 	public String getEmailAddress() {
@@ -374,7 +363,7 @@ public class Brand {
 	}
 
 	/**
-	 * Sets the the email address.
+	 * Sets the {@code Brand} email address.
 	 * @param emailAddress the email address
 	 */
 	public void setEmailAddress(String emailAddress) {
@@ -383,8 +372,8 @@ public class Brand {
 
 	/**
 	 * Returns the industrial flag.
-	 * @return <em>true</em> if this is a industrial series producer; 
-	 * <em>false</em> otherwise
+	 * @return {@code true} if this is a industrial series producer; 
+	 * {@code false} otherwise
 	 */
 	public boolean isIndustrial() {
 		return industrial;
@@ -392,15 +381,15 @@ public class Brand {
 
 	/**
 	 * Sets the industrial flag.
-	 * @param industrial <em>true</em> if this is a industrial series producer;
-	 * <em>false</em> otherwise
+	 * @param industrial {@code true} if this is a industrial series 
+	 * producer; {@code false} otherwise
 	 */
 	public void setIndustrial(boolean industrial) {
 		this.industrial = industrial;
 	}
 
 	/**
-	 * Returns the brand image.
+	 * Returns the {@code Brand} image.
 	 * @return the image
 	 */
 	public byte[] getLogo() {
@@ -408,7 +397,7 @@ public class Brand {
 	}
 
 	/**
-	 * Sets the brand image.
+	 * Sets the {@code Brand} image.
 	 * @param logo the image
 	 */
 	public void setLogo(byte[] logo) {
@@ -449,7 +438,7 @@ public class Brand {
 	}
 
 	/**
-	 * Returns a string representation of this <em>Brand</em>.
+	 * Returns a string representation of this {@code Brand}.
 	 * @return a string representation of the object
 	 */
 	@Override
@@ -458,10 +447,10 @@ public class Brand {
 	}
 	
 	/**
-	 * Indicates whether some other object is "equal to" this one.
+	 * Indicates whether some other {@code Brand} is equal to this one.
 	 * @param obj the reference object with which to compare
-	 * @return <em>true</em> if this object is the same as the obj argument; 
-	 * <em>false</em> otherwise
+	 * @return {@code true} if this object is the same as the obj argument; 
+	 * {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {

@@ -38,60 +38,33 @@ public class BrandsServiceImpl implements BrandsService {
 		this.repo = repo;
 	}
 	
-	/**
-	 * Returns the brand entity with the id.
-	 * @param id the unique id.
-	 * @return a brand instance. <em>null</em> if no brands are found.
-	 */
 	@Override
 	public Brand findById(ObjectId id) {
 		return repo.findById(id);
 	}
 	
-	/**
-	 * Returns the brand from the slug value.
-	 * @param slug the brand slug.
-	 * @return a brand instance. <em>null</em> if no brands are found.
-	 */
 	@Override
 	public Brand findBySlug(String slug) {
 		return repo.findBySlug(slug);
 	}
 	
-	/**
-	 * Returns the brand from the name.
-	 * @param name the brand name.
-	 * @return a brand instance. <em>null</em> if no brands are found.
-	 */
 	@Override
 	public Brand findByName(String name) {
 		return repo.findByName(name);
 	}
 	
-	/**
-	 * Persist the brand instance to the data store.
-	 * @param brand a brand.
-	 */
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save(Brand brand) {
 		repo.save(brand);
 	}
 	
-	/**
-	 * Remove the brand from the data store.
-	 * @param brand a brand.
-	 */
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void remove(Brand brand) {
 		repo.remove(brand);
 	}
 
-	/**
-	 * Finds all brand documents in the collection.
-	 * @return the brand list.
-	 */
 	@Override
 	public Iterable<Brand> findAll() {
 		return repo.findAll();

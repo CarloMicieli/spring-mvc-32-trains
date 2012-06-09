@@ -17,76 +17,152 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 
+import com.trenako.SearchCriteria;
 import com.trenako.entities.RollingStock;
 
 /**
  * The interface for the rolling stocks service.
- * @author Carlo Micieli
+ * <p>
+ * The concrete classes that implements the {@code RollingStocksService} interface will provide
+ * the following functionalities:
+ * <ul>
+ * <li>returns the {@code RollingStock} by id;</li>
+ * <li>returns the {@code RollingStock} list by a {@link SearchCriteria};</li>
+ * <li>returns the {@code RollingStock} list;</li>
+ * <li>saves/removes a {@code RollingStock}.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * The service provide search methods with only one search criteria, if more search criteria are needed
+ * the clients should use the {@link RollingStocksService#findAll(SearchCriteria)} method.
+ * </p>
  *
- */
+ * @author Carlo Micieli
+ * @see com.trenako.entities.RollingStock
+ */ 
 public interface RollingStocksService {
 
 	/**
-	 * Finds the rolling stock document in the collection by id.
-	 * @param id the rolling stock id.
-	 * @return the rolling stock document if found; <em>null</em> otherwise.
+	 * Finds the {@link RollingStock} with the provided id.
+	 * @param id the unique id
+	 * @return a {@code RollingStock} if found; {@code null} otherwise
 	 */
 	RollingStock findById(ObjectId id);
 
 	/**
-	 Finds the rolling stock document in the collection by slug.
-	 * @param slug the rolling stock slug.
-	 * @return the rolling stock document if found; <em>null</em> otherwise.
+	 * Finds the {@link RollingStock} with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code RollingStock} if found; {@code null} otherwise
+	 * @see com.trenako.entities.RollingStock#getSlug()
 	 */
 	RollingStock findBySlug(String slug);
 
 	/**
-	 * Returns the rolling stock documents. 
-	 * @return the rolling stocks list.
+	 * Returns a {@link RollingStock} list.
+	 * <p>
+	 * The clients must use this method when two or more search criteria are needed.
+	 * </p>
+	 *
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending {@link RollingStock#getLastModifiedDate()}.
+	 * </p>
+	 *
+	 * @param criteria the search criteria
+	 * @return a {@code RollingStock} list
+	 * @see com.trenako.SearchCriteria
 	 */
-	Iterable<RollingStock> findAll();
+	Iterable<RollingStock> findAll(SearchCriteria criteria);
 	
 	/**
-	 * Returns the rolling stock documents by brand name.
-	 * @param brandName the brand name.
-	 * @return the rolling stocks list.
+	 * Returns a list of {@link RollingStock} with the same brand.
+	 * <p>
+	 * This method is using the {@link Brand#getSlug()} value as a search key.
+	 * </p>
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param brand the brand
+	 * @return a {@code RollingStock} list
+	 * @see com.trenako.entities.Brand
 	 */
-	Iterable<RollingStock> findByBrand(String brandName);
+	Iterable<RollingStock> findByBrand(String brand);
 
 	/**
-	 * Returns the rolling stock documents by era.
-	 * @param era the era.
-	 * @return the rolling stocks list.
-	 */
+	 * Returns a list of {@link RollingStock} with the same era.
+	 * <p>
+	 * This method is performing a case sensitive search (ie {@code iv} and {@code IV} produce different results).
+	 * </p>
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param era the era
+	 * @return a {@code RollingStock} list
+	 * @see com.trenako.entities.Era
+	 */	 
 	Iterable<RollingStock> findByEra(String era);
 
 	/**
-	 * Returns the rolling stock documents by scale.
-	 * @param scale the scale.
-	 * @return the rolling stocks list.
+	 * Returns a list of {@link RollingStock} with the same scale.
+	 * <p>
+	 * This method is performing a case sensitive search (ie {@code h0} and {@code H0} produce different results).
+	 * </p>
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param scale the scale
+	 * @return a {@code RollingStock} list
+	 * @see com.trenako.entities.Scale
 	 */
 	Iterable<RollingStock> findByScale(String scale);
 
 	/**
-	 * Returns the rolling stock documents by category.
-	 * @param category the category.
-	 * @return the rolling stocks list.
+	 * Returns a list of {@link RollingStock} with the same category.
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param category the category
+	 * @return a {@code RollingStock} list
+	 * @see com.trenako.entities.Category
 	 */
 	Iterable<RollingStock> findByCategory(String category);
 
 	/**
-	 * Returns the rolling stock documents by power method.
-	 * @param powerMethod the power method.
-	 * @return the rolling stocks list.
-	 */
+	 * Returns a list of {@link RollingStock} with the same power method.
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param powerMethod the power method
+	 * @return a {@code RollingStock} list
+	 * @see com.trenako.entities.PowerMethod
+	 */	 
 	Iterable<RollingStock> findByPowerMethod(String powerMethod);
 
 	/**
-	 * Returns the rolling stock documents by railway.
-	 * @param railwayName the railway name.
-	 * @return the rolling stocks list.
-	 */
-	Iterable<RollingStock> findByRailwayName(String railwayName);
+	 * Returns a list of {@link RollingStock} with the same railway.
+	 * <p>
+	 * This method is using the {@link Railway#getSlug()} value as a search key.
+	 * </p>	 
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param railway the railway
+	 * @return a {@code RollingStock} list
+	 * @see com.trenako.entities.Railway
+	 */	
+	Iterable<RollingStock> findByRailwayName(String railway);
 
 	/**
 	 * Returns the rolling stock documents by brand and era.
@@ -119,25 +195,33 @@ public interface RollingStocksService {
 	 * @param railwayName the railway.
 	 * @return the rolling stocks list.
 	 */
-	Iterable<RollingStock> findByBrandAndRailway(String brandName,
-			String railwayName);
+	Iterable<RollingStock> findByBrandAndRailway(String brandName, String railwayName);
 
 	/**
-	 * Returns the rolling stock documents by tag.
-	 * @param tag the tag.
-	 * @return the rolling stocks list.
+	 * Returns a list of {@link RollingStock} with the same tag.
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param tag the tag
+	 * @return a {@code RollingStock} list
 	 */
 	Iterable<RollingStock> findByTag(String tag);
 
 	/**
-	 * Saves the rolling stock document in the collection.
-	 * @param rs a brand.
+	 * Persists a {@link RollingStock} changes in the data store.
+	 * <p>
+	 * This method performs a "upsert": if the {@code RollingStock} is not present in the data store
+	 * a new {@code RollingStock} is created; otherwise the method will update the existing {@code RollingStock}. 
+	 * </p>	 
+	 * @param comment the {@code RollingStock} to be saved
 	 */
 	void save(RollingStock rs);
 
 	/**
-	 * Remove the rolling stock document from the collection.
-	 * @param rs a brand.
+	 * Removes a {@link RollingStock} from the data store.
+	 * @param comment the {@code RollingStock} to be removed
 	 */
 	void remove(RollingStock rs);
 }

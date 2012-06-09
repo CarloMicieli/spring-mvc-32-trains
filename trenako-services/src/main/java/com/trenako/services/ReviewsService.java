@@ -22,63 +22,95 @@ import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
 
 /**
- * The interface for the reviews service.
- * @author Carlo Micieli
+ * The interface for the rolling stock reviews service.
+ * <p>
+ * The concrete classes that implements the {@code ReviewsService} interface will provide
+ * the following functionalities:
+ * <ul>
+ * <li>finds a {@code Review} by id;</li>
+ * <li>returns the {@code Review} list by author;</li>
+ * <li>returns the {@code Review} list by rolling stock;</li>
+ * <li>returns the {@code Review} list;</li>
+ * <li>saves/removes a {@code Review}.</li>
+ * </ul>
+ * </p>
  *
- */
+ * @author Carlo Micieli
+ * @see com.trenako.entities.Review
+ */ 
 public interface ReviewsService {
+	
 	/**
-	 * Finds the review by its unique id.
-	 * @param id the review id
-	 * @return the review if found; <em>null</em> otherwise
+	 * Finds the {@link Review} with the provided id.
+	 * @param id the unique id
+	 * @return a {@code Review} if found; {@code null} otherwise
 	 */
 	Review findById(ObjectId id);
 	
 	/**
-	 * Finds the list of reviews with the same author.
-	 * @param author the reviews' author
-	 * @return the list of reviews
-	 */
+	 * Returns the list of {@link Review} with the same author id.
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param authorId the reviews' author
+	 * @return a {@code Review} list
+	 */	
 	Iterable<Review> findByAuthor(Account author);
 
 	/**
-	 * Finds the list of reviews with the same author name.
+	 * Returns the list of {@link Review} with the same author name.
+	 * <p>
+	 * This method is using the {@link Account#getSlug()} value as a search key.
+	 * </p>
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
 	 * @param authorName the reviews' author name
-	 * @return the list of reviews
+	 * @return a {@code Review} list
 	 */
 	Iterable<Review> findByAuthor(String authorName);
 	
 	/**
-	 * Finds the list of reviews for a rolling stock.
-	 * 
-	 * This method returns the last 10 reviews ordered by
-	 * descending posted date. 
-	 * 
+	 * Returns a list of {@link Review} for the same rolling stock.
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
 	 * @param rollingStock the rolling stock
-	 * @return the list of reviews
+	 * @return a {@code Review} list
 	 */	
 	Iterable<Review> findByRollingStock(RollingStock rollingStock);
 
 	/**
-	 * Finds the list of reviews for the provided rolling stock slug.
-	 * 
-	 * This method returns the last 10 reviews ordered by
-	 * descending posted date. 
-	 * 
+	 * Returns a list of {@link Review} for the same rolling stock slug.
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
 	 * @param rsSlug the rolling stock slug
-	 * @return the list of reviews
+	 * @return a {@code Review} list
 	 */	
 	Iterable<Review> findByRollingStock(String rsSlug);
 	
 	/**
-	 * Saves the review.
-	 * @param review the review to be saved
+	 * Persists the {@link Review} changes in the data store.
+	 * <p>
+	 * This method performs a "upsert": if the {@code Review} is not present in the data store
+	 * a new {@code Review} is created; otherwise the method will update the existing {@code Review}. 
+	 * </p>	 
+	 * @param comment the {@code Review} to be saved
 	 */
 	void save(Review review);
 	
 	/**
-	 * Removes the review.
-	 * @param review the review to be removed
+	 * Removes a {@link Review} from the data store.
+	 * @param comment the {@code Review} to be removed
 	 */
 	void remove(Review review);	
 }

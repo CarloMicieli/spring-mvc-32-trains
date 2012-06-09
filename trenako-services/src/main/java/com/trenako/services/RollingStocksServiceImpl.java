@@ -19,6 +19,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.trenako.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RollingStocksRepository;
 
@@ -37,89 +38,46 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 		this.repo = repo;
 	}
 	
-	/**
-	 * Finds the rolling stock document in the collection by id.
-	 * @param id the rolling stock id.
-	 * @return the rolling stock document if found; <em>null</em> otherwise.
-	 */
 	@Override
 	public RollingStock findById(ObjectId id) {
 		return repo.findById(id);
 	}
 	
-	/**
-	 Finds the rolling stock document in the collection by slug.
-	 * @param slug the rolling stock slug.
-	 * @return the rolling stock document if found; <em>null</em> otherwise.
-	 */
 	@Override
 	public RollingStock findBySlug(String slug) {
 		return repo.findBySlug(slug);
 	}
-	
-	/**
-	 * 
-	 */
+
 	@Override
-	public Iterable<RollingStock> findAll() {
+	public Iterable<RollingStock> findAll(SearchCriteria sc) {
 		return repo.findAll();
 	}
 	
-	/**
-	 * Returns the rolling stock documents by brand name.
-	 * @param brandName the brand name.
-	 * @return the rolling stocks list.
-	 */
 	@Override
 	public Iterable<RollingStock> findByBrand(String brandName) {
 		return repo.findByBrand(brandName);
 	}
-	
-	/**
-	 * Returns the rolling stock documents by era.
-	 * @param era the era.
-	 * @return the rolling stocks list.
-	 */
+
 	@Override
 	public Iterable<RollingStock> findByEra(String era) {
 		return repo.findByEra(era);
 	}
 
-	/**
-	 * Returns the rolling stock documents by scale.
-	 * @param scale the scale.
-	 * @return the rolling stocks list.
-	 */
 	@Override
 	public Iterable<RollingStock> findByScale(String scale) {
 		return repo.findByScale(scale);
 	}
-	
-	/**
-	 * Returns the rolling stock documents by category.
-	 * @param category the category.
-	 * @return the rolling stocks list.
-	 */
+
 	@Override
 	public Iterable<RollingStock> findByCategory(String category) {
 		return repo.findByCategory(category);
 	}
-	
-	/**
-	 * Returns the rolling stock documents by power method.
-	 * @param powerMethod the power method.
-	 * @return the rolling stocks list.
-	 */
+
 	@Override
 	public Iterable<RollingStock> findByPowerMethod(String powerMethod) {
 		return repo.findByPowerMethod(powerMethod);
 	}
 
-	/**
-	 * Returns the rolling stock documents by railway.
-	 * @param railwayName the railway name.
-	 * @return the rolling stocks list.
-	 */
 	@Override
 	public Iterable<RollingStock> findByRailwayName(String railwayName) {
 		return repo.findByRailwayName(railwayName);
@@ -150,22 +108,13 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 		return repo.findByTag(tag);
 	}
 	
-	/**
-	 * Saves the rolling stock document in the collection.
-	 * @param rs a brand.
-	 */
 	@Override
 	public void save(RollingStock rs) {
 		repo.save(rs);
 	}
-	
-	/**
-	 * Remove the rolling stock document from the collection.
-	 * @param rs a brand.
-	 */
+
 	@Override
 	public void remove(RollingStock rs) {
 		repo.remove(rs);
 	}
-
 }

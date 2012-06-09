@@ -45,7 +45,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * </p>
  * <p>
  * The application will store some information for each model the users have purchased, 
- * for instance: the price, rolling stock condition (ie <em>new</em> or <em>pre owned</em>) 
+ * for instance: the price, rolling stock condition (ie {@code new} or {@code pre owned}) 
  * and the addition date.
  * </p>
  * <p>
@@ -80,8 +80,7 @@ public class Collection {
 	}
 
     /**
-     * Creates a new rolling stocks collection for the 
-     * provided user.
+     * Creates a new {@code Collection} with the provided owner.
      * @param owner the user who owns this collection
      */
 	public Collection(Account owner) {
@@ -89,7 +88,7 @@ public class Collection {
 	}
 
 	/**
-	 * Returns the collection unique id.
+	 * Returns the {@code Collection} id.
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
@@ -97,7 +96,7 @@ public class Collection {
 	}
     
 	/**
-	 * Returns the collection's owner name.
+	 * Returns the {@code Collection}'s owner name.
 	 * <p>
 	 * If this value is null then the method will return {@link Account#getSlug()}.
 	 * </p>
@@ -109,7 +108,7 @@ public class Collection {
 	}
 
 	/**
-	 * Returns the account of the collection's owner.
+	 * Returns the account of the {@code Collection}'s owner.
 	 * @return the owner
 	 */
 	public Account getOwner() {

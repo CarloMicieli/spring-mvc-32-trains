@@ -40,7 +40,7 @@ public class Address {
 	}
 	
 	/**
-	 * The address builder class.
+	 * The {@code Address} builder class.
 	 * @author Carlo Micieli
 	 *
 	 */

@@ -22,63 +22,95 @@ import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
 
 /**
- * The interface for the comments service.
- * @author Carlo Micieli
+ * The interface for the rolling stock comments service.
+ * <p>
+ * The concrete classes that implements the {@code CommentsService} interface will provide
+ * the following functionalities:
+ * <ul>
+ * <li>finds a {@link Comment} by id;</li>
+ * <li>returns the {@link Comment} list by author;</li>
+ * <li>returns the {@link Comment} list by rolling stock;</li>
+ * <li>returns the last posted {@link Comment} list;</li>
+ * <li>saves/removes a {@link Comment}.</li>
+ * </ul>
+ * </p>
  *
+ * @author Carlo Micieli
+ * @see com.trenako.entities.Comment
  */
 public interface CommentsService {
+	
 	/**
-	 * Finds the comment by its unique id.
-	 * @param id the comment id
-	 * @return the comment if found; <em>null</em> otherwise
-	 */
+	 * Finds the {@link Comment} with the provided id.
+	 * @param id the unique id
+	 * @return a {@code Comment} if found; {@code null} otherwise
+	 */	
 	Comment findById(ObjectId id);
 	
 	/**
-	 * Finds the list of comments with the same author.
-	 * @param author the comments' author
-	 * @return the list of comments
-	 */
+	 * Returns the list of {@link Comment} with the same author id.
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param authorId the comments' author
+	 * @return a {@code Comment} list
+	 */	 
 	Iterable<Comment> findByAuthor(Account author);
 
 	/**
-	 * Finds the list of comments with the same author name.
+	 * Returns the list of {@link Comment} with the same author name.
+	 * <p>
+	 * This method is using the {@link Account#getSlug()} value as a search key.
+	 * </p>
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
 	 * @param authorName the comments' author name
-	 * @return the list of comments
+	 * @return a {@code Comment} list
 	 */
 	Iterable<Comment> findByAuthor(String authorName);
 	
 	/**
-	 * Finds the list of comments for a rolling stock.
-	 * 
-	 * This method returns the comments ordered by
-	 * descending posted date. 
-	 * 
-	 * @param rollingStock the rolling stock
+	 * Returns the list of {@link Comment} for the same rolling stock id.
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
+	 * @param rollingStockId the rolling stock
 	 * @return the list of comments
 	 */	
 	Iterable<Comment> findByRollingStock(RollingStock rollingStock);
 
 	/**
-	 * Finds the list of comments for the provided rolling stock slug.
-	 * 
-	 * This method returns the comments ordered by
-	 * descending posted date. 
-	 * 
+	 * Returns the list of {@link Comment} for the same rolling stock slug.
+	 * <p>
+	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
+	 * the results are sort by descending posted date. 
+	 * </p>
+	 *
 	 * @param rsSlug the rolling stock slug
 	 * @return the list of comments
 	 */	
 	Iterable<Comment> findByRollingStock(String rsSlug);
 	
 	/**
-	 * Saves the comment.
-	 * @param comment the comment to be saved
+	 * Persists the {@link Comment} changes in the data store.
+	 * <p>
+	 * This method performs a "upsert": if the {@code Comment} is not present in the data store
+	 * a new {@code Comment} is created; otherwise the method will update the existing {@code Comment}. 
+	 * </p>	 
+	 * @param comment the {@code Comment} to be saved
 	 */
 	void save(Comment comment);
 	
 	/**
-	 * Removes the comment.
-	 * @param comment the comment to be removed
+	 * Removes a {@link Comment} from the data store.
+	 * @param comment the {@code Comment} to be removed
 	 */
 	void remove(Comment comment);
 }

@@ -118,7 +118,7 @@ class RollingStocksServiceSpecification extends Specification {
 	
 	def "should find all the rolling stocks"() {
 		when:
-		def results = service.findAll()
+		def results = service.findAll(null)
 		
 		then:
 		results != null

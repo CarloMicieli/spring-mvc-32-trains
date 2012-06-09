@@ -34,6 +34,14 @@ public class AppGlobals {
 	}
 	
 	/**
+	 * The maximum size for the result set returned by the data store.
+	 * <p>
+	 * The default size is {@code 25}.
+	 * </p>
+	 */
+	public static final int MAX_RESULT_SET_SIZE = 25;
+	
+	/**
 	 * Returns the list of the locale supported by the application.
 	 * @return the list of locale
 	 */

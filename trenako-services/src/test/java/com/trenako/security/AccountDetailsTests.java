@@ -17,8 +17,6 @@ package com.trenako.security;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-
 import org.junit.Test;
 
 import com.trenako.entities.Account;
@@ -82,8 +80,8 @@ public class AccountDetailsTests {
 	public void shouldAssignRolesToUsers() {
 		Account user = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
+			.roles("ROLE_ADMIN", "ROLE_USER")
 			.build();
-		user.setRoles(Arrays.asList("ROLE_ADMIN", "ROLE_USER"));
 		
 		AccountDetails userDetails = new AccountDetails(user);
 

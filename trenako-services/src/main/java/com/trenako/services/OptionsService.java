@@ -21,48 +21,70 @@ import com.trenako.entities.Option;
 import com.trenako.entities.OptionFamily;
 
 /**
- * The interface for the options service.
- * @author Carlo Micieli
+ * The interface for the rolling stock options service.
+ * <p>
+ * The concrete classes that implements the {@code OptionsService} interface will provide
+ * the following functionalities:
+ * <ul>
+ * <li>finds an {@link Option} by id;</li>
+ * <li>returns the list of {@link Option} by {@link OptionFamily};</li>
+ * <li>returns the {@link Option} list;</li>
+ * <li>saves/removes a {@link Option}.</li>
+ * </ul>
+ * </p>
  *
+ * @author Carlo Micieli
+ * @see com.trenako.entities.Option
+ * @see com.trenako.entities.OptionFamily
  */
 public interface OptionsService {
 
 	/**
-	 * Returns the option document by id.
-	 * @param id the unique id.
-	 * @return an option document; <em>null</em> otherwise.
+	 * Finds the {@link Option} with the provided id.
+	 * @param id the unique id
+	 * @return a {@code Option} if found; {@code null} otherwise
 	 */
 	Option findById(ObjectId id);
 
 	/**
-	 * Returns the option document by option name.
-	 * @param name the option name.
-	 * @return an option document; <em>null</em> otherwise.
+	 * Finds the {@link Option} with the provided name.
+	 * @param name the option name
+	 * @return a {@code Option} if found; {@code null} otherwise
 	 */
 	Option findByName(String name);
 
 	/**
-	 * Returns the option documents by option family.
-	 * @param family the family.
-	 * @return the option documents.
-	 */
+	 * Returns the list of {@link Option} with the same {@link OptionFamily}.
+	 * <p>
+	 * This method returns all {@code Option} objects, sort by name. 
+	 * </p>
+	 *
+	 * @param family the {@code OptionFamily}
+	 * @return a {@code Option} list
+	 * @see com.trenako.entities.OptionFamily
+	 */	 
 	Iterable<Option> findByFamily(OptionFamily family);
 
 	/**
-	 * Returns all the option documents in the collection.
-	 * @return the option documents.
-	 */
+	 * Returns the list of all {@link Option} objects sorted by name.
+	 *
+	 * @return a {@code Option} list
+	 */	 
 	Iterable<Option> findAll();
 
 	/**
-	 * Saves the option document in the collection.
-	 * @param option the option document to be saved.
+	 * Persists the {@link Option} changes in the data store.
+	 * <p>
+	 * This method performs a "upsert": if the {@code Option} is not present in the data store
+	 * a new {@code Option} is created; otherwise the method will update the existing {@code Option}. 
+	 * </p>	 
+	 * @param option the {@code Option} to be saved
 	 */
 	void save(Option option);
 
 	/**
-	 * Remove the option document from the collection.
-	 * @param option the option document to be deleted.
+	 * Removes a {@link Option} from the data store.
+	 * @param option the {@code Option} to be removed
 	 */
 	void remove(Option option);
 

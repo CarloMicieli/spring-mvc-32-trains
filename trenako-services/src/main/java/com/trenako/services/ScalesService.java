@@ -15,61 +15,88 @@
  */
 package com.trenako.services;
 
+import java.math.BigDecimal;
+
 import org.bson.types.ObjectId;
 
 import com.trenako.entities.Scale;
 
 /**
- * The interface for the service to manage the {@link Scale} entity class.
- * @author Carlo Micieli
+ * The interface for the model railway scales service.
+ * <p>
+ * The concrete classes that implements the {@code ScalesService} interface will provide
+ * the following functionalities:
+ * <ul>
+ * <li>finds a {@code Scale} by id;</li>
+ * <li>finds a {@code Scale} by name;</li>
+ * <li>returns the {@code Scale} list;</li>
+ * <li>returns the {@code Scale} list for narrow/standard gauges;</li>
+ * <li>saves/removes a {@code Scale}.</li>
+ * </ul>
+ * </p>
  *
- */
+ * @author Carlo Micieli
+ * @see com.trenako.entities.Scale
+ */ 
 public interface ScalesService {
 
 	/**
-	 * Returns the scale with the provided id.
+	 * Finds the {@link Scale} with the provided id.
 	 * @param id the unique id
-	 * @return a scale if found; <em>null</em> otherwise
+	 * @return a {@code Scale} if found; {@code null} otherwise
 	 */
 	Scale findById(ObjectId id);
 
 	/**
-	 * Returns the scale with the provided name.
-	 * @param name the scale name
-	 * @return a scale if found; <em>null</em> otherwise
+	 * Finds the {@link Scale} with the provided name.
+	 * <p>
+	 * Due to possible data store implementation the clients for this method must 
+	 * think this search as case sensitive.
+	 * </p>
+	 *  
+	 * @param name the {@code Scale} name
+	 * @return a {@code Scale} if found; {@code null} otherwise
 	 */
 	Scale findByName(String name);
 	
 	/**
-	 * Returns all the scale with the provided {@link Scale#isNarrow()} value.
-	 * @param isNarrow <em>true</em> will returns all the scales with narrow gauges; 
-	 * <em>false</em> will return the scales with standard gauges
-	 * @return the list of scales
+	 * Returns all {@link Scale} object with the provided {@link Scale#isNarrow()} value.
+	 * @param isNarrow {@code true} will returns all the scales with narrow gauges; 
+	 * {@code false} will return the scales with standard gauges
+	 * @return a {@code Scale} list
 	 */
-	//Iterable<Scale> findAll(boolean isNarrow);
+	Iterable<Scale> findAll(boolean isNarrow);
 	
 	/**
-	 * Returns all the scale with the provided {@link Scale#getRatio()} value.
-	 * @param ratio the scale ratio
-	 * @return the list of scales
+	 * Returns the list of {@link Scale} with the same {@link Scale#getRatio()} value.
+	 * @param ratio the {@code Scale} ratio
+	 * @return a {@code Scale} list
 	 */
-	//Iterable<Scale> findByRatio(double ratio);
+	Iterable<Scale> findByRatio(BigDecimal ratio);
 
 	/**
-	 * Returns all the scale entities.
+	 * Returns all {@link Scale} objects.
+	 * <p>
+	 * This methods return all the scale, sort by name.
+	 * </p>
+	 * 
 	 * @return the list of scales
 	 */
 	Iterable<Scale> findAll();
 
 	/**
-	 * Saves the changes for the scale.
-	 * @param scale a scale
+	 * Persists the {@link Scale} changes in the data store.
+	 * <p>
+	 * This method performs a "upsert": if the {@code Scale} is not present in the data store
+	 * a new {@code Scale} is created; otherwise the method will update the existing {@code Scale}. 
+	 * </p>	 
+	 * @param scale the {@code Scale} to be saved
 	 */
 	void save(Scale scale);
 
 	/**
-	 * Deletes the scale.
-	 * @param scale a scale
+	 * Removes a {@link Scale} from the data store.
+	 * @param scale the scale {@code Scale} to be removed
 	 */
 	void remove(Scale brand);
 

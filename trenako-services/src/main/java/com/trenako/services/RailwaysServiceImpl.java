@@ -38,50 +38,27 @@ public class RailwaysServiceImpl implements RailwaysService {
 		this.repo = repo;
 	}
 	
-	/**
-	 * Finds the railway document in the collection by id.
-	 * @param id the unique id.
-	 * @return a railway document. <em>null</em> otherwise.
-	 */
 	@Override
 	public Railway findById(ObjectId id) {
 		return repo.findById(id);
 	}
 	
-	/**
-	 * Finds the railway document in the collection by name.
-	 * @param name the railway name.
-	 * @return a railway document. <em>null</em> otherwise.
-	 */
 	@Override
 	public Railway findByName(String name) {
 		return repo.findByName(name);
 	}
 	
-	/**
-	 * Finds all the railway document in the collection by country.
-	 * @param country the country.
-	 * @return the documents.
-	 */
 	@Override
 	public Iterable<Railway> findByCountry(String country) {
 		return repo.findByCountry(country);
 	}
 	
-	/**
-	 * Saves the railway document in the collection.
-	 * @param railway the railway document to be saved.
-	 */
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save(Railway railway) {
 		repo.save(railway);
 	}
 	
-	/**
-	 * Remove the railway document from the collection.
-	 * @param railway the railway document to be deleted.
-	 */
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void remove(Railway railway) {
@@ -96,6 +73,5 @@ public class RailwaysServiceImpl implements RailwaysService {
 	@Override
 	public Railway findBySlug(String slug) {
 		return repo.findBySlug(slug);
-	}
-	
+	}	
 }

@@ -27,6 +27,14 @@ import static org.junit.Assert.*;
 public class AccountTests {
 	
 	@Test
+	public void shouldProduceAStringRepresentation() {
+		Account user = new Account.Builder("mail@mail.com")
+			.displayName("Nickname")
+			.build();
+		assertEquals("mail@mail.com (Nickname)", user.toString());
+	}
+	
+	@Test
 	public void shouldCreateNewAccounts() {
 		Account user = new Account.Builder("mail@mail.com")
 			.password("$ecret")

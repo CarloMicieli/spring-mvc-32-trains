@@ -48,7 +48,7 @@ public class RollingStocksServiceTests {
 
 	@Test
 	public void shouldFindAllRollingStocks() {
-		service.findAll();
+		service.findAll(null);
 		verify(repo, times(1)).findAll();
 	}
 	

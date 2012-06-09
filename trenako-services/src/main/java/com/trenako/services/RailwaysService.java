@@ -21,50 +21,88 @@ import com.trenako.entities.Railway;
 
 /**
  * The interface for the railways service.
- * @author Carlo Micieli
+ * <p>
+ * The concrete classes that implements the {@code RailwaysService} interface will provide
+ * the following functionalities:
+ * <ul>
+ * <li>finds a {@code Railway} by id;</li>
+ * <li>finds a {@code Railway} by slug (unique, URL friendly value);</li>
+ * <li>finds a {@code Railway} by name;</li>
+ * <li>returns the list of {@code Railway} by ISO country code;</li>
+ * <li>returns the {@code Railway} list;</li>
+ * <li>saves/removes a {@code Railway}.</li>
+ * </ul>
+ * </p>
  *
+ * @author Carlo Micieli
+ * @see com.trenako.entities.Railway
  */
 public interface RailwaysService {
 
 	/**
-	 * Finds the railway document in the collection by id.
-	 * @param id the unique id.
-	 * @return a railway document. <em>null</em> otherwise.
+	 * Finds the {@link Railway} with the provided id.
+	 * @param id the unique id
+	 * @return a {@code Railway} if found; {@code null} otherwise
 	 */
 	Railway findById(ObjectId id);
 
 	/**
-	 * Finds the railway document in the collection by name.
-	 * @param name the railway name.
-	 * @return a railway document. <em>null</em> otherwise.
+	 * Finds the {@link Railway} with the provided name.
+	 * <p>
+	 * Due to possible data store implementation the clients for this method must 
+	 * think this search as case sensitive.
+	 * </p>
+	 *
+	 * @param name the {@code Railway} name
+	 * @return a {@code Railway} if found; {@code null} otherwise
+	 * @see com.trenako.entities.Railway#getName()
 	 */
 	Railway findByName(String name);
 
 	/**
-	 * Finds the railway document in the collection by slug.
-	 * @param slug the railway slug.
-	 * @return a railway document. <em>null</em> otherwise.
+	 * Finds the {@link Railway} with the provided slug value.
+	 * @param slug the {@code Railway} slug
+	 * @return a {@code Railway} if found; {@code null} otherwise
+	 * @see com.trenako.entities.Railway#getSlug()
 	 */
 	Railway findBySlug(String slug);
 	
 	/**
-	 * Finds all the railway document in the collection by country.
-	 * @param country the country.
-	 * @return the documents.
-	 */
+	 * Returns all {@link Railway} objects for the provided country from the data store.
+	 * <p>
+	 * This methods return all the railways, sort by name.
+	 * </p>
+	 * <p>
+	 * The country code is one value from the {@code ISO 3166-1 alpha-2} code standard.
+	 * </p>
+	 * 
+	 * @param country the country code
+	 * @return a {@code Railway} list
+	 */	
 	Iterable<Railway> findByCountry(String country);
 	
+	/**
+	 * Returns all {@link Railway} objects from the data store.
+	 * <p>
+	 * This methods return all the railways, sort by name.
+	 * </p>
+	 * @return a {@code Railway} list
+	 */
 	Iterable<Railway> findAll();
 
 	/**
-	 * Saves the railway document in the collection.
-	 * @param railway the railway document to be saved.
+	 * Persists the {@link Railway} changes in the data store.
+	 * <p>
+	 * This method performs a "upsert": if the {@code Railway} is not present in the data store
+	 * a new {@code Railway} is created; otherwise the method will update the existing {@code Railway}. 
+	 * </p>	 
+	 * @param railway the {@code Railway} to be saved
 	 */
 	void save(Railway railway);
 
 	/**
-	 * Remove the railway document from the collection.
-	 * @param railway the railway document to be deleted.
+	 * Removes a {@link Railway} from the data store.
+	 * @param railway the {@code Railway} to be removed
 	 */
 	void remove(Railway railway);
 
