@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.trenako.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RollingStocksRepository;
 
@@ -124,5 +125,11 @@ public class RollingStocksRepositoryImpl implements RollingStocksRepository {
 	@Override
 	public void remove(RollingStock rs) {
 		mongo.remove(rs);
+	}
+
+	@Override
+	public Iterable<RollingStock> find(SearchCriteria sc) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

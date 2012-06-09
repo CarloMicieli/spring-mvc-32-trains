@@ -17,6 +17,7 @@ package com.trenako.repositories.mongo;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -129,6 +130,15 @@ public class MongoRepository<T> {
 	public Iterable<T> findAll(String key1, Object value1, String key2, Object value2) {
 		return mongoOps.find(query(where(key1).is(value1).and(key2).is(value2)), clazz);
 	}
+	
+	
+	public Iterable<T> findAll(MongoSearchCriteria sc) {
+		Criteria critera = new Criteria();
+		critera.andOperator(sc.criterias());
+		Query query = query(critera);		
+		return mongoOps.find(query, clazz);
+	}
+	
 	
 	/**
 	 * Remove the document from the collection.

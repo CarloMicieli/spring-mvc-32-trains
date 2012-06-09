@@ -17,6 +17,7 @@ package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
 
+import com.trenako.SearchCriteria;
 import com.trenako.entities.RollingStock;
 
 /**
@@ -118,6 +119,13 @@ public interface RollingStocksRepository {
 	 * @return the rolling stocks list.
 	 */
 	Iterable<RollingStock> findByBrandAndRailway(String brandName, String railwayName);
+	
+	/**
+	 * Returns the {@code RollingStock} list according the provided search criteria.
+	 * @param sc the search criteria
+	 * @return a {@code RollingStock} list
+	 */
+	Iterable<RollingStock> find(SearchCriteria sc);
 	
 	/**
 	 * 
