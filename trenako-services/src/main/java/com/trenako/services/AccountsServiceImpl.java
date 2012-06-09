@@ -23,7 +23,7 @@ import com.trenako.entities.Account;
 import com.trenako.repositories.AccountsRepository;
 
 /**
- * 
+ * The concrete implementation for the accounts service.
  * @author Carlo Micieli
  *
  */
