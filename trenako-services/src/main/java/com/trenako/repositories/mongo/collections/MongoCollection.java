@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.repositories.mongo.core;
+package com.trenako.repositories.mongo.collections;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -33,7 +33,7 @@ import static org.springframework.data.mongodb.core.query.Query.*;
  * @author Carlo Micieli
  *
  */
-public class MongoRepository<T> {
+public abstract class MongoCollection<T> {
 	
 	private final MongoTemplate mongoOps;
 	private final Class<T> clazz;
@@ -43,7 +43,7 @@ public class MongoRepository<T> {
 	 * @param mongoOps the mongodb template
 	 * @param clazz the target type
 	 */
-	public MongoRepository(MongoTemplate mongoOps, Class<T> clazz) {
+	public MongoCollection(MongoTemplate mongoOps, Class<T> clazz) {
 		this.clazz = clazz;
 		this.mongoOps = mongoOps;
 	}

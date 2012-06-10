@@ -32,7 +32,7 @@ import org.springframework.data.mongodb.core.query.Order;
 
 import com.trenako.entities.Scale;
 import com.trenako.repositories.ScalesRepository;
-import com.trenako.repositories.mongo.core.MongoRepository;
+import com.trenako.repositories.mongo.collections.ScalesCollection;
 
 /**
  * 
@@ -42,7 +42,7 @@ import com.trenako.repositories.mongo.core.MongoRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class ScalesRepositoryTests {
 
-	@Mock MongoRepository<Scale> mongo;
+	@Mock ScalesCollection mongo;
 	ScalesRepository repo;
 	
 	@Before

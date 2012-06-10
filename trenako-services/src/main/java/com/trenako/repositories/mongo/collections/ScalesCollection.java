@@ -13,8 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.trenako.repositories.mongo.collections;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Component;
+
+import com.trenako.entities.Scale;
 
 /**
- * The package for the mongodb repository helper/utility classes.
+ * 
+ * @author Carlo Micieli
+ *
  */
-package com.trenako.repositories.mongo.core;
+@Component
+public class ScalesCollection extends MongoCollection<Scale> {
+
+	@Autowired
+	public ScalesCollection(MongoTemplate mongoOps) {
+		super(mongoOps, Scale.class);
+	}
+
+}

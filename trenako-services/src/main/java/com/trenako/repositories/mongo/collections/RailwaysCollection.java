@@ -13,37 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.repositories.mongo;
+package com.trenako.repositories.mongo.collections;
 
-import static org.junit.Assert.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Component;
 
-import org.junit.Test;
-
-import com.trenako.SearchCriteria;
-import com.trenako.repositories.mongo.collections.MongoSearchCriteria;
+import com.trenako.entities.Railway;
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-public class MongoSearchCriteriaTests {
-
-	@Test
-	public void shouldFillTheListOfCriteria() {
-		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.category("electric-locomotives")
-			.era("IV")
-			.powerMethod("AC")
-			.railway("DB")
-			.scale("H0")
-			.build();
-		
-		MongoSearchCriteria mongoCrit = 
-				new MongoSearchCriteria(sc);
-		
-		assertEquals(6, mongoCrit.criterias().length);	
+@Component
+public class RailwaysCollection extends MongoCollection<Railway> {
+	
+	@Autowired
+	public RailwaysCollection(MongoTemplate mongo) {
+		super(mongo, Railway.class);
 	}
-
 }

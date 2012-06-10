@@ -17,13 +17,12 @@ package com.trenako.repositories.mongo;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Scale;
 import com.trenako.repositories.ScalesRepository;
-import com.trenako.repositories.mongo.core.MongoRepository;
+import com.trenako.repositories.mongo.collections.ScalesCollection;
 
 /**
  * The concrete implementation for scales repository for mongodb.
@@ -33,46 +32,41 @@ import com.trenako.repositories.mongo.core.MongoRepository;
 @Repository("scalesRepository")
 public class ScalesRepositoryImpl implements ScalesRepository {
 
-	private final MongoRepository<Scale> mongo;
+	private final ScalesCollection scales;
 	
 	@Autowired
-	public ScalesRepositoryImpl(MongoTemplate mongoOps) {
-		mongo = new MongoRepository<Scale>(mongoOps, Scale.class);
-	}
-
-	// constructor: for testing
-	ScalesRepositoryImpl(MongoRepository<Scale> mongo) {
-		this.mongo = mongo;
+	public ScalesRepositoryImpl(ScalesCollection scales) {
+		this.scales = scales;
 	}
 
 	@Override
 	public Scale findByName(String name) {
-		return mongo.findOne("name", name);
+		return scales.findOne("name", name);
 	}
 
 	@Override
 	public Scale findById(ObjectId id) {
-		return mongo.findById(id);
+		return scales.findById(id);
 	}
 
 	@Override
 	public Scale findBySlug(String slug) {
-		return mongo.findOne("slug", slug);
+		return scales.findOne("slug", slug);
 	}
 	
 	@Override
 	public Iterable<Scale> findAll() {
-		return mongo.findAllOrderBy("name", Order.ASCENDING);
+		return scales.findAllOrderBy("name", Order.ASCENDING);
 	}
 
 	@Override
 	public void save(Scale scale) {
-		mongo.save(scale);
+		scales.save(scale);
 	}
 
 	@Override
 	public void remove(Scale scale) {
-		mongo.remove(scale);
+		scales.remove(scale);
 	}
 
 }

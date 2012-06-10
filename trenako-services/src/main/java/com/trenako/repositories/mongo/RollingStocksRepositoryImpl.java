@@ -17,13 +17,12 @@ package com.trenako.repositories.mongo;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RollingStocksRepository;
-import com.trenako.repositories.mongo.core.MongoRepository;
+import com.trenako.repositories.mongo.collections.RollingStocksCollection;
 
 /**
  * The concrete implementation for rolling stocks repository for mongodb.
@@ -33,15 +32,10 @@ import com.trenako.repositories.mongo.core.MongoRepository;
 @Repository("rollingStocksRepository")
 public class RollingStocksRepositoryImpl implements RollingStocksRepository {
 
-	private final MongoRepository<RollingStock> mongo;
+	private final RollingStocksCollection mongo;
 	
 	@Autowired
-	public RollingStocksRepositoryImpl(MongoTemplate mongoOps) {
-		this.mongo = new MongoRepository<RollingStock>(mongoOps, RollingStock.class);
-	}
-	
-	// constructor: for testing
-	RollingStocksRepositoryImpl(MongoRepository<RollingStock> mongo) {
+	public RollingStocksRepositoryImpl(RollingStocksCollection mongo) {
 		this.mongo = mongo;
 	}
 

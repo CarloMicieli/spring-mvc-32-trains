@@ -32,7 +32,8 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.trenako.AppGlobals;
 import com.trenako.entities.Brand;
-import com.trenako.repositories.mongo.core.MongoRepository;
+import com.trenako.repositories.mongo.collections.BrandsCollection;
+import com.trenako.repositories.mongo.collections.MongoCollection;
 
 /**
  * 
@@ -43,12 +44,12 @@ import com.trenako.repositories.mongo.core.MongoRepository;
 public class MongoRepositoryTests {
 
 	@Mock MongoTemplate mongo;
-	MongoRepository<Brand> repo;
+	MongoCollection<Brand> repo;
 	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		repo = new MongoRepository<Brand>(mongo, Brand.class);
+		repo = new BrandsCollection(mongo);
 	}
 
 	@Test

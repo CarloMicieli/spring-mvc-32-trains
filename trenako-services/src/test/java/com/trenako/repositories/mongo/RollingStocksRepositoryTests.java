@@ -31,7 +31,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RollingStocksRepository;
-import com.trenako.repositories.mongo.core.MongoRepository;
+import com.trenako.repositories.mongo.collections.RollingStocksCollection;
 
 /**
  * 
@@ -41,7 +41,7 @@ import com.trenako.repositories.mongo.core.MongoRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStocksRepositoryTests {
 
-	@Mock MongoRepository<RollingStock> mongo;
+	@Mock RollingStocksCollection mongo;
 	RollingStocksRepository repo;
 	
 	@Before

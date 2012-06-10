@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.repositories.mongo.core;
+package com.trenako.repositories.mongo.collections;
 
 import static org.springframework.data.mongodb.core.query.Criteria.*;
 

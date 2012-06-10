@@ -17,13 +17,12 @@ package com.trenako.repositories.mongo;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Railway;
 import com.trenako.repositories.RailwaysRepository;
-import com.trenako.repositories.mongo.core.MongoRepository;
+import com.trenako.repositories.mongo.collections.RailwaysCollection;
 
 /**
  * The concrete implementation for the railways repository for mongodb.
@@ -33,15 +32,10 @@ import com.trenako.repositories.mongo.core.MongoRepository;
 @Repository("railwaysRepository")
 public class RailwaysRepositoryImpl implements RailwaysRepository {
 
-	final MongoRepository<Railway> mongo;
+	final RailwaysCollection mongo;
 	
 	@Autowired
-	public RailwaysRepositoryImpl(MongoTemplate mongoOps) {
-		this.mongo = new MongoRepository<Railway>(mongoOps, Railway.class);
-	}
-
-	// constructor: for testing
-	RailwaysRepositoryImpl(MongoRepository<Railway> mongo) {
+	public RailwaysRepositoryImpl(RailwaysCollection mongo) {
 		this.mongo = mongo;
 	}
 

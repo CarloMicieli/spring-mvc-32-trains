@@ -29,7 +29,7 @@ import org.springframework.data.mongodb.core.query.Order;
 
 import com.trenako.entities.Brand;
 import com.trenako.repositories.mongo.BrandsRepositoryImpl;
-import com.trenako.repositories.mongo.core.MongoRepository;
+import com.trenako.repositories.mongo.collections.BrandsCollection;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class BrandsRepositoryTests {
 
-	@Mock MongoRepository<Brand> mongo;
+	@Mock BrandsCollection mongo;
 	BrandsRepositoryImpl repo;
 
 	@Before

@@ -22,10 +22,10 @@ import org.springframework.stereotype.Repository;
 import com.trenako.entities.Option;
 import com.trenako.entities.OptionFamily;
 import com.trenako.repositories.OptionsRepository;
-import com.trenako.repositories.mongo.core.MongoRepository;
+import com.trenako.repositories.mongo.collections.MongoCollection;
 
 @Repository("optionsRepository")
-public class OptionsRepositoryImpl extends MongoRepository<Option> implements OptionsRepository {
+public class OptionsRepositoryImpl extends MongoCollection<Option> implements OptionsRepository {
 
 	@Autowired
 	public OptionsRepositoryImpl(MongoTemplate mongoOps) {

@@ -17,13 +17,12 @@ package com.trenako.repositories.mongo;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Brand;
 import com.trenako.repositories.BrandsRepository;
-import com.trenako.repositories.mongo.core.MongoRepository;
+import com.trenako.repositories.mongo.collections.BrandsCollection;
 
 /**
  * The concrete implementation for the mongodb brands repository.
@@ -33,49 +32,44 @@ import com.trenako.repositories.mongo.core.MongoRepository;
 @Repository("brandsRepository")
 public class BrandsRepositoryImpl implements BrandsRepository {
 	
-	private final MongoRepository<Brand> mongo;
+	private final BrandsCollection brands;
 	
 	/**
 	 * Creates a new mongodb brands repository.
-	 * @param mongo the mongodb template
+	 * @param brands the {@code Brand} mongo collection
 	 */
 	@Autowired
-	public BrandsRepositoryImpl(MongoTemplate mongo) {
-		this.mongo = new MongoRepository<Brand>(mongo, Brand.class);
-	}
-	
-	// constructor: for testing
-	BrandsRepositoryImpl(MongoRepository<Brand> mongo) {
-		this.mongo = mongo;
+	public BrandsRepositoryImpl(BrandsCollection brands) {
+		this.brands = brands;
 	}
 	
 	@Override
 	public Brand findBySlug(String slug) {
-		return mongo.findOne("slug", slug);
+		return brands.findOne("slug", slug);
 	}
 
 	@Override
 	public Brand findByName(String name) {
-		return mongo.findOne("name", name);
+		return brands.findOne("name", name);
 	}
 
 	@Override
 	public Brand findById(ObjectId id) {
-		return mongo.findById(id);
+		return brands.findById(id);
 	}
 
 	@Override
 	public Iterable<Brand> findAll() {
-		return mongo.findAllOrderBy("name", Order.ASCENDING);
+		return brands.findAllOrderBy("name", Order.ASCENDING);
 	}
 
 	@Override
 	public void save(Brand brand) {
-		mongo.save(brand);		
+		brands.save(brand);		
 	}
 
 	@Override
 	public void remove(Brand brand) {
-		mongo.remove(brand);
+		brands.remove(brand);
 	}
 }
