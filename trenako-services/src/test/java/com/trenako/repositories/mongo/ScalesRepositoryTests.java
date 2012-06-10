@@ -32,6 +32,7 @@ import org.springframework.data.mongodb.core.query.Order;
 
 import com.trenako.entities.Scale;
 import com.trenako.repositories.ScalesRepository;
+import com.trenako.repositories.mongo.core.MongoRepository;
 
 /**
  * 

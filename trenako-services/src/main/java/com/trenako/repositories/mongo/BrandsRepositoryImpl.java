@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Brand;
 import com.trenako.repositories.BrandsRepository;
+import com.trenako.repositories.mongo.core.MongoRepository;
 
 /**
  * The concrete implementation for the mongodb brands repository.

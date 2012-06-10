@@ -32,6 +32,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.trenako.AppGlobals;
 import com.trenako.entities.Brand;
+import com.trenako.repositories.mongo.core.MongoRepository;
 
 /**
  * 

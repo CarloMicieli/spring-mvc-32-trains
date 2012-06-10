@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Railway;
 import com.trenako.repositories.RailwaysRepository;
+import com.trenako.repositories.mongo.core.MongoRepository;
 
 /**
  * The concrete implementation for the railways repository for mongodb.

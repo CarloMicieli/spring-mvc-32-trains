@@ -31,6 +31,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RollingStocksRepository;
+import com.trenako.repositories.mongo.core.MongoRepository;
 
 /**
  * 

@@ -32,6 +32,7 @@ import org.springframework.data.mongodb.core.query.Order;
 
 import com.trenako.entities.Railway;
 import com.trenako.repositories.RailwaysRepository;
+import com.trenako.repositories.mongo.core.MongoRepository;
 
 /**
  * 

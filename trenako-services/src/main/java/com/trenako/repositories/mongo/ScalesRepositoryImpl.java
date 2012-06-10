@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Scale;
 import com.trenako.repositories.ScalesRepository;
+import com.trenako.repositories.mongo.core.MongoRepository;
 
 /**
  * The concrete implementation for scales repository for mongodb.

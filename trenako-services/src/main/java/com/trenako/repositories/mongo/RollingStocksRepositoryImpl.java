@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import com.trenako.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RollingStocksRepository;
+import com.trenako.repositories.mongo.core.MongoRepository;
 
 /**
  * The concrete implementation for rolling stocks repository for mongodb.
