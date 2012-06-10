@@ -15,7 +15,7 @@
  */
 package com.trenako.listeners;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -32,10 +32,11 @@ public class ScalesEventListenerTests {
 	public void shouldFillTheValuesBeforeSave() {
 		ScalesEventListener listener = new ScalesEventListener();
 
-		Scale scale = new Scale.Builder("H0").ratio(87).build();
+		Scale scale = new Scale.Builder("H0").ratio(870).build();
 		BasicDBObject dbo = new BasicDBObject();
 		listener.onBeforeSave(scale, dbo);
 
 		assertNotNull(dbo.get("lastModified"));
+		assertEquals("h0", dbo.get("slug"));
 	}
 }

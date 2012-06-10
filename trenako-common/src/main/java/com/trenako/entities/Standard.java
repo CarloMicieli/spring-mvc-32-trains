@@ -13,27 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.listeners;
-
-import java.util.Date;
-
-import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
-import org.springframework.stereotype.Component;
-
-import com.mongodb.DBObject;
-import com.trenako.entities.Scale;
+package com.trenako.entities;
 
 /**
- * The listener to change the document just before the scales are saved.
+ * It represents the model railway standards enumeration.
  * @author Carlo Micieli
  *
  */
-@Component
-public class ScalesEventListener extends AbstractMongoEventListener<Scale> {
+public enum Standard {
+	/**
+	 * {@code NEM}: these standards are published by the European 
+	 * federation of national model railway associations ({@code MOROP}).
+	 */
+	NEM,
+	
+	/**
+	 * {@code NMRA}: these standards are published by the North
+	 * American model railroad association.
+	 */
+	NMRA,
+	
+	/**
+	 * {@code British}: these standards are widely used by the 
+	 * British model railways.
+	 */
+	BRITISH,
 
-	@Override
-	public void onBeforeSave(Scale source, DBObject dbo) {
-		dbo.put("lastModified", new Date());
-		dbo.put("slug", source.getSlug());
-	}	
+	/**
+	 * {@code Japanese}: these standards are widely used by the 
+	 * Japanese model railways.
+	 */
+	JAPANESE;
 }

@@ -60,9 +60,9 @@ class RollingStocksServiceSpecification extends Specification {
 		def brands = [acme, bemo, roco]
 		mongoTemplate.insert brands, Brand.class
 		
-		def H0m = new Scale(name: "H0m", ratio: 87)
-		def H0 = new Scale(name: "H0", ratio: 87)
-		def N = new Scale(name: "N", ratio: 160)
+		def H0m = new Scale(name: "H0m", ratio: 870)
+		def H0 = new Scale(name: "H0", ratio: 870)
+		def N = new Scale(name: "N", ratio: 1600)
 		def scales = [H0m, H0, N]
 		mongoTemplate.insert scales, Scale.class
 		

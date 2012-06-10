@@ -39,7 +39,7 @@ public class ScaleValidationTests extends AbstractValidationTests<Scale> {
 	@Test
 	public void shouldValidateScales() {
 		Scale scale = new Scale.Builder("H0")
-			.ratio(87)
+			.ratio(870)
 			.build();
 		Map<String, String> errors = validate(scale);
 		assertEquals(0, errors.size());
@@ -57,7 +57,7 @@ public class ScaleValidationTests extends AbstractValidationTests<Scale> {
 	@Test
 	public void shouldValidateScaleNameSize() {
 		Scale scale = new Scale.Builder("12345678901") //max = 10
-			.ratio(87)
+			.ratio(870)
 			.build();
 		Map<String, String> errors = validate(scale);
 		assertEquals(1, errors.size());
@@ -76,7 +76,7 @@ public class ScaleValidationTests extends AbstractValidationTests<Scale> {
 		assertEquals("scale.ratio.range.notmet", errors.get("ratio"));
 
 		Scale s2 = new Scale.Builder("H0")
-			.ratio(221)
+			.ratio(2210)
 			.narrow(true)
 			.build();
 		errors = validate(s2);

@@ -15,6 +15,11 @@
  */
 package com.trenako.entities;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -26,14 +31,28 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.utility.Slug;
+
 /**
- * It represents a scale of model railway.
+ * It represents a {@code Scale} of model railway.
+ * <p>
+ * In order to avoid the {@code double} rounding problems this 
+ * class is using integer values internally. 
+ * </p>
+ * <p>
+ * The class provides methods with the correct values for both 
+ * {@code ratio} and {@code gauge}.
+ * </p>
+ * 
  * @author Carlo Micieli
  *
  */
 @Document(collection = "scales")
 public class Scale {
 	
+	public final static BigDecimal GAUGE_FACTOR = BigDecimal.valueOf(100);
+	public final static BigDecimal RATIO_FACTOR = BigDecimal.valueOf(10);
+
 	@Id
 	private ObjectId id;
 	
@@ -42,21 +61,28 @@ public class Scale {
 	@Indexed(unique = true)
 	private String name;
 	
-	@Range(min = 2, max = 220, message = "scale.ratio.range.notmet")
-	private double ratio;
+	@Indexed(unique = true)
+	private String slug;
+	
+	@Range(min = 80, max = 2200, message = "scale.ratio.range.notmet")
+	private int ratio;
 
-	@Range(min = 0, max = 1000, message = "scale.gauge.range.notmet")
-	private double gauge;
+	@Range(min = 0, max = 20000, message = "scale.gauge.range.notmet")
+	private int gauge;
+	
+	@Indexed
+	private Set<Standard> standards;
 	
 	private boolean narrow;
+	private Date lastModified;
 	
 	// required
 	Scale() {
 	}
 	
 	/**
-	 * Creates a new scale.
-	 * @param name the scale name.
+	 * Creates a new {@code Scale}.
+	 * @param name the name
 	 */
 	public Scale(String name) {
 		this.name = name;
@@ -69,34 +95,112 @@ public class Scale {
 		this.narrow = b.narrow;
 	}
 	
+	/**
+	 * It represents a {@code Scale} builder class.
+	 * @author Carlo Micieli
+	 *
+	 */
 	public static class Builder {
 		// required fields
 		private final String name;
 		
 		// optional fields
-		private double ratio = 0;
-		private double gauge = 0;
+		private int ratio = 0;
+		private int gauge = 0;
 		private boolean narrow = false;
 		
+		/**
+		 * Creates a new {@code Scale} builder.
+		 * @param name the name
+		 */
 		public Builder(String name) {
 			this.name = name;
 		}
 		
-		public Builder ratio(double r) {
-			ratio = r;
+		/**
+		 * Sets the {@code scale} ratio.
+		 * <p>
+		 * The ratio is internally stored as {@code Integer}; the
+		 * actual value must be multiplied by a {@code 10} factor.
+		 * </p>
+		 * <p>
+		 * For example, a ratio of {@code 32.5} must be inserted as {@code 325}.
+		 * </p>
+		 * 
+		 * @param ratio the ratio
+		 * @return a builder
+		 * @see Builder#ratio(BigDecimal)
+		 */
+		public Builder ratio(int ratio) {
+			this.ratio = ratio;
 			return this;
 		}
 		
-		public Builder gauge(double g) {
-			gauge = g;
+		/**
+		 * Sets the {@code scale} ratio in millimeters.
+		 * <p>
+		 * The clients must use this method if they provide
+		 * the exact value.
+		 * </p>
+		 * 
+		 * @param ratio the ratio
+		 * @return a builder
+		 */
+		public Builder ratio(BigDecimal ratio) {
+			this.ratio = ratio
+					.multiply(RATIO_FACTOR).intValue();
 			return this;
 		}
 		
+		/**
+		 * Sets the {@code Scale} gauge.
+		 * <p>
+		 * The gauge is internally stored as {@code Integer}; the
+		 * actual value must be multiplied by a {@code 100} factor.
+		 * </p>
+		 * <p>
+		 * For example, a gauge of {@code 16.5} must be inserted as {@code 1650}.
+		 * </p>
+		 *  
+		 * @param gauge the gauge
+		 * @return a builder
+		 * @see Builder#gauge(BigDecimal)
+		 */
+		public Builder gauge(int gauge) {
+			this.gauge = gauge;
+			return this;
+		}
+
+		/**
+		 * Sets the {@code Scale} gauge in millimeters.
+		 * <p>
+		 * The clients must use this method if they provide
+		 * the exact value.
+		 * </p>
+		 * 
+		 * @param gauge the gauge
+		 * @return a builder
+		 */
+		public Builder gauge(BigDecimal gauge) {
+			this.gauge = gauge
+					.multiply(GAUGE_FACTOR).intValue();
+			return this;
+		}
+		
+		/**
+		 * Indicates whether a {@code Scale} is narrow or not.
+		 * @param n {@code true} for narrow scales; {@code false} otherwise
+		 * @return a builder
+		 */
 		public Builder narrow(boolean n) {
 			narrow = n;
 			return this;
 		}
 		
+		/**
+		 * Builds a new {@code Scale} object.
+		 * @return a {@code Scale}
+		 */
 		public Scale build() {
 			return new Scale(this);
 		}
@@ -127,36 +231,74 @@ public class Scale {
 	}
 
 	/**
+	 * Returns the {@code Scale} slug.
+	 * @return the slug
+	 */
+	public String getSlug() {
+		if( slug==null ) slug = Slug.encode(name);
+		return slug;
+	}
+		
+	/**
 	 * Returns the ratio of a linear dimension of the 
 	 * model to the same dimension of the original.
 	 * @return the scale ratio
 	 */
-	public double getRatio() {
+	public int getRatio() {
 		return ratio;
 	}
 
+	/**
+	 * Returns the {@code Scale} ratio in millimeters,
+	 * @return the ratio
+	 */
+	public BigDecimal ratio() {
+		return (new BigDecimal(getRatio()))
+				.divide(RATIO_FACTOR);
+	}
+	
 	/**
 	 * Sets the ratio of a linear dimension of the 
 	 * model to the same dimension of the original.
 	 * @param ratio the scale ratio
 	 */
-	public void setRatio(double ratio) {
+	public void setRatio(int ratio) {
 		this.ratio = ratio;
+	}
+	
+	/**
+	 * Sets the {@code Scale} ratio from a {@link java.math.BigDecimal}
+	 * value.
+	 * 
+	 * @param ratio the {@code Scale} ratio
+	 */
+	public void setRatio(BigDecimal ratio) {
+		this.ratio = ratio
+				.multiply(RATIO_FACTOR).intValue();
 	}
 	
 	/**
 	 * Returns the the distance between the two rails forming a railroad track.	
 	 * @return the gauge.
 	 */
-	public double getGauge() {
+	public int getGauge() {
 		return gauge;
 	}
 
 	/**
+	 * Returns the {@code Scale} gauge in millimeters.
+	 * @return the gauge
+	 */
+	public BigDecimal gauge() {
+		return (new BigDecimal(getGauge()))
+				.divide(GAUGE_FACTOR);
+	}
+	
+	/**
 	 * Sets the distance between the two rails forming a railroad track
 	 * @param gauge the gauge
 	 */
-	public void setGauge(double gauge) {
+	public void setGauge(int gauge) {
 		this.gauge = gauge;
 	}
 
@@ -185,16 +327,40 @@ public class Scale {
 	}
 	
 	/**
+	 * Returns the list of {@link Standard} that include this 
+	 * {@code Scale}.	
+	 * @return the list of standards
+	 */
+	public Set<Standard> getStandards() {
+		return standards;
+	}
+
+	/**
+	 * Adds a new standard to this scale.
+	 * @param standard a standard
+	 */
+	public void addStandard(Standard standard) {
+		if( standards==null ) standards = new HashSet<Standard>();
+		standards.add(standard);
+	}
+
+	/**
 	 * Returns the string representation for this scale ratio.
 	 * @return the scale ratio as string.
 	 */
 	public String getRatioText() {
-		int r = (int)ratio;
-		if( ratio - r!=0 ) {
-			return String.format("1:%.1f", ratio);
-		}
-		
-		return String.format("1:%d", (int)ratio);
+		return new StringBuilder()
+			.append("1:")
+			.append(this.ratio().toString())
+			.toString();
+	}
+	
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 	
 	/**

@@ -17,6 +17,7 @@ package com.trenako.entities;
 
 import org.junit.Test;
 
+import static java.math.BigDecimal.*;
 import static org.junit.Assert.*;
 
 /**
@@ -27,45 +28,90 @@ import static org.junit.Assert.*;
 public class ScaleTests {
 	
 	@Test
+	public void shouldAddNewStandards() {
+		Scale s = new Scale.Builder("H0").build();
+		s.addStandard(Standard.NMRA);
+		assertEquals(1, s.getStandards().size());
+	}
+	
+	@Test
+	public void shouldReturnTheGaugeInMillimeters() {
+		Scale s = new Scale.Builder("H0")
+			.gauge(1650) // stored as integer
+			.build();
+		assertEquals(valueOf(16.5), s.gauge());
+	}
+	
+	@Test
+	public void shouldreturnTheRatioInMillimeters() {
+		Scale s = new Scale.Builder("H0")
+			.ratio(435) // stored as integer
+			.build();
+		assertEquals(valueOf(43.5), s.ratio());		
+	}
+	
+	@Test
 	public void shouldPrintTheScaleRatio() {
-		Scale s1 = new Scale.Builder("H0").ratio(87).build();
+		Scale s1 = new Scale.Builder("H0")
+			.ratio(valueOf(87.0))
+			.build();
 		assertEquals("1:87", s1.getRatioText());
 	
-		Scale s2 = new Scale.Builder("0").ratio(43.5).build();
+		Scale s2 = new Scale.Builder("0")
+			.ratio(valueOf(43.5))
+			.build();
 		assertEquals("1:43.5", s2.getRatioText());
 	}
 	
 	@Test
 	public void equalsShouldFalseForDifferentScales() {
-		Scale x = new Scale.Builder("H0").ratio(87).build();
-		Scale y = new Scale.Builder("N").ratio(160).build();
+		Scale x = new Scale.Builder("H0")
+			.ratio(valueOf(87))
+			.build();
+		Scale y = new Scale.Builder("N")
+			.ratio(valueOf(160))
+			.build();
 		assertFalse(x.equals(y));
 	}
 	
 	@Test
 	public void equalsShouldTrueForEqualScales() {
-		Scale x = new Scale.Builder("H0").ratio(87).build();
-		Scale y = new Scale.Builder("H0").ratio(87).build();
+		Scale x = new Scale.Builder("H0")
+			.ratio(valueOf(87))
+			.build();
+		Scale y = new Scale.Builder("H0")
+			.ratio(valueOf(87))
+			.build();
 		assertTrue(x.equals(y));
 	}
 
 	@Test
 	public void hashCodeShouldProduceTheSameHashForEqualScales() {
-		Scale x = new Scale.Builder("H0").ratio(87).build();
-		Scale y = new Scale.Builder("H0").ratio(87).build();
+		Scale x = new Scale.Builder("H0")
+			.ratio(valueOf(87))
+			.build();
+		Scale y = new Scale.Builder("H0")
+			.ratio(valueOf(87))
+			.build();
 		assertEquals(x.hashCode(), y.hashCode());
+	}
+	
+	@Test
+	public void shouldFillTheSlugValue() {
+		Scale x = new Scale.Builder("#1n3").build();
+		assertEquals("1n3", x.getSlug());
 	}
 	
 	@Test
 	public void shouldBuildNewScales() {	
 		Scale s = new Scale.Builder("H0")
-			.ratio(87)
-			.gauge(16.5)
+			.ratio(valueOf(87))
+			.gauge(1650)
 			.narrow(true)
 			.build();
 		assertEquals("H0", s.getName());
-		assertEquals(87, s.getRatio(), 0.1);
-		assertEquals(16.5, s.getGauge(), 0.1);
+		assertEquals(870, s.getRatio());
+		assertEquals(1650, s.getGauge());
 		assertEquals(true, s.isNarrow());
 	}
 }
