@@ -144,6 +144,11 @@ public class SearchCriteria {
 
 	/**
 	 * Returns the {@code power method} search criteria.
+	 * <p>
+	 * The appropriate way to check whether a power method is selected is using
+	 * the {@link SearchCriteria#hasPowerMethod()} method.
+	 * </p>
+	 * 
 	 * @return the criteria value
 	 * @see com.trenako.entities.PowerMethod
 	 */
@@ -161,6 +166,11 @@ public class SearchCriteria {
 	
 	/**
 	 * Returns the {@code brand} search criteria.
+	 * <p>
+	 * The appropriate way to check whether a brand is selected is using
+	 * the {@link SearchCriteria#hasBrand()} method.
+	 * </p>
+	 * 
 	 * @return the criteria value
 	 * @see com.trenako.entities.Brand
 	 */
@@ -178,6 +188,11 @@ public class SearchCriteria {
 
 	/**
 	 * Returns the {@code scale} search criteria.
+	 * <p>
+	 * The appropriate way to check whether a scale is selected is using
+	 * the {@link SearchCriteria#hasScale()} method.
+	 * </p>
+	 * 
 	 * @return the criteria value
 	 * @see com.trenako.entities.Scale
 	 */
@@ -195,6 +210,11 @@ public class SearchCriteria {
 	
 	/**
 	 * Returns the {@code category} search criteria.
+	 * <p>
+	 * The appropriate way to check whether a category is selected is using
+	 * the {@link SearchCriteria#hasCategory()} method.
+	 * </p>
+	 * 
 	 * @return the criteria value
 	 * @see com.trenako.entities.Category
 	 */
@@ -212,6 +232,11 @@ public class SearchCriteria {
 	
 	/**
 	 * Returns the {@code era} search criteria.
+	 * <p>
+	 * The appropriate way to check whether an era is selected is using
+	 * the {@link SearchCriteria#hasEra()} method.
+	 * </p>
+	 * 
 	 * @return the criteria value
 	 * @see com.trenako.entities.Era
 	 */
@@ -229,6 +254,11 @@ public class SearchCriteria {
 	
 	/**
 	 * Returns the {@code railway} search criteria.
+	 * <p>
+	 * The appropriate way to check whether a railway is selected is using
+	 * the {@link SearchCriteria#hasRailway()} method.
+	 * </p>
+	 * 
 	 * @return the criteria value
 	 * @see com.trenako.entities.Railway
 	 */
