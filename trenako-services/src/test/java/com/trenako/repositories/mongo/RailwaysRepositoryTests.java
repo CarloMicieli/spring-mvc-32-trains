@@ -93,11 +93,11 @@ public class RailwaysRepositoryTests {
 	@Test
 	public void shouldFindAllTheRailways() {
 		List<Railway> value = Arrays.asList(new Railway("DRG"), new Railway("DB"));
-		when(mongo.findAll()).thenReturn(value);
+		when(mongo.findAllOrderBy("name", Order.ASCENDING)).thenReturn(value);
 		
 		List<Railway> railways = (List<Railway>) repo.findAll();
 		
-		verify(mongo, times(1)).findAll();
+		verify(mongo, times(1)).findAllOrderBy("name", Order.ASCENDING);
 		assertNotNull(railways);
 		assertEquals(2, railways.size());
 	}

@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.mongodb.core.query.Order;
 
 import com.trenako.entities.Scale;
 import com.trenako.repositories.ScalesRepository;
@@ -50,6 +51,18 @@ public class ScalesRepositoryTests {
 	}
 
 	@Test
+	public void shouldFindScalesById() {
+		ObjectId id = new ObjectId();
+		Scale value = new Scale("H0");
+		when(mongo.findById(eq(id))).thenReturn(value);
+		
+		Scale scale = repo.findById(id);
+		
+		verify(mongo, times(1)).findById(eq(id));
+		assertNotNull(scale);
+	}
+	
+	@Test
 	public void shouldFindScalesByName() {
 		Scale value = new Scale("H0");
 		when(mongo.findOne(eq("name"), eq("H0"))).thenReturn(value);
@@ -61,27 +74,26 @@ public class ScalesRepositoryTests {
 	}
 
 	@Test
+	public void shouldFindScalesBySlug() {
+		Scale value = new Scale("H0");
+		when(mongo.findOne(eq("slug"), eq("h0"))).thenReturn(value);
+		
+		Scale scale = repo.findBySlug("h0");
+		
+		verify(mongo, times(1)).findOne(eq("slug"), eq("h0"));
+		assertNotNull(scale);
+	}
+	
+	@Test
 	public void shouldFindAllTheScales() {
 		List<Scale> value = Arrays.asList(new Scale("H0"), new Scale("N"));
-		when(mongo.findAll()).thenReturn(value);
+		when(mongo.findAllOrderBy("name", Order.ASCENDING)).thenReturn(value);
 		
 		List<Scale> results = (List<Scale>) repo.findAll();
 		
-		verify(mongo, times(1)).findAll();
+		verify(mongo, times(1)).findAllOrderBy("name", Order.ASCENDING);
 		assertNotNull(results);
 		assertEquals(2, results.size());
-	}
-
-	@Test
-	public void shouldFindScalesById() {
-		ObjectId id = new ObjectId();
-		Scale value = new Scale("H0");
-		when(mongo.findById(eq(id))).thenReturn(value);
-		
-		Scale scale = repo.findById(id);
-		
-		verify(mongo, times(1)).findById(eq(id));
-		assertNotNull(scale);
 	}
 
 	@Test

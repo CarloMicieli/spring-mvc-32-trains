@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.mongodb.core.query.Order;
 
 import com.trenako.entities.Brand;
 import com.trenako.repositories.mongo.BrandsRepositoryImpl;
@@ -89,11 +90,11 @@ public class BrandsRepositoryTests {
 	@Test
 	public void shouldFindAllTheBrands() {
 		List<Brand> brands = Arrays.asList(new Brand("ACME"), new Brand("Roco"));
-		when(mongo.findAll()).thenReturn(brands);
+		when(mongo.findAllOrderBy("name", Order.ASCENDING)).thenReturn(brands);
 		
 		List<Brand> results = (List<Brand>) repo.findAll();
 		
-		verify(mongo, times(1)).findAll();
+		verify(mongo, times(1)).findAllOrderBy("name", Order.ASCENDING);
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}

@@ -38,6 +38,13 @@ public interface ScalesRepository {
 	 * @return a brand instance. <em>null</em> if no brands are found.
 	 */
 	Scale findByName(String name);
+
+	/**
+	 * Finds the {@code Scale} with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code Brand}
+	 */
+	Scale findBySlug(String slug);
 	
 	/**
 	 * Returns all scales in the collection.

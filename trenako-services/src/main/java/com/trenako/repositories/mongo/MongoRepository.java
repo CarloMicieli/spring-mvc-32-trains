@@ -61,10 +61,10 @@ public class MongoRepository<T> {
 	 * @param key the sort key
 	 * @param order the sort order ({@code ascending}, {@code descending}) 
 	 */
-	public void findAllOrderBy(String key, Order order) {
+	public Iterable<T> findAllOrderBy(String key, Order order) {
 		Query q = new Query().limit(AppGlobals.MAX_RESULT_SET_SIZE);
 		q.sort().on(key, order);
-		mongoOps.find(q, clazz);
+		return mongoOps.find(q, clazz);
 	}
 
 	/**

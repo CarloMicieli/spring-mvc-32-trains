@@ -66,7 +66,7 @@ public class RailwaysRepositoryImpl implements RailwaysRepository {
 
 	@Override
 	public Iterable<Railway> findAll() {
-		return mongo.findAll();
+		return mongo.findAllOrderBy("name", Order.ASCENDING);
 	}
 
 	@Override

@@ -47,19 +47,19 @@ public interface BrandsRepository {
 	Brand findBySlug(String slug);
 	
 	/**
-	 * Returns all the brands.
+	 * Returns the {@code Brand} list.
 	 * @return the brands.
 	 */
 	Iterable<Brand> findAll();
 	
 	/**
-	 * Persist the brand instance to the data store.
+	 * Persists the brand instance to the data store.
 	 * @param brand a brand.
 	 */
 	void save(Brand brand);
 	
 	/**
-	 * Remove the brand from the data store.
+	 * Removes the brand from the data store.
 	 * @param brand a brand.
 	 */
 	void remove(Brand brand);

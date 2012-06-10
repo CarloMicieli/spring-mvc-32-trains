@@ -18,6 +18,7 @@ package com.trenako.repositories.mongo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Brand;
@@ -64,7 +65,7 @@ public class BrandsRepositoryImpl implements BrandsRepository {
 
 	@Override
 	public Iterable<Brand> findAll() {
-		return mongo.findAll();
+		return mongo.findAllOrderBy("name", Order.ASCENDING);
 	}
 
 	@Override

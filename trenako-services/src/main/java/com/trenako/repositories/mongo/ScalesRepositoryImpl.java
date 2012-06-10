@@ -18,6 +18,7 @@ package com.trenako.repositories.mongo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Scale;
@@ -54,8 +55,13 @@ public class ScalesRepositoryImpl implements ScalesRepository {
 	}
 
 	@Override
+	public Scale findBySlug(String slug) {
+		return mongo.findOne("slug", slug);
+	}
+	
+	@Override
 	public Iterable<Scale> findAll() {
-		return mongo.findAll();
+		return mongo.findAllOrderBy("name", Order.ASCENDING);
 	}
 
 	@Override
@@ -67,4 +73,5 @@ public class ScalesRepositoryImpl implements ScalesRepository {
 	public void remove(Scale scale) {
 		mongo.remove(scale);
 	}
+
 }
