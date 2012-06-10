@@ -129,9 +129,10 @@ public abstract class MongoCollection<T> {
 	}
 	
 	/**
-	 * 
-	 * @param sc
-	 * @return
+	 * Returns all documents in the collection matching the provided
+	 * search criteria.
+	 * @param sc the search criteria
+	 * @return a document list
 	 */
 	public Iterable<T> findAll(MongoSearchCriteria sc) {
 		Criteria critera = new Criteria();

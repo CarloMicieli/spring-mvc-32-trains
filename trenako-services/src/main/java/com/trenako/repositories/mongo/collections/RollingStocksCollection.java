@@ -22,13 +22,17 @@ import org.springframework.stereotype.Component;
 import com.trenako.entities.RollingStock;
 
 /**
- * 
+ * It represents the helper class for the {@code RollingStock} mongo collection.
  * @author Carlo Micieli
  *
  */
 @Component
 public class RollingStocksCollection extends MongoCollection<RollingStock> {
 	
+	/**
+	 * Creates a new {@code RollingStocksCollection} class.
+	 * @param mongoOps the mongo template
+	 */
 	@Autowired
 	public RollingStocksCollection(MongoTemplate mongoOps) {
 		super(mongoOps, RollingStock.class);

@@ -22,13 +22,17 @@ import org.springframework.stereotype.Component;
 import com.trenako.entities.Brand;
 
 /**
- * 
+ * It represents the helper class for the {@code Brand} mongo collection.
  * @author Carlo Micieli
  *
  */
 @Component
 public class BrandsCollection extends MongoCollection<Brand> {
 
+	/**
+	 * Creates a new {@code BrandsCollection} class.
+	 * @param mongoOps the mongo template
+	 */
 	@Autowired
 	public BrandsCollection(MongoTemplate mongoOps) {
 		super(mongoOps, Brand.class);

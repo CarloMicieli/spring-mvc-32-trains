@@ -22,13 +22,17 @@ import org.springframework.stereotype.Component;
 import com.trenako.entities.Scale;
 
 /**
- * 
+ * It represents the helper class for the {@code Scale} mongo collection.
  * @author Carlo Micieli
  *
  */
 @Component
 public class ScalesCollection extends MongoCollection<Scale> {
 
+	/**
+	 * Creates a new {@code ScalesCollection} class.
+	 * @param mongoOps the mongo template
+	 */
 	@Autowired
 	public ScalesCollection(MongoTemplate mongoOps) {
 		super(mongoOps, Scale.class);

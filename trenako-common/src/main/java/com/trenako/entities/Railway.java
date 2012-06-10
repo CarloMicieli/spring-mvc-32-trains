@@ -70,7 +70,7 @@ public class Railway {
 	}
 	
 	/**
-	 * Create a new railway.
+	 * Creates a new {@code Railway} with the provided name.
 	 * @param name the railway name.
 	 */
 	public Railway(String name) {

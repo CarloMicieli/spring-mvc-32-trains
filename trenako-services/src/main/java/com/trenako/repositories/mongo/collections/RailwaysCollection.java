@@ -22,13 +22,17 @@ import org.springframework.stereotype.Component;
 import com.trenako.entities.Railway;
 
 /**
- * 
+ * It represents the helper class for the {@code Railway} mongo collection.
  * @author Carlo Micieli
  *
  */
 @Component
 public class RailwaysCollection extends MongoCollection<Railway> {
 	
+	/**
+	 * Creates a new {@code RailwaysCollection} class.
+	 * @param mongo the mongo template
+	 */
 	@Autowired
 	public RailwaysCollection(MongoTemplate mongo) {
 		super(mongo, Railway.class);
