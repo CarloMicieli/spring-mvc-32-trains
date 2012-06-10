@@ -67,11 +67,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("brandName"), eq("ACME"))).thenReturn(value);
+		when(mongo.find(eq("brandName"), eq("ACME"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByBrand("ACME");
 		
-		verify(mongo, times(1)).findAll(eq("brandName"), eq("ACME"));
+		verify(mongo, times(1)).find(eq("brandName"), eq("ACME"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -81,11 +81,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("era"), eq("IV"))).thenReturn(value);
+		when(mongo.find(eq("era"), eq("IV"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByEra("IV");
 		
-		verify(mongo, times(1)).findAll(eq("era"), eq("IV"));
+		verify(mongo, times(1)).find(eq("era"), eq("IV"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -95,11 +95,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("scaleName"), eq("H0"))).thenReturn(value);
+		when(mongo.find(eq("scaleName"), eq("H0"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByScale("H0");
 		
-		verify(mongo, times(1)).findAll(eq("scaleName"), eq("H0"));
+		verify(mongo, times(1)).find(eq("scaleName"), eq("H0"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -109,11 +109,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("category"), eq("electric-locomotive"))).thenReturn(value);
+		when(mongo.find(eq("category"), eq("electric-locomotive"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByCategory("electric-locomotive");
 		
-		verify(mongo, times(1)).findAll(eq("category"), eq("electric-locomotive"));
+		verify(mongo, times(1)).find(eq("category"), eq("electric-locomotive"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -123,11 +123,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("powerMethod"), eq("AC"))).thenReturn(value);
+		when(mongo.find(eq("powerMethod"), eq("AC"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByPowerMethod("AC");
 		
-		verify(mongo, times(1)).findAll(eq("powerMethod"), eq("AC"));
+		verify(mongo, times(1)).find(eq("powerMethod"), eq("AC"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -137,11 +137,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("railwayName"), eq("DB"))).thenReturn(value);
+		when(mongo.find(eq("railwayName"), eq("DB"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByRailwayName("DB");
 		
-		verify(mongo, times(1)).findAll(eq("railwayName"), eq("DB"));
+		verify(mongo, times(1)).find(eq("railwayName"), eq("DB"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -151,11 +151,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("brandName"), eq("ACME"), eq("era"), eq("IV"))).thenReturn(value);
+		when(mongo.find(eq("brandName"), eq("ACME"), eq("era"), eq("IV"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByBrandAndEra("ACME", "IV");
 		
-		verify(mongo, times(1)).findAll(eq("brandName"), eq("ACME"), eq("era"), eq("IV"));
+		verify(mongo, times(1)).find(eq("brandName"), eq("ACME"), eq("era"), eq("IV"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -165,11 +165,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("brandName"), eq("ACME"), eq("scaleName"), eq("H0"))).thenReturn(value);
+		when(mongo.find(eq("brandName"), eq("ACME"), eq("scaleName"), eq("H0"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByBrandAndScale("ACME", "H0");
 		
-		verify(mongo, times(1)).findAll(eq("brandName"), eq("ACME"), eq("scaleName"), eq("H0"));
+		verify(mongo, times(1)).find(eq("brandName"), eq("ACME"), eq("scaleName"), eq("H0"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -179,11 +179,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("brandName"), eq("ACME"), eq("category"), eq("electric-locomotives"))).thenReturn(value);
+		when(mongo.find(eq("brandName"), eq("ACME"), eq("category"), eq("electric-locomotives"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByBrandAndCategory("ACME", "electric-locomotives");
 		
-		verify(mongo, times(1)).findAll(eq("brandName"), eq("ACME"), eq("category"), eq("electric-locomotives"));
+		verify(mongo, times(1)).find(eq("brandName"), eq("ACME"), eq("category"), eq("electric-locomotives"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -193,11 +193,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("brandName"), eq("ACME"), eq("railwayName"), eq("DB"))).thenReturn(value);
+		when(mongo.find(eq("brandName"), eq("ACME"), eq("railwayName"), eq("DB"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByBrandAndRailway("ACME", "DB");
 		
-		verify(mongo, times(1)).findAll(eq("brandName"), eq("ACME"), eq("railwayName"), eq("DB"));
+		verify(mongo, times(1)).find(eq("brandName"), eq("ACME"), eq("railwayName"), eq("DB"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 	}
@@ -207,11 +207,11 @@ public class RollingStocksRepositoryTests {
 		List<RollingStock> value = Arrays.asList(
 				new RollingStock.Builder("ACME", "223456").build(),
 				new RollingStock.Builder("ACME", "123456").build());
-		when(mongo.findAll(eq("tags"), eq("tag-value"))).thenReturn(value);
+		when(mongo.find(eq("tags"), eq("tag-value"))).thenReturn(value);
 		
 		List<RollingStock> results = (List<RollingStock>) repo.findByTag("tag-value");
 		
-		verify(mongo, times(1)).findAll(eq("tags"), eq("tag-value"));
+		verify(mongo, times(1)).find(eq("tags"), eq("tag-value"));
 		assertNotNull(results);
 		assertEquals(2, results.size());
 

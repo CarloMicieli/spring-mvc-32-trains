@@ -15,12 +15,14 @@
  */
 package com.trenako.repositories.mongo;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -28,6 +30,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 
+import com.trenako.AppGlobals;
 import com.trenako.entities.Brand;
 
 /**
@@ -50,9 +53,21 @@ public class MongoRepositoryTests {
 	@Test
 	public void shouldFindAll() {
 		repo.findAll();
-		verify(mongo, times(1)).findAll(eq(Brand.class));		
+		verify(mongo, times(1)).findAll(eq(Brand.class));
 	}
 
+	@Test
+	public void shouldFindAllSorted() {
+		ArgumentCaptor<Query> argument = ArgumentCaptor.forClass(Query.class);
+		repo.findAllOrderBy("name", Order.ASCENDING);
+
+		verify(mongo, times(1)).find(argument.capture(), eq(Brand.class));
+
+		Query q = argument.getValue();
+		assertEquals(true, q.getSortObject().containsField("name"));
+		assertEquals(AppGlobals.MAX_RESULT_SET_SIZE, q.getLimit());
+	}
+	
 	@Test
 	public void shouldFindById() {
 		ObjectId id = new ObjectId();
@@ -88,21 +103,21 @@ public class MongoRepositoryTests {
 		String key = "key";
 		Object value = "value";
 		
-		repo.findAll(key, value);
+		repo.find(key, value);
 		verify(mongo, times(1)).find(isA(Query.class), eq(Brand.class));
 	}
 
 	@Test
 	public void shouldFindAllStringObjectStringOrder() {
 		
-		repo.findAll("key", "value", "sortCriteria", Order.ASCENDING);
+		repo.findOrderBy("key", "value", "sortCriteria", Order.ASCENDING);
 		verify(mongo, times(1)).find(isA(Query.class), eq(Brand.class));
 	}
 
 	@Test
 	public void shouldFindAllStringObjectStringObject() {
 		
-		repo.findAll("key1", "value1", "key2", "value2");
+		repo.find("key1", "value1", "key2", "value2");
 		verify(mongo, times(1)).find(isA(Query.class), eq(Brand.class));
 	}
 

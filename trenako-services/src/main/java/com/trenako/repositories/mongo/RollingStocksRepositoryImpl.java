@@ -51,60 +51,60 @@ public class RollingStocksRepositoryImpl implements RollingStocksRepository {
 
 	@Override
 	public Iterable<RollingStock> findByBrand(String brandName) {
-		return mongo.findAll("brandName", brandName);
+		return mongo.find("brandName", brandName);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByEra(String era) {
-		return mongo.findAll("era", era);
+		return mongo.find("era", era);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByScale(String scaleName) {
-		return mongo.findAll("scaleName", scaleName);
+		return mongo.find("scaleName", scaleName);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByCategory(String category) {
-		return mongo.findAll("category", category);
+		return mongo.find("category", category);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByPowerMethod(String powerMethod) {
-		return mongo.findAll("powerMethod", powerMethod);
+		return mongo.find("powerMethod", powerMethod);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByRailwayName(String railwayName) {
-		return mongo.findAll("railwayName", railwayName);
+		return mongo.find("railwayName", railwayName);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByBrandAndEra(String brandName, String era) {
-		return mongo.findAll("brandName", brandName, "era", era);
+		return mongo.find("brandName", brandName, "era", era);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByBrandAndScale(String brandName,
 			String scale) {
-		return mongo.findAll("brandName", brandName, "scaleName", scale);
+		return mongo.find("brandName", brandName, "scaleName", scale);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByBrandAndCategory(String brandName,
 			String categoryName) {
-		return mongo.findAll("brandName", brandName, "category", categoryName);
+		return mongo.find("brandName", brandName, "category", categoryName);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByBrandAndRailway(String brandName,
 			String railwayName) {
-		return mongo.findAll("brandName", brandName, "railwayName", railwayName);
+		return mongo.find("brandName", brandName, "railwayName", railwayName);
 	}
 
 	@Override
 	public Iterable<RollingStock> findByTag(String tag) {
-		return mongo.findAll("tags", tag);
+		return mongo.find("tags", tag);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class RailwaysRepositoryImpl implements RailwaysRepository {
 
 	@Override
 	public Iterable<Railway> findByCountry(String country) {
-		return mongo.findAll("country", country, "name", Order.ASCENDING);
+		return mongo.findOrderBy("country", country, "name", Order.ASCENDING);
 	}
 	
 	@Override

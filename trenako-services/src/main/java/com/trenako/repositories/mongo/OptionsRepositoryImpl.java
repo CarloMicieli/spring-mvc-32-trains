@@ -38,6 +38,6 @@ public class OptionsRepositoryImpl extends MongoRepository<Option> implements Op
 
 	@Override
 	public Iterable<Option> findByFamily(OptionFamily family) {
-		return findAll("family", family);
+		return find("family", family);
 	}
 }

@@ -55,11 +55,11 @@ public class RailwaysRepositoryTests {
 	public void shouldFindRailwaysByCountry() {
 		
 		List<Railway> railways = Arrays.asList(new Railway("DRG"), new Railway("DB"));
-		when(mongo.findAll(eq("country"), eq("DEU"), eq("name"), eq(Order.ASCENDING))).thenReturn(railways);
+		when(mongo.findOrderBy(eq("country"), eq("DEU"), eq("name"), eq(Order.ASCENDING))).thenReturn(railways);
 		
 		List<Railway> results = (List<Railway>) repo.findByCountry("DEU");
 		
-		verify(mongo, times(1)).findAll(eq("country"), eq("DEU"), eq("name"), eq(Order.ASCENDING));
+		verify(mongo, times(1)).findOrderBy(eq("country"), eq("DEU"), eq("name"), eq(Order.ASCENDING));
 		assertNotNull(results);
 		assertEquals(2, results.size());		
 	}

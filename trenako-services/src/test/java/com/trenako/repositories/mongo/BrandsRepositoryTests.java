@@ -45,18 +45,6 @@ public class BrandsRepositoryTests {
 		MockitoAnnotations.initMocks(this);
 		repo = new BrandsRepositoryImpl(mongo);
 	}
-	
-	@Test
-	public void shouldFindAllTheBrands() {
-		List<Brand> brands = Arrays.asList(new Brand("ACME"), new Brand("Roco"));
-		when(mongo.findAll()).thenReturn(brands);
-		
-		List<Brand> results = (List<Brand>) repo.findAll();
-		
-		verify(mongo, times(1)).findAll();
-		assertNotNull(results);
-		assertEquals(2, results.size());
-	}
 
 	@Test
 	public void shouldFindBrandsById() {
@@ -71,7 +59,7 @@ public class BrandsRepositoryTests {
 		assertEquals("ACME", brand.getName());
 		verify(mongo, times(1)).findById(eq(id));
 	}
-
+	
 	@Test
 	public void shouldFindBrandsByName() {
 		Brand b = new Brand("ACME");
@@ -96,6 +84,18 @@ public class BrandsRepositoryTests {
 		assertNotNull("Brand not found.", brand);
 		assertEquals("ACME", brand.getName());
 		verify(mongo, times(1)).findOne(eq("slug"), eq("acme"));
+	}
+	
+	@Test
+	public void shouldFindAllTheBrands() {
+		List<Brand> brands = Arrays.asList(new Brand("ACME"), new Brand("Roco"));
+		when(mongo.findAll()).thenReturn(brands);
+		
+		List<Brand> results = (List<Brand>) repo.findAll();
+		
+		verify(mongo, times(1)).findAll();
+		assertNotNull(results);
+		assertEquals(2, results.size());
 	}
 	
 	@Test

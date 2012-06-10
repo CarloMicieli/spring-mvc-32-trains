@@ -21,6 +21,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 
+import com.trenako.AppGlobals;
+
 import static org.springframework.data.mongodb.core.query.Criteria.*;
 import static org.springframework.data.mongodb.core.query.Query.*;
 
@@ -55,6 +57,17 @@ public class MongoRepository<T> {
 	}
 
 	/**
+	 * Finds all documents in the collection.
+	 * @param key the sort key
+	 * @param order the sort order ({@code ascending}, {@code descending}) 
+	 */
+	public void findAllOrderBy(String key, Order order) {
+		Query q = new Query().limit(AppGlobals.MAX_RESULT_SET_SIZE);
+		q.sort().on(key, order);
+		mongoOps.find(q, clazz);
+	}
+
+	/**
 	 * Finds the document with the given id.
 	 * @param id the document id
 	 * @return the document with the given id if found; <em>null</em> otherwise
@@ -62,23 +75,7 @@ public class MongoRepository<T> {
 	public T findById(ObjectId id) {
 		return mongoOps.findById(id, clazz);
 	}
-	
-	/**
-	 * Save the object to the collection for the entity 
-	 * type of the object to save
-	 * @param object the object to save
-	 */
-	public void save(T object) {
-		mongoOps.save(object);
-	}
-	
-	/**
-	 * Remove all documents in the collection.
-	 */
-	public void removeAll() {
-		mongoOps.remove(new Query(), clazz);
-	}
-	
+		
 	/**
 	 * Finds the first document in the collection according to the provided criteria.
 	 * <p>
@@ -100,7 +97,7 @@ public class MongoRepository<T> {
 	 * @param value the key value
 	 * @return the list of documents
 	 */
-	public Iterable<T> findAll(String key, Object value) {
+	public Iterable<T> find(String key, Object value) {
 		return mongoOps.find(query(where(key).is(value)), clazz);
 	}
 	
@@ -113,7 +110,7 @@ public class MongoRepository<T> {
 	 * @param order the order
 	 * @return the list of documents
 	 */
-	public Iterable<T> findAll(String key, Object value, String sortCriteria, Order order) {
+	public Iterable<T> findOrderBy(String key, Object value, String sortCriteria, Order order) {
 		final Query q = query(where(key).is(value));
 		q.sort().on(sortCriteria, order);
 		return mongoOps.find(q, clazz);
@@ -127,11 +124,15 @@ public class MongoRepository<T> {
 	 * @param value2 the second key value
 	 * @return the list of documents
 	 */
-	public Iterable<T> findAll(String key1, Object value1, String key2, Object value2) {
+	public Iterable<T> find(String key1, Object value1, String key2, Object value2) {
 		return mongoOps.find(query(where(key1).is(value1).and(key2).is(value2)), clazz);
 	}
 	
-	
+	/**
+	 * 
+	 * @param sc
+	 * @return
+	 */
 	public Iterable<T> findAll(MongoSearchCriteria sc) {
 		Criteria critera = new Criteria();
 		critera.andOperator(sc.criterias());
@@ -139,6 +140,21 @@ public class MongoRepository<T> {
 		return mongoOps.find(query, clazz);
 	}
 	
+	/**
+	 * Save the object to the collection for the entity 
+	 * type of the object to save
+	 * @param object the object to save
+	 */
+	public void save(T object) {
+		mongoOps.save(object);
+	}
+	
+	/**
+	 * Remove all documents in the collection.
+	 */
+	public void removeAll() {
+		mongoOps.remove(new Query(), clazz);
+	}
 	
 	/**
 	 * Remove the document from the collection.

@@ -26,25 +26,25 @@ import com.trenako.entities.Brand;
  */
 public interface BrandsRepository {
 	/**
-	 * Returns the brand entity with the id.
+	 * Finds the {@code Brand} with the provided id.
 	 * @param id the unique id.
-	 * @return a brand instance. <em>null</em> if no brands are found.
+	 * @return a {@code Brand} if found; {@code null} otherwise
 	 */
 	Brand findById(ObjectId id);
 	
 	/**
-	 * Returns the brand from the slug value.
-	 * @param slug the brand slug.
-	 * @return a brand instance. <em>null</em> if no brands are found.
-	 */
-	Brand findBySlug(String slug);
-	
-	/**
-	 * Returns the brand from the name.
-	 * @param name the brand name.
-	 * @return a brand instance. <em>null</em> if no brands are found.
+	 * Finds the {@code Brand} with the provided name.
+	 * @param name the name
+	 * @return a {@code Brand} if found; {@code null} otherwise
 	 */
 	Brand findByName(String name);
+	
+	/**
+	 * Finds the {@code Brand} with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code Brand} if found; {@code null} otherwise
+	 */
+	Brand findBySlug(String slug);
 	
 	/**
 	 * Returns all the brands.
