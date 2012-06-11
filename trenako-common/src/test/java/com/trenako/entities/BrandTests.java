@@ -15,8 +15,6 @@
  */
 package com.trenako.entities;
 
-import java.util.List;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -86,16 +84,6 @@ public class BrandTests {
 		assertEquals(true, b.isIndustrial());
 	}
 	
-	@Test
-	public void shouldManageTheListOfScales() {
-		Brand b = new Brand.Builder("ACME").build();
-		b.addScale("H0");
-		b.addScale("N");
-		
-		List<String> scales = (List<String>) b.getScales();
-		assertEquals("[H0, N]", scales.toString());
-	}
-
 	@Test
 	public void shouldManageBrandAddress() {
 		Address a = new Address.Builder()

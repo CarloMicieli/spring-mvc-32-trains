@@ -15,11 +15,8 @@
  */
 package com.trenako.entities;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.Size;
@@ -84,7 +81,7 @@ public class Brand {
 	
 	private boolean industrial;
 	
-	private List<String> scales;
+	//private List<String> scales;
 	
 	private byte[] logo;
 	
@@ -404,23 +401,6 @@ public class Brand {
 		this.logo = logo;
 	}
 	
-	/**
-	 * Adds a scale produced by this brand.
-	 * @param scale the scale
-	 */
-	public void addScale(String scale) {
-		if( scales==null ) scales = new ArrayList<String>();
-		scales.add(scale);
-	}
-
-	/**
-	 * Returns the scale list produced by this brand.
-	 * @return the list of scales
-	 */
-	public Iterable<String> getScales() {
-		return Collections.unmodifiableList(scales);
-	}
-
 	/**
 	 * Returns the last modified timestamp.
 	 * @return the timestamp
