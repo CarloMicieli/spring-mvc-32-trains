@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  */
 @Controller
-@RequestMapping("/")
 public class HomeController {
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
 	public String home() {
-		return "Funzia";
+		return "home/index";
 	}
 }
