@@ -88,7 +88,7 @@ public class Brand {
 	private Date lastModified;
 	
 	// required by spring data
-	Brand() {
+	public Brand() {
 	}
 
 	/**
