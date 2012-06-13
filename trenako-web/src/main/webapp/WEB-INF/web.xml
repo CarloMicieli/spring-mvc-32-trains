@@ -13,9 +13,16 @@
     	<param-value>com.trenako.web.config</param-value>
 	</context-param>
 
+	<!-- activate the spring profile to use -->
+	<context-param>
+		<param-name>contextInitializerClasses</param-name>
+		<param-value>com.trenako.web.config.ContextProfileInitializer</param-value>
+	</context-param>
+
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>

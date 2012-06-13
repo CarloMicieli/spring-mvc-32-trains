@@ -20,6 +20,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
@@ -36,6 +37,7 @@ import com.mongodb.WriteConcern;
  */
 @Configuration
 @ComponentScan(basePackages = "com.trenako")
+@Profile("production")
 @PropertySource("classpath:META-INF/spring/app.properties")
 public class ApplicationConfig {
 	
