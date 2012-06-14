@@ -133,6 +133,7 @@ project("trenako-services") {
 project("trenako-web") {
 	apply plugin: 'war'
 	apply plugin: 'eclipse-wtp'
+	apply plugin: 'jetty'
 
 	description = 'The mvc web application.'
 
