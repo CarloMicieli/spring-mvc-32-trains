@@ -141,8 +141,8 @@ project("trenako-web") {
 		compile project(":trenako-services")
 
 		// spring mvc
-		compile "org.springframework:spring-webmvc:${springVersion}"
 		compile "org.springframework:spring-web:${springVersion}"
+		compile "org.springframework:spring-webmvc:${springVersion}"
 		
 		compile("org.springframework.security:spring-security-web:${securityVersion}") {
 			exclude group: "commons-logging", module: "commons-logging"
