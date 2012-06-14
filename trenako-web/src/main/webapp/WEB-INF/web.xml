@@ -19,10 +19,10 @@
 	</context-param>
 
 	<!-- Activate the spring profile to use -->
-<!-- 	<context-param> -->
-<!-- 		<param-name>contextInitializerClasses</param-name> -->
-<!-- 		<param-value>com.trenako.web.config.ContextProfileInitializer</param-value> -->
-<!-- 	</context-param> -->
+	<context-param>
+		<param-name>contextInitializerClasses</param-name>
+		<param-value>com.trenako.web.config.ContextProfileInitializer</param-value>
+	</context-param>
 
 	<!-- Bootstrap the root application context as usual using ContextLoaderListener -->
 	<listener>
