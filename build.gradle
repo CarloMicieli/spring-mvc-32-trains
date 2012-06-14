@@ -10,7 +10,7 @@ def spockVersion = "0.6-groovy-1.8"
 allprojects {
 	apply plugin: 'java'
 	apply plugin: 'groovy'
-	apply plugin: 'eclipse'
+	apply plugin: 'eclipse-wtp'
 
 	sourceCompatibility = JavaVersion.VERSION_1_6
     targetCompatibility = JavaVersion.VERSION_1_6
@@ -132,8 +132,6 @@ project("trenako-services") {
 
 project("trenako-web") {
 	apply plugin: 'war'
-	apply plugin: 'eclipse-wtp'
-	apply plugin: 'jetty'
 
 	description = 'The mvc web application.'
 
