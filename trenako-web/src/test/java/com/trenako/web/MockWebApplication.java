@@ -34,8 +34,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Inherited
 public @interface MockWebApplication {
         /**
-         * The location of the webapp directory relative to your project.
-         * For maven users, this is generally src/main/webapp (default).
+         * The location of the {@code webapp} directory relative to your project.
          */
         String webapp() default "src/main/webapp";
         
