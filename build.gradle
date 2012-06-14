@@ -13,7 +13,7 @@ allprojects {
 	apply plugin: 'eclipse-wtp'
 
 	sourceCompatibility = JavaVersion.VERSION_1_6
-    targetCompatibility = JavaVersion.VERSION_1_6
+	targetCompatibility = JavaVersion.VERSION_1_6
 
 	repositories {
 		mavenCentral()
@@ -33,7 +33,7 @@ allprojects {
 	sourceSets {
 		integrationTest {
 			groovy.srcDir file('src/integrationTest/groovy')
-		    resources.srcDir file('src/integrationTest/resources')
+			resources.srcDir file('src/integrationTest/resources')
 			compileClasspath = sourceSets.main.output + sourceSets.test.output + configurations.integrationTestCompile
 			runtimeClasspath = output + compileClasspath + configurations.integrationTestRuntime
 		}
@@ -135,6 +135,10 @@ project("trenako-web") {
 
 	description = 'The mvc web application.'
 
+	repositories {
+		maven {url "http://maven.springframework.org/snapshot"}
+	}
+
 	dependencies {
 		compile project(":trenako-common")
 		compile project(":trenako-services")
@@ -161,6 +165,12 @@ project("trenako-web") {
 		// Servlet Api
 		providedCompile "javax.servlet:servlet-api:2.5"
 		compile "javax.servlet:jstl:1.2"
+
+		testCompile "org.springframework:spring-test-mvc:1.0.0.BUILD-SNAPSHOT"
+	
+		// Springockito
+		testCompile "org.kubek2k:springockito:1.0.4",
+			"org.kubek2k:springockito-annotations:1.0.2"
 	}
 }
 
