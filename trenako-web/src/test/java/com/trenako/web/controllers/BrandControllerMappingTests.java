@@ -19,9 +19,12 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
 import com.trenako.web.AbstractSpringControllerTests;
 
@@ -34,10 +37,16 @@ public class BrandControllerMappingTests extends AbstractSpringControllerTests {
 	private @Autowired BrandsService mockService;
 	
 	@Test
-	public void firstTest() throws Exception {
-		mockMvc().perform(get("/brands"))
-			.andExpect(status().isNotFound());
+	public void shouldListAllBrands() throws Exception {
+		Iterable<Brand> value = Arrays.asList(new Brand(), new Brand());
+		when(mockService.findAll()).thenReturn(value);
 		
-		verify(mockService, times(0)).findAll();
+		mockMvc().perform(get("/brands"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("brands"))
+			.andExpect(forwardedUrl("/WEB-INF/views/brand/list.jsp"));
+		
+		verify(mockService, times(1)).findAll();
 	}
 }

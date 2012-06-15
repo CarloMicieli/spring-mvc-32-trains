@@ -19,10 +19,12 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.*;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.server.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.trenako.web.config.WebConfig;
 
@@ -39,6 +41,11 @@ import com.trenako.web.config.WebConfig;
 @MockWebApplication(name = "appServlet")
 public abstract class AbstractSpringControllerTests {
 
+	// the TestContext framework doesn't support WebApplicationContext yet:
+	// <https://jira.springsource.org/browse/SPR-5243>
+	@Autowired
+	private WebApplicationContext wac;
+	
 	public final static String VIEWS_PATH = "/WEB-INF/views/";
 	
 	private MockMvc mockMvc;
@@ -48,8 +55,6 @@ public abstract class AbstractSpringControllerTests {
 
 	@Before
 	public void setup() {
-		mockMvc = annotationConfigSetup(WebConfig.class)
-			.configureWebAppRootDir("src/main/webapp", false)
-			.build();
+		this.mockMvc = webApplicationContextSetup(this.wac).build();
 	}
 }
