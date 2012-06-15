@@ -34,9 +34,9 @@ import com.trenako.web.config.WebConfig;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
 		loader = MockWebApplicationContextLoader.class,
-		classes = {WebConfig.class, TestConfiguration.class})
+		classes = {WebConfig.class, TestConfig.class})
 @ActiveProfiles("test")
-@MockWebApplication(name = "appServlet")		
+@MockWebApplication(name = "appServlet")
 public abstract class AbstractSpringControllerTests {
 
 	public final static String VIEWS_PATH = "/WEB-INF/views/";

@@ -166,11 +166,8 @@ project("trenako-web") {
 		providedCompile "javax.servlet:servlet-api:2.5"
 		compile "javax.servlet:jstl:1.2"
 
+		// Spring test mvc
 		testCompile "org.springframework:spring-test-mvc:1.0.0.BUILD-SNAPSHOT"
-	
-		// Springockito
-		testCompile "org.kubek2k:springockito:1.0.4",
-			"org.kubek2k:springockito-annotations:1.0.2"
 	}
 }
 
