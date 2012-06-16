@@ -19,6 +19,7 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.*;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,15 +47,26 @@ public abstract class AbstractSpringControllerTests {
 	@Autowired
 	private WebApplicationContext wac;
 	
-	public final static String VIEWS_PATH = "/WEB-INF/views/";
+	private final static String VIEWS_PATH = "/WEB-INF/views/";
 	
 	private MockMvc mockMvc;
-	public MockMvc mockMvc() {
+	protected MockMvc mockMvc() {
 		return mockMvc;
+	}
+	
+	protected String view(String controller, String viewName) {
+		return new StringBuilder()
+			.append(VIEWS_PATH)
+			.append(controller)
+			.append("/")
+			.append(viewName)
+			.append(".jsp")
+			.toString();
 	}
 
 	@Before
 	public void setup() {
+		MockitoAnnotations.initMocks(this);
 		this.mockMvc = webApplicationContextSetup(this.wac).build();
 	}
 }

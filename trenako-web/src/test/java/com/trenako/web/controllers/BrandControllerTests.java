@@ -27,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -78,7 +77,7 @@ public class BrandControllerTests {
 		
 		String viewName = controller.newBrand(model);
 		
-		assertEquals("brand/new", viewName);
+		assertEquals("brand/edit", viewName);
 		assertEquals(true, model.containsAttribute("brand"));
 	}
 	
@@ -89,20 +88,7 @@ public class BrandControllerTests {
 		RedirectAttributes redirectAtt = new RedirectAttributesModelMap();
 		
 		String redirect = controller.create(brand, mockResult, redirectAtt);
-		assertEquals("redirect:brands", redirect);
+		assertEquals("redirect:/brands", redirect);
 		verify(service, times(1)).save(eq(brand));
-	}
-	
-	@Test
-	public void shouldManageExceptionFromBrandsCreate() {
-		Brand brand = new Brand();
-		doThrow(new DataIntegrityViolationException("")).when(service).save(eq(brand));
-		
-		RedirectAttributes redirectAtt = new RedirectAttributesModelMap();
-		String viewName = controller.create(brand, mockResult, redirectAtt);
-		assertEquals("brand/new", viewName);
-		assertEquals("Database error", redirectAtt.getFlashAttributes().get("message"));
-		assertTrue(redirectAtt.containsAttribute("brand"));
-	}
-	
+	}	
 }

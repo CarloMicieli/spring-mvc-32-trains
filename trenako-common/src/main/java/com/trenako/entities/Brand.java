@@ -237,13 +237,29 @@ public class Brand {
 	public ObjectId getId() {
 		return id;
 	}
-
+	
+	/**
+	 * Sets the {@code Brand} id.
+	 * @param id the unique id
+	 */
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
+	
 	/**
 	 * Returns the {@code Brand} company name.
 	 * @return the company name
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * Sets the {@code Brand} company name.
+	 * @param name the company name
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/**

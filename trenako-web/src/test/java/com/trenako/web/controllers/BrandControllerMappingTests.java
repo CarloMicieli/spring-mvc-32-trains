@@ -19,6 +19,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
+import static org.hamcrest.Matchers.*;
+
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -45,8 +47,35 @@ public class BrandControllerMappingTests extends AbstractSpringControllerTests {
 			.andExpect(status().isOk())
 			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brands"))
-			.andExpect(forwardedUrl("/WEB-INF/views/brand/list.jsp"));
+			.andExpect(forwardedUrl(view("brand", "list")));
 		
 		verify(mockService, times(1)).findAll();
+	}
+	
+	@Test
+	public void shouldRenderTheNewBrandForm() throws Exception {
+		mockMvc().perform(get("/brands/new"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("brand"))
+			.andExpect(forwardedUrl(view("brand", "edit")));
+	}
+	
+	@Test
+	public void shouldRedirectAfterCreate() throws Exception {
+		mockMvc().perform(post("/brands").param("name", "ACME"))
+			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo("Brand created")))
+			.andExpect(redirectedUrl("/brands"));
+	}
+	
+	@Test
+	public void shouldRedirectAfterCreateValidationError() throws Exception {
+		mockMvc().perform(post("/brands"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(1))
+			.andExpect(model().attributeHasErrors("brand"))
+			.andExpect(forwardedUrl(view("brand", "edit")));
 	}
 }

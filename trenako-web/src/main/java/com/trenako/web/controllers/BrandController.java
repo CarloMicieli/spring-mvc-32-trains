@@ -19,7 +19,6 @@ import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,7 +31,7 @@ import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
 
 /**
- * 
+ * It represents the brands controller.
  * @author Carlo Micieli
  *
  */
@@ -44,6 +43,10 @@ public class BrandController {
 	
 	private final BrandsService service;
 	
+	/**
+	 * Creates a new {@code BrandController}.
+	 * @param service
+	 */
 	@Autowired
 	public BrandController(BrandsService service) {
 		this.service = service;
@@ -59,25 +62,22 @@ public class BrandController {
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public String newBrand(Model model) {
 		model.addAttribute("brand", new Brand());
-		return "brand/new";
+		return "brand/edit";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String create(@Valid @ModelAttribute Brand brand, 
-			BindingResult bindingResult, 
-			RedirectAttributes redirectAtt) {
+			BindingResult result, 
+			RedirectAttributes redirectAtts) {
 		
-		try {
-			service.save(brand);	
-		}
-		catch(DataAccessException dae) {
-			log.error(dae.getMessage());
-			
-			redirectAtt.addFlashAttribute("message", "Database error");
-			redirectAtt.addAttribute("brand", brand);
-			return "brand/new";
+		if( result.hasErrors() ) {
+			redirectAtts.addAttribute("brand", brand);		
+			return "brand/edit";		
 		}
 		
-		return "redirect:brands";
+		// save brand
+		service.save(brand);
+		redirectAtts.addFlashAttribute("message", "Brand created");
+		return "redirect:/brands";		
 	}
 }
