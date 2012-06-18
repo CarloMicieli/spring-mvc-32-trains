@@ -25,6 +25,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Brand;
@@ -52,11 +53,14 @@ public class BrandController {
 		this.service = service;
 	}
 
+	/**
+	 * Maps the requests to {@ GET /brands}.
+	 * @return
+	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public String list(Model model) {
+	public ModelAndView list() {
 		Iterable<Brand> brands = service.findAll();
-		model.addAttribute("brands", brands);
-		return "brand/list";
+		return new ModelAndView("brand/list", "brands", brands);
 	}
 
 	@RequestMapping(value = "/new", method = RequestMethod.GET)

@@ -17,6 +17,7 @@ package com.trenako.web.controllers;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.ModelAndViewAssert.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
@@ -57,18 +59,12 @@ public class BrandControllerTests {
 	
 	@Test
 	public void shouldListAllBrands() {
-		
 		List<Brand> value = Arrays.asList(new Brand("AAA"), new Brand("BBB"));
 		when(service.findAll()).thenReturn(value);
 		
-		Model model = new ExtendedModelMap();
-		String viewName = controller.list(model);
-		
-		assertEquals("brand/list", viewName);
-		assertEquals(true, model.containsAttribute("brands"));
-		
-		Object brands = ((ExtendedModelMap)model).get("brands");
-		assertSame(value, brands);
+		ModelAndView mav = controller.list();
+		assertViewName(mav, "brand/list");
+		assertModelAttributeValue(mav, "brands", value);
 	}
 	
 	@Test
