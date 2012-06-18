@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>Trenako.com</title>
+		<meta name="home" content="active"/>
 	</head>
 	
 	<body>

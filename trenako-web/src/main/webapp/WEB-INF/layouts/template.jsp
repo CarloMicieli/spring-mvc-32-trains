@@ -36,11 +36,11 @@
 		       <a class="brand" href="#">Trenako</a>
 		       <div class="nav-collapse">
 		         <ul class="nav">
-		         	<li class="<decorator:getProperty property="home"/>">
+		         	<li class="<decorator:getProperty property="meta.home"/>">
 						<a href="<c:url value="/home" />"><s:message code="home" text="Home"/></a></li>
-		         	<li class="<decorator:getProperty property="you"/>">
+		         	<li class="<decorator:getProperty property="meta.you"/>">
 						<a href="<c:url value="/you" />"><s:message code="you" text="You"/></a></li>
-		         	<li class="<decorator:getProperty property="browse"/>">
+		         	<li class="<decorator:getProperty property="meta.browse"/>">
 						<a href="<c:url value="/browse" />"><s:message code="browse" text="Browse"/></a></li>		         </ul>
 		       </div>
 		    </div>
