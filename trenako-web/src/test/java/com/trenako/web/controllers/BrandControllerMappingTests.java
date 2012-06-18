@@ -48,8 +48,25 @@ public class BrandControllerMappingTests extends AbstractSpringControllerTests {
 			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brands"))
 			.andExpect(forwardedUrl(view("brand", "list")));
+	}
+	
+	@Test
+	public void shouldShowABrand() throws Exception {
+		Brand value = new Brand();
+		when(mockService.findBySlug(eq("acme"))).thenReturn(value);
 		
-		verify(mockService, times(1)).findAll();
+		mockMvc().perform(get("/brands/{slug}", "acme"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("brand"))
+			.andExpect(forwardedUrl(view("brand", "show")));
+	}
+	
+	@Test
+	public void shouldReturn404WhenTheBrandNotFound() throws Exception {
+		when(mockService.findBySlug(eq("acme"))).thenReturn(null);
+		mockMvc().perform(get("/brands/{slug}", "acme"))
+			.andExpect(status().isNotFound());
 	}
 	
 	@Test

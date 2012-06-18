@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,6 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
+import com.trenako.web.errors.NotFoundException;
 
 /**
  * It represents the brands controller.
@@ -54,13 +56,27 @@ public class BrandController {
 	}
 
 	/**
-	 * Maps the requests to {@ GET /brands}.
-	 * @return
+	 * Maps the requests to {@code GET /brands}.
+	 * @return a {@code Brand} list
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView list() {
 		Iterable<Brand> brands = service.findAll();
 		return new ModelAndView("brand/list", "brands", brands);
+	}
+	
+	/**
+	 * Maps the requests to {@code GET /brands/:slug}.
+	 * @param slug the {@code Brand} slug
+	 * @return a {@code Brand}
+	 */
+	@RequestMapping(value = "/{slug}", method = RequestMethod.GET) 
+	public ModelAndView show(@PathVariable("slug") String slug) {
+		Brand brand = service.findBySlug(slug);
+		if( brand==null )
+			throw new NotFoundException();
+		
+		return new ModelAndView("brand/show", "brand", brand);
 	}
 
 	@RequestMapping(value = "/new", method = RequestMethod.GET)

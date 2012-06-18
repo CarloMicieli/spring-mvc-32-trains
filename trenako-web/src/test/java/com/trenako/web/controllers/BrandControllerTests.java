@@ -63,8 +63,23 @@ public class BrandControllerTests {
 		when(service.findAll()).thenReturn(value);
 		
 		ModelAndView mav = controller.list();
+		
+		verify(service, times(1)).findAll();
 		assertViewName(mav, "brand/list");
 		assertModelAttributeValue(mav, "brands", value);
+	}
+	
+	@Test
+	public void shouldShowABrand() {
+		Brand value = new Brand("ACME");
+		String slug = "slug";
+		when(service.findBySlug(eq(slug))).thenReturn(value);
+		
+		ModelAndView mav = controller.show(slug);
+		
+		verify(service, times(1)).findBySlug(eq(slug));
+		assertViewName(mav, "brand/show");
+		assertModelAttributeValue(mav, "brand", value);
 	}
 	
 	@Test
