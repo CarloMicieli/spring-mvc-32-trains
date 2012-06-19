@@ -15,19 +15,13 @@
  */
 package com.trenako.web.controllers;
 
-import javax.validation.Valid;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
@@ -77,27 +71,5 @@ public class BrandController {
 			throw new NotFoundException();
 		
 		return new ModelAndView("brand/show", "brand", brand);
-	}
-
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String newBrand(Model model) {
-		model.addAttribute("brand", new Brand());
-		return "brand/edit";
-	}
-
-	@RequestMapping(method = RequestMethod.POST)
-	public String create(@Valid @ModelAttribute Brand brand, 
-			BindingResult result, 
-			RedirectAttributes redirectAtts) {
-		
-		if( result.hasErrors() ) {
-			redirectAtts.addAttribute("brand", brand);		
-			return "brand/edit";		
-		}
-		
-		// save brand
-		service.save(brand);
-		redirectAtts.addFlashAttribute("message", "Brand created");
-		return "redirect:/brands";		
 	}
 }

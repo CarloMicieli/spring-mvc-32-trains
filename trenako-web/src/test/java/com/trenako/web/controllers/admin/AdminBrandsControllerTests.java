@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.web.controllers;
+package com.trenako.web.controllers.admin;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.ModelAndViewAssert.*;
-
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +27,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
@@ -40,43 +42,36 @@ import com.trenako.services.BrandsService;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BrandControllerTests {
-	
+public class AdminBrandsControllerTests {
 	@Mock Model mockModel;
 	@Mock BindingResult mockResult;
 	@Mock BrandsService service;
-	BrandController controller;
+	AdminBrandsController controller;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new BrandController(service);
+		controller = new AdminBrandsController(service);
 	}
 	
 	@Test
-	public void shouldListAllBrands() {
-		List<Brand> value = Arrays.asList(new Brand("AAA"), new Brand("BBB"));
-		when(service.findAll()).thenReturn(value);
+	public void shouldCreateNewBrandForm() {
+		Model model = new ExtendedModelMap();
 		
-		ModelAndView mav = controller.list();
+		String viewName = controller.newForm(model);
 		
-		verify(service, times(1)).findAll();
-		assertViewName(mav, "brand/list");
-		assertModelAttributeValue(mav, "brands", value);
+		assertEquals("brand/edit", viewName);
+		assertEquals(true, model.containsAttribute("brand"));
 	}
 	
 	@Test
-	public void shouldShowABrand() {
-		Brand value = new Brand("ACME");
-		String slug = "slug";
-		when(service.findBySlug(eq(slug))).thenReturn(value);
+	public void shouldCreateBrands() {
+		Brand brand = new Brand();
+		when(mockResult.hasErrors()).thenReturn(false);
+		RedirectAttributes redirectAtt = new RedirectAttributesModelMap();
 		
-		ModelAndView mav = controller.show(slug);
-		
-		verify(service, times(1)).findBySlug(eq(slug));
-		assertViewName(mav, "brand/show");
-		assertModelAttributeValue(mav, "brand", value);
+		String redirect = controller.create(brand, mockResult, redirectAtt);
+		assertEquals("redirect:/brands", redirect);
+		verify(service, times(1)).save(eq(brand));
 	}
-	
-	
 }
