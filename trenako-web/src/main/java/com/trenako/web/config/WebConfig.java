@@ -18,11 +18,15 @@ package com.trenako.web.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import com.trenako.web.converters.ObjectIdConverter;
 
 /**
  * The configuration class for the Spring MVC application.
@@ -41,11 +45,25 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 	}
 	
+	@Override
+	public void addFormatters(FormatterRegistry registry) {
+		ObjectIdConverter oidConverter = new ObjectIdConverter();
+		registry.addConverter(oidConverter);
+	}
+	
 	public @Bean InternalResourceViewResolver viewResolver() {
 		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 		resolver.setViewClass(JstlView.class);
 		resolver.setPrefix("/WEB-INF/views/");
 		resolver.setSuffix(".jsp");
 		return resolver;
+	}
+	
+	// bean for files upload. 
+	// commons-fileupload is required in the classpath
+	public @Bean CommonsMultipartResolver multipartResolver() {
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+		multipartResolver.setMaxUploadSize(1024 * 512); // 512Kb
+		return multipartResolver;
 	}
 }
