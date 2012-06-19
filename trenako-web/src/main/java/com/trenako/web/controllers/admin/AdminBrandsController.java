@@ -23,14 +23,11 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -66,9 +63,8 @@ public class AdminBrandsController {
 	 * @return the view and model
 	 */
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String newForm(Model model) {
-		model.addAttribute("brand", new Brand());
-		return "brand/edit";
+	public ModelAndView newForm() {
+		return new ModelAndView("brand/edit", "brand", new Brand());
 	}
 
 	/**
@@ -96,7 +92,7 @@ public class AdminBrandsController {
 		// save brand
 		service.save(brand);
 		redirectAtts.addFlashAttribute("message", "Brand created");
-		return "redirect:/brands";		
+		return "redirect:/admin/brands";		
 	}
 
 	/**
@@ -111,7 +107,8 @@ public class AdminBrandsController {
 	 */
 	@RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
 	public ModelAndView editForm(@PathVariable("id") ObjectId brandId) {
-		return null;
+		final Brand brand = service.findById(brandId);
+		return new ModelAndView("brand/edit", "brand", brand);
 	}
 	
 	/**
@@ -128,24 +125,22 @@ public class AdminBrandsController {
 	 */
 	@RequestMapping(method = RequestMethod.PUT)
 	public String save(@Valid @ModelAttribute Brand brand,
-		@RequestParam("file") MultipartFile file, 
 		BindingResult result, 
 		RedirectAttributes redirectAtts) throws IOException {
 	
 		if (result.hasErrors()) {
 			redirectAtts.addAttribute(brand);
-			return "/brand/edit";
+			return "brand/edit";
 		}
 	
 		try {
 			service.save(brand);
-			redirectAtts.addAttribute("brandId", brand.getId());
-			return "redirect:/brands/{brandId}";
+			return "redirect:/admin/brands";
 		}
 		catch (DataIntegrityViolationException dae) {
 			result.reject("database.error");
 			redirectAtts.addAttribute(brand);
-			return "/brand/edit";
+			return "brand/edit";
 		}
 	}
 	
@@ -156,13 +151,16 @@ public class AdminBrandsController {
 	 * Maps the request to {@code DELETE /brands/:id}.
 	 * </p>
 	 *
-	 * @param brand the {@code Brand} model
-	 * @param bindingResult the validation results
+	 * @param brandId the {@code Brand} id
 	 * @param redirectAtts the redirect attributes
 	 *
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public String delete(@PathVariable("id") ObjectId brandId) {
-		return null;
+	public String delete(@PathVariable("id") ObjectId brandId, RedirectAttributes redirectAtts) {
+		final Brand brand = service.findById(brandId);
+		service.remove(brand);
+		
+		redirectAtts.addFlashAttribute("message", "Brand deleted");
+		return "redirect:/admin/brands";
 	}
 }

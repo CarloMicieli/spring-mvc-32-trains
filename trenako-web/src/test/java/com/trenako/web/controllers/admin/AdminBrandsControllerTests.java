@@ -15,21 +15,21 @@
  */
 package com.trenako.web.controllers.admin;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.ModelAndViewAssert.*;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
@@ -44,6 +44,7 @@ import com.trenako.services.BrandsService;
 @RunWith(MockitoJUnitRunner.class)
 public class AdminBrandsControllerTests {
 	@Mock Model mockModel;
+	@Mock RedirectAttributes mockRedirectAtts;
 	@Mock BindingResult mockResult;
 	@Mock BrandsService service;
 	AdminBrandsController controller;
@@ -56,12 +57,10 @@ public class AdminBrandsControllerTests {
 	
 	@Test
 	public void shouldCreateNewBrandForm() {
-		Model model = new ExtendedModelMap();
+		ModelAndView mav = controller.newForm();
 		
-		String viewName = controller.newForm(model);
-		
-		assertEquals("brand/edit", viewName);
-		assertEquals(true, model.containsAttribute("brand"));
+		assertViewName(mav, "brand/edit");
+		assertModelAttributeAvailable(mav, "brand");
 	}
 	
 	@Test
@@ -71,7 +70,28 @@ public class AdminBrandsControllerTests {
 		RedirectAttributes redirectAtt = new RedirectAttributesModelMap();
 		
 		String redirect = controller.create(brand, mockResult, redirectAtt);
-		assertEquals("redirect:/brands", redirect);
+		assertEquals("redirect:/admin/brands", redirect);
 		verify(service, times(1)).save(eq(brand));
+	}
+	
+	@Test
+	public void shouldFillEditBrandForm() {
+		ObjectId id = new ObjectId();
+		Brand value = new Brand();
+		when(service.findById(eq(id))).thenReturn(value);
+		
+		ModelAndView mav = controller.editForm(id);
+		
+		assertViewName(mav, "brand/edit");
+		assertModelAttributeValue(mav, "brand", value);
+	}
+	
+	@Test
+	public void shouldDeleteBrands() {
+		ObjectId id = new ObjectId();
+		Brand value = new Brand();
+		when(service.findById(eq(id))).thenReturn(value);
+		controller.delete(id, mockRedirectAtts);
+		verify(service, times(1)).remove(eq(value));		
 	}
 }
