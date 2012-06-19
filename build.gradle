@@ -21,6 +21,7 @@ def springVersion = "3.1.1.RELEASE"
 def securityVersion = "3.1.0.RELEASE"
 def slf4jVersion = "1.6.1"
 def spockVersion = "0.6-groovy-1.8"
+def mongoDriverVersion = "2.8.0"
 
 allprojects {
 	apply plugin: 'java'
@@ -125,7 +126,7 @@ project("trenako-common") {
 
 		// mongodb
 		compile "org.springframework.data:spring-data-mongodb:1.0.1.RELEASE"
-		compile "org.mongodb:mongo-java-driver:2.7.3"
+		compile "org.mongodb:mongo-java-driver:${mongoDriverVersion}"
 	}
 } 
 
@@ -175,7 +176,7 @@ project("trenako-web") {
 
 		// mongodb
 		compile "org.springframework.data:spring-data-mongodb:1.0.1.RELEASE"
-		compile "org.mongodb:mongo-java-driver:2.7.3"
+		compile "org.mongodb:mongo-java-driver:${mongoDriverVersion}"
 
 		// Servlet Api
 		providedCompile "javax.servlet:servlet-api:2.5"
