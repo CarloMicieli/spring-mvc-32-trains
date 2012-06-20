@@ -40,6 +40,25 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	private final static ObjectId OID = new ObjectId(ID);
 	
 	@Test
+	public void shouldRenderTheBrandShowView() throws Exception {
+		when(mockService.findById(eq(OID))).thenReturn(new Brand());
+		mockMvc().perform(get("/admin/brands/{id}", ID))
+			.andExpect(status().isOk())
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("brand"))
+			.andExpect(forwardedUrl(view("brand", "show")));
+	}
+	
+	@Test
+	public void shouldRenderTheBrandsListView() throws Exception {
+		mockMvc().perform(get("/admin/brands"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("brands"))
+			.andExpect(forwardedUrl(view("brand", "list")));
+	}
+	
+	@Test
 	public void shouldRenderTheNewBrandForm() throws Exception {
 		mockMvc().perform(get("/admin/brands/new"))
 			.andExpect(status().isOk())

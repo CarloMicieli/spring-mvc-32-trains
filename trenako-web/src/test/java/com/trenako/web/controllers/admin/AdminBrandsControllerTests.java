@@ -56,6 +56,25 @@ public class AdminBrandsControllerTests {
 	}
 	
 	@Test
+	public void shouldListBrands() {
+		ModelAndView mav = controller.list();
+		
+		verify(service, times(1)).findAll();
+		assertViewName(mav, "brand/list");
+		assertModelAttributeAvailable(mav, "brands");
+	}
+	
+	@Test
+	public void shouldShowBrands() {
+		ObjectId id = new ObjectId();
+		ModelAndView mav = controller.show(id);
+		
+		verify(service, times(1)).findById(eq(id));
+		assertViewName(mav, "brand/show");
+		assertModelAttributeAvailable(mav, "brand");
+	}
+	
+	@Test
 	public void shouldCreateNewBrandForm() {
 		ModelAndView mav = controller.newForm();
 		

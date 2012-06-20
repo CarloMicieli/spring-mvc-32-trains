@@ -41,7 +41,21 @@
 		         	<li class="<decorator:getProperty property="meta.you"/>">
 						<a href="<c:url value="/you" />"><s:message code="you" text="You"/></a></li>
 		         	<li class="<decorator:getProperty property="meta.browse"/>">
-						<a href="<c:url value="/browse" />"><s:message code="browse" text="Browse"/></a></li>		         </ul>
+						<a href="<c:url value="/browse" />"><s:message code="browse" text="Browse"/></a></li>		        
+						<li class="dropdown" id="menu1">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+      Admin
+      <b class="caret"></b>
+    </a>
+					<ul class="dropdown-menu">
+      					<li><a href="<c:url value="/admin/brands" />">Brands</a></li>
+      					<li><a href="#">Another action</a></li>
+      					<li><a href="#">Something else here</a></li>
+      					<li class="divider"></li>
+      					<li><a href="#">Separated link</a></li>
+   		 			</ul>	
+   		 			</li>
+				</ul>
 		       </div>
 		    </div>
 		  </div>
@@ -56,8 +70,14 @@
     	</div>
 	  	
 	  	<!-- Placed at the end of the document so the pages load faster -->
-	  	<script type="text/javascript" src="<c:url value="/resources/js/bootstrap.js" />"></script>
-    	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	  	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    	<script type="text/javascript" src="<c:url value="/resources/js/bootstrap.js" />"></script>
+    	
+    	<script type="text/javascript">
+    	$(document).ready(function() {
+    		$('.menu').dropdown()
+    	}
+    	</script>
     	
 	</body>
 </html>

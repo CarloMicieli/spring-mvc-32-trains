@@ -54,6 +54,16 @@ public class AdminBrandsController {
 		this.service = service;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView list() {
+		return new ModelAndView("brand/list", "brands", service.findAll());
+	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ModelAndView show(@PathVariable("id") ObjectId id) {
+		return new ModelAndView("brand/show", "brand", service.findById(id));
+	}
+	
 	/**
 	 * This action renders the form to create new {@code Brand}.
 	 * <p>
