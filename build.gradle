@@ -18,6 +18,7 @@ group = "com.trenako"
 description = "A social network for model railways."
 
 def springVersion = "3.1.1.RELEASE"
+def dataVersion = "1.0.2.RELEASE"
 def securityVersion = "3.1.0.RELEASE"
 def slf4jVersion = "1.6.1"
 def spockVersion = "0.6-groovy-1.8"
@@ -125,7 +126,7 @@ project("trenako-common") {
 		compile "org.hibernate:hibernate-validator:4.2.0.Final"	
 
 		// mongodb
-		compile "org.springframework.data:spring-data-mongodb:1.0.1.RELEASE"
+		compile "org.springframework.data:spring-data-mongodb:${dataVersion}"
 		compile "org.mongodb:mongo-java-driver:${mongoDriverVersion}"
 	}
 } 
@@ -175,7 +176,7 @@ project("trenako-web") {
 		compile "opensymphony:sitemesh:2.4.2"
 
 		// mongodb
-		compile "org.springframework.data:spring-data-mongodb:1.0.1.RELEASE"
+		compile "org.springframework.data:spring-data-mongodb:${dataVersion}"
 		compile "org.mongodb:mongo-java-driver:${mongoDriverVersion}"
 
 		// files upload
