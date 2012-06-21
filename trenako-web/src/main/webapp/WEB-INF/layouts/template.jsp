@@ -10,10 +10,15 @@
 		<meta name="author" content="">
 		
 		<title><decorator:title default="Trenako"/></title>	
+		<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 		<link href="<c:url value="/resources/css/bootstrap.css" />" rel="stylesheet" />
 		<style>
       	body {
         	padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      	}
+      	.brand {
+      		color: orange;
+      		font: normal normal normal 24px/24px Lobster,Georgia,Times,'Times New Roman',serif;
       	}
     	</style>
 		<link href="<c:url value="/resources/css/bootstrap-responsive.css" />" rel="stylesheet" />
