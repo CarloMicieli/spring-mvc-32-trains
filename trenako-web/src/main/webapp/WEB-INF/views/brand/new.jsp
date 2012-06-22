@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 	<title>
-		Brands | edit
+		Brands | new
 	</title>
 	<body>
 		<div class="row-fluid">
@@ -22,9 +22,7 @@
 			</div>
 			<div class="span9">
 				<c:url value="/admin/brands" var="brandsUrl" />
-				<form:form id="form" class="form-horizontal" method="PUT" action="${brandsUrl}" modelAttribute="brand" >
-					
-					<form:hidden path="id"/>
+				<form:form id="form" class="form-horizontal" method="POST" action="${brandsUrl}" modelAttribute="brand" >
 					
 					<fieldset>
     					<legend>Brand</legend>
