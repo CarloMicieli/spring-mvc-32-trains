@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.Model;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -43,7 +43,6 @@ import com.trenako.services.BrandsService;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AdminBrandsControllerTests {
-	@Mock Model mockModel;
 	@Mock RedirectAttributes mockRedirectAtts;
 	@Mock BindingResult mockResult;
 	@Mock BrandsService service;
@@ -57,7 +56,9 @@ public class AdminBrandsControllerTests {
 	
 	@Test
 	public void shouldListBrands() {
-		ModelAndView mav = controller.list();
+		Pageable paging = mock(Pageable.class);
+		
+		ModelAndView mav = controller.list(paging);
 		
 		verify(service, times(1)).findAll();
 		assertViewName(mav, "brand/list");
@@ -78,7 +79,7 @@ public class AdminBrandsControllerTests {
 	public void shouldCreateNewBrandForm() {
 		ModelAndView mav = controller.newForm();
 		
-		assertViewName(mav, "brand/edit");
+		assertViewName(mav, "brand/new");
 		assertModelAttributeAvailable(mav, "brand");
 	}
 	
@@ -110,7 +111,9 @@ public class AdminBrandsControllerTests {
 		ObjectId id = new ObjectId();
 		Brand value = new Brand();
 		when(service.findById(eq(id))).thenReturn(value);
+
 		controller.delete(id, mockRedirectAtts);
+		
 		verify(service, times(1)).remove(eq(value));		
 	}
 }

@@ -23,7 +23,9 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.*
 
 import org.bson.types.ObjectId;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
@@ -59,12 +61,22 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
+	public void shouldProcessPagingParameters() throws Exception {
+		ArgumentCaptor<Pageable> arg = ArgumentCaptor.forClass(Pageable.class);
+		
+		mockMvc().perform(get("/admin/brands").param("page", "1").param("page.size", "25"))
+			.andExpect(status().isOk());
+		
+		//verify(mockService, times(1)).findAll();
+	}
+	
+	@Test
 	public void shouldRenderTheNewBrandForm() throws Exception {
 		mockMvc().perform(get("/admin/brands/new"))
 			.andExpect(status().isOk())
 			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brand"))
-			.andExpect(forwardedUrl(view("brand", "edit")));
+			.andExpect(forwardedUrl(view("brand", "new")));
 	}
 	
 	@Test
@@ -82,7 +94,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 			.andExpect(status().isOk())
 			.andExpect(model().size(1))
 			.andExpect(model().attributeHasErrors("brand"))
-			.andExpect(forwardedUrl(view("brand", "edit")));
+			.andExpect(forwardedUrl(view("brand", "new")));
 	}
 	
 	@Test

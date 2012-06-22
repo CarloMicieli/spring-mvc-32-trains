@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Scope;
 
 import com.trenako.services.BrandsService;
 
@@ -33,7 +34,7 @@ import com.trenako.services.BrandsService;
 @ComponentScan("com.trenako.web")
 @Profile("test")
 public class TestConfig {
-	public @Bean BrandsService brandsService() {
+	public @Bean @Scope("singleton") BrandsService brandsService() {
 		return mock(BrandsService.class);
 	}
 }

@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -55,7 +56,7 @@ public class AdminBrandsController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView list() {
+	public ModelAndView list(Pageable pageable) {
 		return new ModelAndView("brand/list", "brands", service.findAll());
 	}
 	
@@ -74,7 +75,7 @@ public class AdminBrandsController {
 	 */
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public ModelAndView newForm() {
-		return new ModelAndView("brand/edit", "brand", new Brand());
+		return new ModelAndView("brand/new", "brand", new Brand());
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class AdminBrandsController {
 		
 		if( result.hasErrors() ) {
 			redirectAtts.addAttribute("brand", brand);		
-			return "brand/edit";		
+			return "brand/new";		
 		}
 		
 		// save brand
