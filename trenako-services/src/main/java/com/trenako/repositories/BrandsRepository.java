@@ -16,15 +16,16 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.trenako.entities.Brand;
 
 /**
- * The interface for the model railway brands repository.
+ * The repository for the model railway {@code Brand}s.
  * @author Carlo Micieli
  *
  */
-public interface BrandsRepository {
+public interface BrandsRepository extends PagingAndSortingRepository<Brand, ObjectId> {
 	/**
 	 * Finds the {@code Brand} with the provided id.
 	 * @param id the unique id.
@@ -45,22 +46,4 @@ public interface BrandsRepository {
 	 * @return a {@code Brand} if found; {@code null} otherwise
 	 */
 	Brand findBySlug(String slug);
-	
-	/**
-	 * Returns the {@code Brand} list.
-	 * @return the brands.
-	 */
-	Iterable<Brand> findAll();
-	
-	/**
-	 * Persists the brand instance to the data store.
-	 * @param brand a brand.
-	 */
-	void save(Brand brand);
-	
-	/**
-	 * Removes the brand from the data store.
-	 * @param brand a brand.
-	 */
-	void remove(Brand brand);
 }

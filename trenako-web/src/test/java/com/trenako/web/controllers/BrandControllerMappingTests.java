@@ -38,26 +38,30 @@ public class BrandControllerMappingTests extends AbstractSpringControllerTests {
 	
 	@Test
 	public void shouldListAllBrands() throws Exception {
-		Iterable<Brand> value = Arrays.asList(new Brand(), new Brand());
-		when(mockService.findAll()).thenReturn(value);
+		when(mockService.findAll()).thenReturn(Arrays.asList(new Brand(), new Brand()));
 		
 		mockMvc().perform(get("/brands"))
 			.andExpect(status().isOk())
 			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brands"))
 			.andExpect(forwardedUrl(view("brand", "list")));
+		
+		// TODO code smell
+		// waiting 3.2 <https://jira.springsource.org/browse/SPR-9493>
+		reset(mockService);
 	}
 	
 	@Test
 	public void shouldShowABrand() throws Exception {
-		Brand value = new Brand();
-		when(mockService.findBySlug(eq("acme"))).thenReturn(value);
+		when(mockService.findBySlug(eq("acme"))).thenReturn(new Brand());
 		
 		mockMvc().perform(get("/brands/{slug}", "acme"))
 			.andExpect(status().isOk())
 			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brand"))
 			.andExpect(forwardedUrl(view("brand", "show")));
+		
+		reset(mockService);
 	}
 	
 	@Test
@@ -65,7 +69,7 @@ public class BrandControllerMappingTests extends AbstractSpringControllerTests {
 		when(mockService.findBySlug(eq("acme"))).thenReturn(null);
 		mockMvc().perform(get("/brands/{slug}", "acme"))
 			.andExpect(status().isNotFound());
+		
+		reset(mockService);
 	}
-	
-	
 }

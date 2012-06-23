@@ -3,12 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-	http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context-3.1.xsd
-	http://www.springframework.org/schema/data/mongo
-   	http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/data/mongo
+	   	http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 
 	<context:component-scan base-package="com.trenako"/>
 
@@ -18,5 +19,8 @@
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
   		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
 	</bean>
+	
+	<!-- Register the mongodb repositories -->
+	<mongo:repositories base-package="com.trenako.repositories" />
 	
 </beans>

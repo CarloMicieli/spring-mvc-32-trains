@@ -17,6 +17,8 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -62,11 +64,16 @@ public class BrandsServiceImpl implements BrandsService {
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void remove(Brand brand) {
-		repo.remove(brand);
+		repo.delete(brand);
 	}
 
 	@Override
 	public Iterable<Brand> findAll() {
 		return repo.findAll();
+	}
+	
+	@Override
+	public Page<Brand> findAll(Pageable pageable) {
+		return repo.findAll(pageable);
 	}
 }

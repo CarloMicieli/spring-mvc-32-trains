@@ -25,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Pageable;
 
 import com.trenako.entities.Brand;
 import com.trenako.repositories.BrandsRepository;
@@ -38,6 +39,7 @@ import com.trenako.services.BrandsServiceImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class BrandsServiceTests {
 
+	@Mock Pageable mockPaging;
 	@Mock BrandsRepository repo;
 	@InjectMocks public BrandsServiceImpl service;
 	
@@ -46,6 +48,12 @@ public class BrandsServiceTests {
 		MockitoAnnotations.initMocks(this);
 	}
 
+	@Test
+	public void shouldListBrandsPaginated() {
+		service.findAll(mockPaging);
+		verify(repo, times(1)).findAll(eq(mockPaging));
+	}
+	
 	@Test
 	public void shouldFindBrandsById() {
 		ObjectId id = new ObjectId();
@@ -76,7 +84,7 @@ public class BrandsServiceTests {
 	public void shouldRemoveBrands() {
 		Brand brand = new Brand("ACME");
 		service.remove(brand);
-		verify(repo, times(1)).remove(eq(brand));
+		verify(repo, times(1)).delete(eq(brand));
 	}
 
 }

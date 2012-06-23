@@ -16,6 +16,8 @@
 package com.trenako.services;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.trenako.entities.Brand;
 
@@ -75,6 +77,14 @@ public interface BrandsService {
 	 * @return a {@code Brand} list
 	 */
 	Iterable<Brand> findAll();
+	
+	/**
+	 * Returns the list of paginated {@link Brand}s.
+	 * 
+	 * @param pageable the pagination information
+	 * @return the paginated {@code Brand} results
+	 */
+	Page<Brand> findAll(Pageable pageable);
 	
 	/**
 	 * Persists the {@link Brand} changes in the data store.

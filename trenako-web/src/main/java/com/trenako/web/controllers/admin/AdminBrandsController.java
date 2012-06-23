@@ -57,7 +57,7 @@ public class AdminBrandsController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView list(Pageable pageable) {
-		return new ModelAndView("brand/list", "brands", service.findAll());
+		return new ModelAndView("brand/list", "brands", service.findAll(pageable));
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

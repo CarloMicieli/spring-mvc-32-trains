@@ -60,7 +60,7 @@ public class AdminBrandsControllerTests {
 		
 		ModelAndView mav = controller.list(paging);
 		
-		verify(service, times(1)).findAll();
+		verify(service, times(1)).findAll(eq(paging));
 		assertViewName(mav, "brand/list");
 		assertModelAttributeAvailable(mav, "brands");
 	}
