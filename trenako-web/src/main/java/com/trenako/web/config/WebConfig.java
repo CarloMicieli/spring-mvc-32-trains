@@ -20,6 +20,7 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableArgumentResolver;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -58,11 +59,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-		argumentResolvers.add(paginationResolver());
-	}
-	
-	public @Bean HandlerMethodArgumentResolver paginationResolver() {
-		return new ServletWebArgumentResolverAdapter(new PageableArgumentResolver());
+		PageableArgumentResolver resolver = new PageableArgumentResolver();
+		resolver.setFallbackPagable(new PageRequest(1, 10));
+		
+		argumentResolvers.add(new ServletWebArgumentResolverAdapter(resolver));
 	}
 	
 	public @Bean InternalResourceViewResolver viewResolver() {

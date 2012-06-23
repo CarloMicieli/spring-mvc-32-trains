@@ -25,6 +25,7 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
 import org.bson.types.ObjectId;
+import org.junit.After;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -47,6 +48,13 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	private final static String ID = "47cc67093475061e3d95369d";
 	private final static ObjectId OID = new ObjectId(ID);
 	
+	@After
+	public void cleanUp() {
+		// TODO code smell
+		// waiting 3.2 <https://jira.springsource.org/browse/SPR-9493>
+		reset(mockService);
+	}
+	
 	@Test
 	public void shouldRenderTheBrandShowView() throws Exception {
 		when(mockService.findById(eq(OID))).thenReturn(new Brand());
@@ -55,10 +63,6 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brand"))
 			.andExpect(forwardedUrl(view("brand", "show")));
-		
-		// TODO code smell
-		// waiting 3.2 <https://jira.springsource.org/browse/SPR-9493>
-		reset(mockService);
 	}
 	
 	@Test
@@ -71,8 +75,20 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brands"))
 			.andExpect(forwardedUrl(view("brand", "list")));
+	}
 	
-		reset(mockService);
+	@Test
+	public void shouldShowTheFirstPageOfBrandsByDefault() throws Exception {
+		ArgumentCaptor<Pageable> arg = ArgumentCaptor.forClass(Pageable.class);
+		
+		mockMvc().perform(get("/admin/brands"))
+			.andExpect(status().isOk());
+		
+		verify(mockService, times(1)).findAll(arg.capture());
+		
+		Pageable p = arg.getValue();
+		assertEquals(0, p.getPageNumber());
+		assertEquals(10, p.getPageSize());
 	}
 	
 	@Test
@@ -80,7 +96,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 		ArgumentCaptor<Pageable> arg = ArgumentCaptor.forClass(Pageable.class);
 		
 		mockMvc().perform(get("/admin/brands")
-				.param("page", "1")
+				.param("page.number", "1")
 				.param("page.size", "25")
 				.param("page.sort", "name")
 				.param("page.sort.dir", "desc"))
@@ -93,8 +109,6 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 		assertEquals(25, p.getPageSize());
 		assertNotNull("Sort is null", p.getSort().getOrderFor("name"));
 		assertEquals(Sort.Direction.DESC, p.getSort().getOrderFor("name").getDirection());
-		
-		reset(mockService);
 	}
 	
 	@Test
@@ -132,7 +146,6 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brand"))
 			.andExpect(forwardedUrl(view("brand", "edit")));
-		reset(mockService);
 	}
 
 	@Test
@@ -159,7 +172,6 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo("Brand deleted")))
 			.andExpect(redirectedUrl("/admin/brands"));
-		reset(mockService);
 	}
 
 }
