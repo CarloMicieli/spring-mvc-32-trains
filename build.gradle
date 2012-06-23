@@ -179,6 +179,9 @@ project("trenako-web") {
 		compile "org.springframework.data:spring-data-mongodb:${dataVersion}"
 		compile "org.mongodb:mongo-java-driver:${mongoDriverVersion}"
 
+		// imgscalr
+		compile "org.imgscalr:imgscalr-lib:4.2"
+
 		// files upload
 		compile "commons-fileupload:commons-fileupload:1.2.2",
 			"commons-io:commons-io:2.1"
@@ -191,6 +194,10 @@ project("trenako-web") {
 		testCompile "org.springframework:spring-test-mvc:1.0.0.BUILD-SNAPSHOT",
 			"org.hamcrest:hamcrest-core:1.2.1",
 			"org.hamcrest:hamcrest-library:1.2.1"
+		
+		// PowerMock (for static class tests)
+		testCompile "org.powermock:powermock-module-junit4:1.4.12",
+			"org.powermock:powermock-api-mockito:1.4.12"
 	}
 }
 
