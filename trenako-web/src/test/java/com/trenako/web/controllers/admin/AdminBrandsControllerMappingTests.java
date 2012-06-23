@@ -96,7 +96,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 		ArgumentCaptor<Pageable> arg = ArgumentCaptor.forClass(Pageable.class);
 		
 		mockMvc().perform(get("/admin/brands")
-				.param("page.number", "1")
+				.param("page.page", "2")
 				.param("page.size", "25")
 				.param("page.sort", "name")
 				.param("page.sort.dir", "desc"))
@@ -105,7 +105,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 		verify(mockService, times(1)).findAll(arg.capture());
 		
 		Pageable p = arg.getValue();
-		assertEquals(0, p.getPageNumber());
+		assertEquals(1, p.getPageNumber());
 		assertEquals(25, p.getPageSize());
 		assertNotNull("Sort is null", p.getSort().getOrderFor("name"));
 		assertEquals(Sort.Direction.DESC, p.getSort().getOrderFor("name").getDirection());
