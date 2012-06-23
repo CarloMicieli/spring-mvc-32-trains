@@ -45,7 +45,7 @@
 						</tr>
 					</thead>
 					<tbody>
-					<c:forEach var="brand" items="${brands}">
+					<c:forEach var="brand" items="${brands.content}">
 						<tr>
 							<td>${brand.name}</td>
 							<td>${brand.description}</td>
