@@ -43,6 +43,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.trenako.entities.Image;
+
 /**
  * 
  * @author Carlo Micieli
@@ -129,10 +131,11 @@ public class ImgscalrServiceTests {
 		
 		final byte[] out = "file content".getBytes();
 		final byte[] content = "file content".getBytes();
+		final Image image = new Image(MediaType.IMAGE_PNG_VALUE, content);
 		
 		when(IOUtils.toByteArray(isA(InputStream.class))).thenReturn(out);
 				
-		ResponseEntity<byte[]> resp = imgService.renderImage(content, MediaType.IMAGE_PNG);
+		ResponseEntity<byte[]> resp = imgService.renderImage(image);
 		
 		assertNotNull("Response is null", resp);
 		assertEquals(HttpStatus.CREATED, resp.getStatusCode());
@@ -143,6 +146,6 @@ public class ImgscalrServiceTests {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldRenderImagesThrowsAnExceptionIfInputIsNull() throws IOException {
-		imgService.renderImage(null, MediaType.IMAGE_PNG);
+		imgService.renderImage(null);
 	}
 }

@@ -23,6 +23,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.trenako.services.BrandsService;
+import com.trenako.services.ImagesService;
+import com.trenako.web.images.ImageProcessingAdapter;
 
 /**
  * 
@@ -30,10 +32,18 @@ import com.trenako.services.BrandsService;
  *
  */
 @Configuration
-@ComponentScan("com.trenako.web")
+@ComponentScan("com.trenako.web.controllers")
 @Profile("test")
 public class TestConfig {
 	public @Bean BrandsService brandsService() {
 		return mock(BrandsService.class);
+	}
+	
+	public @Bean ImagesService imagesService() {
+		return mock(ImagesService.class);
+	}
+	
+	public @Bean ImageProcessingAdapter imgUtils() {
+		return mock(ImageProcessingAdapter.class);
 	}
 }

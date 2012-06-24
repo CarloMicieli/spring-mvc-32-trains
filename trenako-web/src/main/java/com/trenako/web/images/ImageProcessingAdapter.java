@@ -17,17 +17,19 @@ package com.trenako.web.images;
 
 import java.io.IOException;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.trenako.entities.Image;
+
 /**
- * The service for the uploaded picture management.
+ * The adapter interface for the processing library
+ * in charge of the uploaded images management.
  * 
  * @author Carlo Micieli
  *
  */
-public interface ImagesService {
+public interface ImageProcessingAdapter {
 	/**
 	 * Creates a thumbnail for a received {@link MultipartFile} from a web request.
 	 * 
@@ -51,9 +53,8 @@ public interface ImagesService {
 	 * Renders the image to the HTTP response stream.
 	 * 
 	 * @param image the image to be rendered
-	 * @param mediaType the image media type
 	 * @return the output HTTP response
 	 * @throws IOException if an I/O exception of some sort has occurred
 	 */
-	ResponseEntity<byte[]> renderImage(byte[] image, MediaType mediaType) throws IOException;
+	ResponseEntity<byte[]> renderImage(Image image) throws IOException;
 }

@@ -33,17 +33,21 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.trenako.entities.Image;
+
 /**
- * A concrete implementation for the {@link ImagesService} interface.
+ * A concrete implementation for the {@link ImageProcessingAdapter} interface.
  * <p>
  * This class is using the functionality provided by the {@code imgscalr} image processing library.
  * </p>
  * @author Carlo Micieli
  *
  */
-public class ImgscalrService implements ImagesService {
+@Component
+public class ImgscalrService implements ImageProcessingAdapter {
 
 	/**
 	 * The list of {@link MediaType}s allowed by the application for uploads operations.
@@ -71,11 +75,14 @@ public class ImgscalrService implements ImagesService {
 	}
 
 	@Override
-	public ResponseEntity<byte[]> renderImage(byte[] image, MediaType mediaType) throws IOException {
+	public ResponseEntity<byte[]> renderImage(Image image) throws IOException {
 		if( image==null )
 			throw new IllegalArgumentException("Input stream is null");
 		
-		InputStream in = new ByteArrayInputStream(image);
+		byte[] img = image.getImage();
+		MediaType mediaType = parse(image.getMediaType());
+		
+		InputStream in = new ByteArrayInputStream(img);
 
 	    final HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(mediaType);
@@ -84,6 +91,10 @@ public class ImgscalrService implements ImagesService {
 	}
 	
 	// helper methods
+	
+	private MediaType parse(String mediaType) {
+		return MediaType.parseMediaType(mediaType);
+	}
 	
 	private void validateFile(MultipartFile file) throws IOException {
 		MediaType contentType = MediaType.parseMediaType(file.getContentType());
