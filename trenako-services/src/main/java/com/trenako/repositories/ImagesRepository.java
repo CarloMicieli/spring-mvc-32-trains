@@ -13,33 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.services;
+package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Image;
-import com.trenako.repositories.ImagesRepository;
 
 /**
- * The concrete implementation for the {@code ImagesService}.
+ * 
  * @author Carlo Micieli
  *
  */
-@Service("imagesService")
-public class ImagesServiceImpl implements ImagesService {
+public interface ImagesRepository {
 
-	private final ImagesRepository repo;
-	
-	@Autowired
-	public ImagesServiceImpl(ImagesRepository repo) {
-		this.repo = repo;
-	}
-	
-	@Override
-	public Image getBrandImage(ObjectId brandId) {
-		return repo.findBrandImage(brandId);
-	}
+	/**
+	 * Returns the logo {@link Image} for the provided {@code Brand} id.
+	 * @param brandId the brand id
+	 * @return the image if found; {@code null} otherwise
+	 */
+	Image findBrandImage(ObjectId brandId);
 
 }

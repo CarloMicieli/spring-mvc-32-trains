@@ -83,7 +83,7 @@ public class Brand {
 	
 	//private List<String> scales;
 	
-	private byte[] logo;
+	private Image logo;
 	
 	private Date lastModified;
 	
@@ -405,7 +405,7 @@ public class Brand {
 	 * Returns the {@code Brand} image.
 	 * @return the image
 	 */
-	public byte[] getLogo() {
+	public Image getLogo() {
 		return logo;
 	}
 
@@ -413,7 +413,7 @@ public class Brand {
 	 * Sets the {@code Brand} image.
 	 * @param logo the image
 	 */
-	public void setLogo(byte[] logo) {
+	public void setLogo(Image logo) {
 		this.logo = logo;
 	}
 	

@@ -13,33 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.services;
+package com.trenako.repositories.mongo;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
 
+import com.trenako.entities.Brand;
 import com.trenako.entities.Image;
 import com.trenako.repositories.ImagesRepository;
 
 /**
- * The concrete implementation for the {@code ImagesService}.
+ * The concrete implementation for {@code ImagesRepository} interface.
  * @author Carlo Micieli
  *
  */
-@Service("imagesService")
-public class ImagesServiceImpl implements ImagesService {
+@Repository
+public class ImagesRepositoryImpl implements ImagesRepository {
 
-	private final ImagesRepository repo;
+	private final MongoTemplate mongoTemplate;
 	
 	@Autowired
-	public ImagesServiceImpl(ImagesRepository repo) {
-		this.repo = repo;
+	public ImagesRepositoryImpl(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
 	}
 	
 	@Override
-	public Image getBrandImage(ObjectId brandId) {
-		return repo.findBrandImage(brandId);
+	public Image findBrandImage(ObjectId brandId) {
+		final Brand b = mongoTemplate.findById(brandId, Brand.class);
+		if( b==null ) return null;
+		return b.getLogo();
 	}
 
 }
