@@ -29,11 +29,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Brand;
+import com.trenako.entities.Image;
 import com.trenako.services.BrandsService;
+import com.trenako.web.images.ImageProcessingAdapter;
 
 /**
  * It represents the {@code controller} to manage the {@code Brand} elements.
@@ -46,13 +50,15 @@ import com.trenako.services.BrandsService;
 public class AdminBrandsController {
 
 	private final BrandsService service;
+	private final ImageProcessingAdapter imgUtils;
 	
 	/**
 	 * Creates a new {@code AdminBrandsController} controller.
 	 */
 	@Autowired
-	public AdminBrandsController(BrandsService service) {
+	public AdminBrandsController(BrandsService service, ImageProcessingAdapter imgUtils) {
 		this.service = service;
+		this.imgUtils = imgUtils;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -86,18 +92,26 @@ public class AdminBrandsController {
 	 * </p>
 	 *
 	 * @param brand the {@code Brand} to be added
+	 * @param file the logo image
 	 * @param result the validation results
 	 * @param redirectAtts the redirect attributes
+	 * @throws IOException 
 	 *
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String create(@Valid @ModelAttribute Brand brand, 
+			@RequestParam("file") MultipartFile file,
 			BindingResult result, 
-			RedirectAttributes redirectAtts) {
+			RedirectAttributes redirectAtts) throws IOException {
 		
 		if( result.hasErrors() ) {
 			redirectAtts.addAttribute("brand", brand);		
 			return "brand/new";		
+		}
+		
+		if (!file.isEmpty()) {
+			final Image img = new Image(file.getContentType(), imgUtils.convertToBytes(file));
+			brand.setLogo(img);
 		}
 		
 		// save brand

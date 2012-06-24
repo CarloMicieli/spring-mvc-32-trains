@@ -20,6 +20,8 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.*;
 
+import java.io.IOException;
+
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,13 +30,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
+import com.trenako.web.images.ImageProcessingAdapter;
 
 /**
  * 
@@ -44,6 +50,7 @@ import com.trenako.services.BrandsService;
 @RunWith(MockitoJUnitRunner.class)
 public class AdminBrandsControllerTests {
 	@Mock RedirectAttributes mockRedirectAtts;
+	@Mock ImageProcessingAdapter imgUtils;
 	@Mock BindingResult mockResult;
 	@Mock BrandsService service;
 	AdminBrandsController controller;
@@ -51,7 +58,7 @@ public class AdminBrandsControllerTests {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new AdminBrandsController(service);
+		controller = new AdminBrandsController(service, imgUtils);
 	}
 	
 	@Test
@@ -84,13 +91,18 @@ public class AdminBrandsControllerTests {
 	}
 	
 	@Test
-	public void shouldCreateBrands() {
-		Brand brand = new Brand();
+	public void shouldCreateBrands() throws IOException {
+		final byte[] value = "file content".getBytes();
+ 		Brand brand = new Brand();
 		when(mockResult.hasErrors()).thenReturn(false);
 		RedirectAttributes redirectAtt = new RedirectAttributesModelMap();
-		
-		String redirect = controller.create(brand, mockResult, redirectAtt);
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		when(imgUtils.convertToBytes(eq(file))).thenReturn(value);
+
+		String redirect = controller.create(brand, file, mockResult, redirectAtt);
+
 		assertEquals("redirect:/admin/brands", redirect);
+		assertNotNull(brand.getLogo());
 		verify(service, times(1)).save(eq(brand));
 	}
 	
@@ -115,5 +127,10 @@ public class AdminBrandsControllerTests {
 		controller.delete(id, mockRedirectAtts);
 		
 		verify(service, times(1)).remove(eq(value));		
+	}
+	
+	private MultipartFile buildFile(MediaType mediaType) {
+		byte[] content = "file content".getBytes();
+		return new MockMultipartFile("image.jpg", "image.jpg", mediaType.toString(), content);
 	}
 }
