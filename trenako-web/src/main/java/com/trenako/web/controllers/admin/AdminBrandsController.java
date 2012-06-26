@@ -35,7 +35,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Brand;
-import com.trenako.entities.Image;
 import com.trenako.services.BrandsService;
 import com.trenako.web.images.ImageProcessingAdapter;
 
@@ -110,8 +109,7 @@ public class AdminBrandsController {
 		}
 		
 		if (!file.isEmpty()) {
-			final Image img = new Image(file.getContentType(), imgUtils.convertToBytes(file));
-			brand.setLogo(img);
+			brand.setLogo(imgUtils.createImage(file));
 		}
 		
 		// save brand
@@ -148,7 +146,7 @@ public class AdminBrandsController {
 	 * @param redirectAtts the redirect attributes
 	 *
 	 */
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	public String save(@Valid @ModelAttribute Brand brand,
 		BindingResult result, 
 		RedirectAttributes redirectAtts) throws IOException {

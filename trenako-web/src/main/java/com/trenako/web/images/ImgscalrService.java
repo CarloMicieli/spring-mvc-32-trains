@@ -56,7 +56,7 @@ public class ImgscalrService implements ImageProcessingAdapter {
 			Collections.unmodifiableList(Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG));
 	
 	@Override
-	public byte[] createThumbnail(MultipartFile file, int targetSize)
+	public Image createThumbnail(MultipartFile file, int targetSize)
 			throws IOException {
 		
 		validateFile(file);
@@ -65,13 +65,14 @@ public class ImgscalrService implements ImageProcessingAdapter {
 		final BufferedImage thumb = pad(
 				resize(image, Method.SPEED, Mode.FIT_TO_HEIGHT, targetSize, OP_ANTIALIAS, OP_BRIGHTER), 2);
 
-		return convertToArray(thumb, file.getContentType());
+		return new Image(file.getContentType(),
+				convertToArray(thumb, file.getContentType()));
 	}
 
 	@Override
-	public byte[] convertToBytes(MultipartFile file) throws IOException {
+	public Image createImage(MultipartFile file) throws IOException {
 		validateFile(file);
-		return file.getBytes();
+		return new Image(file.getContentType(), file.getBytes());
 	}
 
 	@Override

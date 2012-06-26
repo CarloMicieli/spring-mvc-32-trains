@@ -56,16 +56,15 @@ public class ImgscalrServiceTests {
 
 	private ImgscalrService imgService = new ImgscalrService();
 	
-	private MultipartFile mockFile(MediaType type) {
-		final byte[] content = "file content".getBytes();		
-		MockMultipartFile file = new MockMultipartFile("file", "file", type.toString(), content);
-		return file;
+	private MultipartFile mockFile(byte[] content, MediaType type) {
+		return new MockMultipartFile("file.jpg", "file.jpg", type.toString(), content);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldValidateImageMediaTypesForCreateThumbnails() throws IOException {
 		// not an image file type
-		MultipartFile file = mockFile(MediaType.APPLICATION_XML);
+		final byte[] content = "file content".getBytes();
+		MultipartFile file = mockFile(content, MediaType.APPLICATION_XML);
 		
 		imgService.createThumbnail(file, 100);
 	}
@@ -77,6 +76,7 @@ public class ImgscalrServiceTests {
 		
 		// setup the mock methods
 		final int targetSize = 100;
+		final byte[] content = "file content".getBytes();
 		
 		final BufferedImage img = new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB);
 		final BufferedImage resizedImg = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
@@ -87,13 +87,14 @@ public class ImgscalrServiceTests {
 		when(Scalr.resize(img, Method.SPEED, Mode.FIT_TO_HEIGHT, targetSize, options)).thenReturn(resizedImg);
 		when(Scalr.pad(eq(resizedImg), eq(2))).thenReturn(thumb);
 
-		MultipartFile file = mockFile(MediaType.IMAGE_JPEG);
+		MultipartFile file = mockFile(content, MediaType.IMAGE_JPEG);
 		
 		// call the method under test
-		byte[] bytes = imgService.createThumbnail(file, targetSize);
+		Image image = imgService.createThumbnail(file, targetSize);
 		
 		// assert
-		assertNotNull("Byte array is empty", bytes);
+		assertNotNull("Byte array is empty", image.getImage());
+		assertEquals("image/jpeg", image.getMediaType());
 
 		// (1) the image is resized
 		PowerMockito.verifyStatic();
@@ -110,19 +111,22 @@ public class ImgscalrServiceTests {
 	
 	@Test
 	public void shouldConvertImagesToBytes() throws Exception {
-		MultipartFile file = mockFile(MediaType.IMAGE_JPEG);
+		final byte[] content = "file content".getBytes();
+		MultipartFile file = mockFile(content, MediaType.IMAGE_JPEG);
 		
-		byte[] bytes = imgService.convertToBytes(file);
+		Image img = imgService.createImage(file);
 		
-		assertEquals(file.getBytes(), bytes);
+		assertEquals(content, img.getImage());
+		assertEquals(MediaType.IMAGE_JPEG_VALUE, img.getMediaType());
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldValidateImageMediaTypesForConvertToBytes() throws IOException {
 		// not an image file type
-		MultipartFile file = mockFile(MediaType.APPLICATION_XML);
+		final byte[] content = "file content".getBytes();
+		MultipartFile file = mockFile(content, MediaType.APPLICATION_XML);
 		
-		imgService.convertToBytes(file);
+		imgService.createImage(file);
 	}
 	
 	@Test

@@ -39,6 +39,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.trenako.entities.Brand;
+import com.trenako.entities.Image;
 import com.trenako.services.BrandsService;
 import com.trenako.web.images.ImageProcessingAdapter;
 
@@ -97,7 +98,7 @@ public class AdminBrandsControllerTests {
 		when(mockResult.hasErrors()).thenReturn(false);
 		RedirectAttributes redirectAtt = new RedirectAttributesModelMap();
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
-		when(imgUtils.convertToBytes(eq(file))).thenReturn(value);
+		when(imgUtils.createImage(eq(file))).thenReturn(new Image(MediaType.IMAGE_JPEG_VALUE, value));
 
 		String redirect = controller.create(brand, file, mockResult, redirectAtt);
 

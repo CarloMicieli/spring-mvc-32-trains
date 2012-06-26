@@ -56,7 +56,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldRenderTheBrandShowView() throws Exception {
+	public void shouldHaveGetBrandMapping() throws Exception {
 		when(mockService.findById(eq(OID))).thenReturn(new Brand());
 		mockMvc().perform(get("/admin/brands/{id}", ID))
 			.andExpect(status().isOk())
@@ -151,17 +151,8 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	}
 
 	@Test
-	public void shouldRedirectAfterSaveValidationError() throws Exception {
-		mockMvc().perform(put("/admin/brands"))
-			.andExpect(status().isOk())
-			.andExpect(model().size(1))
-			.andExpect(model().attributeHasErrors("brand"))
-			.andExpect(forwardedUrl(view("brand", "edit")));		
-	}
-	
-	@Test
 	public void shouldSaveBrandChanges() throws Exception {
-		mockMvc().perform(put("/admin/brands").param("name", "ACME"))
+		mockMvc().perform(fileUpload("/admin/brands//{id}", ID).param("name", "ACME"))
 			.andExpect(status().isOk())
 			.andExpect(redirectedUrl("/admin/brands"));
 	}

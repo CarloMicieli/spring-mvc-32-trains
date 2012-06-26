@@ -38,7 +38,7 @@ public interface ImageProcessingAdapter {
 	 * @return the bytes array for the thumbnail
 	 * @throws IOException if an I/O exception of some sort has occurred
 	 */
-	byte[] createThumbnail(MultipartFile file, int targetSize) throws IOException;
+	Image createThumbnail(MultipartFile file, int targetSize) throws IOException;
 	
 	/**
 	 * Converts a received {@link MultipartFile} from a web request to a bytes array.
@@ -47,7 +47,7 @@ public interface ImageProcessingAdapter {
 	 * @return the bytes array for the picture
 	 * @throws IOException if an I/O exception of some sort has occurred
 	 */
-	byte[] convertToBytes(MultipartFile file) throws IOException;
+	Image createImage(MultipartFile file) throws IOException;
 	
 	/**
 	 * Renders the image to the HTTP response stream.
