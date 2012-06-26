@@ -62,11 +62,13 @@ public class Railway {
 	@Past(message = "railway.operatingUntil.past.notmet")
 	private Date operatingUntil;
 	
-	private byte[] image;
+	private Image image;
 	private Date lastModified;
 	
-	// required
-	Railway() {
+	/**
+	 * Creates a new empty {@code Railway}.
+	 */
+	public Railway() {
 	}
 	
 	/**
@@ -267,7 +269,7 @@ public class Railway {
 	 * Returns the railway logo image.
 	 * @return the image
 	 */
-	public byte[] getImage() {
+	public Image getImage() {
 		return image;
 	}
 
@@ -275,7 +277,7 @@ public class Railway {
 	 * Sets the railway logo image.
 	 * @param image the image
 	 */
-	public void setImage(byte[] image) {
+	public void setImage(Image image) {
 		this.image = image;
 	}
 
