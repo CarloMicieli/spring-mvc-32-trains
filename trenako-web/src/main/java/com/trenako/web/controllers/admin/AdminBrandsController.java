@@ -60,11 +60,29 @@ public class AdminBrandsController {
 		this.imgUtils = imgUtils;
 	}
 	
+	/**
+	 * This actions shows all the {@code Brand}s.
+	 * <p>
+	 * Maps the request to {@code GET /admin/brands}.
+	 * </p>
+	 *
+	 * @param pageable the paging information
+	 * @return the model and view for the {@code Brand}s list
+	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView list(Pageable pageable) {
 		return new ModelAndView("brand/list", "brands", service.findAll(pageable));
 	}
 	
+	/**
+	 * This actions shows a {@code Brand}.
+	 * <p>
+	 * Maps the request to {@code GET /admin/brands/:id}.
+	 * </p>
+	 *
+	 * @param id the {@code Brand} id
+	 * @return the model and view for the {@code Brand}
+	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ModelAndView show(@PathVariable("id") ObjectId id) {
 		return new ModelAndView("brand/show", "brand", service.findById(id));

@@ -21,14 +21,17 @@
 				</div>
 			</div>
 			<div class="span9">
-				<c:url value="/admin/brands" var="brandsUrl" />
-				<form:form id="form" class="form-horizontal" method="PUT" action="${brandsUrl}" modelAttribute="brand" >
+				<div class="page-header">
+					<h1><s:message code="edit.brand.label" text="Edit brand" /></h1>
+				</div>
+				<s:url var="editUrl" value="/admin/brands/{id}">
+		           	<s:param name="id" value="${brand.id}" />
+				</s:url>
+				<form:form id="form" class="form-horizontal" method="POST" action="${editUrl}" modelAttribute="brand" >
 					
 					<form:hidden path="id"/>
 					
 					<fieldset>
-    					<legend>Brand</legend>
-    				
     					<c:if test="${not empty message}">
 							<div id="message" class="${message.type}">${message.message}</div>
 						</c:if>
@@ -73,18 +76,85 @@
 						</s:bind>
 						
 						<div class="control-group">
-							<form:label path="emailAddress" cssClass="control-label">Mass production:</form:label>
+							<form:label path="industrial" cssClass="control-label">Is die-cast producer:</form:label>
 							<div class="controls">
 								<label class="checkbox">
 									<form:checkbox path="industrial"/>
-									check if this is a die cast producer
 								</label>
 							</div>
 						</div>
 						
+						<div class="control-group">
+							<label class="control-label" for="file">Brand logo:</label>
+							<div class="controls">
+								<input class="input-file" id="file" type="file">
+							</div>
+						</div>
+						
+						<fieldset class="embedded address">
+							<legend><s:message code="brand.address.label" text="Address" /></legend>
+							
+	    					<s:bind path="brand.address.streetAddress">
+							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+								<form:label path="address.streetAddress" cssClass="control-label">Street address:</form:label>
+								<div class="controls">
+									<form:input path="address.streetAddress" cssClass="input-xlarge focused"/>
+									<form:errors path="address.streetAddress" element="span" cssClass="help-inline"/>
+								</div>
+							</div>
+							</s:bind>
+
+							<s:bind path="brand.address.postalCode">
+							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+								<form:label path="address.postalCode" cssClass="control-label">Postal code:</form:label>
+								<div class="controls">
+									<form:input path="address.postalCode" cssClass="input-xlarge focused"/>
+									<form:errors path="address.postalCode" element="span" cssClass="help-inline"/>
+								</div>
+							</div>
+							</s:bind>
+							
+							<s:bind path="brand.address.city">
+							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+								<form:label path="address.city" cssClass="control-label">City:</form:label>
+								<div class="controls">
+									<form:input path="address.city" cssClass="input-xlarge focused"/>
+									<form:errors path="address.city" element="span" cssClass="help-inline"/>
+								</div>
+							</div>
+							</s:bind>
+
+							<s:bind path="brand.address.locality">
+							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+								<form:label path="address.locality" cssClass="control-label">Locality:</form:label>
+								<div class="controls">
+									<form:input path="address.locality" cssClass="input-xlarge focused"/>
+									<form:errors path="address.locality" element="span" cssClass="help-inline"/>
+								</div>
+							</div>
+							</s:bind>
+
+							<s:bind path="brand.address.country">
+							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+								<form:label path="address.country" cssClass="control-label">Country:</form:label>
+								<div class="controls">
+									<form:input path="address.country" cssClass="input-xlarge focused"/>
+									<form:errors path="address.country" element="span" cssClass="help-inline"/>
+								</div>
+							</div>
+							</s:bind>
+						</fieldset>
+						
 						<div class="form-actions">
-							<form:button type="submit" class="btn btn-primary">Save</form:button>
-							<form:button type="reset" class="btn">Reset</form:button>
+							<form:button class="btn btn-primary" type="submit" name="_action_save">
+								<i class="icon-check icon-white"></i>
+								<s:message code="save.label" text="Save" />
+							</form:button>
+						
+							<form:button class="btn" type="reset" name="_action_reset">
+								<i class="icon-repeat icon-black"></i>
+								<s:message code="reset.label" text="Reset" />
+							</form:button>						
 						</div>				
 					</fieldset>
 				</form:form>

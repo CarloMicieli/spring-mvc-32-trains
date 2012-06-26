@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 	<head>
@@ -12,13 +12,13 @@
 					<ul class="nav nav-list">
 						<li class="nav-header">Brand</li>
 						<li class="active">
-							<a href="<spring:url value="/admin/brands" />" class="list">
+							<a href="<s:url value="/admin/brands" />" class="list">
 								<i class="icon-list icon-white"></i>
 								Brands List
 							</a>
 						</li>
 						<li>
-							<a href="<spring:url value="/admin/brands/new" />" class="create">
+							<a href="<s:url value="/admin/brands/new" />" class="create">
 								<i class="icon-plus"></i>
 								Create brand
 							</a>
@@ -29,18 +29,18 @@
 
 			<div class="span9">
 				<div class="page-header">
-					<h1><spring:message code="brand.list" text="Brands list" /></h1>
+					<h1><s:message code="brand.list" text="Brands list" /></h1>
 				</div>
 				
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th><spring:message code="brand.name" text="Name" /></th>
-							<th><spring:message code="brand.description" text="Description" /></th>
-							<th><spring:message code="brand.website" text="Website" /></th>
-							<th><spring:message code="brand.emailAddress" text="Email Address" /></th>
-							<th><spring:message code="brand.industrial" text="Industrial" /></th>
-							<th><spring:message code="brand.address" text="Address" /></th>
+							<th><s:message code="brand.name" text="Name" /></th>
+							<th><s:message code="brand.description" text="Description" /></th>
+							<th><s:message code="brand.website" text="Website" /></th>
+							<th><s:message code="brand.emailAddress" text="Email Address" /></th>
+							<th><s:message code="brand.industrial" text="Industrial" /></th>
+							<th><s:message code="brand.address" text="Address" /></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -54,9 +54,9 @@
 							<td>${brand.industrial}</td>
 							<td>${brand.address}</td>
 
-							<spring:url var="showUrl" value="/admin/brands/{id}">
-				            	<spring:param name="id" value="${brand.id}" />
-							</spring:url>
+							<s:url var="showUrl" value="/admin/brands/{id}">
+				            	<s:param name="id" value="${brand.id}" />
+							</s:url>
 							<td class="link">
 								<a href="${showUrl}" class="btn btn-small">Show &raquo;</a>
 							</td>
