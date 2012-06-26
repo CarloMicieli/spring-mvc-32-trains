@@ -28,7 +28,10 @@ public class Address {
 	private String locality;
 	private String country;
 	
-	Address() {
+	/**
+	 * Creates a new empty {@code Address}.
+	 */
+	public Address() {
 	}
 	
 	private Address(Builder b) {
