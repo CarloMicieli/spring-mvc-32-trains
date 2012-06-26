@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Profile;
 import com.trenako.services.BrandsService;
 import com.trenako.services.ImagesService;
 import com.trenako.services.RailwaysService;
+import com.trenako.services.ScalesService;
 import com.trenako.web.images.ImageProcessingAdapter;
 
 /**
@@ -46,6 +47,10 @@ public class TestConfig {
 
 	public @Bean RailwaysService railwaysService() {
 		return mock(RailwaysService.class);
+	}
+
+	public @Bean ScalesService scalesService() {
+		return mock(ScalesService.class);
 	}
 	
 	public @Bean ImageProcessingAdapter imgUtils() {

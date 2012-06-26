@@ -76,8 +76,10 @@ public class Scale {
 	private boolean narrow;
 	private Date lastModified;
 	
-	// required
-	Scale() {
+	/**
+	 * Creates a new empty {@code Scale}.
+	 */
+	public Scale() {
 	}
 	
 	/**
