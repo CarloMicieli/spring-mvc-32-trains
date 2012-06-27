@@ -100,12 +100,13 @@ public class AdminScalesControllerTests {
 	public void createActionShouldRedirectAfterValidationErrors() {
 		Scale scale = new Scale();
 		when(mockResult.hasErrors()).thenReturn(true);
+		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		ModelAndView mav = controller.create(scale, mockResult, mockRedirect);
+		String viewName = controller.create(scale, mockResult, redirectAtts);
 		
 		verify(mockService, times(0)).save(eq(scale));
-		assertViewName(mav, "scale/new");
-		assertModelAttributeAvailable(mav, "scale");
+		assertEquals("scale/new", viewName);
+		assertEquals(true, redirectAtts.containsAttribute("scale"));
 	}
 	
 	@Test
@@ -114,10 +115,10 @@ public class AdminScalesControllerTests {
 		when(mockResult.hasErrors()).thenReturn(false);
 		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		ModelAndView mav = controller.create(scale, mockResult, redirectAtts);
+		String viewName = controller.create(scale, mockResult, redirectAtts);
 		
 		verify(mockService, times(1)).save(eq(scale));
-		assertViewName(mav, "redirect:/admin/scales");
+		assertEquals("redirect:/admin/scales", viewName);
 		assertEquals(1, redirectAtts.getFlashAttributes().size());
 		assertEquals("Scale created", redirectAtts.getFlashAttributes().get("message"));
 	}
@@ -145,13 +146,14 @@ public class AdminScalesControllerTests {
 	@Test
 	public void saveActionShouldRedirectAfterValidationErrors() {
 		Scale scale = new Scale();
+		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		when(mockResult.hasErrors()).thenReturn(true);
 		
-		ModelAndView mav = controller.save(scale, mockResult, mockRedirect);
+		String viewName = controller.save(scale, mockResult, redirectAtts);
 		
 		verify(mockService, times(0)).save(eq(scale));
-		assertViewName(mav, "scale/edit");
-		assertModelAttributeAvailable(mav, "scale");
+		assertEquals("scale/edit", viewName);
+		assertEquals(true, redirectAtts.containsAttribute("scale"));
 	}
 	
 	@Test
@@ -160,10 +162,10 @@ public class AdminScalesControllerTests {
 		Scale scale = new Scale();
 		when(mockResult.hasErrors()).thenReturn(false);
 				
-		ModelAndView mav = controller.save(scale, mockResult, redirectAtts);
+		String viewName = controller.save(scale, mockResult, redirectAtts);
 		
 		verify(mockService, times(1)).save(eq(scale));
-		assertViewName(mav, "redirect:/admin/scales");
+		assertEquals("redirect:/admin/scales", viewName);
 		assertEquals(1, redirectAtts.getFlashAttributes().size());
 		assertEquals("Scale saved", redirectAtts.getFlashAttributes().get("message"));
 	}
@@ -184,10 +186,10 @@ public class AdminScalesControllerTests {
 		
 		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		ModelAndView mav = controller.delete(id, redirectAtts);
+		String viewName = controller.delete(id, redirectAtts);
 		
 		verify(mockService, times(1)).remove(eq(value));
-		assertViewName(mav, "redirect:/admin/scales");
+		assertEquals("redirect:/admin/scales", viewName);
 		assertEquals(1, redirectAtts.getFlashAttributes().size());
 		assertEquals("Scale deleted", redirectAtts.getFlashAttributes().get("message"));
 	}

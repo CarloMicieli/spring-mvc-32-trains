@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.trenako.entities.Scale;
 import com.trenako.services.ScalesService;
@@ -70,7 +69,7 @@ public class AdminScalesController {
 	/**
 	 * This actions shows all the {@code Scale}s.
 	 * <p>
-	 * Maps the request to {@code GET /admin/scales/:id}.
+	 * Maps the request to {@code gitGET /admin/scales/:id}.
 	 * </p>
 	 *
 	 * @param id the {@code Scale} id
@@ -111,17 +110,18 @@ public class AdminScalesController {
 	 *
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView create(@Valid @ModelAttribute Scale scale, 
+	public String create(@Valid @ModelAttribute Scale scale, 
 			BindingResult result, 
 			RedirectAttributes redirectAtts) {
 		
 		if (result.hasErrors()) {
-			return new ModelAndView("scale/new", "scale", scale);
+			redirectAtts.addAttribute("scale", scale);		
+			return "scale/new";
 		}
 		
 		service.save(scale);
 		redirectAtts.addFlashAttribute("message", "Scale created");
-		return new ModelAndView(new RedirectView("/admin/scales"));
+		return "redirect:/admin/scales";
 	}
 	
 	/**
@@ -156,23 +156,25 @@ public class AdminScalesController {
 	 * @return the view name
 	 */
 	@RequestMapping(method = RequestMethod.PUT)
-	public ModelAndView save(@Valid @ModelAttribute Scale scale,
+	public String save(@Valid @ModelAttribute Scale scale,
 		BindingResult result,
 		RedirectAttributes redirectAtts) {
 	
 		if (result.hasErrors()) {
-			return new ModelAndView("scale/edit", "scale", scale);
+			redirectAtts.addAttribute("scale", scale);
+			return "scale/edit";
 		}
 	
 		try {
 			service.save(scale);
 			
 			redirectAtts.addFlashAttribute("message", "Scale saved");
-			return new ModelAndView(new RedirectView("/admin/scales"));
+			return "redirect:/admin/scales";
 		}
 		catch (DataIntegrityViolationException dae) {
 			result.reject("database.error");
-			return new ModelAndView("scale/edit", "scale", scale);
+			redirectAtts.addAttribute("scale", scale);
+			return "scale/edit";
 		}
 	}
 
@@ -188,7 +190,7 @@ public class AdminScalesController {
 	 * @return the view name
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public ModelAndView delete(@PathVariable("id") ObjectId scaleId, RedirectAttributes redirectAtts) {
+	public String delete(@PathVariable("id") ObjectId scaleId, RedirectAttributes redirectAtts) {
 		Scale scale = service.findById(scaleId);
 		if (scale==null)
 			throw new NotFoundException();
@@ -196,6 +198,6 @@ public class AdminScalesController {
 		service.remove(scale);
 		
 		redirectAtts.addFlashAttribute("message", "Scale deleted");
-		return new ModelAndView(new RedirectView("/admin/scales"));
+		return "redirect:/admin/scales";
 	}
 }
