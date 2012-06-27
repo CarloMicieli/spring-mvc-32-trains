@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.trenako.entities.Railway;
 import com.trenako.services.RailwaysService;
@@ -117,13 +116,14 @@ public class AdminRailwaysController {
 	 *
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView create(@Valid @ModelAttribute Railway railway, 
+	public String create(@Valid @ModelAttribute Railway railway, 
 			@RequestParam("file") MultipartFile file,
 			BindingResult result, 
 			RedirectAttributes redirectAtts) throws IOException {
 		
 		if (result.hasErrors()) {
-			return new ModelAndView("railway/new", "railway", railway);
+			redirectAtts.addAttribute("railway", railway);
+			return "railway/new";
 		}
 		
 		if (!file.isEmpty()) {
@@ -132,7 +132,7 @@ public class AdminRailwaysController {
 		
 		service.save(railway);
 		redirectAtts.addFlashAttribute("message", "Railway created");
-		return new ModelAndView(new RedirectView("/admin/railways"));
+		return "redirect:/admin/railways";
 	}
 	
 	/**
@@ -167,23 +167,25 @@ public class AdminRailwaysController {
 	 * @return the view name
 	 */
 	@RequestMapping(method = RequestMethod.PUT)
-	public ModelAndView save(@Valid @ModelAttribute Railway railway,
+	public String save(@Valid @ModelAttribute Railway railway,
 		BindingResult result,
 		RedirectAttributes redirectAtts) throws IOException {
 	
 		if (result.hasErrors()) {
-			return new ModelAndView("railway/edit", "railway", railway);
+			redirectAtts.addAttribute("railway", railway);
+			return "railway/edit";
 		}
 	
 		try {
 			service.save(railway);
 			
 			redirectAtts.addFlashAttribute("message", "Railway saved");
-			return new ModelAndView(new RedirectView("/admin/railways"));
+			return "redirect:/admin/railways";
 		}
 		catch (DataIntegrityViolationException dae) {
 			result.reject("database.error");
-			return new ModelAndView("railway/edit", "railway", railway);
+			redirectAtts.addAttribute("railway", railway);
+			return "railway/edit";
 		}
 	}
 
@@ -199,7 +201,7 @@ public class AdminRailwaysController {
 	 * @return the view name
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public ModelAndView delete(@PathVariable("id") ObjectId railwayId, RedirectAttributes redirectAtts) {
+	public String delete(@PathVariable("id") ObjectId railwayId, RedirectAttributes redirectAtts) {
 		Railway railway = service.findById(railwayId);
 		if (railway==null)
 			throw new NotFoundException();
@@ -207,7 +209,7 @@ public class AdminRailwaysController {
 		service.remove(railway);
 		
 		redirectAtts.addFlashAttribute("message", "Railway deleted");
-		return new ModelAndView(new RedirectView("/admin/railways"));
+		return "redirect:/admin/railways";
 	}
 	
 }

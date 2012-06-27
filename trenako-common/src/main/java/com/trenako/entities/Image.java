@@ -9,7 +9,10 @@ public class Image {
 	private byte[] image;
 	private String mediaType;
 	
-	Image() {
+	/**
+	 * Creates an empty {@code Image}.
+	 */
+	public Image() {
 	}
 	
 	/**

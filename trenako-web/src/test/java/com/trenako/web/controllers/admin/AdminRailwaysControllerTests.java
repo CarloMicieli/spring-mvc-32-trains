@@ -29,7 +29,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -107,12 +106,13 @@ public class AdminRailwaysControllerTests {
 	public void createActionShouldRedirectAfterValidationErrors() throws IOException {
 		Railway railway = new Railway();
 		when(mockResult.hasErrors()).thenReturn(true);
-	
-		ModelAndView mav = controller.create(railway, mockFile, mockResult, mockRedirect);
+		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
+		
+		String viewName = controller.create(railway, mockFile, mockResult, redirectAtts);
 		
 		verify(mockService, times(0)).save(eq(railway));
-		assertViewName(mav, "railway/new");
-		assertModelAttributeAvailable(mav, "railway");
+		assertEquals("railway/new", viewName);
+		assertEquals(true, redirectAtts.containsAttribute("railway"));
 	}
 	
 	@Test
@@ -121,10 +121,10 @@ public class AdminRailwaysControllerTests {
 		when(mockResult.hasErrors()).thenReturn(false);
 		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		ModelAndView mav = controller.create(railway, mockFile, mockResult, redirectAtts);
+		String viewName = controller.create(railway, mockFile, mockResult, redirectAtts);
 		
 		verify(mockService, times(1)).save(eq(railway));
-		assertViewName(mav, "redirect:/admin/railways");
+		assertEquals("redirect:/admin/railways", viewName);
 		assertEquals(1, redirectAtts.getFlashAttributes().size());
 		assertEquals("Railway created", redirectAtts.getFlashAttributes().get("message"));
 	}
@@ -134,13 +134,12 @@ public class AdminRailwaysControllerTests {
 		Railway railway = new Railway();
 		when(mockResult.hasErrors()).thenReturn(false);
 		
-		Image value = new Image("image/jpeg", new byte[]{});
-		MultipartFile file = new MockMultipartFile("file.jpg", "file.jpg", "image/jpeg", new byte[]{});
-		when(mockImgUtil.createImage(eq(file))).thenReturn(value);
+		when(mockFile.isEmpty()).thenReturn(false);
+		when(mockImgUtil.createImage(eq(mockFile))).thenReturn(new Image());
 		
-		controller.create(railway, file, mockResult, mockRedirect);
+		controller.create(railway, mockFile, mockResult, mockRedirect);
 		
-		verify(mockImgUtil, times(1)).createImage(eq(file));
+		verify(mockImgUtil, times(1)).createImage(eq(mockFile));
 		assertNotNull("Railway logo is null", railway.getImage());
 	}
 	
@@ -168,12 +167,13 @@ public class AdminRailwaysControllerTests {
 	public void saveActionShouldRedirectAfterValidationErrors() throws IOException {
 		Railway railway = new Railway();
 		when(mockResult.hasErrors()).thenReturn(true);
+		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		ModelAndView mav = controller.save(railway, mockResult, mockRedirect);
+		String viewName = controller.save(railway, mockResult, redirectAtts);
 		
 		verify(mockService, times(0)).save(eq(railway));
-		assertViewName(mav, "railway/edit");
-		assertModelAttributeAvailable(mav, "railway");
+		assertEquals("railway/edit", viewName);
+		assertEquals(true, redirectAtts.containsAttribute("railway"));
 	}
 	
 	@Test
@@ -182,10 +182,10 @@ public class AdminRailwaysControllerTests {
 		Railway railway = new Railway();
 		when(mockResult.hasErrors()).thenReturn(false);
 				
-		ModelAndView mav = controller.save(railway, mockResult, redirectAtts);
+		String viewName = controller.save(railway, mockResult, redirectAtts);
 		
 		verify(mockService, times(1)).save(eq(railway));
-		assertViewName(mav, "redirect:/admin/railways");
+		assertEquals("redirect:/admin/railways", viewName);
 		assertEquals(1, redirectAtts.getFlashAttributes().size());
 		assertEquals("Railway saved", redirectAtts.getFlashAttributes().get("message"));
 	}
@@ -206,10 +206,10 @@ public class AdminRailwaysControllerTests {
 		
 		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		ModelAndView mav = controller.delete(id, redirectAtts);
+		String viewName = controller.delete(id, redirectAtts);
 		
 		verify(mockService, times(1)).remove(eq(value));
-		assertViewName(mav, "redirect:/admin/railways");
+		assertEquals("redirect:/admin/railways", viewName);
 		assertEquals(1, redirectAtts.getFlashAttributes().size());
 		assertEquals("Railway deleted", redirectAtts.getFlashAttributes().get("message"));
 	}
