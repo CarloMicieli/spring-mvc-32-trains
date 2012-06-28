@@ -84,7 +84,7 @@
 						<div class="control-group">
 							<label class="control-label" for="file">Brand logo:</label>
 							<div class="controls">
-								<input class="input-file" id="file" type="file">
+								<input class="input-file" id="file" name="file" type="file">
 								<p class="help-block">Max size 512 Kb.</p>
 							</div>
 						</div>
