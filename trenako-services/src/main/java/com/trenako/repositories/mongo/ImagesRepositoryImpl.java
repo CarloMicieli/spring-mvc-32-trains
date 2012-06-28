@@ -29,11 +29,15 @@ import com.trenako.repositories.ImagesRepository;
  * @author Carlo Micieli
  *
  */
-@Repository
+@Repository("imagesRepository")
 public class ImagesRepositoryImpl implements ImagesRepository {
 
 	private final MongoTemplate mongoTemplate;
 	
+	/**
+	 * Creates a new {@code ImagesRepositoryImpl} class.
+	 * @param mongoTemplate the mongo db template
+	 */
 	@Autowired
 	public ImagesRepositoryImpl(MongoTemplate mongoTemplate) {
 		this.mongoTemplate = mongoTemplate;
