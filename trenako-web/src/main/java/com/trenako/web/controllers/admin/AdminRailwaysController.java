@@ -36,7 +36,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.entities.Railway;
 import com.trenako.services.RailwaysService;
 import com.trenako.web.errors.NotFoundException;
-import com.trenako.web.images.ImageConverter;
 import com.trenako.web.images.WebImageService;
 
 /**
@@ -48,12 +47,12 @@ import com.trenako.web.images.WebImageService;
 @RequestMapping("/admin/railways")
 public class AdminRailwaysController {
 	private final RailwaysService service;
-	private final WebImageService imgUtils;
+	private final WebImageService imageService;
 	
 	@Autowired
 	public AdminRailwaysController(RailwaysService service, WebImageService imageService) {
 		this.service = service;
-		this.imgUtils = imageService;
+		this.imageService = imageService;
 	}
 
 	/**
