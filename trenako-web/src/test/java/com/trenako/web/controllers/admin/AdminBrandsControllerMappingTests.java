@@ -60,7 +60,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 		when(mockService.findById(eq(OID))).thenReturn(new Brand());
 		mockMvc().perform(get("/admin/brands/{id}", ID))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("brand"))
 			.andExpect(forwardedUrl(view("brand", "show")));
 	}
@@ -72,7 +72,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 		
 		mockMvc().perform(get("/admin/brands"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("brands"))
 			.andExpect(forwardedUrl(view("brand", "list")));
 	}
@@ -115,8 +115,9 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	public void shouldRenderTheNewBrandForm() throws Exception {
 		mockMvc().perform(get("/admin/brands/new"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("brand"))
+			.andExpect(model().attributeExists("countries"))
 			.andExpect(forwardedUrl(view("brand", "new")));
 	}
 	
@@ -145,14 +146,15 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 		when(mockService.findById(eq(OID))).thenReturn(new Brand());
 		mockMvc().perform(get("/admin/brands/{id}/edit", ID))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("brand"))
+			.andExpect(model().attributeExists("countries"))
 			.andExpect(forwardedUrl(view("brand", "edit")));
 	}
 
 	@Test
 	public void shouldSaveBrandChanges() throws Exception {
-		mockMvc().perform(fileUpload("/admin/brands//{id}", ID).param("name", "ACME"))
+		mockMvc().perform(put("/admin/brands").param("name", "ACME"))
 			.andExpect(status().isOk())
 			.andExpect(redirectedUrl("/admin/brands"));
 	}

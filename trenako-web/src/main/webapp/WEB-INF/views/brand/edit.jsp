@@ -24,10 +24,8 @@
 				<div class="page-header">
 					<h1><s:message code="edit.brand.label" text="Edit brand" /></h1>
 				</div>
-				<s:url var="editUrl" value="/admin/brands/{id}">
-		           	<s:param name="id" value="${brand.id}" />
-				</s:url>
-				<form:form id="form" class="form-horizontal" method="POST" action="${editUrl}" modelAttribute="brand" >
+				<s:url var="editUrl" value="/admin/brands"/>
+				<form:form id="form" class="form-horizontal" method="PUT" action="${editUrl}" modelAttribute="brand" >
 					
 					<form:hidden path="id"/>
 					
@@ -81,13 +79,6 @@
 								<label class="checkbox">
 									<form:checkbox path="industrial"/>
 								</label>
-							</div>
-						</div>
-						
-						<div class="control-group">
-							<label class="control-label" for="file">Brand logo:</label>
-							<div class="controls">
-								<input class="input-file" id="file" type="file">
 							</div>
 						</div>
 						

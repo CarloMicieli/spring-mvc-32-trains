@@ -100,7 +100,7 @@ public class AdminBrandsControllerTests {
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
 		when(imgUtils.createImage(eq(file))).thenReturn(new Image(MediaType.IMAGE_JPEG_VALUE, value));
 
-		String redirect = controller.create(brand, file, mockResult, redirectAtt);
+		String redirect = controller.create(brand, mockResult, file, redirectAtt);
 
 		assertEquals("redirect:/admin/brands", redirect);
 		assertNotNull(brand.getLogo());

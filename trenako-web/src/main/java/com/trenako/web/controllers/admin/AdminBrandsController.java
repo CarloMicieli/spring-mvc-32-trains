@@ -16,6 +16,7 @@
 package com.trenako.web.controllers.admin;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.validation.Valid;
 
@@ -60,6 +61,11 @@ public class AdminBrandsController {
 		this.imgUtils = imgUtils;
 	}
 	
+	@ModelAttribute("countries")
+	public Iterable<String> countries() {
+		return Arrays.asList("Österreich", "Italia", "Germany", "USA", "China", "France", "Japan");
+	}
+	
 	/**
 	 * This actions shows all the {@code Brand}s.
 	 * <p>
@@ -85,7 +91,8 @@ public class AdminBrandsController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ModelAndView show(@PathVariable("id") ObjectId id) {
-		return new ModelAndView("brand/show", "brand", service.findById(id));
+		Brand b = service.findById(id);
+		return new ModelAndView("brand/show", "brand", b);
 	}
 	
 	/**
@@ -116,9 +123,9 @@ public class AdminBrandsController {
 	 *
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public String create(@Valid @ModelAttribute Brand brand, 
-			@RequestParam("file") MultipartFile file,
+	public String create(@Valid @ModelAttribute("brand") Brand brand, 
 			BindingResult result, 
+			@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAtts) throws IOException {
 		
 		if( result.hasErrors() ) {
@@ -164,7 +171,7 @@ public class AdminBrandsController {
 	 * @param redirectAtts the redirect attributes
 	 *
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.PUT)
 	public String save(@Valid @ModelAttribute Brand brand,
 		BindingResult result, 
 		RedirectAttributes redirectAtts) throws IOException {

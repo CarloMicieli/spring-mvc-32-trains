@@ -56,6 +56,7 @@
 							<form:label path="website" cssClass="control-label">Website:</form:label>
 							<div class="controls">
 								<form:input path="website" type="url" cssClass="input-xlarge focused"/>
+								<form:errors path="website" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
@@ -67,6 +68,7 @@
 								<div class="input-prepend">
 									<span class="add-on">@</span><form:input type="email" path="emailAddress" cssClass="input-xlarge focused"/>
 								</div>
+								<form:errors path="emailAddress" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
@@ -81,13 +83,16 @@
 							</div>
 						</div>
 						
+						<s:bind path="brand.logo">
 						<div class="control-group">
 							<label class="control-label" for="file">Brand logo:</label>
 							<div class="controls">
 								<input class="input-file" id="file" name="file" type="file">
+								<form:errors path="logo" element="span" cssClass="help-inline"/>
 								<p class="help-block">Max size 512 Kb.</p>
 							</div>
 						</div>
+						</s:bind>
 		
 						<fieldset class="embedded address">
 							<legend><s:message code="brand.address.label" text="Address" /></legend>
@@ -136,7 +141,10 @@
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 								<form:label path="address.country" cssClass="control-label">Country:</form:label>
 								<div class="controls">
-									<form:input path="address.country" cssClass="input-xlarge focused"/>
+								<form:select path="address.country">
+									<form:option value="-" label="--countries--"/>
+									<form:options items="${countries}"/>
+								</form:select>
 									<form:errors path="address.country" element="span" cssClass="help-inline"/>
 								</div>
 							</div>

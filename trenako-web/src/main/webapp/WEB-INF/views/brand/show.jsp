@@ -30,6 +30,12 @@
 				<div class="page-header">
 					<h1><s:message code="edit.label" text="Edit" /> ${brand.name}</h1>
 				</div>
+				<div>
+					<s:url value="/images/brand/{id}" var="logoUrl">
+						<s:param name="id" value="${brand.id}" />
+					</s:url>
+					<img src="${logoUrl}" alt="Not found"/>
+				</div>
     			<dl>
     				<dt><s:message code="brand.name" text="Name" />:</dt>
     				<dd>${brand.name}</dd>
@@ -41,8 +47,10 @@
     				<dd>${brand.website}</dd>    				
     			</dl>
 				
-				<c:url value="/admin/brands" var="brandsUrl" />
-				<form:form action="${brandsUrl}" method="post" modelAttribute="brand" >
+				<s:url value="/admin/brands/{id}" var="brandsUrl">
+					<s:param name="id" value="${brand.id}" />
+				</s:url>
+				<form:form action="${brandsUrl}" method="delete" modelAttribute="brand" >
 					<form:hidden path="id"/>
 					<div class="form-actions">
 						<s:url var="editUrl" value="/admin/brands/{id}/edit">
