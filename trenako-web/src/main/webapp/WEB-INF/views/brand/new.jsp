@@ -34,7 +34,9 @@
     				
     					<s:bind path="brand.name">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="name" cssClass="control-label">Name:</form:label>
+							<form:label path="name" cssClass="control-label">
+								<s:message code="brand.name.label" text="Name"/>:
+							</form:label>
 							<div class="controls">
 								<form:input path="name" cssClass="input-xlarge focused" required="required"/>
 								<form:errors path="name" element="span" cssClass="help-inline"/>
@@ -44,7 +46,9 @@
 						
 						<s:bind path="brand.description">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="description" cssClass="control-label">Description:</form:label>
+							<form:label path="description" cssClass="control-label">
+								<s:message code="brand.description.label" text="Description"/>:
+							</form:label>							
 							<div class="controls">
 								<form:textarea path="description" cssClass="input-xlarge focused"/>
 							</div>
@@ -53,7 +57,9 @@
 						
 						<s:bind path="brand.website">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="website" cssClass="control-label">Website:</form:label>
+							<form:label path="website" cssClass="control-label">
+								<s:message code="brand.website.label" text="Website"/>:
+							</form:label>
 							<div class="controls">
 								<form:input path="website" type="url" cssClass="input-xlarge focused"/>
 								<form:errors path="website" element="span" cssClass="help-inline"/>
@@ -63,7 +69,9 @@
 						
 						<s:bind path="brand.emailAddress">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="emailAddress" cssClass="control-label">Email address:</form:label>
+							<form:label path="emailAddress" cssClass="control-label">
+								<s:message code="brand.emailAddress.label" text="Email address"/>:
+							</form:label>
 							<div class="controls">
 								<div class="input-prepend">
 									<span class="add-on">@</span><form:input type="email" path="emailAddress" cssClass="input-xlarge focused"/>
@@ -74,26 +82,30 @@
 						</s:bind>
 						
 						<div class="control-group">
-							<form:label path="industrial" cssClass="control-label">Industrial brand:</form:label>
+							<form:label path="industrial" cssClass="control-label">
+								<s:message code="brand.industrial.label" text="Industrial brand"/>:
+							</form:label>
 							<div class="controls">
 								<label class="checkbox">
 									<form:checkbox path="industrial"/>
-									Die-cast producer
+									<s:message code="brand.industrial.help.test" text="Die-cast producer" /> 
 								</label>
 							</div>
 						</div>
 						
-						<s:bind path="brand.logo">
 						<div class="control-group">
-							<label class="control-label" for="file">Brand logo:</label>
+							<label class="control-label" for="file">
+								<s:message code="brand.logo.label" text="Brand logo"/>:
+							</label>
 							<div class="controls">
 								<input class="input-file" id="file" name="file" type="file">
-								<form:errors path="logo" element="span" cssClass="help-inline"/>
-								<p class="help-block">Max size 512 Kb.</p>
+								<form:errors element="span" cssClass="help-inline"/>
+								<p class="help-block">
+									<s:message code="brand.logo.help.text" text="Max size 512 Kb."/>
+								</p>
 							</div>
 						</div>
-						</s:bind>
-		
+
 						<fieldset class="embedded address">
 							<legend><s:message code="brand.address.label" text="Address" /></legend>
 							

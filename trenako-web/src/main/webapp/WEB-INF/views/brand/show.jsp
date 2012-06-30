@@ -30,21 +30,24 @@
 				<div class="page-header">
 					<h1><s:message code="edit.label" text="Edit" /> ${brand.name}</h1>
 				</div>
-				<div>
-					<s:url value="/images/brand/{id}" var="logoUrl">
-						<s:param name="id" value="${brand.id}" />
-					</s:url>
-					<img src="${logoUrl}" alt="Not found"/>
-				</div>
     			<dl>
-    				<dt><s:message code="brand.name" text="Name" />:</dt>
+    				<dt><s:message code="brand.name.label" text="Name" />:</dt>
     				<dd>${brand.name}</dd>
-    				<dt><s:message code="brand.description" text="Description" />:</dt>
+    				<dt><s:message code="brand.description.label" text="Description" />:</dt>
     				<dd>${brand.description}</dd>
-    				<dt><s:message code="brand.emailAddress" text="Email Address" />:</dt>
+    				<dt><s:message code="brand.emailAddress.label" text="Email Address" />:</dt>
     				<dd>${brand.emailAddress}</dd>
-    				<dt><s:message code="brand.website" text="Website" />:</dt>
-    				<dd>${brand.website}</dd>    				
+    				<dt><s:message code="brand.website.label" text="Website" />:</dt>
+    				<dd>${brand.website}</dd>
+					<dt><s:message code="brand.industrial.label" text="Industrial" />:</dt>
+    				<dd>${brand.industrial}</dd>
+    				<dt><s:message code="brand.logo.label" text="Logo" />:</dt>
+    				<dd>
+    					<s:url value="/images/brand/{id}" var="logoUrl">
+							<s:param name="id" value="${brand.id}" />
+						</s:url>
+						<img src="${logoUrl}" alt="Not found"/>
+    				</dd>
     			</dl>
 				
 				<s:url value="/admin/brands/{id}" var="brandsUrl">

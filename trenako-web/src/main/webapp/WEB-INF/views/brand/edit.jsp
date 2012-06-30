@@ -29,14 +29,16 @@
 					
 					<form:hidden path="id"/>
 					
-					<fieldset>
+					<fieldset>    				
     					<c:if test="${not empty message}">
 							<div id="message" class="${message.type}">${message.message}</div>
 						</c:if>
     				
     					<s:bind path="brand.name">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="name" cssClass="control-label">Name:</form:label>
+							<form:label path="name" cssClass="control-label">
+								<s:message code="brand.name.label" text="Name"/>:
+							</form:label>
 							<div class="controls">
 								<form:input path="name" cssClass="input-xlarge focused" required="required"/>
 								<form:errors path="name" element="span" cssClass="help-inline"/>
@@ -46,7 +48,9 @@
 						
 						<s:bind path="brand.description">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="description" cssClass="control-label">Description:</form:label>
+							<form:label path="description" cssClass="control-label">
+								<s:message code="brand.description.label" text="Description"/>:
+							</form:label>							
 							<div class="controls">
 								<form:textarea path="description" cssClass="input-xlarge focused"/>
 							</div>
@@ -55,29 +59,38 @@
 						
 						<s:bind path="brand.website">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="website" cssClass="control-label">Website:</form:label>
+							<form:label path="website" cssClass="control-label">
+								<s:message code="brand.website.label" text="Website"/>:
+							</form:label>
 							<div class="controls">
 								<form:input path="website" type="url" cssClass="input-xlarge focused"/>
+								<form:errors path="website" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
 						
 						<s:bind path="brand.emailAddress">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="emailAddress" cssClass="control-label">Email address:</form:label>
+							<form:label path="emailAddress" cssClass="control-label">
+								<s:message code="brand.emailAddress.label" text="Email address"/>:
+							</form:label>
 							<div class="controls">
 								<div class="input-prepend">
 									<span class="add-on">@</span><form:input type="email" path="emailAddress" cssClass="input-xlarge focused"/>
 								</div>
+								<form:errors path="emailAddress" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
 						
 						<div class="control-group">
-							<form:label path="industrial" cssClass="control-label">Is die-cast producer:</form:label>
+							<form:label path="industrial" cssClass="control-label">
+								<s:message code="brand.industrial.label" text="Industrial brand"/>:
+							</form:label>
 							<div class="controls">
 								<label class="checkbox">
 									<form:checkbox path="industrial"/>
+									<s:message code="brand.industrial.help.test" text="Die-cast producer" /> 
 								</label>
 							</div>
 						</div>
@@ -129,13 +142,16 @@
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 								<form:label path="address.country" cssClass="control-label">Country:</form:label>
 								<div class="controls">
-									<form:input path="address.country" cssClass="input-xlarge focused"/>
+								<form:select path="address.country">
+									<form:option value="-" label="--countries--"/>
+									<form:options items="${countries}"/>
+								</form:select>
 									<form:errors path="address.country" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
 							</s:bind>
 						</fieldset>
-						
+		
 						<div class="form-actions">
 							<form:button class="btn btn-primary" type="submit" name="_action_save">
 								<i class="icon-check icon-white"></i>
