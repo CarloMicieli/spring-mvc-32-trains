@@ -25,9 +25,9 @@ import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.trenako.services.ImagesService;
 import com.trenako.web.AbstractSpringControllerTests;
-import com.trenako.web.images.ImageConverter;
+import com.trenako.web.errors.NotFoundException;
+import com.trenako.web.images.WebImageService;
 
 /**
  * 
@@ -35,8 +35,7 @@ import com.trenako.web.images.ImageConverter;
  *
  */
 public class ImagesControllerMappingTests extends AbstractSpringControllerTests {
-	private @Autowired ImagesService mockService;
-	private @Autowired ImageConverter mockUtils;
+	private @Autowired WebImageService mockService;
 	
 	private final static String ID = "47cc67093475061e3d95369d";
 	private final static ObjectId OID = new ObjectId(ID);
@@ -46,12 +45,11 @@ public class ImagesControllerMappingTests extends AbstractSpringControllerTests 
 		// TODO code smell
 		// waiting 3.2 <https://jira.springsource.org/browse/SPR-9493>
 		reset(mockService);
-		reset(mockUtils);
 	}
 	
 	@Test
 	public void shouldReturn404WhenTheBrandLogoNotFound() throws Exception {
-		when(mockService.getImage(eq(OID))).thenReturn(null);
+		when(mockService.renderImageFor(eq(OID))).thenThrow(new NotFoundException());
 		mockMvc().perform(get("/images/brand/{brandId}", ID))
 			.andExpect(status().isNotFound());
 	}

@@ -51,15 +51,15 @@ import com.trenako.web.images.WebImageService;
 public class AdminBrandsController {
 
 	private final BrandsService service;
-	private final WebImageService imgUtils;
+	private final WebImageService imgService;
 	
 	/**
 	 * Creates a new {@code AdminBrandsController} controller.
 	 */
 	@Autowired
-	public AdminBrandsController(BrandsService service, WebImageService imgUtils) {
+	public AdminBrandsController(BrandsService service, WebImageService imgService) {
 		this.service = service;
-		this.imgUtils = imgUtils;
+		this.imgService = imgService;
 	}
 	
 	@ModelAttribute("countries")

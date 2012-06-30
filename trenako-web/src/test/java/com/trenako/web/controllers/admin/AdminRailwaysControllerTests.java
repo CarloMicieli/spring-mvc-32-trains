@@ -35,11 +35,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
-import com.trenako.entities.Image;
 import com.trenako.entities.Railway;
 import com.trenako.services.RailwaysService;
 import com.trenako.web.errors.NotFoundException;
-import com.trenako.web.images.ImageConverter;
 import com.trenako.web.images.WebImageService;
 
 /**
@@ -128,20 +126,6 @@ public class AdminRailwaysControllerTests {
 		assertEquals("redirect:/admin/railways", viewName);
 		assertEquals(1, redirectAtts.getFlashAttributes().size());
 		assertEquals("Railway created", redirectAtts.getFlashAttributes().get("message"));
-	}
-	
-	@Test
-	public void createActionShouldCreateNewRailwaysWithALogo() throws IOException {
-		Railway railway = new Railway();
-		when(mockResult.hasErrors()).thenReturn(false);
-		
-		when(mockFile.isEmpty()).thenReturn(false);
-		//when(mockImgUtil.createImage(eq(mockFile))).thenReturn(new Image());
-		
-		controller.create(railway, mockFile, mockResult, mockRedirect);
-		
-		//verify(mockImgUtil, times(1)).createImage(eq(mockFile));
-		assertNotNull("Railway logo is null", railway.getImage());
 	}
 	
 	@Test

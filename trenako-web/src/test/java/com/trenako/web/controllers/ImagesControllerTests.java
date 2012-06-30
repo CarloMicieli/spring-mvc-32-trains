@@ -30,7 +30,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.trenako.web.images.ImageConverter;
 import com.trenako.web.images.WebImageService;
 
 /**
@@ -42,7 +41,6 @@ import com.trenako.web.images.WebImageService;
 public class ImagesControllerTests {
 	
 	@Mock WebImageService mockService;
-	@Mock ImageConverter mockImgUtils;
 	ImagesController controller;
 	
 	@Before
@@ -62,14 +60,5 @@ public class ImagesControllerTests {
 		verify(mockService, times(1)).renderImageFor(eq(id));
 		assertNotNull(resp);
 		assertEquals(HttpStatus.CREATED, resp.getStatusCode());
-	}
-	
-	@Test
-	public void shouldReturnNotFoundIfBrandHasNoImage() throws IOException {
-		ObjectId id = new ObjectId();
-		ResponseEntity<byte[]> resp = controller.renderBrandLogo(id);
-		assertNotNull(resp);
-		assertEquals(HttpStatus.NOT_FOUND, resp.getStatusCode());
-		assertNull("Response body is not null", resp.getBody());
 	}
 }
