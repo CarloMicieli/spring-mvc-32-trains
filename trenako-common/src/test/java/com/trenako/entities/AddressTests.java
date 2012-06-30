@@ -53,4 +53,39 @@ public class AddressTests {
 			.build();
 		assertEquals("30 Commercial Rd., PO1 1AA Bristol, (England)", a.toString());
 	}
+	
+	@Test
+	public void shouldReturnBlankForEmptyAddresses() {
+		Address a = new Address();
+		assertEquals("", a.toString());
+	}
+	
+	@Test
+	public void isEmptyShouldReturnTrueForEmptyAddresses() {
+		Address a = new Address();
+		assertTrue(a.isEmpty());
+	}
+	
+	@Test
+	public void isEmptyShouldReturnFalseIfAddressIsNotEmpty() {
+		Address a = new Address.Builder()
+			.streetAddress("AAAA").build();
+		assertFalse(a.isEmpty());
+		
+		Address b = new Address.Builder()
+			.city("AAAA").build();
+		assertFalse(b.isEmpty());
+		
+		Address c = new Address.Builder()
+			.postalCode("AAAA").build();
+		assertFalse(c.isEmpty());
+		
+		Address d = new Address.Builder()
+			.country("AAAA").build();
+		assertFalse(d.isEmpty());
+		
+		Address e = new Address.Builder()
+			.locality("AAAA").build();
+		assertFalse(e.isEmpty());
+	}
 }

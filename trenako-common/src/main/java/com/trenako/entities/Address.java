@@ -165,6 +165,22 @@ public class Address {
 	}
 	
 	/**
+	 * Indicates whether the current {@code Address} is empty.
+	 * @return {@code true} if empty; {@code false} otherwise
+	 */
+	public boolean isEmpty() {
+		return emptyOrNull(streetAddress) &&
+				emptyOrNull(postalCode) &&
+				emptyOrNull(city) &&
+				emptyOrNull(locality) &&
+				emptyOrNull(country);
+	}
+	
+	private boolean emptyOrNull(String s) {
+		return s==null || s.isEmpty();
+	}
+	
+	/**
 	 * Returns a string representation of the object.
 	 * <p>
 	 * This method should returns an address representation like this:
@@ -177,6 +193,8 @@ public class Address {
 	 */
 	@Override
 	public String toString() {
+		if (isEmpty()) return "";
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append(getStreetAddress());
 		sb.append(", ");

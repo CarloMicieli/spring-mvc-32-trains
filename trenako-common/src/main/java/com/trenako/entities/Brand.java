@@ -32,6 +32,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.trenako.utility.Slug;
+import com.trenako.validation.constraints.ValidAddress;
 
 /**
  * It represents a model railways rolling stock manufacturer.
@@ -66,6 +67,7 @@ public class Brand {
 	@Indexed(unique = true)
 	private String slug;
 	
+	@ValidAddress(message = "brand.address.format.notmet")
 	private Address address;
 	
 	private Map<String, Address> branches;
