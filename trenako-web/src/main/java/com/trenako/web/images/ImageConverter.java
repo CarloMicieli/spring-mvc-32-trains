@@ -20,7 +20,7 @@ import java.io.IOException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.trenako.entities.Image;
+import com.trenako.entities.UploadFile;
 
 /**
  * The adapter interface for the processing library
@@ -29,7 +29,7 @@ import com.trenako.entities.Image;
  * @author Carlo Micieli
  *
  */
-public interface ImageProcessingAdapter {
+public interface ImageConverter {
 	/**
 	 * Creates a thumbnail for a received {@link MultipartFile} from a web request.
 	 * 
@@ -38,7 +38,7 @@ public interface ImageProcessingAdapter {
 	 * @return the bytes array for the thumbnail
 	 * @throws IOException if an I/O exception of some sort has occurred
 	 */
-	Image createThumbnail(MultipartFile file, int targetSize) throws IOException;
+	UploadFile createThumbnail(MultipartFile file, int targetSize) throws IOException;
 	
 	/**
 	 * Converts a received {@link MultipartFile} from a web request to a bytes array.
@@ -47,7 +47,7 @@ public interface ImageProcessingAdapter {
 	 * @return the bytes array for the picture
 	 * @throws IOException if an I/O exception of some sort has occurred
 	 */
-	Image createImage(MultipartFile file) throws IOException;
+	UploadFile createImage(MultipartFile file) throws IOException;
 	
 	/**
 	 * Renders the image to the HTTP response stream.
@@ -56,5 +56,5 @@ public interface ImageProcessingAdapter {
 	 * @return the output HTTP response
 	 * @throws IOException if an I/O exception of some sort has occurred
 	 */
-	ResponseEntity<byte[]> renderImage(Image image) throws IOException;
+	ResponseEntity<byte[]> renderImage(UploadFile image) throws IOException;
 }

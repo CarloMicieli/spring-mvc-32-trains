@@ -37,7 +37,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
-import com.trenako.web.images.ImageProcessingAdapter;
+import com.trenako.web.images.ImageConverter;
+import com.trenako.web.images.WebImageService;
 
 /**
  * It represents the {@code controller} to manage the {@code Brand} elements.
@@ -50,13 +51,13 @@ import com.trenako.web.images.ImageProcessingAdapter;
 public class AdminBrandsController {
 
 	private final BrandsService service;
-	private final ImageProcessingAdapter imgUtils;
+	private final WebImageService imgUtils;
 	
 	/**
 	 * Creates a new {@code AdminBrandsController} controller.
 	 */
 	@Autowired
-	public AdminBrandsController(BrandsService service, ImageProcessingAdapter imgUtils) {
+	public AdminBrandsController(BrandsService service, WebImageService imgUtils) {
 		this.service = service;
 		this.imgUtils = imgUtils;
 	}
@@ -133,9 +134,9 @@ public class AdminBrandsController {
 			return "brand/new";		
 		}
 		
-		if (!file.isEmpty()) {
-			brand.setLogo(imgUtils.createImage(file));
-		}
+//		if (!file.isEmpty()) {
+//			brand.setLogo(imgUtils.createImage(file));
+//		}
 		
 		// save brand
 		service.save(brand);

@@ -36,10 +36,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.trenako.entities.Image;
+import com.trenako.entities.UploadFile;
 
 /**
- * A concrete implementation for the {@link ImageProcessingAdapter} interface.
+ * A concrete implementation for the {@link ImageConverter} interface.
  * <p>
  * This class is using the functionality provided by the {@code imgscalr} image processing library.
  * </p>
@@ -47,7 +47,7 @@ import com.trenako.entities.Image;
  *
  */
 @Component
-public class ImgscalrService implements ImageProcessingAdapter {
+public class ImgscalrService implements ImageConverter {
 
 	/**
 	 * The list of {@link MediaType}s allowed by the application for uploads operations.
@@ -56,7 +56,7 @@ public class ImgscalrService implements ImageProcessingAdapter {
 			Collections.unmodifiableList(Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG));
 	
 	@Override
-	public Image createThumbnail(MultipartFile file, int targetSize)
+	public UploadFile createThumbnail(MultipartFile file, int targetSize)
 			throws IOException {
 		
 		validateFile(file);
@@ -65,22 +65,22 @@ public class ImgscalrService implements ImageProcessingAdapter {
 		final BufferedImage thumb = pad(
 				resize(image, Method.SPEED, Mode.FIT_TO_HEIGHT, targetSize, OP_ANTIALIAS, OP_BRIGHTER), 2);
 
-		return new Image(file.getContentType(),
-				convertToArray(thumb, file.getContentType()));
+		return new UploadFile(
+				convertToArray(thumb, file.getContentType()), file.getContentType());
 	}
 
 	@Override
-	public Image createImage(MultipartFile file) throws IOException {
+	public UploadFile createImage(MultipartFile file) throws IOException {
 		validateFile(file);
-		return new Image(file.getContentType(), file.getBytes());
+		return new UploadFile(file.getBytes(), file.getContentType());
 	}
 
 	@Override
-	public ResponseEntity<byte[]> renderImage(Image image) throws IOException {
+	public ResponseEntity<byte[]> renderImage(UploadFile image) throws IOException {
 		if( image==null )
 			throw new IllegalArgumentException("Input stream is null");
 		
-		byte[] img = image.getImage();
+		byte[] img = image.getContent();
 		MediaType mediaType = parse(image.getMediaType());
 		
 		InputStream in = new ByteArrayInputStream(img);

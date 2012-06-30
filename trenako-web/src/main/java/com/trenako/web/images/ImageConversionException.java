@@ -13,31 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.services;
+package com.trenako.web.images;
 
-import org.bson.types.ObjectId;
-
-import com.trenako.entities.Image;
+import org.springframework.core.NestedRuntimeException;
 
 /**
- * 
+ * It represents a not checked exception during file upload operations.
  * @author Carlo Micieli
  *
  */
-public interface ImagesService {
+@SuppressWarnings("serial")
+public class ImageConversionException extends NestedRuntimeException {
 
-	/**
-	 * Loads the logo image for the {@code Brand}.
-	 * @param parentId the parent document id
-	 * @return the logo picture
-	 */
-	Image getImage(ObjectId parentId);
+	public ImageConversionException(String msg) {
+		super(msg);
+	}
 	
-	/**
-	 * Saves the image.
-	 * @param parentId
-	 * @param image
-	 */
-	void saveImage(ObjectId parentId, Image image);
-
+	public ImageConversionException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 }

@@ -16,6 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.repository.CrudRepository;
 
 import com.trenako.entities.Image;
 
@@ -24,13 +25,13 @@ import com.trenako.entities.Image;
  * @author Carlo Micieli
  *
  */
-public interface ImagesRepository {
+public interface ImagesRepository extends CrudRepository<Image, ObjectId> {
 
 	/**
-	 * Returns the logo {@link Image} for the provided {@code Brand} id.
-	 * @param brandId the brand id
+	 * Returns the {@link Image} for the provided parent document id.
+	 * @param parentId the parent document id
 	 * @return the image if found; {@code null} otherwise
 	 */
-	Image findBrandImage(ObjectId brandId);
+	Image findByParentId(ObjectId parentId);
 
 }

@@ -36,7 +36,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.entities.Railway;
 import com.trenako.services.RailwaysService;
 import com.trenako.web.errors.NotFoundException;
-import com.trenako.web.images.ImageProcessingAdapter;
+import com.trenako.web.images.ImageConverter;
+import com.trenako.web.images.WebImageService;
 
 /**
  * 
@@ -47,12 +48,12 @@ import com.trenako.web.images.ImageProcessingAdapter;
 @RequestMapping("/admin/railways")
 public class AdminRailwaysController {
 	private final RailwaysService service;
-	private final ImageProcessingAdapter imgUtils;
+	private final WebImageService imgUtils;
 	
 	@Autowired
-	public AdminRailwaysController(RailwaysService service, ImageProcessingAdapter imgUtils) {
+	public AdminRailwaysController(RailwaysService service, WebImageService imageService) {
 		this.service = service;
-		this.imgUtils = imgUtils;
+		this.imgUtils = imageService;
 	}
 
 	/**
@@ -126,10 +127,10 @@ public class AdminRailwaysController {
 			return "railway/new";
 		}
 		
-		if (!file.isEmpty()) {
-			railway.setImage(imgUtils.createImage(file));
-		}
-		
+//		if (!file.isEmpty()) {
+//			railway.setImage(imgUtils.createImage(file));
+//		}
+//		
 		service.save(railway);
 		redirectAtts.addFlashAttribute("message", "Railway created");
 		return "redirect:/admin/railways";

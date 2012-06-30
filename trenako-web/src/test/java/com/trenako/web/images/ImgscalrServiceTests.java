@@ -43,7 +43,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.trenako.entities.Image;
+import com.trenako.entities.UploadFile;
 
 /**
  * 
@@ -90,10 +90,10 @@ public class ImgscalrServiceTests {
 		MultipartFile file = mockFile(content, MediaType.IMAGE_JPEG);
 		
 		// call the method under test
-		Image image = imgService.createThumbnail(file, targetSize);
+		UploadFile image = imgService.createThumbnail(file, targetSize);
 		
 		// assert
-		assertNotNull("Byte array is empty", image.getImage());
+		assertNotNull("Byte array is empty", image.getContent());
 		assertEquals("image/jpeg", image.getMediaType());
 
 		// (1) the image is resized
@@ -114,9 +114,9 @@ public class ImgscalrServiceTests {
 		final byte[] content = "file content".getBytes();
 		MultipartFile file = mockFile(content, MediaType.IMAGE_JPEG);
 		
-		Image img = imgService.createImage(file);
+		UploadFile img = imgService.createImage(file);
 		
-		assertEquals(content, img.getImage());
+		assertEquals(content, img.getContent());
 		assertEquals(MediaType.IMAGE_JPEG_VALUE, img.getMediaType());
 	}
 	
@@ -135,7 +135,7 @@ public class ImgscalrServiceTests {
 		
 		final byte[] out = "file content".getBytes();
 		final byte[] content = "file content".getBytes();
-		final Image image = new Image(MediaType.IMAGE_PNG_VALUE, content);
+		final UploadFile image = new UploadFile(content, MediaType.IMAGE_PNG_VALUE);
 		
 		when(IOUtils.toByteArray(isA(InputStream.class))).thenReturn(out);
 				

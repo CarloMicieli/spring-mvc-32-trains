@@ -27,6 +27,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trenako.entities.Image;
+import com.trenako.entities.UploadFile;
 import com.trenako.repositories.ImagesRepository;
 
 /**
@@ -49,19 +50,20 @@ public class ImagesServiceTests {
 	@Test
 	public void shouldReturnNullIfBrandImageIsNotFound() {
 		ObjectId id = new ObjectId();
-		Image img = service.getBrandImage(id);
+		Image img = service.getImage(id);
 		assertNull(img);
 	}
 	
 	@Test
 	public void shouldReturnAnImageForBrand() {
-		ObjectId id = new ObjectId();
-		Image value = new Image("image/jpg", new byte[]{});
-		when(mockRepo.findBrandImage(eq(id))).thenReturn(value);
+		ObjectId brandId = new ObjectId();
+		UploadFile file = new UploadFile(new byte[]{}, "image/jpg");
+		Image value = new Image(brandId, file);
+		when(mockRepo.findByParentId(eq(brandId))).thenReturn(value);
 		
-		Image img = service.getBrandImage(id);
+		Image img = service.getImage(brandId);
 		
 		assertNotNull("Image is null", img);
-		verify(mockRepo, times(1)).findBrandImage(eq(id));
+		verify(mockRepo, times(1)).findByParentId(eq(brandId));
 	}
 }

@@ -26,7 +26,8 @@ import com.trenako.services.BrandsService;
 import com.trenako.services.ImagesService;
 import com.trenako.services.RailwaysService;
 import com.trenako.services.ScalesService;
-import com.trenako.web.images.ImageProcessingAdapter;
+import com.trenako.web.images.ImageConverter;
+import com.trenako.web.images.WebImageService;
 
 /**
  * 
@@ -41,8 +42,8 @@ public class TestConfig {
 		return mock(BrandsService.class);
 	}
 	
-	public @Bean ImagesService imagesService() {
-		return mock(ImagesService.class);
+	public @Bean WebImageService imagesService() {
+		return mock(WebImageService.class);
 	}
 
 	public @Bean RailwaysService railwaysService() {
@@ -53,7 +54,4 @@ public class TestConfig {
 		return mock(ScalesService.class);
 	}
 	
-	public @Bean ImageProcessingAdapter imgUtils() {
-		return mock(ImageProcessingAdapter.class);
-	}
 }

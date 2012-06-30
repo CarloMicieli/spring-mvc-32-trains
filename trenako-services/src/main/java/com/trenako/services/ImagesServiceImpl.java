@@ -38,8 +38,14 @@ public class ImagesServiceImpl implements ImagesService {
 	}
 	
 	@Override
-	public Image getBrandImage(ObjectId brandId) {
-		return repo.findBrandImage(brandId);
+	public Image getImage(ObjectId brandId) {
+		return repo.findByParentId(brandId);
+	}
+
+	@Override
+	public void saveImage(ObjectId parentId, Image image) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

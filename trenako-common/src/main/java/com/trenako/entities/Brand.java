@@ -81,10 +81,6 @@ public class Brand {
 	
 	private boolean industrial;
 	
-	//private List<String> scales;
-	
-	private Image logo;
-	
 	private Date lastModified;
 	
 	// required by spring data
@@ -401,22 +397,6 @@ public class Brand {
 		this.industrial = industrial;
 	}
 
-	/**
-	 * Returns the {@code Brand} image.
-	 * @return the image
-	 */
-	public Image getLogo() {
-		return logo;
-	}
-
-	/**
-	 * Sets the {@code Brand} image.
-	 * @param logo the image
-	 */
-	public void setLogo(Image logo) {
-		this.logo = logo;
-	}
-	
 	/**
 	 * Returns the last modified timestamp.
 	 * @return the timestamp

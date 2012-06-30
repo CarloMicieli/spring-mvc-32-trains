@@ -27,14 +27,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import com.trenako.entities.Image;
-import com.trenako.services.ImagesService;
-import com.trenako.web.images.ImageProcessingAdapter;
+import com.trenako.web.images.ImageConverter;
+import com.trenako.web.images.WebImageService;
 
 /**
  * 
@@ -44,40 +41,27 @@ import com.trenako.web.images.ImageProcessingAdapter;
 @RunWith(MockitoJUnitRunner.class)
 public class ImagesControllerTests {
 	
-	@Mock ImagesService mockService;
-	@Mock ImageProcessingAdapter mockImgUtils;
+	@Mock WebImageService mockService;
+	@Mock ImageConverter mockImgUtils;
 	ImagesController controller;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new ImagesController(mockService, mockImgUtils);
+		controller = new ImagesController(mockService);
 	}
 	
-	private ResponseEntity<byte[]> buildResponse(MediaType mediaType) {
-		final byte[] bytes = "file content".getBytes();
-		final HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(mediaType);
-	    final ResponseEntity<byte[]> resp = new ResponseEntity<byte[]>(bytes, headers, HttpStatus.CREATED);
-	    return resp;
-	}
-
 	@Test
 	public void shouldRenderTheBrandLogoImages() throws IOException {
 		ObjectId id = new ObjectId();
-		byte[] bytes = "file content".getBytes();
-		Image img = new Image(MediaType.IMAGE_JPEG_VALUE, bytes);
-		
-		ResponseEntity<byte[]> value = buildResponse(MediaType.IMAGE_JPEG);
-	
-		when(mockService.getBrandImage(eq(id))).thenReturn(img);
-		when(mockImgUtils.renderImage(eq(img))).thenReturn(value);
-		
+		ResponseEntity<byte[]> value = new ResponseEntity<byte[]>(HttpStatus.CREATED);
+		when(mockService.renderImageFor(eq(id))).thenReturn(value);
+
 		ResponseEntity<byte[]> resp = controller.renderBrandLogo(id);
+
+		verify(mockService, times(1)).renderImageFor(eq(id));
 		assertNotNull(resp);
 		assertEquals(HttpStatus.CREATED, resp.getStatusCode());
-		assertTrue(resp.hasBody());
-		assertEquals(MediaType.IMAGE_JPEG, resp.getHeaders().getContentType());
 	}
 	
 	@Test
@@ -88,5 +72,4 @@ public class ImagesControllerTests {
 		assertEquals(HttpStatus.NOT_FOUND, resp.getStatusCode());
 		assertNull("Response body is not null", resp.getBody());
 	}
-	
 }
