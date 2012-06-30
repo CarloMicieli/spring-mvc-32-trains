@@ -22,6 +22,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.validation.constraints.SupportedImage;
+
 /**
  * It represents an image as stored in the database.
  * @author Carlo Micieli
@@ -39,7 +41,10 @@ public class Image {
 	private String filename;
 	
 	@NotNull(message = "image.is.empty")
+	@SupportedImage(message = "image.invalid.file")
 	private UploadFile image;
+	
+	@SupportedImage(message = "image.invalid.file")
 	private UploadFile thumbnail;
 	
 	/**

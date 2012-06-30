@@ -17,6 +17,7 @@ package com.trenako;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -95,5 +96,16 @@ public class AppGlobals {
 	 * The default language for the application.
 	 */
 	public static final String DEFAULT_LANGUAGE = Locale.ENGLISH.getLanguage();
+	
+	/**
+	 * The maximum allowed size for uploaded files.
+	 */
+	public static final int MAX_UPLOAD_SIZE = 512 * 1024;
+	
+	/**
+	 * The allowed media types for uploaded files.
+	 */
+	public static final List<String> ALLOWED_MEDIA_TYPES =
+			Collections.unmodifiableList(Arrays.asList("images/png", "images/jpg"));
 	
 }
