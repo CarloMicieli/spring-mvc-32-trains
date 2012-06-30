@@ -31,44 +31,46 @@
 	</head>
 	<body>
 		<div class="navbar navbar-fixed-top">
-		   <div class="navbar-inner">
-		     <div class="container">
-		       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-		         <span class="icon-bar"></span>
-		         <span class="icon-bar"></span>
-		         <span class="icon-bar"></span>
-		       </a>
-		       <a class="brand" href="#">Trenako</a>
-		       <div class="nav-collapse">
-		         <ul class="nav">
-		         	<li class="<decorator:getProperty property="meta.home"/>">
-						<a href="<c:url value="/home" />"><s:message code="home" text="Home"/></a></li>
-		         	<li class="<decorator:getProperty property="meta.you"/>">
-						<a href="<c:url value="/you" />"><s:message code="you" text="You"/></a></li>
-		         	<li class="<decorator:getProperty property="meta.browse"/>">
-						<a href="<c:url value="/browse" />"><s:message code="browse" text="Browse"/></a></li>		        
-						<li class="dropdown" id="menu1">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-      Admin
-      <b class="caret"></b>
-    </a>
-					<ul class="dropdown-menu">
-      					<li><a href="<c:url value="/admin/brands" />">Brands</a></li>
-      					<li><a href="#">Another action</a></li>
-      					<li><a href="#">Something else here</a></li>
-      					<li class="divider"></li>
-      					<li><a href="#">Separated link</a></li>
-   		 			</ul>	
-   		 			</li>
-				</ul>
-		       </div>
-		    </div>
-		  </div>
+   			<div class="navbar-inner">
+     			<div class="container">
+       				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+         				<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="#">Trenako</a>
+					<div class="nav-collapse">
+  						<ul class="nav">
+  							<li class="<decorator:getProperty property="meta.home"/>">
+								<a href="<c:url value="/home" />"><s:message code="home" text="Home"/></a>
+							</li>
+							<li class="<decorator:getProperty property="meta.you"/>">
+								<a href="<c:url value="/you" />"><s:message code="you" text="You"/></a>
+							</li>
+							<li class="<decorator:getProperty property="meta.browse"/>">
+								<a href="<c:url value="/browse" />"><s:message code="browse" text="Browse"/></a>
+							</li>		        
+							<li class="dropdown" id="menu1">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+									<s:message code="menu.admin.label" text="Administration" />
+									<b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<li><a href="<c:url value="/admin/brands" />"><s:message code="menu.brands.label" text="Brands" /></a></li>
+	     							<li><a href="<c:url value="/admin/railways" />"><s:message code="menu.railways.label" text="Railways" /></a></li>
+	     							<li><a href="<c:url value="/admin/scales" />"><s:message code="menu.scales.label" text="Scales" /></a></li>
+	     							<li class="divider"></li>
+	     							<li><a href="#">Users</a></li>
+	  		 					</ul>
+	  		 				</li>
+						</ul>
+	       			</div>
+	    		</div>
+			</div>
 		</div>
-	
+
 		<div class="container">
 			<decorator:body/>
-			
 			<footer>
         		<p>&copy; Trenako.com 2012</p>
       		</footer>
