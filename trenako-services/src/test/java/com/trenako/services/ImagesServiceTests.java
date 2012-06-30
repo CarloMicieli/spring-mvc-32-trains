@@ -48,22 +48,31 @@ public class ImagesServiceTests {
 	}
 	
 	@Test
-	public void shouldReturnNullIfBrandImageIsNotFound() {
+	public void shouldReturnNullIfImageIsNotFound() {
 		ObjectId id = new ObjectId();
 		Image img = service.getImage(id);
 		assertNull(img);
 	}
 	
 	@Test
-	public void shouldReturnAnImageForBrand() {
-		ObjectId brandId = new ObjectId();
+	public void shouldLoadImages() {
+		ObjectId id = new ObjectId();
 		UploadFile file = new UploadFile(new byte[]{}, "image/jpg");
-		Image value = new Image(brandId, file);
-		when(mockRepo.findByParentId(eq(brandId))).thenReturn(value);
+		Image value = new Image(id, file);
+		when(mockRepo.findByParentId(eq(id))).thenReturn(value);
 		
-		Image img = service.getImage(brandId);
+		Image img = service.getImage(id);
 		
 		assertNotNull("Image is null", img);
-		verify(mockRepo, times(1)).findByParentId(eq(brandId));
+		verify(mockRepo, times(1)).findByParentId(eq(id));
+	}
+	
+	@Test
+	public void shouldSaveImages() {
+		Image image = new Image();
+		
+		service.saveImage(image);
+		
+		verify(mockRepo, times(1)).save(eq(image));
 	}
 }

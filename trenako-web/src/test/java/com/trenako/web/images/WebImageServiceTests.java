@@ -41,10 +41,6 @@ public class WebImageServiceTests {
 		service = new WebImageServiceImpl(mockDb, mockConverter);
 	}
 
-//	private MultipartFile buildFile(String filename, String contentType, byte[] content) {
-//		return new MockMultipartFile(filename, filename, contentType, content);
-//	}
-	
 	@Test
 	public void shouldSaveImages() throws IOException {
 		final ObjectId parentId = new ObjectId();
@@ -61,7 +57,7 @@ public class WebImageServiceTests {
 		service.saveImage(parentId, mockFile);
 		
 		verify(mockConverter, times(1)).createImage(eq(mockFile));
-		verify(mockDb, times(1)).saveImage(eq(parentId), arg.capture());
+		verify(mockDb, times(1)).saveImage(arg.capture());
 		Image img = arg.getValue();
 		assertEquals(filename, img.getFilename());
 		assertNotNull(img.getImage());
@@ -89,7 +85,7 @@ public class WebImageServiceTests {
 		verify(mockConverter, times(1)).createImage(eq(mockFile));
 		verify(mockConverter, times(1)).createThumbnail(eq(mockFile), eq(100));
 		
-		verify(mockDb, times(1)).saveImage(eq(parentId), arg.capture());
+		verify(mockDb, times(1)).saveImage(arg.capture());
 		Image img = arg.getValue();
 		assertEquals(filename, img.getFilename());
 		assertNotNull(img.getImage());

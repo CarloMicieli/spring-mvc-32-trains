@@ -50,7 +50,7 @@ import com.trenako.web.images.WebImageService;
 @RunWith(MockitoJUnitRunner.class)
 public class AdminBrandsControllerTests {
 	@Mock RedirectAttributes mockRedirectAtts;
-	@Mock WebImageService imgUtils;
+	@Mock WebImageService imgService;
 	@Mock BindingResult mockResult;
 	@Mock BrandsService service;
 	AdminBrandsController controller;
@@ -58,7 +58,7 @@ public class AdminBrandsControllerTests {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new AdminBrandsController(service, imgUtils);
+		controller = new AdminBrandsController(service, imgService);
 	}
 	
 	@Test
@@ -92,17 +92,17 @@ public class AdminBrandsControllerTests {
 	
 	@Test
 	public void shouldCreateBrands() throws IOException {
- 		Brand brand = new Brand();
+ 		ObjectId id = new ObjectId();
+		Brand brand = new Brand(id);
 		when(mockResult.hasErrors()).thenReturn(false);
 		RedirectAttributes redirectAtt = new RedirectAttributesModelMap();
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
-		//when(imgUtils.createImage(eq(file))).thenReturn(new Image(MediaType.IMAGE_JPEG_VALUE, value));
 
 		String redirect = controller.create(brand, mockResult, file, redirectAtt);
 
 		assertEquals("redirect:/admin/brands", redirect);
-		//assertNotNull(brand.getLogo());
 		verify(service, times(1)).save(eq(brand));
+		verify(imgService, times(1)).saveImage(eq(id), eq(file));
 	}
 	
 	@Test

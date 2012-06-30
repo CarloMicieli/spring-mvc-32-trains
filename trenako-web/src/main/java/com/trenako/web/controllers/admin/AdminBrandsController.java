@@ -134,12 +134,12 @@ public class AdminBrandsController {
 			return "brand/new";		
 		}
 		
-//		if (!file.isEmpty()) {
-//			brand.setLogo(imgUtils.createImage(file));
-//		}
-		
 		// save brand
 		service.save(brand);
+		if (!file.isEmpty()) {
+			imgService.saveImage(brand.getId(), file);
+		}
+		
 		redirectAtts.addFlashAttribute("message", "Brand created");
 		return "redirect:/admin/brands";		
 	}

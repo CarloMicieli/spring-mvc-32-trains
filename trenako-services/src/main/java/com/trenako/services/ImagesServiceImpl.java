@@ -43,9 +43,8 @@ public class ImagesServiceImpl implements ImagesService {
 	}
 
 	@Override
-	public void saveImage(ObjectId parentId, Image image) {
-		// TODO Auto-generated method stub
-		
+	public void saveImage(Image image) {
+		repo.save(image);
 	}
 
 }

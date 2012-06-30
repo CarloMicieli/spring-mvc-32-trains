@@ -61,7 +61,7 @@ public class WebImageServiceImpl implements WebImageService {
 			final Image image = new Image.Builder(parentId, uploadFile)
 				.filename(file.getOriginalFilename())
 				.build();
-			db.saveImage(parentId, image);
+			db.saveImage(image);
 		} catch (IOException ex) {
 			throw new ImageConversionException("Upload exception");
 		}
@@ -76,7 +76,7 @@ public class WebImageServiceImpl implements WebImageService {
 				.thumbnail(thumbnail)
 				.filename(file.getOriginalFilename())
 				.build();
-			db.saveImage(parentId, image);
+			db.saveImage(image);
 		} catch (IOException ex) {
 			throw new ImageConversionException("Upload exception");
 		}	

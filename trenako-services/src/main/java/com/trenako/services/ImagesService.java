@@ -35,9 +35,8 @@ public interface ImagesService {
 	
 	/**
 	 * Saves the image.
-	 * @param parentId
 	 * @param image
 	 */
-	void saveImage(ObjectId parentId, Image image);
+	void saveImage(Image image);
 
 }
