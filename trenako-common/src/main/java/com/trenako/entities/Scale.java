@@ -31,6 +31,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.format.annotations.IntegerFormat;
+import com.trenako.format.annotations.IntegerFormat.Style;
 import com.trenako.utility.Slug;
 
 /**
@@ -65,9 +67,11 @@ public class Scale {
 	private String slug;
 	
 	@Range(min = 80, max = 2200, message = "scale.ratio.range.notmet")
+	@IntegerFormat(style = Style.SCALE_RATIO)
 	private int ratio;
 
 	@Range(min = 0, max = 20000, message = "scale.gauge.range.notmet")
+	@IntegerFormat(style = Style.SCALE_GAUGE)
 	private int gauge;
 	
 	@Indexed

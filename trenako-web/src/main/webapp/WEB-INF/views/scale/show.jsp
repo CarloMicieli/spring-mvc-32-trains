@@ -31,9 +31,9 @@
     				<dt><s:message code="scale.name.label" text="Name" />:</dt>
     				<dd>${scale.name}</dd>
     				<dt><s:message code="scale.ratio.label" text="Ratio" />:</dt>
-    				<dd>${scale.ratio}</dd>
+    				<dd><s:eval expression="scale.ratio"/></dd>
     				<dt><s:message code="scale.gauge.label" text="Gauge" />:</dt>
-    				<dd>${scale.gauge}</dd>
+    				<dd><s:eval expression="scale.gauge"/></dd>
     				<dt><s:message code="scale.narrow.label" text="Is narrow" />:</dt>
     				<dd>${scale.narrow}</dd>
     			</dl>

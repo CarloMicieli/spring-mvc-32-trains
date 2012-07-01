@@ -32,6 +32,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentR
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.trenako.format.IntegerAnnotationFormatterFactory;
 import com.trenako.web.converters.ObjectIdConverter;
 
 /**
@@ -53,8 +54,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
-		ObjectIdConverter oidConverter = new ObjectIdConverter();
-		registry.addConverter(oidConverter);
+		registry.addConverter(new ObjectIdConverter());
+		registry.addFormatterForFieldAnnotation(new IntegerAnnotationFormatterFactory());
 	}
 	
 	@Override

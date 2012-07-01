@@ -35,7 +35,7 @@
 				</div>
 				
 				<c:if test="${not empty message}">
-					<div id="message" class="info">${message.message}</div>
+					<div id="message" class="info">${message}</div>
 				</c:if>
 				
 				<table class="table table-striped">
@@ -52,8 +52,8 @@
 					<c:forEach var="scale" items="${scales}">
 						<tr>
 							<td>${scale.name}</td>
-							<td>${scale.ratio}</td>
-							<td>${scale.gauge}</td>
+							<td><s:eval expression="scale.ratio"/></td>
+							<td><s:eval expression="scale.gauge"/></td>
 							<td>${scale.narrow}</td>
 
 							<s:url var="showUrl" value="/admin/scales/{id}">
