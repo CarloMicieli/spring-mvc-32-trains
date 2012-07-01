@@ -28,7 +28,7 @@
 					<h1><s:message code="create.scale.label" text="New scale" /></h1>
 				</div>
 				<s:url var="createUrl" value="/admin/scales" />
-				<form:form id="form" class="form-horizontal" method="POST" action="${createUrl}" modelAttribute="scale" enctype="multipart/form-data">
+				<form:form id="form" class="form-horizontal" method="POST" action="${createUrl}" modelAttribute="scale">
 					
 					<fieldset>    				
     					<c:if test="${not empty message}">

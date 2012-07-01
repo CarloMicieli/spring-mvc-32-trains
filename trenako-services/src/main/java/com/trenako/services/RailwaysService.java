@@ -16,6 +16,8 @@
 package com.trenako.services;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.trenako.entities.Railway;
 
@@ -88,7 +90,7 @@ public interface RailwaysService {
 	 * </p>
 	 * @return a {@code Railway} list
 	 */
-	Iterable<Railway> findAll();
+	Page<Railway> findAll(Pageable paging);
 
 	/**
 	 * Persists the {@link Railway} changes in the data store.

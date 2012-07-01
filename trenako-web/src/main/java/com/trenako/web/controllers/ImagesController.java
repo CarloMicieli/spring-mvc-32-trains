@@ -52,4 +52,9 @@ public class ImagesController {
 	public ResponseEntity<byte[]> renderBrandLogo(@PathVariable("brandId") ObjectId id) throws IOException {
 		return imagesService.renderImageFor(id);
 	}
+	
+	@RequestMapping(value = "/railway/{railwayId}", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> renderRailwayLogo(@PathVariable("railwayId") ObjectId id) throws IOException {
+		return imagesService.renderImageFor(id);
+	}
 }

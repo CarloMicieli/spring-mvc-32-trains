@@ -20,7 +20,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.*;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -29,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,6 +47,7 @@ import com.trenako.web.images.WebImageService;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AdminRailwaysControllerTests {
+	@Mock Pageable mockPaging;
 	@Mock WebImageService mockImgUtil;
 	@Mock BindingResult mockResult;
 	@Mock MultipartFile mockFile;
@@ -62,12 +63,9 @@ public class AdminRailwaysControllerTests {
 	
 	@Test
 	public void listActionShouldListAllRailways() {
-		Iterable<Railway> value = Arrays.asList(new Railway(), new Railway());
-		when(mockService.findAll()).thenReturn(value);
-
-		ModelAndView mav = controller.list();
+		ModelAndView mav = controller.list(mockPaging);
 	
-		verify(mockService, times(1)).findAll();
+		verify(mockService, times(1)).findAll(eq(mockPaging));
 		assertViewName(mav, "railway/list");
 		assertModelAttributeAvailable(mav, "railways");
 	}
@@ -107,7 +105,7 @@ public class AdminRailwaysControllerTests {
 		when(mockResult.hasErrors()).thenReturn(true);
 		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		String viewName = controller.create(railway, mockFile, mockResult, redirectAtts);
+		String viewName = controller.create(railway, mockResult, mockFile, redirectAtts);
 		
 		verify(mockService, times(0)).save(eq(railway));
 		assertEquals("railway/new", viewName);
@@ -120,7 +118,7 @@ public class AdminRailwaysControllerTests {
 		when(mockResult.hasErrors()).thenReturn(false);
 		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		String viewName = controller.create(railway, mockFile, mockResult, redirectAtts);
+		String viewName = controller.create(railway, mockResult, mockFile, redirectAtts);
 		
 		verify(mockService, times(1)).save(eq(railway));
 		assertEquals("redirect:/admin/railways", viewName);

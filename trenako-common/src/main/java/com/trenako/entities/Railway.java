@@ -61,8 +61,7 @@ public class Railway {
 	private Date operatingSince;
 	@Past(message = "railway.operatingUntil.past.notmet")
 	private Date operatingUntil;
-	
-	private Image image;
+
 	private Date lastModified;
 	
 	/**
@@ -140,11 +139,19 @@ public class Railway {
 	}
 	
 	/**
-	 * Returns the unique id for the <em>Railway</em>.
+	 * Returns the unique id for the {@code Railway}.
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
 		return id;
+	}
+	
+	/**
+	 * Sets the {@code Railway} id.
+	 * @param id the unique id
+	 */
+	public void setId(ObjectId id) {
+		this.id = id;
 	}
 
 	/**
@@ -263,22 +270,6 @@ public class Railway {
 	 */
 	public void setSlug(String slug) {
 		this.slug = slug;
-	}
-
-	/**
-	 * Returns the railway logo image.
-	 * @return the image
-	 */
-	public Image getImage() {
-		return image;
-	}
-
-	/**
-	 * Sets the railway logo image.
-	 * @param image the image
-	 */
-	public void setImage(Image image) {
-		this.image = image;
 	}
 
 	/**

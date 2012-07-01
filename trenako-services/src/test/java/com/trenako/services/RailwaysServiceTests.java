@@ -25,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Pageable;
 
 import com.trenako.entities.Railway;
 import com.trenako.repositories.RailwaysRepository;
@@ -38,6 +39,7 @@ import com.trenako.services.RailwaysServiceImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class RailwaysServiceTests {
 
+	@Mock Pageable paging;
 	@Mock RailwaysRepository mock;
 	@InjectMocks RailwaysServiceImpl service;
 	
@@ -48,15 +50,15 @@ public class RailwaysServiceTests {
 
 	@Test
 	public void shouldFindAllRailways() {
-		service.findAll();
-		verify(mock, times(1)).findAll();
+		service.findAll(paging);
+		verify(mock, times(1)).findAll(eq(paging));
 	}
 	
 	@Test
 	public void shouldFindRailwaysById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);
-		verify(mock, times(1)).findById(eq(id));
+		verify(mock, times(1)).findOne(eq(id));
 	}
 
 	@Test
@@ -91,7 +93,7 @@ public class RailwaysServiceTests {
 	public void shouldRemoveRailways() {
 		Railway railway = new Railway("DB");
 		service.remove(railway);
-		verify(mock, times(1)).remove(eq(railway));
+		verify(mock, times(1)).delete(eq(railway));
 	}
 
 }

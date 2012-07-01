@@ -16,6 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.trenako.entities.Railway;
 
@@ -24,14 +25,7 @@ import com.trenako.entities.Railway;
  * @author Carlo Micieli
  *
  */
-public interface RailwaysRepository {
-	/**
-	 * Finds the railway document in the collection by id.
-	 * @param id the unique id.
-	 * @return a railway document. <em>null</em> otherwise.
-	 */
-	Railway findById(ObjectId id);
-	
+public interface RailwaysRepository extends PagingAndSortingRepository<Railway, ObjectId> {
 	/**
 	 * Finds the railway document in the collection by name.
 	 * @param name the railway name.
@@ -52,22 +46,4 @@ public interface RailwaysRepository {
 	 * @return the documents.
 	 */
 	Iterable<Railway> findByCountry(String country);
-	
-	/**
-	 * Finds all the railway document in the collection.
-	 * @return the documents.
-	 */
-	Iterable<Railway> findAll();
-	
-	/**
-	 * Saves the railway document in the collection.
-	 * @param railway the railway document to be saved.
-	 */
-	void save(Railway railway);
-	
-	/**
-	 * Remove the railway document from the collection.
-	 * @param railway the railway document to be deleted.
-	 */
-	void remove(Railway railway);
 }

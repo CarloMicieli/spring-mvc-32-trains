@@ -143,7 +143,7 @@
 								<form:label path="address.country" cssClass="control-label">Country:</form:label>
 								<div class="controls">
 								<form:select path="address.country">
-									<form:option value="-" label="--countries--"/>
+									<form:option value="" label="--countries--"/>
 									<form:options items="${countries}"/>
 								</form:select>
 									<form:errors path="address.country" element="span" cssClass="help-inline"/>
