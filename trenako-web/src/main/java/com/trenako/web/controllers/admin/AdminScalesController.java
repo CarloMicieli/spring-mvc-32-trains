@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Scale;
+import com.trenako.entities.Standard;
 import com.trenako.services.ScalesService;
 import com.trenako.web.errors.NotFoundException;
 
@@ -53,17 +55,23 @@ public class AdminScalesController {
 		this.service = scaleService;
 	}
 
+	@ModelAttribute("standards")
+	public Iterable<String> standards() {
+		return Standard.labels();
+	}
+	
 	/**
 	 * This actions shows all the {@code Scale}s.
 	 * <p>
 	 * Maps the request to {@code GET /admin/scales}.
 	 * </p>
+	 * @param paging 
 	 *
 	 * @return the model and view for the {@code Scale}s list
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView list() {
-		return new ModelAndView("scale/list", "scales", service.findAll());
+	public ModelAndView list(Pageable paging) {
+		return new ModelAndView("scale/list", "scales", service.findAll(paging));
 	}
 		
 	/**

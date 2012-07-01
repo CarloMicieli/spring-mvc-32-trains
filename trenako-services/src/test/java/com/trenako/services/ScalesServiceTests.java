@@ -25,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Pageable;
 
 import com.trenako.entities.Scale;
 import com.trenako.repositories.ScalesRepository;
@@ -38,6 +39,7 @@ import com.trenako.services.ScalesServiceImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class ScalesServiceTests {
 
+	@Mock Pageable paging;
 	@Mock ScalesRepository repo;
 	@InjectMocks ScalesServiceImpl service;
 	
@@ -50,7 +52,7 @@ public class ScalesServiceTests {
 	public void shouldFindScalesById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);
-		verify(repo, times(1)).findById(eq(id));
+		verify(repo, times(1)).findOne(eq(id));
 	}
 
 	@Test
@@ -62,8 +64,8 @@ public class ScalesServiceTests {
 
 	@Test
 	public void shouldFindAllScales() {
-		service.findAll();
-		verify(repo, times(1)).findAll();
+		service.findAll(paging);
+		verify(repo, times(1)).findAll(eq(paging));
 	}
 
 	@Test
@@ -77,7 +79,7 @@ public class ScalesServiceTests {
 	public void shouldRemoveScales() {
 		Scale scale = new Scale("H0");
 		service.remove(scale);
-		verify(repo, times(1)).remove(eq(scale));
+		verify(repo, times(1)).delete(eq(scale));
 	}
 
 }

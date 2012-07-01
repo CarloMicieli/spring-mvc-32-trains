@@ -75,7 +75,7 @@ public class Scale {
 	private int gauge;
 	
 	@Indexed
-	private Set<Standard> standards;
+	private Set<String> standards;
 	
 	private boolean narrow;
 	private Date lastModified;
@@ -219,6 +219,14 @@ public class Scale {
 	public ObjectId getId() {
 		return id;
 	}
+	
+	/**
+	 * Sets the {@code Brand} id.
+	 * @param id the unique id
+	 */
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
 
 	/**
 	 * Returns the scale name.
@@ -333,11 +341,20 @@ public class Scale {
 	}
 	
 	/**
+	 * Sets the list of {@link Standard} that include this 
+	 * {@code Scale}.	
+	 * @param standards the list of standards
+	 */
+	public void setStandards(Set<String> standards) {
+		this.standards = standards;
+	}
+	
+	/**
 	 * Returns the list of {@link Standard} that include this 
 	 * {@code Scale}.	
 	 * @return the list of standards
 	 */
-	public Set<Standard> getStandards() {
+	public Set<String> getStandards() {
 		return standards;
 	}
 
@@ -346,10 +363,19 @@ public class Scale {
 	 * @param standard a standard
 	 */
 	public void addStandard(Standard standard) {
-		if( standards==null ) standards = new HashSet<Standard>();
-		standards.add(standard);
+		if( standards==null ) standards = new HashSet<String>();
+		standards.add(standard.toString());
 	}
 
+	/**
+	 * Returns a string with the standards list.
+	 * @return
+	 */
+	public String getStandardsList() {
+		if (standards==null || standards.size()==0 ) return "";
+		return standards.toString();
+	}
+	
 	/**
 	 * Returns the string representation for this scale ratio.
 	 * @return the scale ratio as string.
@@ -416,4 +442,5 @@ public class Scale {
 			.append(gauge)
 			.hashCode();
 	}
+
 }

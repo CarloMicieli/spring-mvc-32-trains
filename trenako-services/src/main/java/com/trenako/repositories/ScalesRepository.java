@@ -16,6 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.trenako.entities.Scale;
 
@@ -24,14 +25,7 @@ import com.trenako.entities.Scale;
  * @author Carlo Micieli
  *
  */
-public interface ScalesRepository {
-	/**
-	 * Returns the scale document by the id.
-	 * @param id the unique id.
-	 * @return a brand instance. <em>null</em> if no brands are found.
-	 */
-	Scale findById(ObjectId id);
-		
+public interface ScalesRepository extends PagingAndSortingRepository<Scale, ObjectId> {
 	/**
 	 * Returns the brand from the name.
 	 * @param name the brand name.
@@ -45,22 +39,4 @@ public interface ScalesRepository {
 	 * @return a {@code Brand}
 	 */
 	Scale findBySlug(String slug);
-	
-	/**
-	 * Returns all scales in the collection.
-	 * @return the scales list.
-	 */
-	Iterable<Scale> findAll();
-	
-	/**
-	 * Saves the scale document in the collection.
-	 * @param scale the scale document to be saved.
-	 */
-	void save(Scale scale);
-	
-	/**
-	 * Remove the scale document from the collection.
-	 * @param scale the scale document to be removed.
-	 */
-	void remove(Scale scale);
 }

@@ -15,10 +15,10 @@
  */
 package com.trenako.services;
 
-import java.math.BigDecimal;
-
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,7 @@ public class ScalesServiceImpl implements ScalesService {
 	
 	@Override
 	public Scale findById(ObjectId id) {
-		return repo.findById(id);
+		return repo.findOne(id);
 	}
 		
 	@Override
@@ -51,8 +51,8 @@ public class ScalesServiceImpl implements ScalesService {
 	}
 	
 	@Override
-	public Iterable<Scale> findAll() {
-		return repo.findAll();
+	public Page<Scale> findAll(Pageable paging) {
+		return repo.findAll(paging);
 	}
 	
 	@Override
@@ -64,18 +64,6 @@ public class ScalesServiceImpl implements ScalesService {
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void remove(Scale brand) {
-		repo.remove(brand);
-	}
-
-	@Override
-	public Iterable<Scale> findAll(boolean isNarrow) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Iterable<Scale> findByRatio(BigDecimal ratio) {
-		// TODO Auto-generated method stub
-		return null;
+		repo.delete(brand);
 	}
 }

@@ -83,6 +83,24 @@
 							</div>
 						</div>
 						
+						<fieldset class="embedded standards">
+							<legend><s:message code="scale.standards.label" text="Standards" /></legend>
+						
+							<div class="control-group">
+								<label class="control-label" for="inlineCheckboxes">
+									<s:message code="scale.standards.label" text="Standards"/>:
+								</label>
+								<div class="controls">
+									<c:forEach var="st" items="${standards}">
+										<label class="checkbox inline">
+											<form:checkbox path="standards" value="${st}"/>
+											${st}
+										</label>
+									</c:forEach>
+								</div>
+							</div>
+						</fieldset>
+						
 						<div class="form-actions">
 							<form:button class="btn btn-primary" type="submit" name="_action_save">
 								<i class="icon-check icon-white"></i>

@@ -15,6 +15,9 @@
  */
 package com.trenako.entities;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * It represents the model railway standards enumeration.
  * @author Carlo Micieli
@@ -44,4 +47,13 @@ public enum Standard {
 	 * Japanese model railways.
 	 */
 	JAPANESE;
+
+	public String label() {
+		return name().toLowerCase().replace('_', '-');
+	}
+	
+	public static Iterable<String> labels() {
+		return Collections.unmodifiableList(
+				Arrays.asList(NEM.label(), NMRA.label(), BRITISH.label(), JAPANESE.label()));
+	}
 }

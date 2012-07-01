@@ -15,6 +15,9 @@
  */
 package com.trenako.entities;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.junit.Test;
 
 import static java.math.BigDecimal.*;
@@ -26,13 +29,6 @@ import static org.junit.Assert.*;
  *
  */
 public class ScaleTests {
-	
-	@Test
-	public void shouldAddNewStandards() {
-		Scale s = new Scale.Builder("H0").build();
-		s.addStandard(Standard.NMRA);
-		assertEquals(1, s.getStandards().size());
-	}
 	
 	@Test
 	public void shouldReturnTheGaugeInMillimeters() {
@@ -113,5 +109,20 @@ public class ScaleTests {
 		assertEquals(870, s.getRatio());
 		assertEquals(1650, s.getGauge());
 		assertEquals(true, s.isNarrow());
+	}
+	
+	@Test
+	public void shouldReturnStandardList() {
+		Scale x = new Scale.Builder("H0").build();
+		x.setStandards(new HashSet<String>(Arrays.asList(Standard.NEM.toString(), Standard.NMRA.toString())));
+		assertEquals(2, x.getStandards().size());
+		assertEquals("[NMRA, NEM]", x.getStandardsList());
+	}
+	
+	@Test
+	public void shouldAddNewStandards() {
+		Scale s = new Scale.Builder("H0").build();
+		s.addStandard(Standard.NMRA);
+		assertEquals(1, s.getStandards().size());
 	}
 }

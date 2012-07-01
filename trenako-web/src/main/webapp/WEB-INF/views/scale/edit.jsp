@@ -27,8 +27,8 @@
 				<div class="page-header">
 					<h1><s:message code="edit.scale.label" text="Edit scale" /></h1>
 				</div>
-				<s:url var="createUrl" value="/admin/scales" />
-				<form:form id="form" class="form-horizontal" method="PUT" action="${createUrl}" modelAttribute="scale" enctype="multipart/form-data">
+				<s:url var="editUrl" value="/admin/scales" />
+				<form:form id="form" class="form-horizontal" method="PUT" action="${editUrl}" modelAttribute="scale">
 					
 					<form:hidden path="id"/>
 					
@@ -55,7 +55,7 @@
 								<s:message code="scale.ratio.label" text="Ratio"/>:
 							</form:label>							
 							<div class="controls">
-								<form:input path="ratio" type="number" cssClass="input-xlarge focused"/>
+								<form:input path="ratio" type="number" min="8" max="220" step="0.1" cssClass="input-xlarge focused"/>
 								<form:errors path="ratio" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
@@ -67,7 +67,7 @@
 								<s:message code="scale.gauge.label" text="Gauge"/>:
 							</form:label>
 							<div class="controls">
-								<form:input path="gauge" type="number" cssClass="input-xlarge focused"/>
+								<form:input path="gauge" type="number" min="0" max="200" step="0.01" cssClass="input-xlarge focused"/>
 								<form:errors path="gauge" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
@@ -84,6 +84,24 @@
 								</label>
 							</div>
 						</div>
+						
+						<fieldset class="embedded standards">
+							<legend><s:message code="scale.standards.label" text="Standards" /></legend>
+						
+							<div class="control-group">
+								<label class="control-label" for="inlineCheckboxes">
+									<s:message code="scale.standards.label" text="Standards"/>:
+								</label>
+								<div class="controls">
+									<c:forEach var="st" items="${standards}">
+										<label class="checkbox inline">
+											<form:checkbox path="standards" value="${st}"/>
+											${st}
+										</label>
+									</c:forEach>
+								</div>
+							</div>
+						</fieldset>						
 						
 						<div class="form-actions">
 							<form:button class="btn btn-primary" type="submit" name="_action_save">

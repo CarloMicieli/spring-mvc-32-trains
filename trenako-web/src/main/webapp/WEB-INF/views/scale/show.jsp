@@ -25,17 +25,23 @@
 			
     		<div class="span9">
 				<div class="page-header">
-					<h1><s:message code="edit.label" text="Edit" /> ${scale.name}</h1>
+					<h1><s:message code="edit.label" text="Edit" /> "${scale.name}"</h1>
 				</div>
     			<dl>
     				<dt><s:message code="scale.name.label" text="Name" />:</dt>
-    				<dd>${scale.name}</dd>
+    				<dd>${scale.name} (${scale.ratioText})</dd>
+    				<dt><s:message code="scale.slug.label" text="Slug" />:</dt>
+    				<dd>/brands/${scale.slug}</dd>
     				<dt><s:message code="scale.ratio.label" text="Ratio" />:</dt>
     				<dd><s:eval expression="scale.ratio"/></dd>
     				<dt><s:message code="scale.gauge.label" text="Gauge" />:</dt>
     				<dd><s:eval expression="scale.gauge"/></dd>
     				<dt><s:message code="scale.narrow.label" text="Is narrow" />:</dt>
     				<dd>${scale.narrow}</dd>
+    				<dt><s:message code="scale.standards.label" text="Standards" />:</dt>
+    				<dd>${scale.standardsList}</dd>
+    				<dt><s:message code="scale.lastModified.label" text="Last modified" />:</dt>
+    				<dd>${scale.lastModified}</dd>    				
     			</dl>
 				
 				<s:url value="/admin/scales/{id}" var="scalesUrl">

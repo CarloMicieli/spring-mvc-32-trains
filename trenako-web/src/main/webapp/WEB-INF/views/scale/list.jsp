@@ -49,7 +49,7 @@
 						</tr>
 					</thead>
 					<tbody>
-					<c:forEach var="scale" items="${scales}">
+					<c:forEach var="scale" items="${scales.content}">
 						<tr>
 							<td>${scale.name}</td>
 							<td><s:eval expression="scale.ratio"/></td>

@@ -19,8 +19,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.*;
 
-import java.util.Arrays;
-
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -43,6 +42,7 @@ import com.trenako.web.errors.NotFoundException;
 @RunWith(MockitoJUnitRunner.class)
 public class AdminScalesControllerTests {
 
+	@Mock Pageable mockPaging;
 	@Mock RedirectAttributes mockRedirect;
 	@Mock BindingResult mockResult;
 	@Mock RedirectAttributes mockRedirectAtts;
@@ -57,12 +57,9 @@ public class AdminScalesControllerTests {
 	
 	@Test
 	public void listActionShouldListAllScales() {
-		Iterable<Scale> value = Arrays.asList(new Scale(), new Scale());
-		when(mockService.findAll()).thenReturn(value);
-
-		ModelAndView mav = controller.list();
+		ModelAndView mav = controller.list(mockPaging);
 		
-		verify(mockService, times(1)).findAll();
+		verify(mockService, times(1)).findAll(eq(mockPaging));
 		assertViewName(mav, "scale/list");
 		assertModelAttributeAvailable(mav, "scales");
 	}

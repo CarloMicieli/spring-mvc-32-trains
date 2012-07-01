@@ -15,9 +15,9 @@
  */
 package com.trenako.services;
 
-import java.math.BigDecimal;
-
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.trenako.entities.Scale;
 
@@ -65,24 +65,25 @@ public interface ScalesService {
 	 * {@code false} will return the scales with standard gauges
 	 * @return a {@code Scale} list
 	 */
-	Iterable<Scale> findAll(boolean isNarrow);
+	//Iterable<Scale> findAll(boolean isNarrow);
 	
 	/**
 	 * Returns the list of {@link Scale} with the same {@link Scale#getRatio()} value.
 	 * @param ratio the {@code Scale} ratio
 	 * @return a {@code Scale} list
 	 */
-	Iterable<Scale> findByRatio(BigDecimal ratio);
+	//Iterable<Scale> findByRatio(BigDecimal ratio);
 
 	/**
 	 * Returns all {@link Scale} objects.
 	 * <p>
 	 * This methods return all the scale, sort by name.
 	 * </p>
+	 * @param pageable 
 	 * 
 	 * @return the list of scales
 	 */
-	Iterable<Scale> findAll();
+	Page<Scale> findAll(Pageable pageable);
 
 	/**
 	 * Persists the {@link Scale} changes in the data store.
