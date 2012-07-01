@@ -19,10 +19,13 @@ import javax.validation.Valid;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +58,12 @@ public class AdminScalesController {
 		this.service = scaleService;
 	}
 
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		// allow empty string
+	    binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
+	}
+	
 	@ModelAttribute("standards")
 	public Iterable<String> standards() {
 		return Standard.labels();
