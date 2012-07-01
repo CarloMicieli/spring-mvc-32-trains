@@ -26,12 +26,16 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentResolverAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.trenako.AppGlobals;
 import com.trenako.format.IntegerAnnotationFormatterFactory;
 import com.trenako.web.converters.ObjectIdConverter;
 
@@ -50,6 +54,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		//Handles HTTP GET requests for resources by efficiently serving 
 		//up static resources in the ${webappRoot}/resources directory
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+	}
+	
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(localeChangeInterceptor());
 	}
 	
 	@Override
@@ -80,5 +89,21 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
 		multipartResolver.setMaxUploadSize(1024 * 512); // 512Kb
 		return multipartResolver;
+	}
+	
+	/**
+	 * The {@code bean} that resolves the locale by using a session attribute.
+	 * @return a bean
+	 */
+	public @Bean SessionLocaleResolver localeResolver() {
+		SessionLocaleResolver resolver = new SessionLocaleResolver();
+		resolver.setDefaultLocale(AppGlobals.DEFAULT_LOCALE);
+		return resolver;
+	}
+	
+	public @Bean LocaleChangeInterceptor localeChangeInterceptor() {
+		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+		interceptor.setParamName("lang");
+		return interceptor;
 	}
 }
