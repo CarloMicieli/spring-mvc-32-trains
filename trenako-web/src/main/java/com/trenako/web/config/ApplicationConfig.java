@@ -39,7 +39,7 @@ import com.mongodb.WriteConcern;
 @Configuration
 @ComponentScan(basePackages = "com.trenako")
 @Profile("production")
-@PropertySource("classpath:META-INF/spring/app.properties")
+@PropertySource("classpath:META-INF/app.properties")
 @ImportResource("classpath:META-INF/spring/spring-data.xml")
 public class ApplicationConfig {
 	
