@@ -45,5 +45,5 @@ public interface RailwaysRepository extends PagingAndSortingRepository<Railway, 
 	 * @param country the country.
 	 * @return the documents.
 	 */
-	Iterable<Railway> findByCountry(String country);
+	Iterable<Railway> findByCountryOrderByNameAsc(String country);
 }

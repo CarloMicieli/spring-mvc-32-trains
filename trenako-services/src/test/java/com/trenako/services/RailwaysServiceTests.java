@@ -21,7 +21,6 @@ import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -40,60 +39,61 @@ import com.trenako.services.RailwaysServiceImpl;
 public class RailwaysServiceTests {
 
 	@Mock Pageable paging;
-	@Mock RailwaysRepository mock;
-	@InjectMocks RailwaysServiceImpl service;
+	@Mock RailwaysRepository repo;
+	RailwaysServiceImpl service;
 	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
+		service = new RailwaysServiceImpl(repo);
 	}
 
 	@Test
 	public void shouldFindAllRailways() {
 		service.findAll(paging);
-		verify(mock, times(1)).findAll(eq(paging));
+		verify(repo, times(1)).findAll(eq(paging));
 	}
 	
 	@Test
 	public void shouldFindRailwaysById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);
-		verify(mock, times(1)).findOne(eq(id));
+		verify(repo, times(1)).findOne(eq(id));
 	}
 
 	@Test
 	public void shouldFindRailwaysByName() {
 		String name = "DB";
 		service.findByName(name);
-		verify(mock, times(1)).findByName(eq(name));
+		verify(repo, times(1)).findByName(eq(name));
 	}
 
 	@Test
 	public void shouldFindRailwaysBySlug() {
 		String slug = "die-bahn";
 		service.findBySlug(slug);
-		verify(mock, times(1)).findBySlug(eq(slug));
+		verify(repo, times(1)).findBySlug(eq(slug));
 	}
 	
 	@Test
 	public void shouldFindRailwaysByCountry() {
 		String country = "DEU";
 		service.findByCountry(country);
-		verify(mock, times(1)).findByCountry(eq(country));
+		verify(repo, times(1)).findByCountryOrderByNameAsc(eq(country));
 	}
 
 	@Test
 	public void shouldSaveRailways() {
 		Railway railway = new Railway("DB");
 		service.save(railway);
-		verify(mock, times(1)).save(eq(railway));
+		verify(repo, times(1)).save(eq(railway));
 	}
 
 	@Test
 	public void shouldRemoveRailways() {
 		Railway railway = new Railway("DB");
 		service.remove(railway);
-		verify(mock, times(1)).delete(eq(railway));
+		verify(repo, times(1)).delete(eq(railway));
 	}
 
 }

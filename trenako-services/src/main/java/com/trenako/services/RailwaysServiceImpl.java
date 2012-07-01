@@ -33,7 +33,7 @@ import com.trenako.repositories.RailwaysRepository;
 @Service("railwaysService")
 public class RailwaysServiceImpl implements RailwaysService {
 	
-	private RailwaysRepository repo;
+	private final RailwaysRepository repo;
 	
 	@Autowired
 	public RailwaysServiceImpl(RailwaysRepository repo) {
@@ -52,7 +52,7 @@ public class RailwaysServiceImpl implements RailwaysService {
 	
 	@Override
 	public Iterable<Railway> findByCountry(String country) {
-		return repo.findByCountry(country);
+		return repo.findByCountryOrderByNameAsc(country);
 	}
 	
 	@Override

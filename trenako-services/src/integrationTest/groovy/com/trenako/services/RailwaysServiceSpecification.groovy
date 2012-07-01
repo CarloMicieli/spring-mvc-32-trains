@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
 
@@ -69,11 +70,12 @@ class RailwaysServiceSpecification extends Specification {
 	
 	def "should find all railways"() {
 		when:
-		def result = service.findAll()
+		def paging = new PageRequest(0, 10)
+		def result = service.findAll(paging).content
 		
 		then:
 		result != null
-		result.size == 3
+		result.size() == 3
 	}
 	
 	def "should find railways by id"() {
