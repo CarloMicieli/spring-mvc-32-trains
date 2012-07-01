@@ -39,7 +39,7 @@ import com.trenako.validation.UploadFileValidator;
 @Constraint(validatedBy = UploadFileValidator.class)
 @Documented
 public @interface SupportedImage {
-	String message() default "The uploaded file is not valid";
+	String message() default "{com.trenako.upload.invalid}";
 
 	Class<?>[] groups() default { };
 

@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -67,7 +68,8 @@ public class Brand {
 	@Indexed(unique = true)
 	private String slug;
 	
-	@ValidAddress(message = "brand.address.format.notmet")
+	@ValidAddress(message = "brand.address.invalid")
+	@Valid
 	private Address address;
 	
 	private Map<String, Address> branches;
