@@ -23,6 +23,7 @@ def securityVersion = "3.1.0.RELEASE"
 def slf4jVersion = "1.6.1"
 def spockVersion = "0.6-groovy-1.8"
 def mongoDriverVersion = "2.8.0"
+def hibernateValidationVersion = "4.3.0.Final"
 
 allprojects {
 	apply plugin: 'java'
@@ -124,7 +125,8 @@ project("trenako-common") {
 
 		// JSR 303 with Hibernate Validator
 		compile "javax.validation:validation-api:1.0.0.GA"
-		compile "org.hibernate:hibernate-validator:4.2.0.Final"	
+		compile "org.hibernate:hibernate-validator:${hibernateValidationVersion}",
+			"org.hibernate:hibernate-validator-annotation-processor:${hibernateValidationVersion}"
 
 		// mongodb
 		compile "org.springframework.data:spring-data-mongodb:${dataVersion}"
