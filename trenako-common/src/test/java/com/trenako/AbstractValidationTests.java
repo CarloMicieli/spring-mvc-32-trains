@@ -23,14 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
 import javax.validation.Validator;
-
-import org.hibernate.validator.engine.resolver.DefaultTraversableResolver;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 /**
  * Abstract test runner for validation tests.
@@ -38,17 +32,12 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
  * @author Carlo P. Micieli
  *
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-	ValidatorConfiguration.class})
 public abstract class AbstractValidationTests<T> {
-	protected @Autowired LocalValidatorFactoryBean validatorFactory;
 	protected Validator validator;
 
 	protected void init(Class<T> providerClass) {
-		validatorFactory.setProviderClass(providerClass);
-		validatorFactory.setTraversableResolver(new DefaultTraversableResolver());
-		validator = validatorFactory.getValidator();
+		//validatorFactory.setProviderClass(providerClass);
+		validator = Validation.buildDefaultValidatorFactory().getValidator();
 	}
 	
 	// helper method to return the tomorrow's date
