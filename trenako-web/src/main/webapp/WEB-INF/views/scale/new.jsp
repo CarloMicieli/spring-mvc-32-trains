@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 	<title>
-		Scales | new
+		<s:message code="scales.new.title.label" />
 	</title>
 	<body>
 		<div class="row-fluid">
@@ -11,12 +11,12 @@
 				<div class="well">
 					<ul class="nav nav-list">
 						<li class="nav-header">
-							<s:message code="scale.label" text="Scale"/>
+							<s:message code="scales.header.title.label" />
 						</li>
 						<li class="active">
 							<a href="<s:url value="/admin/scales" />" class="list">
 								<i class="icon-list icon-white"></i>
-								<s:message code="scales.list.label" text="Scale list"/>
+								<s:message code="scales.list.label" />
 							</a>
 						</li>
 					</ul>
@@ -25,20 +25,20 @@
 			
 			<div class="span9">
 				<div class="page-header">
-					<h1><s:message code="create.scale.label" text="New scale" /></h1>
+					<h1><s:message code="scales.new.title.label" /></h1>
 				</div>
 				<s:url var="createUrl" value="/admin/scales" />
 				<form:form id="form" class="form-horizontal" method="POST" action="${createUrl}" modelAttribute="scale">
 					
-					<fieldset>    				
+					<fieldset>
     					<c:if test="${not empty message}">
-							<div id="message" class="${message.type}">${message.message}</div>
+							<div id="message" class="info">${message}</div>
 						</c:if>
     				
     					<s:bind path="scale.name">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="name" cssClass="control-label">
-								<s:message code="scale.name.label" text="Name"/>:
+								<s:message code="scale.name.label" />:
 							</form:label>
 							<div class="controls">
 								<form:input path="name" cssClass="input-xlarge focused" required="required"/>
@@ -50,10 +50,10 @@
 						<s:bind path="scale.ratio">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="ratio" cssClass="control-label">
-								<s:message code="scale.ratio.label" text="Ratio"/>:
-							</form:label>							
+								<s:message code="scale.ratio.label" />:
+							</form:label>
 							<div class="controls">
-								<form:input path="ratio" type="number" cssClass="input-xlarge focused"/>
+								<form:input path="ratio" type="number" step="0.1" min="8" max="220" cssClass="input-xlarge focused"/>
 								<form:errors path="ratio" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
@@ -62,10 +62,10 @@
 						<s:bind path="scale.gauge">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="gauge" cssClass="control-label">
-								<s:message code="scale.gauge.label" text="Gauge"/>:
+								<s:message code="scale.gauge.label" />:
 							</form:label>
 							<div class="controls">
-								<form:input path="gauge" type="number" cssClass="input-xlarge focused"/>
+								<form:input path="gauge" type="number" step="0.01" min="0" max="200" cssClass="input-xlarge focused"/>
 								<form:errors path="gauge" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
@@ -73,22 +73,22 @@
 						
 						<div class="control-group">
 							<form:label path="narrow" cssClass="control-label">
-								<s:message code="scale.narrow.label" text="Is narrow"/>:
+								<s:message code="scale.narrow.label" />:
 							</form:label>
 							<div class="controls">
 								<label class="checkbox">
 									<form:checkbox path="narrow"/>
-									<s:message code="scale.narrow.help.label" text="narrow gauge" /> 
+									<s:message code="scale.narrow.help.label" /> 
 								</label>
 							</div>
 						</div>
 						
 						<fieldset class="embedded standards">
-							<legend><s:message code="scale.standards.label" text="Standards" /></legend>
+							<legend><s:message code="scale.standards.label" /></legend>
 						
 							<div class="control-group">
 								<label class="control-label" for="inlineCheckboxes">
-									<s:message code="scale.standards.label" text="Standards"/>:
+									<s:message code="scale.standards.label" />:
 								</label>
 								<div class="controls">
 									<c:forEach var="st" items="${standards}">
@@ -104,14 +104,14 @@
 						<div class="form-actions">
 							<form:button class="btn btn-primary" type="submit" name="_action_save">
 								<i class="icon-check icon-white"></i>
-								<s:message code="save.label" text="Save" />
+								<s:message code="button.save.label" text="Save" />
 							</form:button>
 						
 							<form:button class="btn" type="reset" name="_action_reset">
 								<i class="icon-repeat icon-black"></i>
-								<s:message code="reset.label" text="Reset" />
-							</form:button>						
-						</div>				
+								<s:message code="button.reset.label" text="Reset" />
+							</form:button>
+						</div>
 					</fieldset>
 				</form:form>
 			</div>

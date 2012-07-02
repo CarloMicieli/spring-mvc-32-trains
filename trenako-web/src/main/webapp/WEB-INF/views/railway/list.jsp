@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 	<head>
-		<title><s:message code="railways.label" text="Railways"/></title>
+		<title><s:message code="railways.list.title.label"/></title>
 	</head>
 	<body>
 		<div class="row-fluid">
@@ -11,18 +11,18 @@
 				<div class="well">
 					<ul class="nav nav-list">
 						<li class="nav-header">
-							<s:message code="railway.label" text="Railway"/>
+							<s:message code="railways.header.title.label" />
 						</li>
 						<li class="active">
 							<a href="<s:url value="/admin/railways" />" class="list">
 								<i class="icon-list icon-white"></i>
-								<s:message code="railways.list.label" text="Railways"/>
+								<s:message code="railways.list.label" />
 							</a>
 						</li>
 						<li>
 							<a href="<s:url value="/admin/railways/new" />" class="create">
 								<i class="icon-plus"></i>
-								<s:message code="railway.create.label" text="Create railway"/>
+								<s:message code="railways.create.railway.label" />
 							</a>
 						</li>
 					</ul>
@@ -31,7 +31,7 @@
 
 			<div class="span9">
 				<div class="page-header">
-					<h1><s:message code="railways.list.label" text="Railways" /></h1>
+					<h1><s:message code="railways.list.label" /></h1>
 				</div>
 				
 				<c:if test="${not empty message}">
@@ -41,11 +41,11 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th><s:message code="railway.name" text="Name" /></th>
-							<th><s:message code="railway.companyName" text="Company name" /></th>
-							<th><s:message code="railway.country" text="Country" /></th>
-							<th><s:message code="railway.operatingSince" text="Operating since" /></th>
-							<th><s:message code="railway.operatingUntil" text="Operating until" /></th>
+							<th><s:message code="railway.name.label" /></th>
+							<th><s:message code="railway.companyName.label" /></th>
+							<th><s:message code="railway.country.label" /></th>
+							<th><s:message code="railway.operatingSince.label" /></th>
+							<th><s:message code="railway.operatingUntil.label" /></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -62,7 +62,9 @@
 				            	<s:param name="id" value="${railway.id}" />
 							</s:url>
 							<td class="link">
-								<a href="${showUrl}" class="btn btn-small">Show &raquo;</a>
+								<a href="${showUrl}" class="btn btn-small">
+									<s:message code="button.show.label" />
+								</a>
 							</td>
 						</tr>
 					</c:forEach>

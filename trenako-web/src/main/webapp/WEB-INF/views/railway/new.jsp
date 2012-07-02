@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 	<title>
-		Railways | new
+		<s:message code="railways.new.title.label" />
 	</title>
 	<body>
 		<div class="row-fluid">
@@ -11,12 +11,12 @@
 				<div class="well">
 					<ul class="nav nav-list">
 						<li class="nav-header">
-							<s:message code="railway.label" text="Railway"/>
+							<s:message code="railways.header.title.label" />
 						</li>
 						<li class="active">
 							<a href="<s:url value="/admin/railways" />" class="list">
 								<i class="icon-list icon-white"></i>
-								<s:message code="railways.list.label" text="Railways list"/>
+								<s:message code="railways.list.label" />
 							</a>
 						</li>
 					</ul>
@@ -25,7 +25,7 @@
 			
 			<div class="span9">
 				<div class="page-header">
-					<h1><s:message code="create.railway.label" text="New railway" /></h1>
+					<h1><s:message code="railways.new.title.label" /></h1>
 				</div>
 				<s:url var="createUrl" value="/admin/railways" />
 				<form:form id="form" class="form-horizontal" method="POST" action="${createUrl}" modelAttribute="railway" enctype="multipart/form-data">
@@ -38,7 +38,7 @@
     					<s:bind path="railway.name">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="name" cssClass="control-label">
-								<s:message code="railway.name.label" text="Name"/>:
+								<s:message code="railway.name.label" />:
 							</form:label>
 							<div class="controls">
 								<form:input path="name" cssClass="input-xlarge focused" required="required"/>
@@ -50,7 +50,7 @@
 						<s:bind path="railway.companyName">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="companyName" cssClass="control-label">
-								<s:message code="scale.companyName.label" text="Company name"/>:
+								<s:message code="railway.companyName.label" />:
 							</form:label>							
 							<div class="controls">
 								<form:input path="companyName" cssClass="input-xlarge focused"/>
@@ -61,7 +61,9 @@
 						
 						<s:bind path="railway.country">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="country" cssClass="control-label">Country:</form:label>
+							<form:label path="country" cssClass="control-label">
+								<s:message code="railway.country.label" />:
+							</form:label>
 							<div class="controls">
 							<form:select path="country">
 								<form:option value="" label="--countries--"/>
@@ -75,7 +77,7 @@
 						<s:bind path="railway.operatingSince">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="operatingSince" cssClass="control-label">
-								<s:message code="railway.operatingSince.label" text="Operating since"/>:
+								<s:message code="railway.operatingSince.label" />:
 							</form:label>
 							<div class="controls">
 								<form:input path="operatingSince" type="date" cssClass="input-xlarge focused"/>
@@ -87,7 +89,7 @@
 						<s:bind path="railway.operatingUntil">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="operatingUntil" cssClass="control-label">
-								<s:message code="railway.operatingUntil.label" text="Operating until"/>:
+								<s:message code="railway.operatingUntil.label" />:
 							</form:label>
 							<div class="controls">
 								<form:input path="operatingUntil" type="date" cssClass="input-xlarge focused"/>
@@ -98,13 +100,13 @@
 						
 						<div class="control-group">
 							<label class="control-label" for="file">
-								<s:message code="brand.logo.label" text="Railway logo"/>:
+								<s:message code="railway.logo.label" />:
 							</label>
 							<div class="controls">
 								<input class="input-file" id="file" name="file" type="file">
 								<form:errors element="span" cssClass="help-inline"/>
 								<p class="help-block">
-									<s:message code="upload.help.text" text="Max size 512 Kb."/>
+									<s:message code="railway.logo.help.label" />
 								</p>
 							</div>
 						</div>						
@@ -112,12 +114,12 @@
 						<div class="form-actions">
 							<form:button class="btn btn-primary" type="submit" name="_action_save">
 								<i class="icon-check icon-white"></i>
-								<s:message code="save.label" text="Save" />
+								<s:message code="button.save.label" />
 							</form:button>
 						
 							<form:button class="btn" type="reset" name="_action_reset">
 								<i class="icon-repeat icon-black"></i>
-								<s:message code="reset.label" text="Reset" />
+								<s:message code="button.reset.label" />
 							</form:button>						
 						</div>				
 					</fieldset>

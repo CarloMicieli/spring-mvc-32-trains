@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 	<title>
-		Scales | ${scale.name}
+		<s:message code="scales.show.title.label" arguments="${scale.name}" />
 	</title>
 	<body>
 		<div class="row-fluid">
@@ -11,12 +11,12 @@
 				<div class="well">
 					<ul class="nav nav-list">
 						<li class="nav-header">
-							<s:message code="scale.label" text="Scale"/>
+							<s:message code="scales.header.title.label" />
 						</li>
 						<li class="active">
 							<a href="<s:url value="/admin/scales" />" class="list">
 								<i class="icon-list icon-white"></i>
-								<s:message code="scales.list.label" text="Scale list"/>
+								<s:message code="scales.list.label" />
 							</a>
 						</li>
 					</ul>
@@ -25,22 +25,20 @@
 			
     		<div class="span9">
 				<div class="page-header">
-					<h1><s:message code="edit.label" text="Edit" /> "${scale.name}"</h1>
+					<h1><s:message code="scales.edit.title.label" arguments="${scale.name}" /></h1>
 				</div>
     			<dl>
-    				<dt><s:message code="scale.name.label" text="Name" />:</dt>
+    				<dt><s:message code="scale.name.label" />:</dt>
     				<dd>${scale.name} (${scale.ratioText})</dd>
-    				<dt><s:message code="scale.slug.label" text="Slug" />:</dt>
-    				<dd>/brands/${scale.slug}</dd>
-    				<dt><s:message code="scale.ratio.label" text="Ratio" />:</dt>
+    				<dt><s:message code="scale.ratio.label" />:</dt>
     				<dd><s:eval expression="scale.ratio"/></dd>
-    				<dt><s:message code="scale.gauge.label" text="Gauge" />:</dt>
+    				<dt><s:message code="scale.gauge.label" />:</dt>
     				<dd><s:eval expression="scale.gauge"/></dd>
-    				<dt><s:message code="scale.narrow.label" text="Is narrow" />:</dt>
+    				<dt><s:message code="scale.narrow.label" />:</dt>
     				<dd>${scale.narrow}</dd>
-    				<dt><s:message code="scale.standards.label" text="Standards" />:</dt>
+    				<dt><s:message code="scale.standards.label" />:</dt>
     				<dd>${scale.standardsList}</dd>
-    				<dt><s:message code="scale.lastModified.label" text="Last modified" />:</dt>
+    				<dt><s:message code="scale.lastModified.label" />:</dt>
     				<dd>${scale.lastModified}</dd>    				
     			</dl>
 				
@@ -55,12 +53,12 @@
 						</s:url>
 						<a href="${editUrl}" class="btn">
 							<i class="icon-pencil"></i>
-							<s:message code="edit.label" text="Edit" />
+							<s:message code="button.edit.label" />
 						</a>
 
 						<button class="btn btn-danger" type="submit" name="_action_delete">
 							<i class="icon-trash icon-white"></i>
-							<s:message code="delete.label" text="Delete" />
+							<s:message code="button.delete.label" />
 						</button>
 					</div>
 				</form:form>

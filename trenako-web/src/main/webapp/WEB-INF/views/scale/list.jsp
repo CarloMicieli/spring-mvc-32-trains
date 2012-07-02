@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 	<head>
-		<title><s:message code="scales.label" text="Scales"/></title>
+		<title><s:message code="scales.list.title.label" /></title>
 	</head>
 	<body>
 		<div class="row-fluid">
@@ -11,18 +11,18 @@
 				<div class="well">
 					<ul class="nav nav-list">
 						<li class="nav-header">
-							<s:message code="scale.label" text="Scale"/>
+							<s:message code="scales.header.title.label" />
 						</li>
 						<li class="active">
 							<a href="<s:url value="/admin/scales" />" class="list">
 								<i class="icon-list icon-white"></i>
-								<s:message code="scales.list.label" text="Scale list"/>
+								<s:message code="scales.list.label" />
 							</a>
 						</li>
 						<li>
 							<a href="<s:url value="/admin/scales/new" />" class="create">
 								<i class="icon-plus"></i>
-								<s:message code="scale.create.label" text="Create scale"/>
+								<s:message code="scales.create.scale.label" />
 							</a>
 						</li>
 					</ul>
@@ -31,7 +31,7 @@
 
 			<div class="span9">
 				<div class="page-header">
-					<h1><s:message code="scales.list.label" text="Scales list" /></h1>
+					<h1><s:message code="scales.list.label" /></h1>
 				</div>
 				
 				<c:if test="${not empty message}">
@@ -41,10 +41,10 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th><s:message code="scale.name" text="Name" /></th>
-							<th><s:message code="scale.ratio" text="Ratio" /></th>
-							<th><s:message code="scale.gauge" text="Gauge" /></th>
-							<th><s:message code="scale.narrow" text="Is Narrow" /></th>
+							<th><s:message code="scale.name.label" /></th>
+							<th><s:message code="scale.ratio.label" /></th>
+							<th><s:message code="scale.gauge.label" /></th>
+							<th><s:message code="scale.narrow.label" /></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -60,7 +60,9 @@
 				            	<s:param name="id" value="${scale.id}" />
 							</s:url>
 							<td class="link">
-								<a href="${showUrl}" class="btn btn-small">Show &raquo;</a>
+								<a href="${showUrl}" class="btn btn-small">
+									<s:message code="button.show.label" />
+								</a>
 							</td>
 						</tr>
 					</c:forEach>
