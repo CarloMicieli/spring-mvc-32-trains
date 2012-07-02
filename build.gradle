@@ -36,7 +36,7 @@ allprojects {
 	repositories {
 		mavenCentral()
 		maven {url "http://repo.springsource.org/release"}
-		maven {url "http://repo.springsource.org/libs-milestone"}
+		maven {url "http://repo.springsource.org/libs-snapshot"}
 		maven {url "http://repository.jboss.org/nexus/content/repositories/releases/"}
 	}
 
@@ -193,7 +193,7 @@ project("trenako-web") {
 		compile "javax.servlet:jstl:1.2"
 
 		// Spring test mvc
-		testCompile "org.springframework:spring-test-mvc:1.0.0.M1",
+		testCompile "org.springframework:spring-test-mvc:1.0.0.BUILD-SNAPSHOT",
 			"org.hamcrest:hamcrest-core:1.2.1",
 			"org.hamcrest:hamcrest-library:1.2.1"
 		
