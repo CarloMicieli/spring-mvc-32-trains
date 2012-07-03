@@ -16,6 +16,7 @@
 package com.trenako.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -77,7 +78,7 @@ public class Account implements Serializable {
 	private List<String> roles;
 	
 	// required by spring data
-	Account() {
+	public Account() {
 	}
 	
 	private Account(Builder b) {
@@ -206,7 +207,17 @@ public class Account implements Serializable {
 	public String getPassword() {
 		return password;
 	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
+	public void init() {
+		enabled = true;
+		if (roles==null) roles = new ArrayList<String>();
+		roles.add("ROLE_USER");		
+	}
+	
 	/**
 	 * Returns the {@code Account} display name.
 	 * <p>

@@ -19,7 +19,7 @@ public class PersistentLogin {
 	private String username;
 
 	// required by spring data
-	PersistentLogin() {
+	public PersistentLogin() {
 	}
 	
 	/**

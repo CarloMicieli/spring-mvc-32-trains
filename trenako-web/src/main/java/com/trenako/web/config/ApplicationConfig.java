@@ -40,7 +40,8 @@ import com.mongodb.WriteConcern;
 @ComponentScan(basePackages = "com.trenako")
 @Profile("production")
 @PropertySource("classpath:META-INF/app.properties")
-@ImportResource("classpath:META-INF/spring/spring-data.xml")
+@ImportResource(value = {"classpath:META-INF/spring/spring-data.xml", 
+		"classpath:META-INF/spring/spring-security.xml"})
 public class ApplicationConfig {
 	
 	private @Autowired Environment env;
