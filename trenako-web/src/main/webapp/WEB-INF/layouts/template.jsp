@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -39,6 +40,34 @@
 						<span class="icon-bar"></span>
 					</a>
 					<a class="brand" href="#">Trenako</a>
+					<div class="btn-group pull-right">
+					<sec:authorize access="authenticated" var="authenticated" />
+						<c:choose>
+							<c:when test="${authenticated}">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="icon-user"></i> <sec:authentication property="principal.username" />
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="#">Profile</a></li>
+								<li class="divider"></li>
+								<li><a href="<c:url value="/auth/logout" />">Sign Out</a></li>
+							</ul>
+						</c:when>
+						<c:otherwise>
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="icon-user"></i> Starts here
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="<c:url value="/auth/login" />">Login</a></li>
+								<li class="divider"></li>
+								<li><a href="<c:url value="/auth/signup" />">Sign up</a></li>
+							</ul>
+						</c:otherwise>
+					</c:choose>
+
+					</div>
 					<div class="nav-collapse">
   						<ul class="nav">
   							<li class="<decorator:getProperty property="meta.home"/>">

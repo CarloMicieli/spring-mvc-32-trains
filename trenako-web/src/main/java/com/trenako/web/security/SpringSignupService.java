@@ -88,7 +88,7 @@ public class SpringSignupService implements SignupService {
 	@Override
 	public void authenticate(Account account) {
 		final Collection<? extends GrantedAuthority> authorities = Collections.unmodifiableList(
-				AuthorityUtils.createAuthorityList((String[]) account.getRoles().toArray()));
+				AuthorityUtils.createAuthorityList("ROLE_USER"));
 
 		Authentication authentication = new UsernamePasswordAuthenticationToken(
 				account,

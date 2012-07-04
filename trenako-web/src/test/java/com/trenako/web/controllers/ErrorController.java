@@ -25,15 +25,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  */
 @Controller
-public class HomeController {
-	
-	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-	public String home() {
-		return "home/index";
-	}
-	
-	@RequestMapping(value = "/default", method = RequestMethod.GET)
-	public String defaultAction() {
-		return "home/index";
+@RequestMapping("/error")
+public class ErrorController {
+
+	@RequestMapping(value = "/denied", method = RequestMethod.GET)
+	public String denied() {
+		return "error/denied";
 	}
 }

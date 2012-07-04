@@ -29,6 +29,7 @@
 		access-denied-page="/error/denied">
 		<intercept-url pattern="/auth/login*" access="permitAll" />
 		<intercept-url pattern="/auth/signup*" access="permitAll" />
+		<intercept-url pattern="/auth/logout*" access="permitAll" />
 		<intercept-url pattern="/home*" access="permitAll" />
 		<intercept-url pattern="/images/**" access="permitAll" />
 		<intercept-url pattern="/browse/**" access="permitAll" />
@@ -40,7 +41,7 @@
 		<form-login login-page='/auth/login'
 			authentication-failure-url="/auth/login?login_error"
 			default-target-url="/default" />
-		<logout logout-url="/logout" />
+		<logout logout-url="/auth/logout" />
 		<remember-me token-repository-ref="persistentTokenRepository" />
 	</http>
 
