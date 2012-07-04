@@ -26,6 +26,7 @@ import com.trenako.services.BrandsService;
 import com.trenako.services.RailwaysService;
 import com.trenako.services.ScalesService;
 import com.trenako.web.images.WebImageService;
+import com.trenako.web.security.SignupService;
 
 /**
  * 
@@ -52,4 +53,7 @@ public class TestConfig {
 		return mock(ScalesService.class);
 	}
 	
+	public @Bean SignupService signupService() {
+		return mock(SignupService.class);
+	}
 }

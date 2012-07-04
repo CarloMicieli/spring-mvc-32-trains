@@ -191,6 +191,14 @@ public class Account implements Serializable {
 	public ObjectId getId() {
 		return id;
 	}
+	
+	/**
+	 * Sets the {@code Account} unique id.
+	 * @param id the unique id
+	 */
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
 
 	/**
 	 * Returns the {@code Account} email address
@@ -201,6 +209,14 @@ public class Account implements Serializable {
 	}
 
 	/**
+	 * Sets the {@code Account} email address
+	 * @param emailAddress the user email address
+	 */
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+	
+	/**
 	 * Returns the {@code Account} password.
 	 * @return the password
 	 */
@@ -208,16 +224,14 @@ public class Account implements Serializable {
 		return password;
 	}
 	
+	/**
+	 * Sets the {@code Account} password.
+	 * @param password the password
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public void init() {
-		enabled = true;
-		if (roles==null) roles = new ArrayList<String>();
-		roles.add("ROLE_USER");		
-	}
-	
 	/**
 	 * Returns the {@code Account} display name.
 	 * <p>
@@ -229,6 +243,14 @@ public class Account implements Serializable {
 	 */
 	public String getDisplayName() {
 		return displayName;
+	}
+	
+	/**
+	 * 
+	 * @param displayName
+	 */
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	/**
@@ -252,12 +274,24 @@ public class Account implements Serializable {
 		return enabled;
 	}
 
+	public void setEnabled(boolean b) {
+		this.enabled = b;		
+	}
+	
 	/**
 	 * Indicates whether the {@code Account} is expired.
 	 * @return {@code true} if the account is expired; {@code false} otherwise
 	 */
 	public boolean isExpired() {
 		return expired;
+	}
+	
+	/**
+	 * Indicates whether the {@code Account} is expired.
+	 * @param expired {@code true} if the account is expired; {@code false} otherwise
+	 */
+	public void setExpired(boolean expired) {
+		this.expired = expired;
 	}
 
 	/**
@@ -267,6 +301,14 @@ public class Account implements Serializable {
 	public boolean isLocked() {
 		return locked;
 	}
+	
+	/**
+	 * Indicates whether the {@code Account} is locked or unlocked.
+	 * @param locked {@code true} if the account is locked; {@code false} otherwise
+	 */
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
 
 	/**
 	 * Returns the roles granted to the {@code Account}.
@@ -275,7 +317,24 @@ public class Account implements Serializable {
 	public List<String> getRoles() {
 		return roles;
 	}
+	
+	/**
+	 * Sets the roles granted to the {@code Account}.
+	 * @param roles the roles
+	 */
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
 
+	/**
+	 * Adds a new role to the {@code Account}.
+	 * @param role the role
+	 */
+	public void addRole(String role) {
+		if (roles==null) roles = new ArrayList<String>();
+		roles.add(role);
+	}
+	
 	/**
 	 * Indicates whether some other {@code Account} is equal to this one.
 	 * <p>

@@ -18,16 +18,15 @@ package com.trenako.web.controllers;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.trenako.entities.Account;
-import com.trenako.security.SecurityService;
-import com.trenako.services.AccountsService;
+import com.trenako.web.security.SignupService;
 
 /**
  * It represents the authentication controller.
@@ -38,13 +37,11 @@ import com.trenako.services.AccountsService;
 @RequestMapping("/auth")
 public class AuthController {
 	
-	private final AccountsService accountService;
-	private @Autowired SecurityService securityService;
-	private @Autowired PasswordEncoder passwordEncoder;
+	private final SignupService signupService;
 	
 	@Autowired
-	public AuthController(AccountsService accountService) {
-		this.accountService = accountService;
+	public AuthController(SignupService signupService) {
+		this.signupService = signupService;
 	}
 	
 	// for testing 
@@ -56,28 +53,23 @@ public class AuthController {
 	}
 
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
-	public String signUp(Model model) {
-		model.addAttribute(new Account());
-		return "auth/signup";
+	public ModelAndView signUp() {
+		return new ModelAndView("auth/signup", "account", new Account());
 	}
 
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public String createUser(@Valid Account account, BindingResult result, Model model) {
+	public String createUser(@Valid Account account, BindingResult result, ModelMap model) {
 		if (result.hasErrors()) {
 			model.addAttribute(account);
 			return "auth/signup";
 		}
-		
-		// set the default values for the user
-		account.init();
-		
-		account.setPassword(passwordEncoder.encodePassword(account.getPassword(), null));
-		accountService.save(account);
+				
+		signupService.createAccount(account);
 		
 		// automatically sign in the new user
-		securityService.authenticate(account);
+		signupService.authenticate(account);
 		
-		return "home/index";
+		return "redirect:/default";
 	}
 }
 

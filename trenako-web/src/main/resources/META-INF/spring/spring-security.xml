@@ -13,7 +13,7 @@
 
 	<!-- remember me tokens repository -->
 	<beans:bean name="persistentTokenRepository"
-		class="com.trenako.web.security.SpringPersistentTokenRepository" />
+		class="com.trenako.web.security.PersistentTokenRepositoryImpl" />
 
 	<!-- password encoders -->
 	<beans:bean name="passwordEncoder" 
