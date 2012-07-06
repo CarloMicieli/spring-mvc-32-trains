@@ -217,6 +217,14 @@ public class Account implements Serializable {
 	}
 	
 	/**
+	 * Returns the user name.
+	 * @return the username
+	 */
+	public String getUsername() {
+		return emailAddress;
+	}
+	
+	/**
 	 * Returns the {@code Account} password.
 	 * @return the password
 	 */

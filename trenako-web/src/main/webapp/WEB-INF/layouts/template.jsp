@@ -78,7 +78,8 @@
 							</li>
 							<li class="<decorator:getProperty property="meta.browse"/>">
 								<a href="<c:url value="/browse" />"><s:message code="browse" text="Browse"/></a>
-							</li>		        
+							</li>
+							<sec:authorize url="/admin">        
 							<li class="dropdown" id="menu1">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
 									<s:message code="menu.admin.label" text="Administration" />
@@ -92,6 +93,7 @@
 	     							<li><a href="#">Users</a></li>
 	  		 					</ul>
 	  		 				</li>
+	  		 				</sec:authorize>
 						</ul>
 	       			</div>
 	    		</div>

@@ -174,7 +174,7 @@ public class AdminBrandsController {
 	@RequestMapping(method = RequestMethod.PUT)
 	public String save(@Valid @ModelAttribute Brand brand,
 		BindingResult result, 
-		RedirectAttributes redirectAtts) throws IOException {
+		RedirectAttributes redirectAtts) {
 	
 		if (result.hasErrors()) {
 			redirectAtts.addAttribute(brand);

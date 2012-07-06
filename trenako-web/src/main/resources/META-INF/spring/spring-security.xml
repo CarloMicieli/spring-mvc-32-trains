@@ -24,21 +24,22 @@
 	
 	<!-- no security checks for static content -->
 	<http pattern="/resources/**" security="none" />
-		
-	<http auto-config="true" use-expressions="true"
-		access-denied-page="/error/denied">
+	
+	<http auto-config="true" use-expressions="true" access-denied-page="/error/denied">
 		<intercept-url pattern="/auth/login*" access="permitAll" />
 		<intercept-url pattern="/auth/signup*" access="permitAll" />
 		<intercept-url pattern="/auth/logout*" access="permitAll" />
-		<intercept-url pattern="/home*" access="permitAll" />
 		<intercept-url pattern="/images/**" access="permitAll" />
 		<intercept-url pattern="/browse/**" access="permitAll" />
+		<intercept-url pattern="/default" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/**" method="POST" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/**" method="PUT" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/**" method="DELETE" access="isAuthenticated()" />
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/home*" access="permitAll" />
+		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/**" access="denyAll" />
-		<form-login login-page='/auth/login'
+		<form-login login-page="/auth/login"
 			authentication-failure-url="/auth/login?login_error"
 			default-target-url="/default" />
 		<logout logout-url="/auth/logout" />
