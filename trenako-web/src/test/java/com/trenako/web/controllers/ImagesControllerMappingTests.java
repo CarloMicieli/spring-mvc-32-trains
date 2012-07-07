@@ -25,9 +25,9 @@ import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.trenako.web.AbstractSpringControllerTests;
 import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.WebImageService;
+import com.trenako.web.test.AbstractSpringControllerTests;
 
 /**
  * 

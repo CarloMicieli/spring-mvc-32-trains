@@ -30,7 +30,7 @@
 							<div class="controls">
 							<form:select path="brand" required="required">
 								<form:option value="" label="--brands--"/>
-								<form:options items="${brands}"/>
+								<form:options items="${brands}" itemValue="id" itemLabel="name"/>
 							</form:select>
 							<form:errors path="brand" element="span" cssClass="help-inline"/>
 							</div>
@@ -72,7 +72,7 @@
 							<div class="controls">
 							<form:select path="scale" required="required">
 								<form:option value="" label="--scales--"/>
-								<form:options items="${scales}"/>
+								<form:options items="${scales}" itemValue="id"/>
 							</form:select>
 							<form:errors path="scale" element="span" cssClass="help-inline"/>
 							</div>

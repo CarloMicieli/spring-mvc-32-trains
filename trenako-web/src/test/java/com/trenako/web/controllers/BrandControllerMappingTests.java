@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
-import com.trenako.web.AbstractSpringControllerTests;
+import com.trenako.web.test.AbstractSpringControllerTests;
 
 /**
  * 

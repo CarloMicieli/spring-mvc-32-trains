@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,11 +32,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.Scale;
 import com.trenako.services.RollingStocksService;
 import com.trenako.services.SelectOptionsService;
 import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.WebImageService;
+import com.trenako.web.infrastructure.BrandPropertyEditor;
+import com.trenako.web.infrastructure.RailwayPropertyEditor;
+import com.trenako.web.infrastructure.ScalePropertyEditor;
 
 /**
  * It represents the rolling stocks management controller.
@@ -61,6 +69,14 @@ public class RollingStocksController {
 		this.service = service;
 		this.soService = soService;
 		this.imgService = imgService;
+	}
+	
+	// registers the custom property editors
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.registerCustomEditor(Brand.class, new BrandPropertyEditor(true));
+		binder.registerCustomEditor(Railway.class, new RailwayPropertyEditor(true));
+		binder.registerCustomEditor(Scale.class, new ScalePropertyEditor(true));
 	}
 	
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)

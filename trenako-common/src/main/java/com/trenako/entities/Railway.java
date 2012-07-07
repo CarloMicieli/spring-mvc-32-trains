@@ -78,6 +78,10 @@ public class Railway {
 		this.name = name;
 	}
 	
+	public Railway(ObjectId id) {
+		this.id = id;
+	}
+	
 	private Railway(Builder b) {
 		this.name = b.name;
 		this.companyName = b.companyName;
@@ -86,7 +90,7 @@ public class Railway {
 		this.operatingUntil = b.operatingUntil;
 		this.slug = b.slug;
 	}
-		
+	
 	/**
 	 * The railway builder class.
 	 * @author Carlo Micieli

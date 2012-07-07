@@ -95,6 +95,10 @@ public class Scale {
 		this.name = name;
 	}
 
+	public Scale(ObjectId id) {
+		this.id = id;
+	}
+	
 	private Scale(Builder b) {
 		this.name = b.name;
 		this.ratio = b.ratio;
