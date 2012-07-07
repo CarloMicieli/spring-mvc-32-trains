@@ -15,6 +15,8 @@
  */
 package com.trenako.services;
 
+import org.bson.types.ObjectId;
+
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
@@ -31,6 +33,13 @@ public interface SelectOptionsService {
 	 * @return
 	 */
 	Iterable<Brand> brands();
+	
+	/**
+	 * Returns the {@code Brand} with the provided id.
+	 * @param brandId the {@code Brand} id
+	 * @return a {@code Brand} if found; {@code null} otherwise
+	 */
+	Brand findBrand(ObjectId brandId);
 
 	/**
 	 * Returns the list of {@code Railway}s.

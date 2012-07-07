@@ -15,6 +15,7 @@
  */
 package com.trenako.repositories.mongo;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Order;
@@ -64,6 +65,11 @@ public class SelectOptionsRepositoryImpl implements SelectOptionsRepository {
 		Query query = new Query();
 		query.sort().on("name", Order.ASCENDING);
 		return mongo.find(query, clazz);
+	}
+
+	@Override
+	public Brand findBrand(ObjectId brandId) {
+		return mongo.findById(brandId, Brand.class);
 	}
 
 }

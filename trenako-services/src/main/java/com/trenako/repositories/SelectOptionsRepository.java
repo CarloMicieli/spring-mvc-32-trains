@@ -15,6 +15,8 @@
  */
 package com.trenako.repositories;
 
+import org.bson.types.ObjectId;
+
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
@@ -43,4 +45,6 @@ public interface SelectOptionsRepository {
 	 * @return
 	 */
 	Iterable<Railway> getRailways();
+
+	Brand findBrand(ObjectId brandId);
 }

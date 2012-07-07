@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,14 @@ public class SelectOptionsRepositoryTests {
 		repo = new SelectOptionsRepositoryImpl(mongo);
 	}
 
+	@Test
+	public void shouldFindBrands() {
+		ObjectId brandId = new ObjectId();
+		
+		repo.findBrand(brandId);
+		verify(mongo, times(1)).findById(eq(brandId), eq(Brand.class));
+	}
+	
 	@Test
 	public void shouldGetBrands() {
 		List<Brand> value = Arrays.asList(new Brand(), new Brand());

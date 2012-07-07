@@ -122,7 +122,7 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldRedirectAfterCreateValidationErrors() {
 		when(mockResult.hasErrors()).thenReturn(true);
-		RollingStock rs = new RollingStock();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		
 		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
 		
@@ -134,6 +134,7 @@ public class RollingStocksControllerTests {
 	public void shouldCreateRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
 		when(mockFile.isEmpty()).thenReturn(false);
+		when(soService.findBrand(isA(ObjectId.class))).thenReturn(new Brand("ACME"));
 		ObjectId rsId = new ObjectId();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		rs.setId(rsId);
@@ -143,6 +144,7 @@ public class RollingStocksControllerTests {
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
 		verify(service, times(1)).save(eq(rs));
 		verify(imgService, times(1)).saveImage(eq(rsId), eq(mockFile));
+		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq("acme-123456"));
 		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq("rolling.stock.created"));
 	}
 	

@@ -20,6 +20,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +48,17 @@ public class SelectOptionsServiceTests {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		service = new SelectOptionsServiceImpl(repo);
+	}
+	
+	@Test
+	public void shouldFindBrands() {
+		ObjectId brandId = new ObjectId();
+		Brand value = new Brand();
+		when(repo.findBrand(eq(brandId))).thenReturn(value);
+		
+		Brand brand = service.findBrand(brandId);
+		assertNotNull(brand);
+		verify(repo, times(1)).findBrand(eq(brandId));
 	}
 
 	@Test

@@ -15,6 +15,7 @@
  */
 package com.trenako.services;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +70,11 @@ public class SelectOptionsServiceImpl implements SelectOptionsService {
 	@Override
 	public Iterable<String> powerMethods() {
 		return PowerMethod.list();
+	}
+
+	@Override
+	public Brand findBrand(ObjectId brandId) {
+		return repo.findBrand(brandId);
 	}
 
 }

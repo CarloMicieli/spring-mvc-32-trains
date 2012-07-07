@@ -24,8 +24,10 @@ import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.trenako.entities.Brand;
 import com.trenako.entities.RollingStock;
 import com.trenako.services.RollingStocksService;
+import com.trenako.services.SelectOptionsService;
 import com.trenako.web.test.AbstractSpringControllerTests;
 
 /**
@@ -38,6 +40,7 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 	private ObjectId OID = new ObjectId();
 	private String ID = OID.toString();
 	
+	private @Autowired SelectOptionsService mockOptionsService;
 	private @Autowired RollingStocksService mockService;
 	
 	@After
@@ -45,6 +48,7 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 		// TODO code smell
 		// waiting 3.2 <https://jira.springsource.org/browse/SPR-9493>
 		reset(mockService);
+		reset(mockOptionsService);
 	}
 	
 	@Test
@@ -85,7 +89,10 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 	
 	@Test
 	public void shouldCreateNewRollingStocks() throws Exception {
+		when(mockOptionsService.findBrand(eq(OID))).thenReturn(new Brand("ACME"));
+		
 		mockMvc().perform(fileUpload("/rollingstocks")
+				.file("file", new byte[]{})
 				.param("brand", ID)
 				.param("railway", ID)
 				.param("scale", ID)
