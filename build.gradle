@@ -19,7 +19,7 @@ description = "A social network for model railways."
 
 def springVersion = "3.1.1.RELEASE"
 def dataVersion = "1.0.2.RELEASE"
-def securityVersion = "3.1.0.RELEASE"
+def securityVersion = "3.1.1.RELEASE"
 def slf4jVersion = "1.6.1"
 def spockVersion = "0.6-groovy-1.8"
 def mongoDriverVersion = "2.8.0"
