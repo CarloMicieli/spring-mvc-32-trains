@@ -9,7 +9,7 @@
 	<head>
 		<meta name="description" content="">
 		<meta name="author" content="">
-		
+
 		<title><decorator:title default="Trenako"/></title>	
 		<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 		<link href="<c:url value="/resources/css/bootstrap.css" />" rel="stylesheet" />
