@@ -30,6 +30,11 @@ import com.trenako.repositories.AccountsRepository;
 import com.trenako.entities.Account;
 
 /**
+ * Concrete implementation for the {@link UserDetailsService} interface.
+ * <p>
+ * This is class is loading user accounts from the repository and plug them
+ * in the Spring security pipeline. 
+ * </p>
  * 
  * @author Carlo Micieli
  *

@@ -26,6 +26,10 @@ import com.trenako.entities.PersistentLogin;
 import com.trenako.repositories.RememberMeRepository;
 
 /**
+ * Concrete implementation for the {@link PersistentTokenRepository} interface.
+ * <p>
+ * This class is persisting the tokens for the "remember me" function.
+ * </p>
  * 
  * @author Carlo Micieli
  *
@@ -35,6 +39,10 @@ public class PersistentTokenRepositoryImpl implements PersistentTokenRepository 
 	
 	private final RememberMeRepository repo;
 	
+	/**
+	 * Creates a new {@code PersistentTokenRepositoryImpl}.
+	 * @param repo the persistent tokens repository
+	 */
 	@Autowired
 	public PersistentTokenRepositoryImpl(RememberMeRepository repo) {
 		this.repo = repo;

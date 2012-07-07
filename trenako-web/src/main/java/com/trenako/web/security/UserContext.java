@@ -18,6 +18,8 @@ package com.trenako.web.security;
 import com.trenako.entities.Account;
 
 /**
+ * It represent a security context, used to retrieve the current 
+ * authenticated user (if any).
  * 
  * @author Carlo Micieli
  *

@@ -18,7 +18,7 @@ package com.trenako.web.security;
 import com.trenako.entities.Account;
 
 /**
- *
+ * It represents the service that provide accounts management functionality.
  * @author Carlo Micieli
  *
  */

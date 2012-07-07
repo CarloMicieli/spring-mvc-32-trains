@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import com.trenako.entities.Account;
 
 /**
- *
+ * It represent a Spring security user context.
  * @author Carlo Micieli
  *
  */
