@@ -43,7 +43,7 @@
 								<s:message code="rollingStock.itemNumber.label" />:
 							</form:label>
 							<div class="controls">
-								<form:input path="itemNumber" cssClass="input-xlarge focused" required="required"/>
+								<form:input path="itemNumber" maxlength="10" cssClass="input-xlarge focused" required="required"/>
 								<form:errors path="itemNumber" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
@@ -57,7 +57,7 @@
 							<div class="controls">
 							<form:select path="railway" required="required">
 								<form:option value="" label="--railways--"/>
-								<form:options items="${railways}"/>
+								<form:options items="${railways}" itemValue="id" itemLabel="name" />
 							</form:select>
 							<form:errors path="railway" element="span" cssClass="help-inline"/>
 							</div>
@@ -118,7 +118,7 @@
 									<s:message code="rollingStock.description.label" />:
 								</form:label>
 								<div class="controls">
-									<form:input path="description" cssClass="input-xlarge focused" required="required" />
+									<form:textarea path="description" cssClass="input-xlarge focused" required="required" />
 									<form:errors path="description" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
@@ -130,7 +130,7 @@
 									<s:message code="rollingStock.details.label" />:
 								</form:label>
 								<div class="controls">
-									<form:input path="details" cssClass="input-xlarge focused"/>
+									<form:textarea path="details" cssClass="input-xlarge focused"/>
 									<form:errors path="details" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
