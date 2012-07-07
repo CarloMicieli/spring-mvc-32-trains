@@ -125,8 +125,10 @@ public class RollingStock {
 	
 	private Date lastModified;
 	
-	// required
-	RollingStock() {
+	/**
+	 * Creates an empty {@code RollingStock}.
+	 */
+	public RollingStock() {
 	}
 	
 	private RollingStock(Builder b) {
