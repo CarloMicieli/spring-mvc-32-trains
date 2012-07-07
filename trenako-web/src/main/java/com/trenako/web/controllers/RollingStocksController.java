@@ -15,6 +15,7 @@
  */
 package com.trenako.web.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +44,7 @@ public class RollingStocksController {
 	 * @param service 
 	 * @param soService the service used to fill the drop down lists
 	 */
+	@Autowired
 	public RollingStocksController(RollingStocksService service, SelectOptionsService soService) {
 		this.service = service;
 		this.soService = soService;

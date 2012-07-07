@@ -24,7 +24,9 @@ import org.springframework.context.annotation.Profile;
 
 import com.trenako.services.BrandsService;
 import com.trenako.services.RailwaysService;
+import com.trenako.services.RollingStocksService;
 import com.trenako.services.ScalesService;
+import com.trenako.services.SelectOptionsService;
 import com.trenako.web.images.WebImageService;
 import com.trenako.web.security.SignupService;
 
@@ -55,5 +57,13 @@ public class TestConfig {
 	
 	public @Bean SignupService signupService() {
 		return mock(SignupService.class);
+	}
+	
+	public @Bean RollingStocksService rsService() {
+		return mock(RollingStocksService.class);
+	}
+	
+	public @Bean SelectOptionsService opService() {
+		return mock(SelectOptionsService.class);
 	}
 }
