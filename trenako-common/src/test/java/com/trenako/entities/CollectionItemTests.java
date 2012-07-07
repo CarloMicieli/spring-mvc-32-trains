@@ -24,6 +24,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.trenako.Condition;
+
 /**
  * 
  * @author Carlo Micieli

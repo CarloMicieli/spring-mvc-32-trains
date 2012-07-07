@@ -31,6 +31,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.Standard;
 import com.trenako.format.annotations.IntegerFormat;
 import com.trenako.format.annotations.IntegerFormat.Style;
 import com.trenako.utility.Slug;

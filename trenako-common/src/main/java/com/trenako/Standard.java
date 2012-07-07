@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.entities;
+package com.trenako;
 
 import java.util.Arrays;
 import java.util.Collections;

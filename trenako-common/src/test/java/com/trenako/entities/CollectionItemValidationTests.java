@@ -22,7 +22,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trenako.AbstractValidationTests;
+import com.trenako.test.AbstractValidationTests;
 
 /**
  * 

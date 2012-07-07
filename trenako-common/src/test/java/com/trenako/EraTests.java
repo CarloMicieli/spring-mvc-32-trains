@@ -13,39 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.entities;
+package com.trenako;
+
+import static org.junit.Assert.*;
+import java.util.List;
+
+import org.junit.Test;
 
 /**
- * It represents the rolling stock condition.
+ * 
  * @author Carlo Micieli
  *
  */
-public enum Condition {
-	/** 
-	 * New condition.
-	 */
-	NEW,
-	
-	/**
-	 * Pre owned.
-	 */
-	PRE_OWNED;
-	
-	/**
-	 * Returns the condition description to be stored in the database.
-	 * @return the condition value
-	 */
-	public String keyValue() {
-		return name().toLowerCase().replace('_', '-');
-	}
-	
-	/**
-	 * Parses the condition value from the database.
-	 * @param condition the condition value
-	 * @return a value from Condition enumeration
-	 */
-	public static Condition parse(String condition) {
-		String c = condition.toUpperCase().replace('-', '_');
-		return Condition.valueOf(c);
+public class EraTests {
+	@Test
+	public void shouldListAllEras() {
+		List<String> eras = Era.list();
+		assertEquals("[I, II, III, IV, V, VI]", eras.toString());
 	}
 }

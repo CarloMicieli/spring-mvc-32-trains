@@ -30,11 +30,11 @@ import org.springframework.data.mongodb.core.query.Query
 import static org.springframework.data.mongodb.core.query.Query.*
 import static org.springframework.data.mongodb.core.query.Criteria.*
 
+import com.trenako.Category;
+import com.trenako.Era;
+import com.trenako.PowerMethod;
 import com.trenako.entities.Brand;
-import com.trenako.entities.Category;
 import com.trenako.entities.DeliveryDate;
-import com.trenako.entities.Era;
-import com.trenako.entities.PowerMethod;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
@@ -76,30 +76,30 @@ class RollingStocksServiceSpecification extends Specification {
 		def collection = [
 			new RollingStock(brand: bemo, itemNumber: "1262 256",
 				description: "MGB HGe 4/4 II 106 'St.Gotthard/Gottardo' Zahnradlok 'Glacier-Express'",
-				category: Category.ELECTRIC_LOCOMOTIVES.keyValue(),
+				category: Category.ELECTRIC_LOCOMOTIVES.label(),
 				era: Era.VI.name(),
-				powerMethod: PowerMethod.DC.keyValue(),
+				powerMethod: PowerMethod.DC.label(),
 				railway: MGB,
 				scale: H0m,
 				tags: ["glacier", "express"]),
 			new RollingStock(brand: bemo, itemNumber: "3267 254",
 				description: "MGB B 4254 Leichtmetallwagen",
-				category: Category.PASSENGER_CARS.keyValue(),
+				category: Category.PASSENGER_CARS.label(),
 				era: Era.V.name(),
 				railway: MGB,
 				scale: H0m),
 			new RollingStock(brand: acme, itemNumber: "69501",
 				description: "Gr 685 172",
-				category: Category.STEAM_LOCOMOTIVES.keyValue(),
-				powerMethod: PowerMethod.DC_DCC_SOUND.keyValue(),
+				category: Category.STEAM_LOCOMOTIVES.label(),
+				powerMethod: PowerMethod.DC_DCC_SOUND.label(),
 				era: Era.III.name(),
 				railway: FS,
 				tags: ['museum'],
 				scale: H0),
 			new RollingStock(brand: roco, itemNumber: "43858",
 				description: "Electric loco 101 0004-0",
-				category: Category.ELECTRIC_LOCOMOTIVES.keyValue(),
-				powerMethod: PowerMethod.AC.keyValue(),
+				category: Category.ELECTRIC_LOCOMOTIVES.label(),
+				powerMethod: PowerMethod.AC.label(),
 				era: Era.V.name(),
 				railway: DB,
 				scale: H0)

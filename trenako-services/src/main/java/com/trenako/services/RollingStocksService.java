@@ -104,7 +104,7 @@ public interface RollingStocksService {
 	 *
 	 * @param era the era
 	 * @return a {@code RollingStock} list
-	 * @see com.trenako.entities.Era
+	 * @see com.trenako.Era
 	 */	 
 	Iterable<RollingStock> findByEra(String era);
 
@@ -133,7 +133,7 @@ public interface RollingStocksService {
 	 *
 	 * @param category the category
 	 * @return a {@code RollingStock} list
-	 * @see com.trenako.entities.Category
+	 * @see com.trenako.Category
 	 */
 	Iterable<RollingStock> findByCategory(String category);
 
@@ -146,7 +146,7 @@ public interface RollingStocksService {
 	 *
 	 * @param powerMethod the power method
 	 * @return a {@code RollingStock} list
-	 * @see com.trenako.entities.PowerMethod
+	 * @see com.trenako.PowerMethod
 	 */	 
 	Iterable<RollingStock> findByPowerMethod(String powerMethod);
 

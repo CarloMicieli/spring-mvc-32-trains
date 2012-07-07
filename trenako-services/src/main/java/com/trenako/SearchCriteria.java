@@ -150,7 +150,7 @@ public class SearchCriteria {
 	 * </p>
 	 * 
 	 * @return the criteria value
-	 * @see com.trenako.entities.PowerMethod
+	 * @see com.trenako.PowerMethod
 	 */
 	public String getPowerMethod() {
 		return powerMethod;
@@ -216,7 +216,7 @@ public class SearchCriteria {
 	 * </p>
 	 * 
 	 * @return the criteria value
-	 * @see com.trenako.entities.Category
+	 * @see com.trenako.Category
 	 */
 	public String getCategory() {
 		return category;
@@ -238,7 +238,7 @@ public class SearchCriteria {
 	 * </p>
 	 * 
 	 * @return the criteria value
-	 * @see com.trenako.entities.Era
+	 * @see com.trenako.Era
 	 */
 	public String getEra() {
 		return era;

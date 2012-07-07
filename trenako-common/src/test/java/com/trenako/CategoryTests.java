@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.entities;
+package com.trenako;
 
 import java.util.List;
 
 import org.junit.Test;
+
+import com.trenako.Category;
 
 import static org.junit.Assert.*;
 
@@ -31,10 +33,10 @@ public class CategoryTests {
 	@Test
 	public void shouldProduceDescription() {
 		Category el = Category.ELECTRIC_LOCOMOTIVES;
-		assertEquals("electric-locomotives", el.keyValue());
+		assertEquals("electric-locomotives", el.label());
 		
 		Category emu = Category.ELECTRIC_MULTIPLE_UNIT;
-		assertEquals("electric-multiple-unit", emu.keyValue());
+		assertEquals("electric-multiple-unit", emu.label());
 	}
 	
 	@Test
@@ -45,6 +47,18 @@ public class CategoryTests {
 	
 	@Test
 	public void shouldListAllTheCategoryLabels() {
+		List<String> l = Category.list();
+		assertEquals("steam-locomotives", l.get(0));
+		assertEquals("diesel-locomotives", l.get(1));
+		assertEquals("electric-locomotives", l.get(2));
+		assertEquals("railcars", l.get(3));
+		assertEquals("electric-multiple-unit", l.get(4));
+		assertEquals("freight-cars", l.get(5));
+		assertEquals("passenger-cars", l.get(6));
+	}
+	
+	@Test
+	public void shouldListAllTheCategoryLabelsByCategory() {
 		Iterable<String> categories = Category.list(false);
 		List<String> l = (List<String>) categories;
 		
@@ -66,6 +80,5 @@ public class CategoryTests {
 		Iterable<String> dcCategories = Category.list(true);
 		List<String> lDc = (List<String>) dcCategories;
 		assertEquals("category-dc-steam-locomotives", lDc.get(0));
-	
 	}
 }

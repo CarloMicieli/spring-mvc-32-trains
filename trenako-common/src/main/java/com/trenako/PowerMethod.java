@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.entities;
+package com.trenako;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The power methods for the model.
@@ -50,7 +54,7 @@ public enum PowerMethod {
 	 * Returns the category description to be stored in the database.
 	 * @return the category name.
 	 */
-	public String keyValue() {
+	public String label() {
 		return name().toLowerCase().replace('_', '-');
 	}
 
@@ -62,5 +66,20 @@ public enum PowerMethod {
 	public static PowerMethod parse(String category) {
 		String c = category.toUpperCase().replace('-', '_');
 		return PowerMethod.valueOf(c);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static List<String> list() {
+		int i = 0;
+		String[] labels = new String[PowerMethod.values().length];
+		for (PowerMethod pm : PowerMethod.values()) {
+			labels[i++] = pm.label();
+		}
+
+		return Collections.unmodifiableList(
+				Arrays.asList(labels));
 	}
 }

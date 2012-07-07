@@ -31,6 +31,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.Category;
+
 /**
  * It represents a user collection of rolling stocks.
  * 
@@ -170,7 +172,7 @@ public class Collection {
 	public SortedMap<String, Integer> getCategories() {
 		final SortedMap<String, Integer> m = new TreeMap<String, Integer>();
 		for( Category c : Category.values() ) {
-			m.put(c.keyValue(), count(c.keyValue()));
+			m.put(c.label(), count(c.label()));
 		}
 		return Collections.unmodifiableSortedMap(m);
 	}

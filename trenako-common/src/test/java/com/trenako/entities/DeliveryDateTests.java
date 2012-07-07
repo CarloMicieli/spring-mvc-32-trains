@@ -18,6 +18,7 @@ package com.trenako.entities;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+
 /**
  * 
  * @author Carlo Micieli

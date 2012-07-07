@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.services;
+package com.trenako.repositories;
 
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
@@ -24,41 +24,23 @@ import com.trenako.entities.Scale;
  * @author Carlo Micieli
  *
  */
-public interface SelectOptionsService {
+public interface SelectOptionsRepository {
 
 	/**
 	 * Returns the list of {@code Brand}s.
 	 * @return
 	 */
-	Iterable<Brand> brands();
-
-	/**
-	 * Returns the list of {@code Railway}s.
-	 * @return
-	 */
-	Iterable<Railway> railways();
-
+	Iterable<Brand> getBrands();
+	
 	/**
 	 * Returns the list of {@code Scale}s.
 	 * @return
 	 */
-	Iterable<Scale> scales();
-
-	/**
-	 * Returns the list of categories.
-	 * @return
-	 */
-	Iterable<String> categories();
+	Iterable<Scale> getScales();
 	
 	/**
-	 * Returns the list of eras.
+	 * Returns the list of {@code Railway}s.
 	 * @return
 	 */
-	Iterable<String> eras();
-	
-	/**
-	 * Returns the list of power methods.
-	 * @return
-	 */
-	Iterable<String> powerMethods();
+	Iterable<Railway> getRailways();
 }

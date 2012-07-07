@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.entities;
+package com.trenako;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The model railways eras enumeration.
@@ -44,5 +48,19 @@ public enum Era {
 	/**
 	 * Era VI
 	 */
-	VI,
+	VI;
+
+	/**
+	 * The list of labels for the {@code Era} enum.
+	 * @return
+	 */
+	public static List<String> list() {
+		int i = 0;
+		String[] labels = new String[Era.values().length]; 
+		for (Era e : Era.values()) {
+			labels[i++] = e.name();
+		}
+			
+		return Collections.unmodifiableList(Arrays.asList(labels));
+	}
 }

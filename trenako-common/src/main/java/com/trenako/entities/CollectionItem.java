@@ -26,6 +26,8 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import com.trenako.Condition;
+
 /**
  * It represents a rolling stocks collection item.
  * 

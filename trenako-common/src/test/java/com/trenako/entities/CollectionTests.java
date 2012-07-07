@@ -22,6 +22,8 @@ import java.util.SortedMap;
 
 import org.junit.Test;
 
+import com.trenako.Condition;
+
 /**
  * 
  * @author Carlo Micieli

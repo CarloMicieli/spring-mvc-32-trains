@@ -24,6 +24,11 @@ import com.trenako.entities.OptionFamily;
 import com.trenako.repositories.OptionsRepository;
 import com.trenako.repositories.mongo.collections.MongoCollection;
 
+/**
+ * 
+ * @author Carlo Micieli
+ *
+ */
 @Repository("optionsRepository")
 public class OptionsRepositoryImpl extends MongoCollection<Option> implements OptionsRepository {
 

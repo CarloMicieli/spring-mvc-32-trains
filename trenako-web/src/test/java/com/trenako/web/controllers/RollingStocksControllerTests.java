@@ -22,6 +22,7 @@ import static org.springframework.test.web.ModelAndViewAssert.*;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
@@ -38,18 +42,30 @@ import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
 import com.trenako.services.RollingStocksService;
 import com.trenako.services.SelectOptionsService;
+import com.trenako.web.errors.NotFoundException;
+import com.trenako.web.images.WebImageService;
 
+/**
+ * 
+ * @author Carlo Micieli
+ *
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStocksControllerTests {
 	
+	@Mock MultipartFile mockFile;
+	@Mock RedirectAttributes mockRedirect;
+	@Mock BindingResult mockResult;
+	@Mock WebImageService imgService;
 	@Mock RollingStocksService service;
 	@Mock SelectOptionsService soService;
+	
 	RollingStocksController controller;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new RollingStocksController(service, soService);
+		controller = new RollingStocksController(service, soService, imgService);
 	}
 	
 	@Test
@@ -65,6 +81,14 @@ public class RollingStocksControllerTests {
 		assertEquals("rollingstock/show", viewName);
 		assertTrue(model.containsAttribute("rollingStock"));
 		assertEquals(value, model.get("rollingStock"));
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void shouldThrowsExceptionIfRollingStockNotFound() {
+		String slug = "rs-slug";
+		when(service.findBySlug(eq(slug))).thenReturn(null);
+		
+		controller.show(slug, new ExtendedModelMap());
 	}
 	
 	@Test
@@ -93,5 +117,104 @@ public class RollingStocksControllerTests {
 		assertModelAttributeAvailable(mav, "categories");
 		assertModelAttributeAvailable(mav, "eras");
 		assertModelAttributeAvailable(mav, "powerMethods");
+	}
+	
+	@Test
+	public void shouldRedirectAfterCreateValidationErrors() {
+		when(mockResult.hasErrors()).thenReturn(true);
+		RollingStock rs = new RollingStock();
+		
+		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
+		
+		verify(mockRedirect, times(1)).addAttribute(eq(rs));
+		assertEquals("rollingstocks/new", viewName);
+	}
+	
+	@Test
+	public void shouldCreateRollingStocks() {
+		when(mockResult.hasErrors()).thenReturn(false);
+		when(mockFile.isEmpty()).thenReturn(false);
+		ObjectId rsId = new ObjectId();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		rs.setId(rsId);
+		
+		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
+		
+		assertEquals("redirect:/rollingstocks/{slug}", viewName);
+		verify(service, times(1)).save(eq(rs));
+		verify(imgService, times(1)).saveImage(eq(rsId), eq(mockFile));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq("rolling.stock.created"));
+	}
+	
+	@Test 
+	public void shouldRenderEditRollingStockForms() {
+		String slug = "rs-slug";
+		RollingStock value = new RollingStock.Builder("ACME", "123456").build();
+		when(service.findBySlug(eq(slug))).thenReturn(value);
+		
+		List<Brand> brandValue = Arrays.asList(new Brand(), new Brand());
+		List<Railway> railwayValue = Arrays.asList(new Railway(), new Railway());
+		List<Scale> scaleValue = Arrays.asList(new Scale(), new Scale());
+
+		when(soService.brands()).thenReturn(brandValue);
+		when(soService.railways()).thenReturn(railwayValue);
+		when(soService.scales()).thenReturn(scaleValue);
+		
+		List<String> list = Arrays.asList("aaa", "bbb");
+		when(soService.categories()).thenReturn(list);
+		when(soService.eras()).thenReturn(list);
+		when(soService.powerMethods()).thenReturn(list);
+		
+		ModelAndView mav = controller.editForm(slug);
+		
+		verify(service, times(1)).findBySlug(slug);
+		assertViewName(mav, "rollingstock/edit");
+		assertModelAttributeValue(mav, "rollingStock", value);
+		assertCompareListModelAttribute(mav, "brands", brandValue);
+		assertCompareListModelAttribute(mav, "railways", railwayValue);
+		assertCompareListModelAttribute(mav, "scales", scaleValue);
+		assertModelAttributeAvailable(mav, "categories");
+		assertModelAttributeAvailable(mav, "eras");
+		assertModelAttributeAvailable(mav, "powerMethods");
+	}
+	
+	@Test
+	public void shouldSaveRollingStocks() {
+		when(mockResult.hasErrors()).thenReturn(false);
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		
+		String viewName = controller.save(rs, mockResult, mockRedirect);
+		
+		assertEquals("redirect:/rollingstocks/{slug}", viewName);
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq("rolling.stock.saved"));
+	}
+	
+	@Test
+	public void shouldRedirectAfterSaveValidationErrors() {
+		when(mockResult.hasErrors()).thenReturn(true);
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		
+		String viewName = controller.save(rs, mockResult, mockRedirect);
+		
+		assertEquals("rollingstock/edit", viewName);
+		verify(mockRedirect, times(1)).addAttribute(eq("rollingStock"), eq(rs));
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void shouldThrowsExceptionIfRollingStockNotFoundToEdit() {
+		String slug = "rs-slug";
+		when(service.findBySlug(eq(slug))).thenReturn(null);
+		
+		controller.editForm(slug);
+	}
+	
+	@Test
+	public void shouldDeleteRollingStocks() {
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		
+		String viewName = controller.delete(rs, mockRedirect);
+		
+		assertEquals("redirect:/rollingstocks", viewName);
+		verify(service, times(1)).remove(eq(rs));
 	}
 }

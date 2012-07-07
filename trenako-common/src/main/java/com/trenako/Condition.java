@@ -13,31 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.entities;
-
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
+package com.trenako;
 
 /**
- * 
+ * It represents the rolling stock condition.
  * @author Carlo Micieli
  *
  */
-public class PowerMethodTests {
-
-	@Test
-	public void shouldProduceDescription() {
-		PowerMethod ac = PowerMethod.AC;
-		assertEquals("ac", ac.keyValue());
-		
-		PowerMethod ads = PowerMethod.AC_DCC_SOUND;
-		assertEquals("ac-dcc-sound", ads.keyValue());
+public enum Condition {
+	/** 
+	 * New condition.
+	 */
+	NEW,
+	
+	/**
+	 * Pre owned.
+	 */
+	PRE_OWNED;
+	
+	/**
+	 * Returns the condition description to be stored in the database.
+	 * @return the condition value
+	 */
+	public String keyValue() {
+		return name().toLowerCase().replace('_', '-');
 	}
 	
-	@Test
-	public void shouldParseAStringValue() {
-		PowerMethod ads = PowerMethod.parse("ac-dcc-sound");
-		assertEquals(PowerMethod.AC_DCC_SOUND, ads);
+	/**
+	 * Parses the condition value from the database.
+	 * @param condition the condition value
+	 * @return a value from Condition enumeration
+	 */
+	public static Condition parse(String condition) {
+		String c = condition.toUpperCase().replace('-', '_');
+		return Condition.valueOf(c);
 	}
 }
