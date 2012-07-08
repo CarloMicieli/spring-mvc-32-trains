@@ -120,9 +120,6 @@ public class RollingStock {
 	
 	private Map<String, String> options;
 	
-	private byte[] image;
-	private byte[] thumb;
-	
 	private DeliveryDate deliveryDate;
 	
 	private Date lastModified;
@@ -836,37 +833,6 @@ public class RollingStock {
 		this.options = options;
 	}
 
-	/**
-	 * Returns the rolling stock image.
-	 * @return the image
-	 */
-	public byte[] getImage() {
-		return image;
-	}
-
-	/**
-	 * Sets the rolling stock image.
-	 * @param image the image
-	 */
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
-
-	/**
-	 * Returns the rolling stock thumbnail.
-	 * @return the thumbnail
-	 */
-	public byte[] getThumb() {
-		return thumb;
-	}
-
-	/**
-	 * Sets the rolling stock thumbnail.
-	 * @param thumb the thumbnail
-	 */
-	public void setThumb(byte[] thumb) {
-		this.thumb = thumb;
-	}
 
 	/**
 	 * Returns the last modified timestamp.	
