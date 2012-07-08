@@ -16,6 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.repository.CrudRepository;
 
 import com.trenako.entities.Account;
 
@@ -24,13 +25,7 @@ import com.trenako.entities.Account;
  * @author Carlo Micieli
  *
  */
-public interface AccountsRepository {
-	/**
-	 * Finds a user account by id.
-	 * @param id the user id
-	 * @return the account
-	 */
-	Account findById(ObjectId id);
+public interface AccountsRepository extends CrudRepository<Account, ObjectId> {
 	
 	/**
 	 * Finds a user account by email address.
@@ -45,16 +40,4 @@ public interface AccountsRepository {
 	 * @return the account
 	 */
 	Account findBySlug(String slug);
-	
-	/**
-	 * Saves the account.
-	 * @param account the account to be saved
-	 */
-	void save(Account account);
-	
-	/**
-	 * Removes the account.
-	 * @param account the account to be deleted
-	 */
-	void remove(Account account);
 }

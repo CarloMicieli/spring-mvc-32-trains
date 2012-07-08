@@ -16,6 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.repository.CrudRepository;
 
 import com.trenako.entities.Option;
 import com.trenako.entities.OptionFamily;
@@ -25,14 +26,8 @@ import com.trenako.entities.OptionFamily;
  * @author Carlo Micieli
  *
  */
-public interface OptionsRepository {
-	/**
-	 * Returns the option document by id.
-	 * @param id the unique id.
-	 * @return an option document; <em>null</em> otherwise.
-	 */
-	Option findById(ObjectId id);
-	
+public interface OptionsRepository extends CrudRepository<Option, ObjectId> {
+
 	/**
 	 * Returns the option document by option name.
 	 * @param name the option name.
@@ -46,22 +41,4 @@ public interface OptionsRepository {
 	 * @return the option documents.
 	 */
 	Iterable<Option> findByFamily(OptionFamily family);
-	
-	/**
-	 * Returns all the option documents in the collection.
-	 * @return the option documents.
-	 */
-	Iterable<Option> findAll();
-	
-	/**
-	 * Saves the option document in the collection.
-	 * @param option the option document to be saved.
-	 */
-	void save(Option option);
-	
-	/**
-	 * Remove the option document from the collection.
-	 * @param option the option document to be deleted.
-	 */
-	void remove(Option option);
 }

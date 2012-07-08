@@ -90,8 +90,7 @@ public class SelectOptionsRepositoryTests {
 		assertNotNull(brands);
 		verify(mongo, times(1)).find(arg.capture(), eq(Brand.class));
 		Query q = arg.getValue();
-		assertTrue(q.getSortObject().containsField("name"));
-		
+		assertEquals("{ \"name\" : 1}", q.getSortObject().toString());
 	}
 
 	@Test
@@ -106,7 +105,7 @@ public class SelectOptionsRepositoryTests {
 		assertNotNull(scales);
 		verify(mongo, times(1)).find(arg.capture(), eq(Scale.class));
 		Query q = arg.getValue();
-		assertTrue(q.getSortObject().containsField("name"));
+		assertEquals("{ \"name\" : 1}", q.getSortObject().toString());
 	}
 
 	@Test
@@ -121,7 +120,7 @@ public class SelectOptionsRepositoryTests {
 		assertNotNull(railways);
 		verify(mongo, times(1)).find(arg.capture(), eq(Railway.class));
 		Query q = arg.getValue();
-		assertTrue(q.getSortObject().containsField("name"));
+		assertEquals("{ \"name\" : 1}", q.getSortObject().toString());
 	}
 
 }

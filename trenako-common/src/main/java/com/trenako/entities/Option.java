@@ -40,14 +40,16 @@ public class Option {
 	@NotNull(message = "option.family.required")
 	private OptionFamily family;
 	
-	// required by spring data
-	Option() {
+	/**
+	 * Creates an empty rolling stock {@code Option}.
+	 */
+	public Option() {
 	}
 	
 	/**
-	 * Creates a new rolling stock option.
-	 * @param name the option name.
-	 * @param family the option family.
+	 * Creates a new rolling stock {@code Option}.
+	 * @param name the option name
+	 * @param family the option family
 	 */
 	public Option(String name, OptionFamily family) {
 		this.name = name;
@@ -56,15 +58,23 @@ public class Option {
 	
 	/**
 	 * Gets the unique id for this option.	
-	 * @return the id.
+	 * @return the id
 	 */
 	public ObjectId getId() {
 		return id;
 	}
 
 	/**
+	 * Sets the unique id for this option.	
+	 * @param id the id
+	 */
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
+	
+	/**
 	 * Returns the option name.
-	 * @return the name.
+	 * @return the name
 	 */
 	public String getName() {
 		return name;
@@ -72,7 +82,7 @@ public class Option {
 
 	/**
 	 * Sets the option name.
-	 * @param name the name.
+	 * @param name the name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -80,7 +90,7 @@ public class Option {
 
 	/**
 	 * Returns the option family.
-	 * @return the family.
+	 * @return the family
 	 */
 	public OptionFamily getFamily() {
 		return family;
@@ -88,7 +98,7 @@ public class Option {
 
 	/**
 	 * Sets the option family.
-	 * @param family the family.
+	 * @param family the family
 	 */
 	public void setFamily(OptionFamily family) {
 		this.family = family;
@@ -96,9 +106,9 @@ public class Option {
 
 	/**
 	 * Indicates whether some other object is "equal to" this one.
-	 * @param obj the reference object with which to compare.
-	 * @return <em>true</em> if this object is the same as the obj argument; 
-	 * <em>false</em> otherwise.
+	 * @param obj the reference object with which to compare
+	 * @return {@code true} if this object is the same as the obj argument; 
+	 * {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {

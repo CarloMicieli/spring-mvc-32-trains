@@ -39,7 +39,7 @@ public class AccountsServiceImpl implements AccountsService {
 	
 	@Override
 	public Account findById(ObjectId id) {
-		return repo.findById(id);
+		return repo.findOne(id);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class AccountsServiceImpl implements AccountsService {
 
 	@Override
 	public void remove(Account account) {
-		repo.remove(account);
+		repo.delete(account);
 	}
 
 }

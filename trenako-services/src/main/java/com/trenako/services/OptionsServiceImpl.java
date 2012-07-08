@@ -40,7 +40,7 @@ public class OptionsServiceImpl implements OptionsService {
 	
 	@Override
 	public Option findById(ObjectId id) {
-		return repo.findById(id);
+		return repo.findOne(id);
 	}
 	
 	@Override
@@ -65,6 +65,6 @@ public class OptionsServiceImpl implements OptionsService {
 	
 	@Override
 	public void remove(Option option) {
-		repo.remove(option);
+		repo.delete(option);
 	}
 }

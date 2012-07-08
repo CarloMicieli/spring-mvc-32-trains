@@ -60,12 +60,6 @@ public class SelectOptionsRepositoryImpl implements SelectOptionsRepository {
 	public Iterable<Railway> getRailways() {
 		return findAll(Railway.class);
 	}
-	
-	private <T> Iterable<T> findAll(Class<T> clazz) {
-		Query query = new Query();
-		query.sort().on("name", Order.ASCENDING);
-		return mongo.find(query, clazz);
-	}
 
 	@Override
 	public Brand findBrand(ObjectId brandId) {
@@ -82,4 +76,9 @@ public class SelectOptionsRepositoryImpl implements SelectOptionsRepository {
 		return mongo.findById(scaleId, Scale.class);
 	}
 
+	private <T> Iterable<T> findAll(Class<T> clazz) {
+		Query query = new Query();
+		query.sort().on("name", Order.ASCENDING);
+		return mongo.find(query, clazz);
+	}
 }

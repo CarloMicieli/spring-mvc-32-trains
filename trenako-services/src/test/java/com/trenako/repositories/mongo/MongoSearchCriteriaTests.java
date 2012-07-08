@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.trenako.SearchCriteria;
-import com.trenako.repositories.mongo.collections.MongoSearchCriteria;
 
 /**
  * 

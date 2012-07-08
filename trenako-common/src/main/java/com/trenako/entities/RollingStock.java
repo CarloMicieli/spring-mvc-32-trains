@@ -64,7 +64,7 @@ public class RollingStock {
 	@NotNull(message = "rs.brand.required")
 	private Brand brand;
 	@Indexed
-	private String brandSlug;
+	private String brandName;
 	
 	@Indexed(unique = true)
 	private String slug;
@@ -88,13 +88,13 @@ public class RollingStock {
 	@NotNull(message = "rs.railway.required")
 	private Railway railway;
 	@Indexed
-	private String railwaySlug;
+	private String railwayName;
 	
 	@DBRef
 	@NotNull(message = "rs.scale.required")
 	private Scale scale;
 	@Indexed
-	private String scaleSlug;
+	private String scaleName;
 	
 	@Indexed
 	@NotBlank(message = "rs.era.required")
@@ -365,8 +365,8 @@ public class RollingStock {
 	 * @return the brand name
 	 */		
 	public String getBrandName() {
-		if( brandSlug==null) brandSlug = getBrand().getName();
-		return brandSlug;
+		if( brandName==null) brandName = getBrand().getName();
+		return brandName;
 	}
 
 	/**
@@ -374,7 +374,7 @@ public class RollingStock {
 	 * @param brandName the brand name
 	 */
 	public void setBrandName(String brandName) {
-		this.brandSlug = brandName;
+		this.brandName = brandName;
 	}
 
 	/**
@@ -525,8 +525,8 @@ public class RollingStock {
 	 */
 
 	public String getRailwayName() {
-		if( railwaySlug==null ) railwaySlug = getRailway().getName();
-		return railwaySlug;
+		if( railwayName==null ) railwayName = getRailway().getName();
+		return railwayName;
 	}
 
 	/**
@@ -534,7 +534,7 @@ public class RollingStock {
 	 * @param railwayName the railway name
 	 */
 	public void setRailwayName(String railwayName) {
-		this.railwaySlug = railwayName;
+		this.railwayName = railwayName;
 	}
 	
 	/**
@@ -563,8 +563,8 @@ public class RollingStock {
 	 * @return the scale name
 	 */
 	public String getScaleName() {
-		if( scaleSlug==null ) scaleSlug = getScale().getName();
-		return scaleSlug;
+		if( scaleName==null ) scaleName = getScale().getName();
+		return scaleName;
 	}
 
 	/**
@@ -572,7 +572,7 @@ public class RollingStock {
 	 * @param scaleName the scale name
 	 */
 	public void setScaleName(String scaleName) {
-		this.scaleSlug = scaleName;
+		this.scaleName = scaleName;
 	}
 	
 	/**

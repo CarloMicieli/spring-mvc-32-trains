@@ -115,16 +115,7 @@ class RollingStocksServiceSpecification extends Specification {
 		mongoTemplate.remove all, Brand.class
 		mongoTemplate.remove all, Railway.class
 	}
-	
-	def "should find all the rolling stocks"() {
-		when:
-		def results = service.findAll(null)
-		
-		then:
-		results != null
-		results.size == 4
-	}
-	
+
 	def "should find a rolling stock by id"() {
 		given:
 		def id = mongoTemplate.findOne(query(where("slug").is("bemo-1262-256")), rollingStocks).id
@@ -149,117 +140,7 @@ class RollingStocksServiceSpecification extends Specification {
 		rollingStock.brand.name == "Bemo"
 		rollingStock.itemNumber == "1262 256"
 	}
-	
-	def "should find all rolling stocks for a brand"() {
-		when:
-		def results = service.findByBrand "ACME"
 		
-		then:
-		results != null
-		results.size == 1
-		results.collect{it.slug} == ['acme-69501']		 
-	}
-	
-	def "should find all rolling stocks by railway"() {
-		when:
-		def results = service.findByRailwayName "FS"
-		
-		then:
-		results != null
-		results.size == 1
-		results.collect{it.slug} == ['acme-69501']
-	}
-	
-	def "should find all rolling stocks by brand and category"() {
-		when:
-		def results = service.findByBrandAndCategory "Bemo", "electric-locomotives"
-		
-		then:
-		results != null
-		results.size == 1
-		results.collect{it.slug} == ['bemo-1262-256']
-	}
-	
-	def "should find all rolling stocks by brand and era"() {
-		when:
-		def results = service.findByBrandAndEra "ACME", "III"
-	
-		then:
-		results != null
-		results.size == 1
-		results.collect{it.slug} == ['acme-69501']
-	}
-	
-	def "should find all rolling stocks by brand and railway"() {
-		when:
-		def results = service.findByBrandAndRailway "Roco", "DB"
-	
-		then:
-		results != null
-		results.size == 1
-		results.collect{it.slug} == ['roco-43858']
-	}
-	
-	def "should find all rolling stocks by brand and scale"() {
-		when:
-		def results = service.findByBrandAndScale "Bemo", "H0m"
-	
-		then:
-		results != null
-		results.size == 2
-		results.collect{it.slug}.sort() == ['bemo-1262-256', 'bemo-3267-254']
-	}
-	
-	def "should find all rolling stocks by category"() {
-		when:
-		def results = service.findByCategory "electric-locomotives"
-	
-		then:
-		results != null
-		results.size == 2
-		results.collect{it.slug}.sort() == ['bemo-1262-256', 'roco-43858']
-	}
-	
-	def "should find all rolling stocks by era"() {
-		when:
-		def results = service.findByEra "V"
-	
-		then:
-		results != null
-		results.size == 2
-		results.collect{it.slug}.sort() == ['bemo-3267-254', 'roco-43858']
-	}
-	
-	def "should find all rolling stocks by power method"() {
-		when:
-		def results = service.findByPowerMethod "ac"
-	
-		then:
-		results != null
-		results.size == 1
-		results.collect{it.slug}.sort() == ['roco-43858']
-	}
-	
-	def "should find all rolling stocks by scale"() {
-		when:
-		def results = service.findByScale "H0"
-	
-		then:
-		results != null
-		results.size == 2
-		results.collect{it.slug}.sort() == ['acme-69501', 'roco-43858']
-	}
-	
-	def "should find all rolling stocks by tag"() {
-		when:
-		def results = service.findByTag "museum"
-	
-		then:
-		results != null
-		results.size == 1
-		results.collect{it.slug}.sort() == ['acme-69501']
-	}
-	
 	def "should create new rolling stocks"() {
 		given:
 		def brand = mongoTemplate.findOne query(where("name").is("ACME")), Brand.class

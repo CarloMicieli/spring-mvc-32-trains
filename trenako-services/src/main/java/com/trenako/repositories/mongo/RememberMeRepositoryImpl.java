@@ -15,9 +15,10 @@
  */
 package com.trenako.repositories.mongo;
 
+import static org.springframework.data.mongodb.core.query.Query.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.PersistentLogin;
@@ -41,7 +42,7 @@ public class RememberMeRepositoryImpl implements RememberMeRepository {
 	
 	@Override
 	public PersistentLogin findBySeries(String seriesId) {
-		return mongoTemplate.findById(seriesId, PersistentLogin.class);
+		return mongoTemplate.findOne(query(where("series").is(seriesId)), PersistentLogin.class);
 	}
 
 	@Override
@@ -56,8 +57,6 @@ public class RememberMeRepositoryImpl implements RememberMeRepository {
 
 	@Override
 	public void deleteByUsername(String username) {
-		mongoTemplate.remove(new Query(where("username").is(username)), PersistentLogin.class);
-
+		mongoTemplate.remove(query(where("username").is(username)), PersistentLogin.class);
 	}
-
 }

@@ -21,15 +21,13 @@ import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.data.domain.Pageable;
 
-import com.trenako.entities.Brand;
-import com.trenako.repositories.BrandsRepository;
-import com.trenako.services.BrandsServiceImpl;
+import com.trenako.entities.Option;
+import com.trenako.entities.OptionFamily;
+import com.trenako.repositories.OptionsRepository;
 
 /**
  * 
@@ -37,53 +35,48 @@ import com.trenako.services.BrandsServiceImpl;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BrandsServiceTests {
+public class OptionsServiceTests {
 
-	@Mock Pageable mockPaging;
-	@Mock BrandsRepository repo;
-	@InjectMocks public BrandsServiceImpl service;
+	@Mock OptionsRepository repo;
+	OptionsService service;
 	
 	@Before
-	public void setUp() {
+	public void setup() {
 		MockitoAnnotations.initMocks(this);
-	}
-
-	@Test
-	public void shouldListBrandsPaginated() {
-		service.findAll(mockPaging);
-		verify(repo, times(1)).findAll(eq(mockPaging));
+		service = new OptionsServiceImpl(repo);
 	}
 	
 	@Test
 	public void shouldFindBrandsById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);
-		verify(repo, times(1)).findById(eq(id));
+		verify(repo, times(1)).findOne(eq(id));
 	}
 
 	@Test
-	public void shouldFindBrandsBySlug() {
-		service.findBySlug("slug");
-		verify(repo, times(1)).findBySlug(eq("slug"));
+	public void shouldFindByName() {
+		String name = "name";
+		service.findByName(name);
+		verify(repo, times(1)).findByName(eq(name));
+	}
+	
+	@Test
+	public void shouldFindByFamily() {
+		service.findByFamily(OptionFamily.DCC_INTERFACE);
+		verify(repo, times(1)).findByFamily(eq(OptionFamily.DCC_INTERFACE));
 	}
 
 	@Test
-	public void shouldFindBrandsByName() {
-		service.findByName("name");
-		verify(repo, times(1)).findByName(eq("name"));
+	public void shouldSaveOptions() {
+		Option op = new Option("aaaa", OptionFamily.DCC_INTERFACE);
+		service.save(op);
+		verify(repo, times(1)).save(eq(op));
 	}
 
 	@Test
-	public void shouldSaveBrands() {
-		Brand brand = new Brand("ACME");
-		service.save(brand);
-		verify(repo, times(1)).save(eq(brand));
-	}
-
-	@Test
-	public void shouldRemoveBrands() {
-		Brand brand = new Brand("ACME");
-		service.remove(brand);
-		verify(repo, times(1)).delete(eq(brand));
+	public void shouldRemoveOptions() {
+		Option op = new Option("aaaa", OptionFamily.DCC_INTERFACE);
+		service.remove(op);
+		verify(repo, times(1)).delete(eq(op));
 	}
 }

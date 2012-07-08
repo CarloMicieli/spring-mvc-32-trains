@@ -17,7 +17,9 @@ package com.trenako.entities;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -28,6 +30,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "persistentLogins")
 public class PersistentLogin {
 	@Id
+	private ObjectId id;
+	
+	@Indexed(unique = true)
 	private String series;
 	private Date date;
 	private String tokenValue;
@@ -51,6 +56,14 @@ public class PersistentLogin {
 		this.tokenValue = tokenValue;
 	}
 	
+	public ObjectId getId() {
+		return id;
+	}
+
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
+
 	public Date getDate() {
 		return date;
 	}
@@ -58,6 +71,7 @@ public class PersistentLogin {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+	
 	public String getSeries() {
 		return series;
 	}
@@ -80,5 +94,13 @@ public class PersistentLogin {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder()
+			.append(getUsername() + " ")
+			.append(getSeries())
+			.toString();
 	}
 }

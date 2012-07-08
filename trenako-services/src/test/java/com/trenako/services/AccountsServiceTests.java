@@ -50,7 +50,7 @@ public class AccountsServiceTests {
 	public void shouldFindAccountsById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);
-		verify(repo, times(1)).findById(eq(id));
+		verify(repo, times(1)).findOne(eq(id));
 	}
 
 	@Test
@@ -78,6 +78,6 @@ public class AccountsServiceTests {
 	public void shouldRemoveAccounts() {
 		Account account = new Account.Builder("mail@mail.com").build();
 		service.remove(account);
-		verify(repo, times(1)).remove(eq(account));
+		verify(repo, times(1)).delete(eq(account));
 	}
 }
