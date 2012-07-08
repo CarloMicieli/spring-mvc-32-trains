@@ -21,6 +21,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.trenako.entities.Image;
 
 /**
+ * The interface for {@code Image}s repository.
  * 
  * @author Carlo Micieli
  *
@@ -30,8 +31,7 @@ public interface ImagesRepository extends CrudRepository<Image, ObjectId> {
 	/**
 	 * Returns the {@link Image} for the provided parent document id.
 	 * @param parentId the parent document id
-	 * @return the image if found; {@code null} otherwise
+	 * @return an {@code Image} if found; {@code null} otherwise
 	 */
 	Image findByParentId(ObjectId parentId);
-
 }

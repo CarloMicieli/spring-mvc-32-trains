@@ -21,28 +21,29 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.trenako.entities.Brand;
 
 /**
- * The repository for the model railway {@code Brand}s.
+ * The interface for the model railway {@code Brand}s repository.
+ * 
  * @author Carlo Micieli
  *
  */
 public interface BrandsRepository extends PagingAndSortingRepository<Brand, ObjectId> {
 	/**
-	 * Finds the {@code Brand} with the provided id.
-	 * @param id the unique id.
+	 * Returns the {@code Brand} with the provided id.
+	 * @param id the {@code Brand} id.
 	 * @return a {@code Brand} if found; {@code null} otherwise
 	 */
 	Brand findById(ObjectId id);
 	
 	/**
-	 * Finds the {@code Brand} with the provided name.
-	 * @param name the name
+	 * Returns the {@code Brand} with the provided name.
+	 * @param name the {@code Brand} name
 	 * @return a {@code Brand} if found; {@code null} otherwise
 	 */
 	Brand findByName(String name);
 	
 	/**
-	 * Finds the {@code Brand} with the provided slug.
-	 * @param slug the slug
+	 * Returns the {@code Brand} with the provided slug.
+	 * @param slug the {@code Brand} slug
 	 * @return a {@code Brand} if found; {@code null} otherwise
 	 */
 	Brand findBySlug(String slug);

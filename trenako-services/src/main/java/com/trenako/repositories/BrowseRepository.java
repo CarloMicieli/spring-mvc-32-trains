@@ -106,9 +106,9 @@ public interface BrowseRepository {
 	Iterable<RollingStock> findByCriteria(SearchCriteria sc);
 	
 	/**
-	 * 
-	 * @param tag
-	 * @return the rolling stocks list.
+	 * Returns the {@code RollingStock} list with the provided tag.
+	 * @param tag the tag value
+	 * @return a {@code RollingStock} list
 	 */
 	Iterable<RollingStock> findByTag(String tag);
 

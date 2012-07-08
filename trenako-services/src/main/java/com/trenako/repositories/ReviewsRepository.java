@@ -23,6 +23,7 @@ import com.trenako.entities.RollingStock;
 
 /**
  * The interface for the reviews repository.
+ * 
  * @author Carlo Micieli
  *
  */

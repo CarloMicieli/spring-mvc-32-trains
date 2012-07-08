@@ -21,6 +21,11 @@ import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
 
+/**
+ * 
+ * @author Carlo Micieli
+ *
+ */
 public interface CollectionsRepository {
     /**
      * Finds the collection by its unique id.

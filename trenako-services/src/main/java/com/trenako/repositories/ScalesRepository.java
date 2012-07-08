@@ -21,22 +21,22 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.trenako.entities.Scale;
 
 /**
- * The interface for model railway scales repository.
+ * The interface for model railway {@code Scale}s repository.
  * @author Carlo Micieli
  *
  */
 public interface ScalesRepository extends PagingAndSortingRepository<Scale, ObjectId> {
 	/**
-	 * Returns the brand from the name.
-	 * @param name the brand name.
-	 * @return a brand instance. <em>null</em> if no brands are found.
+	 * Returns the {@code Scale} with the provided name.
+	 * @param name the {@code Scale} name.
+	 * @return a {@code Scale} if found; {@code null} otherwise
 	 */
 	Scale findByName(String name);
 
 	/**
-	 * Finds the {@code Scale} with the provided slug.
-	 * @param slug the slug
-	 * @return a {@code Brand}
+	 * Returns the {@code Scale} with the provided name.
+	 * @param slug the {@code Scale} slug.
+	 * @return a {@code Scale} if found; {@code null} otherwise
 	 */
 	Scale findBySlug(String slug);
 }

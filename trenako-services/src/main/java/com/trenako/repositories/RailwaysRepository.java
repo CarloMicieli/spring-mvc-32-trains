@@ -21,29 +21,29 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.trenako.entities.Railway;
 
 /**
- * The interface for the railways repository.
+ * The interface for the {@code Railway}s repository.
  * @author Carlo Micieli
  *
  */
 public interface RailwaysRepository extends PagingAndSortingRepository<Railway, ObjectId> {
 	/**
-	 * Finds the railway document in the collection by name.
-	 * @param name the railway name.
-	 * @return a railway document. <em>null</em> otherwise.
+	 * Returns the {@code Railway} with the provided name.
+	 * @param name the {@code Railway} name
+	 * @return a {@code Railway} if found; {@code null} otherwise
 	 */
 	Railway findByName(String name);
 
 	/**
-	 * Finds the railway document in the collection by name slug.
-	 * @param slug the railway name slug.
-	 * @return a railway document. <em>null</em> otherwise.
+	 * Returns the {@code Railway} with the provided slug.
+	 * @param slug the {@code Railway} slug
+	 * @return a {@code Railway} if found; {@code null} otherwise
 	 */
 	Railway findBySlug(String slug);
 	
 	/**
-	 * Finds all the railway document in the collection by country.
-	 * @param country the country.
-	 * @return the documents.
+	 * Returns the {@code Railway} list with the provided country code.
+	 * @param country the country code
+	 * @return a list of {@code Railway}s
 	 */
 	Iterable<Railway> findByCountryOrderByNameAsc(String country);
 }

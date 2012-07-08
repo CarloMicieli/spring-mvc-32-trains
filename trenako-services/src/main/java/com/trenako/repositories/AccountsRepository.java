@@ -21,23 +21,24 @@ import org.springframework.data.repository.CrudRepository;
 import com.trenako.entities.Account;
 
 /**
- * The interface for the user accounts repository.
+ * The interface for the user {@code Account}s repository.
+ * 
  * @author Carlo Micieli
  *
  */
 public interface AccountsRepository extends CrudRepository<Account, ObjectId> {
 	
 	/**
-	 * Finds a user account by email address.
+	 * Returns the {@code Account} with the provided email address.
 	 * @param emailAddress the email address
-	 * @return the account
+	 * @return an {@code Account} if found; {@code null} otherwise
 	 */
 	Account findByEmailAddress(String emailAddress);
 	
 	/**
-	 * Finds a user account by slug.
-	 * @param slug the user slug
-	 * @return the account
+	 * Returns the {@code Account} with the provided slug.
+	 * @param slug the slug
+	 * @return an {@code Account} if found; {@code null} otherwise
 	 */
 	Account findBySlug(String slug);
 }

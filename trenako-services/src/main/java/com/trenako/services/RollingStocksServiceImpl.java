@@ -23,7 +23,7 @@ import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RollingStocksRepository;
 
 /**
- * A concrete implementation for the rolling stocks service for mongodb.
+ * A concrete implementation for the {@code RollingStocks} service.
  * @author Carlo Micieli
  *
  */

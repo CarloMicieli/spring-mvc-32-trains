@@ -30,19 +30,19 @@ public interface SelectOptionsRepository {
 
 	/**
 	 * Returns the list of {@code Brand}s.
-	 * @return
+	 * @return a list of {@code Brand}s
 	 */
 	Iterable<Brand> getBrands();
 	
 	/**
 	 * Returns the list of {@code Scale}s.
-	 * @return
+	 * @return a list of {@code Scale}s
 	 */
 	Iterable<Scale> getScales();
 	
 	/**
 	 * Returns the list of {@code Railway}s.
-	 * @return
+	 * @return a list of {@code Railway}s
 	 */
 	Iterable<Railway> getRailways();
 
