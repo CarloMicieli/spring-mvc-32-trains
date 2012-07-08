@@ -129,6 +129,18 @@ public class RollingStocksControllerTests {
 		verify(mockRedirect, times(1)).addAttribute(eq(rs));
 		assertEquals("rollingstocks/new", viewName);
 	}
+		
+	RollingStock build(ObjectId rsId, ObjectId brandId, ObjectId railwayId, ObjectId scaleId) {
+		when(soService.findBrand(eq(brandId))).thenReturn(new Brand("ACME"));
+		when(soService.findRailway(eq(railwayId))).thenReturn(new Railway("DB"));
+		when(soService.findScale(eq(scaleId))).thenReturn(new Scale("H0"));
+	
+		return new RollingStock.Builder(new Brand(brandId), "123456")
+			.id(rsId)
+			.railway(new Railway(railwayId))
+			.scale(new Scale(scaleId))
+			.build();
+	}	
 	
 	@Test
 	public void shouldCreateRollingStocks() {
@@ -136,18 +148,10 @@ public class RollingStocksControllerTests {
 		when(mockFile.isEmpty()).thenReturn(false);
 		
 		ObjectId brandId = new ObjectId();
-		when(soService.findBrand(eq(brandId))).thenReturn(new Brand("ACME"));
 		ObjectId railwayId = new ObjectId();
-		when(soService.findRailway(eq(railwayId))).thenReturn(new Railway("DB"));
 		ObjectId scaleId = new ObjectId();
-		when(soService.findScale(eq(scaleId))).thenReturn(new Scale("H0"));
-
 		ObjectId rsId = new ObjectId();
-		RollingStock rs = new RollingStock.Builder(new Brand(brandId), "123456")
-			.id(rsId)
-			.railway(new Railway(railwayId))
-			.scale(new Scale(scaleId))
-			.build();
+		RollingStock rs = build(rsId, brandId, railwayId, scaleId);
 		
 		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
 		
@@ -193,7 +197,11 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldSaveRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		ObjectId brandId = new ObjectId();
+		ObjectId railwayId = new ObjectId();
+		ObjectId scaleId = new ObjectId();
+		ObjectId rsId = new ObjectId();
+		RollingStock rs = build(rsId, brandId, railwayId, scaleId);
 		
 		String viewName = controller.save(rs, mockResult, mockRedirect);
 		

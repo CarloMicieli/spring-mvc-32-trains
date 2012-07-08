@@ -154,6 +154,11 @@ public class RollingStocksController {
 			return "rollingstock/edit";
 		}
 		
+		// loading for the referenced entities
+		// (given that they are required it is safe to
+		// assume values are provided by the client.)
+		init(rs);
+		
 		redirectAtts.addFlashAttribute("message", "rolling.stock.saved");
 		return "redirect:/rollingstocks/{slug}";
 	}
