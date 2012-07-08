@@ -60,6 +60,29 @@ public class SelectOptionsServiceTests {
 		assertNotNull(brand);
 		verify(repo, times(1)).findBrand(eq(brandId));
 	}
+	
+	@Test
+	public void shouldFindScales() {
+		ObjectId scaleId = new ObjectId();
+		Scale value = new Scale();
+		when(repo.findScale(eq(scaleId))).thenReturn(value);
+		
+		Scale scale = service.findScale(scaleId);
+		assertNotNull(scale);
+		verify(repo, times(1)).findScale(eq(scaleId));
+	}
+	
+	
+	@Test
+	public void shouldFindRailways() {
+		ObjectId railwayId = new ObjectId();
+		Railway value = new Railway();
+		when(repo.findRailway(eq(railwayId))).thenReturn(value);
+		
+		Railway railway = service.findRailway(railwayId);
+		assertNotNull(railway);
+		verify(repo, times(1)).findRailway(eq(railwayId));
+	}
 
 	@Test
 	public void shouldReturnBrandsList() {
@@ -89,10 +112,5 @@ public class SelectOptionsServiceTests {
 		
 		assertNotNull(scales);
 		verify(repo, times(1)).getScales();
-	}
-	
-	@Test
-	public void shouldReturnErasList() {
-		
 	}
 }

@@ -46,5 +46,24 @@ public interface SelectOptionsRepository {
 	 */
 	Iterable<Railway> getRailways();
 
+	/**
+	 * Finds the {@code Brand} with the provided id.
+	 * @param brandId the {@code Brand} id
+	 * @return a {@code Brand} if found; {@code null} otherwise
+	 */
 	Brand findBrand(ObjectId brandId);
+
+	/**
+	 * Finds the {@code Railway} with the provided id.
+	 * @param brandId the {@code Railway} id
+	 * @return a {@code Railway} if found; {@code null} otherwise
+	 */
+	Railway findRailway(ObjectId railwayId);
+
+	/**
+	 * Finds the {@code Scale} with the provided id.
+	 * @param brandId the {@code Scale} id
+	 * @return a {@code Scale} if found; {@code null} otherwise
+	 */
+	Scale findScale(ObjectId scaleId);
 }

@@ -77,4 +77,14 @@ public class SelectOptionsServiceImpl implements SelectOptionsService {
 		return repo.findBrand(brandId);
 	}
 
+	@Override
+	public Scale findScale(ObjectId scaleId) {
+		return repo.findScale(scaleId);
+	}
+
+	@Override
+	public Railway findRailway(ObjectId railwayId) {
+		return repo.findRailway(railwayId);
+	}
+
 }

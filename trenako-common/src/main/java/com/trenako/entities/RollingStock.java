@@ -142,6 +142,7 @@ public class RollingStock {
 		this.details = b.details;
 		this.localDetails = b.localDetails;
 		
+		this.id = b.id;
 		this.tags = b.tags;
 		this.railway = b.railway;
 		this.scale = b.scale;
@@ -164,6 +165,7 @@ public class RollingStock {
 		private final String itemNumber;
 		
 		// optional fields
+		private ObjectId id = null;
 		private String description = null;
 		private Map<String,String> localDescs = null;
 		
@@ -282,6 +284,11 @@ public class RollingStock {
 
 		public Builder totalLength(int len) {
 			totalLength = len;
+			return this;
+		}
+
+		public Builder id(ObjectId id) {
+			this.id = id;
 			return this;
 		}
 	}

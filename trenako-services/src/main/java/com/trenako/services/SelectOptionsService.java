@@ -70,4 +70,7 @@ public interface SelectOptionsService {
 	 * @return
 	 */
 	Iterable<String> powerMethods();
+
+	Scale findScale(ObjectId scaleId);
+	Railway findRailway(ObjectId railwayId);
 }

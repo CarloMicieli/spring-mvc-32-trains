@@ -134,11 +134,20 @@ public class RollingStocksControllerTests {
 	public void shouldCreateRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
 		when(mockFile.isEmpty()).thenReturn(false);
-		when(soService.findBrand(isA(ObjectId.class))).thenReturn(new Brand("ACME"));
-		ObjectId rsId = new ObjectId();
+		
 		ObjectId brandId = new ObjectId();
-		RollingStock rs = new RollingStock.Builder(new Brand(brandId), "123456").build();
-		rs.setId(rsId);
+		when(soService.findBrand(eq(brandId))).thenReturn(new Brand("ACME"));
+		ObjectId railwayId = new ObjectId();
+		when(soService.findRailway(eq(railwayId))).thenReturn(new Railway("DB"));
+		ObjectId scaleId = new ObjectId();
+		when(soService.findScale(eq(scaleId))).thenReturn(new Scale("H0"));
+
+		ObjectId rsId = new ObjectId();
+		RollingStock rs = new RollingStock.Builder(new Brand(brandId), "123456")
+			.id(rsId)
+			.railway(new Railway(railwayId))
+			.scale(new Scale(scaleId))
+			.build();
 		
 		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
 		

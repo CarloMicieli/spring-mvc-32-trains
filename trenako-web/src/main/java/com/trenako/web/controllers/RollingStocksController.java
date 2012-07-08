@@ -17,6 +17,7 @@ package com.trenako.web.controllers;
 
 import javax.validation.Valid;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -112,7 +113,10 @@ public class RollingStocksController {
 			return "rollingstocks/new";
 		}
 		
-		rs.setBrand(soService.findBrand(rs.getBrand().getId()));
+		// loading for the referenced entities
+		// (given that they are required it is safe to
+		// assume values are provided by the client.)
+		init(rs);
 		
 		service.save(rs);
 		if (!file.isEmpty()) {
@@ -160,6 +164,31 @@ public class RollingStocksController {
 		
 		service.remove(rs);
 		return "redirect:/rollingstocks";
+	}
+	
+	// initialize the referenced values
+	private void init(RollingStock rs) {
+		loadBrand(rs);
+		loadScale(rs);
+		loadRailway(rs);
+	}
+	
+	private void loadBrand(RollingStock rs) {
+		final ObjectId brandId = rs.getBrand().getId();
+		final Brand brand = soService.findBrand(brandId);
+		rs.setBrand(brand);		
+	}
+	
+	private void loadRailway(RollingStock rs) {
+		final ObjectId railwayId = rs.getRailway().getId();
+		final Railway railway = soService.findRailway(railwayId);
+		rs.setRailway(railway);		
+	}
+	
+	private void loadScale(RollingStock rs) {
+		final ObjectId scaleId = rs.getScale().getId();
+		final Scale scale = soService.findScale(scaleId);
+		rs.setScale(scale);		
 	}
 	
 	private void fillDropdownLists(ModelAndView mav) {

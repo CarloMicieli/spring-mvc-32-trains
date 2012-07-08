@@ -63,6 +63,22 @@ public class SelectOptionsRepositoryTests {
 	}
 	
 	@Test
+	public void shouldFindRailways() {
+		ObjectId railwayId = new ObjectId();
+		
+		repo.findRailway(railwayId);
+		verify(mongo, times(1)).findById(eq(railwayId), eq(Railway.class));
+	}
+	
+	@Test
+	public void shouldFindScales() {
+		ObjectId scaleId = new ObjectId();
+		
+		repo.findScale(scaleId);
+		verify(mongo, times(1)).findById(eq(scaleId), eq(Scale.class));
+	}
+	
+	@Test
 	public void shouldGetBrands() {
 		List<Brand> value = Arrays.asList(new Brand(), new Brand());
 		

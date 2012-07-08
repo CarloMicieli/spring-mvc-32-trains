@@ -72,4 +72,14 @@ public class SelectOptionsRepositoryImpl implements SelectOptionsRepository {
 		return mongo.findById(brandId, Brand.class);
 	}
 
+	@Override
+	public Railway findRailway(ObjectId railwayId) {
+		return mongo.findById(railwayId, Railway.class);
+	}
+
+	@Override
+	public Scale findScale(ObjectId scaleId) {
+		return mongo.findById(scaleId, Scale.class);
+	}
+
 }
