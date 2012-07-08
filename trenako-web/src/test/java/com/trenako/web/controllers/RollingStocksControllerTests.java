@@ -136,7 +136,8 @@ public class RollingStocksControllerTests {
 		when(mockFile.isEmpty()).thenReturn(false);
 		when(soService.findBrand(isA(ObjectId.class))).thenReturn(new Brand("ACME"));
 		ObjectId rsId = new ObjectId();
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		ObjectId brandId = new ObjectId();
+		RollingStock rs = new RollingStock.Builder(new Brand(brandId), "123456").build();
 		rs.setId(rsId);
 		
 		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
