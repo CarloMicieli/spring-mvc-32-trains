@@ -18,6 +18,8 @@ package com.trenako.entities;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.trenako.DeliveryDateFormatException;
+
 
 /**
  * 
@@ -58,5 +60,42 @@ public class DeliveryDateTests {
 		
 		DeliveryDate z = new DeliveryDate(2012);
 		assertFalse(x.equals(z));
+	}
+	
+	@Test(expected = DeliveryDateFormatException.class)
+	public void shouldThrowsExceptionParsingInvalidValues() {
+		DeliveryDate.parseString("aaaa");
+	}
+	
+	@Test(expected = DeliveryDateFormatException.class)
+	public void shouldThrowsExceptionParsingInvalidYearValues() {
+		DeliveryDate.parseString("123456");
+	}
+
+	@Test(expected = DeliveryDateFormatException.class)
+	public void shouldThrowsExceptionParsingInvalidYears() {
+		DeliveryDate.parseString("aaaa/Q1");
+	}
+	
+	@Test(expected = DeliveryDateFormatException.class)
+	public void shouldThrowsExceptionParsingInvalidQuarters() {
+		DeliveryDate.parseString("2012/Q5");
+	}
+	
+	@Test(expected = DeliveryDateFormatException.class)
+	public void shouldThrowsExceptionParsingInvalidQuarterPrefix() {
+		DeliveryDate.parseString("2012/T5");
+	}
+	
+	@Test
+	public void shouldParseDeliveryDates() {
+		DeliveryDate dd = DeliveryDate.parseString("2012/Q3");
+		assertEquals("2012/Q3", dd.toString());
+	}
+	
+	@Test
+	public void shouldParseDeliveryDatesWithYearOnly() {
+		DeliveryDate dd = DeliveryDate.parseString("2012");
+		assertEquals("2012", dd.toString());
 	}
 }

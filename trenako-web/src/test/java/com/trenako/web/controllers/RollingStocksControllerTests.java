@@ -127,7 +127,7 @@ public class RollingStocksControllerTests {
 		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
 		
 		verify(mockRedirect, times(1)).addAttribute(eq(rs));
-		assertEquals("rollingstocks/new", viewName);
+		assertEquals("rollingstock/new", viewName);
 	}
 		
 	RollingStock build(ObjectId rsId, ObjectId brandId, ObjectId railwayId, ObjectId scaleId) {

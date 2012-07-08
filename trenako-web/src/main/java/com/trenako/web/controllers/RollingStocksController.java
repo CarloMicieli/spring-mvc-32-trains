@@ -34,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Brand;
+import com.trenako.entities.DeliveryDate;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
@@ -42,6 +43,7 @@ import com.trenako.services.SelectOptionsService;
 import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.WebImageService;
 import com.trenako.web.infrastructure.BrandPropertyEditor;
+import com.trenako.web.infrastructure.DeliveryDatePropertyEditor;
 import com.trenako.web.infrastructure.RailwayPropertyEditor;
 import com.trenako.web.infrastructure.ScalePropertyEditor;
 
@@ -78,6 +80,7 @@ public class RollingStocksController {
 		binder.registerCustomEditor(Brand.class, new BrandPropertyEditor(true));
 		binder.registerCustomEditor(Railway.class, new RailwayPropertyEditor(true));
 		binder.registerCustomEditor(Scale.class, new ScalePropertyEditor(true));
+		binder.registerCustomEditor(DeliveryDate.class, new DeliveryDatePropertyEditor(true));
 	}
 	
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
@@ -110,7 +113,7 @@ public class RollingStocksController {
 		
 		if (bindingResult.hasErrors()) {
 			redirectAtts.addAttribute(rs);
-			return "rollingstocks/new";
+			return "rollingstock/new";
 		}
 		
 		// loading for the referenced entities

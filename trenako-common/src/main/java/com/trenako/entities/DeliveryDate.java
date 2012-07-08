@@ -19,6 +19,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
+import com.trenako.DeliveryDateFormatException;
+
 /**
  * It represents a delivery date for a rolling stock.
  * 
@@ -30,14 +34,17 @@ import java.util.List;
  */
 public class DeliveryDate {
 
+	private static String QUARTER_PREFIX = "Q";
 	private static List<Integer> QUARTERS =
 			Collections.unmodifiableList(Arrays.asList(1, 2, 3, 4));
 	
 	private int year;
 	private int quarter;
 	
-	// required by the persistence layer
-	DeliveryDate() {
+	/**
+	 * Creates an empty {@link DeliveryDate}.
+	 */
+	public DeliveryDate() {
 	}
 	
 	/**
@@ -64,7 +71,11 @@ public class DeliveryDate {
 		this.quarter = quarter;
 	}
 	
-	void setYear(int year) {
+	/**
+	 * Sets the delivery date year.
+	 * @param year the year
+	 */
+	public void setYear(int year) {
 		this.year = year;
 	}
 
@@ -76,7 +87,11 @@ public class DeliveryDate {
 		return year;
 	}
 	
-	void setQuarter(int quarter) {
+	/**
+	 * Sets the delivery date quarter.
+	 * @param quarter the quarter
+	 */
+	public void setQuarter(int quarter) {
 		this.quarter = quarter;
 	}
 
@@ -88,6 +103,60 @@ public class DeliveryDate {
 		return quarter;
 	}
 
+	/**
+	 * Parses the string argument as a {@code DeliveryDate}.
+	 * <p>
+	 * A valid instance of {@code DeliveryDate} can have two formats:
+	 * <ul>
+	 * <li>{@code YYYY}, where {@code YYYY} is a valid year (ie {@code year>=1900 && year<2999});</li>
+	 * <li>{@code YYYY + '/Q' + N}, where {@code YYYY} is a valid year (ie {@code year>=1900 && year<2999})
+	 * and {@code N} is the quarter number (ie {@code quarter>=1 && quarter<4}).
+	 * </li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param s the string to be parsed
+	 * @return a {@code DeliveryDate} represented by the string argument
+	 * @throws IllegalArgumentException if {@code s} is empty or {@code null}
+	 * @throws DeliveryDateFormatException if {@code s} doesn't represent a valid {@code DeliveryDate}
+	 */
+	public static DeliveryDate parseString(String s) {
+		if (s==null || !StringUtils.hasText(s)) {
+			throw new IllegalArgumentException("Empty string is not valid");
+		}
+		
+		int year = 0;
+		int quarter = 0;
+		
+		String[] tokens = s.split("/");
+		
+		String sYear = tokens[0];
+		if (!org.apache.commons.lang3.StringUtils.isNumeric(sYear)) {
+			throw new DeliveryDateFormatException("'" + sYear + "' is not a valid year");
+		}
+		
+		year = Integer.parseInt(sYear);
+		if (year<1900 || year>2999) {
+			throw new DeliveryDateFormatException("'" + sYear + "' is not a valid year");
+		}
+		
+		if (tokens.length==2) {
+			String sQuarter = tokens[1];
+			if (sQuarter.length()!=2 && !sQuarter.startsWith(QUARTER_PREFIX))
+				throw new DeliveryDateFormatException("'" + sQuarter + "' is not a valid quarter");
+			
+			quarter = Integer.parseInt(sQuarter.substring(1));
+			if( !QUARTERS.contains(quarter) ) {
+				throw new DeliveryDateFormatException("'" + sQuarter + "' is not a valid quarter");
+			}
+		}
+		
+		if (quarter==0)
+			return new DeliveryDate(year);
+		else
+			return new DeliveryDate(year, quarter);
+	}
+	
 	/**
 	 * Indicates whether some other object is "equal to" this one.
 	 * @param obj the reference object with which to compare.
@@ -110,7 +179,7 @@ public class DeliveryDate {
 	@Override
 	public String toString() {
 		if( QUARTERS.contains(quarter) ) {
-			return String.format("%d/Q%d", year, quarter);
+			return String.format("%d/%s%d", year, QUARTER_PREFIX, quarter);
 		}
 		
 		return String.format("%d", year);
