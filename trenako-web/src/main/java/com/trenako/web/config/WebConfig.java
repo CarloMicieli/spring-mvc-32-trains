@@ -38,6 +38,7 @@ import org.springframework.web.servlet.view.JstlView;
 import com.trenako.AppGlobals;
 import com.trenako.format.IntegerAnnotationFormatterFactory;
 import com.trenako.web.converters.ObjectIdConverter;
+import com.trenako.web.infrastructure.RangeRequestArgumentResolver;
 
 /**
  * The configuration class for the Spring MVC application.
@@ -73,6 +74,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		resolver.setFallbackPagable(new PageRequest(1, 10));
 		
 		argumentResolvers.add(new ServletWebArgumentResolverAdapter(resolver));
+		argumentResolvers.add(new RangeRequestArgumentResolver());
 	}
 	
 	public @Bean InternalResourceViewResolver viewResolver() {
