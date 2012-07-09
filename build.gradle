@@ -17,7 +17,7 @@
 group = "com.trenako"
 description = "A social network for model railways."
 
-def springVersion = "3.1.1.RELEASE"
+def springVersion = "3.1.2.RELEASE"
 def dataVersion = "1.0.2.RELEASE"
 def securityVersion = "3.1.1.RELEASE"
 def slf4jVersion = "1.6.1"
@@ -78,7 +78,7 @@ allprojects {
 
 		// unit testing
 		testCompile "junit:junit:4.10",
-			"org.mockito:mockito-all:1.9.0",
+			"org.mockito:mockito-core:1.9.0",
 			"org.springframework:spring-test:${springVersion}"
 
 		// integration testing
