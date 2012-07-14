@@ -71,20 +71,20 @@ public enum Category {
 	STARTER_SETS;
 	
 	/**
-	 * Returns the category description to be stored in the database.
-	 * @return the category value
+	 * Gets the {@code Category} label
+	 * @return the label
 	 */
 	public String label() {
 		return name().toLowerCase().replace('_', '-');
 	}
 
 	/**
-	 * Parses the category value from the database.
-	 * @param category the category value
-	 * @return a value from Category enumeration
+	 * Parses the string argument as a {@code Category}.
+	 * @param s the string to be parsed
+	 * @return a {@code Category} value
 	 */
-	public static Category parse(String category) {
-		String c = category.toUpperCase().replace('-', '_');
+	public static Category parse(String s) {
+		String c = s.toUpperCase().replace('-', '_');
 		return Category.valueOf(c);
 	}
 
@@ -99,13 +99,17 @@ public enum Category {
 		int i = 0;
 		String[] labels = new String[Category.values().length];
 		for (Category cat : Category.values()) {
-			labels[i++] = String.format("category-%s-%s", pm, cat.label());
+			labels[i++] = String.format("%s-%s", pm, cat.label());
 		}
 
 		return Collections.unmodifiableList(
 				Arrays.asList(labels));
 	}
 
+	/**
+	 * Returns the list of {@code Category} labels
+	 * @return the {@code Category} list
+	 */
 	public static List<String> list() {
 		int i = 0;
 		String[] labels = new String[Category.values().length];

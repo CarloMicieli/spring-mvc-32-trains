@@ -62,23 +62,23 @@ public class CategoryTests {
 		Iterable<String> categories = Category.list(false);
 		List<String> l = (List<String>) categories;
 		
-		assertEquals("category-ac-steam-locomotives", l.get(0));
-		assertEquals("category-ac-diesel-locomotives", l.get(1));
-		assertEquals("category-ac-electric-locomotives", l.get(2));
-		assertEquals("category-ac-railcars", l.get(3));
-		assertEquals("category-ac-electric-multiple-unit", l.get(4));
-		assertEquals("category-ac-freight-cars", l.get(5));
-		assertEquals("category-ac-passenger-cars", l.get(6));
+		assertEquals("ac-steam-locomotives", l.get(0));
+		assertEquals("ac-diesel-locomotives", l.get(1));
+		assertEquals("ac-electric-locomotives", l.get(2));
+		assertEquals("ac-railcars", l.get(3));
+		assertEquals("ac-electric-multiple-unit", l.get(4));
+		assertEquals("ac-freight-cars", l.get(5));
+		assertEquals("ac-passenger-cars", l.get(6));
 	}
 	
 	@Test
 	public void shouldListAllTheCategoriesByPowerMethod() {
 		Iterable<String> acCategories = Category.list(false);
 		List<String> lAc = (List<String>) acCategories;
-		assertEquals("category-ac-steam-locomotives", lAc.get(0));
+		assertEquals("ac-steam-locomotives", lAc.get(0));
 
 		Iterable<String> dcCategories = Category.list(true);
 		List<String> lDc = (List<String>) dcCategories;
-		assertEquals("category-dc-steam-locomotives", lDc.get(0));
+		assertEquals("dc-steam-locomotives", lDc.get(0));
 	}
 }

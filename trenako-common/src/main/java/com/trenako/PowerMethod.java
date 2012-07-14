@@ -32,45 +32,29 @@ public enum PowerMethod {
 	/**
 	 * Direct current.
 	 */
-	DC,
-	/**
-	 * Alternating current with digital interface (Maerklin).
-	 */
-	AC_DCC,
-	/**
-	 * Direct current with digital interface.
-	 */
-	DC_DCC,
-	/**
-	 * Alternating current with digital interface and sound (Maerklin).
-	 */
-	AC_DCC_SOUND,
-	/**
-	 * Direct current with digital interface and sound.
-	 */
-	DC_DCC_SOUND;
+	DC;
 	
 	/**
-	 * Returns the category description to be stored in the database.
-	 * @return the category name.
+	 * Gets the {@code PowerMethod} label.
+	 * @return the label
 	 */
 	public String label() {
 		return name().toLowerCase().replace('_', '-');
 	}
 
 	/**
-	 * Parses the category value from the database.
-	 * @param category the category name.
-	 * @return a value from Category enumeration.
+	 * Parses the string argument as a {@code PowerMethod}.
+	 * @param s the string to be parsed
+	 * @return a {@code PowerMethod} value
 	 */
-	public static PowerMethod parse(String category) {
-		String c = category.toUpperCase().replace('-', '_');
+	public static PowerMethod parse(String s) {
+		String c = s.toUpperCase().replace('-', '_');
 		return PowerMethod.valueOf(c);
 	}
 	
 	/**
 	 * Returns the list of {@code PowerMethod} labels.
-	 * @return the labels list
+	 * @return the {@code PowerMethod} list
 	 */
 	public static List<String> list() {
 		int i = 0;

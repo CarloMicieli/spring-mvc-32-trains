@@ -15,11 +15,6 @@
  */
 package com.trenako.repositories.mongo;
 
-import static org.springframework.data.mongodb.core.query.Criteria.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import com.trenako.SearchCriteria;
@@ -29,49 +24,48 @@ import com.trenako.SearchCriteria;
  * @author Carlo Micieli
  *
  */
-public class MongoSearchCriteria {
+public final class MongoSearchCriteria {
 
-	private final SearchCriteria searchCriteria;
-	
-	/**
-	 * Creates a new {@code MongoSearchCriteria}.
-	 * @param searchCriteria the search criteria
-	 */
-	public MongoSearchCriteria(SearchCriteria searchCriteria) {
-		this.searchCriteria = searchCriteria;
+	private MongoSearchCriteria() {
 	}
-	
+
 	/**
-	 * Returns a list of {@link Criteria}.
-	 * @return the list of {@code Criteria}
+	 * Builds a mongo criteria for the provided {@code SearchCriteria}.
+	 * @param sc the search criteria
+	 * @return a mongo criteria
 	 */
-	public Criteria[] criterias() {
-		List<Criteria> crit = new ArrayList<Criteria>();
+	public static Criteria buildCriteria(SearchCriteria sc) {
+		Criteria c = new Criteria();
 		
-		if( searchCriteria.hasBrand() ) {
-			crit.add(where("brandName").is(searchCriteria.getBrand()));
+		if (sc.hasBrand()) {
+			c.and("brandName").is(sc.getBrand());
 		}
 		
-		if( searchCriteria.hasCategory() ) {
-			crit.add(where("category").is(searchCriteria.getCategory()));
+		if (sc.hasCategory()) {
+			c.and("category").is(sc.getCategory());
 		}
 		
-		if( searchCriteria.hasEra() ) {
-			crit.add(where("era").is(searchCriteria.getEra()));
+		if (sc.hasEra()) {
+			c.and("era").is(sc.getEra());
 		}
 		
-		if( searchCriteria.hasPowerMethod() ) {
-			crit.add(where("powerMethod").is(searchCriteria.getPowerMethod()));
+		if (sc.hasPowerMethod()) {
+			c.and("powerMethod").is(sc.getPowerMethod());
 		}
 		
-		if( searchCriteria.hasRailway() ) {
-			crit.add(where("railwayName").is(searchCriteria.getRailway()));
+		if (sc.hasRailway()) {
+			c.and("railwayName").is(sc.getRailway());
 		}
 		
-		if( searchCriteria.hasScale() ) {
-			crit.add(where("scaleName").is(searchCriteria.getScale()));
+		if (sc.hasScale()) {
+			c.and("scaleName").is(sc.getScale());
 		}
 		
-		return crit.toArray(new Criteria[crit.size()]);
+		if (sc.hasCat()) {
+			c.and("category").is(sc.getCat().category())
+				.and("powerMethod").is(sc.getCat().powerMethod());
+		}
+			
+		return c;
 	}
 }

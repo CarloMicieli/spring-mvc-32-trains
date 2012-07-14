@@ -15,39 +15,28 @@
  */
 package com.trenako;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
-import org.junit.Test;
-
-import com.trenako.PowerMethod;
-
 /**
+ * Thrown to indicate that a method has been passed an illegal string argument
+ * to be parsed as a {@code Cat}.
  * 
  * @author Carlo Micieli
  *
  */
-public class PowerMethodTests {
-
-	@Test
-	public void shouldProduceDescription() {
-		PowerMethod ac = PowerMethod.AC;
-		assertEquals("ac", ac.label());
-		
-		PowerMethod ads = PowerMethod.DC;
-		assertEquals("dc", ads.label());
+@SuppressWarnings("serial")
+public class CatFormatException extends IllegalArgumentException {
+	
+	/**
+	 * Constructs an {@code CatFormatException} with no detail message.
+	 */
+	public CatFormatException() {
+		super();
 	}
 	
-	@Test
-	public void shouldParseAStringValue() {
-		PowerMethod ads = PowerMethod.parse("ac");
-		assertEquals(PowerMethod.AC, ads);
-	}
-	
-	@Test
-	public void shouldListAllPowerMethods() {
-		List<String> l = PowerMethod.list();
-		assertEquals("[ac, dc]", l.toString());
+	/**
+	 * Constructs an {@code CatFormatException} with the specified detail message.
+	 * @param details the detail message
+	 */
+	public CatFormatException(String details) {
+		super(details);
 	}
 }

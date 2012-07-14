@@ -63,6 +63,24 @@ public class SearchCriteriaTests {
 	}
 	
 	@Test
+	public void shouldCheckIfCatCriteriaIsSet() {
+		SearchCriteria x = new SearchCriteria.Builder()
+			.cat("ac-electric-locomotives")
+			.build();
+		assertEquals(true, x.hasCat());
+		
+		SearchCriteria y = new SearchCriteria.Builder()
+			.cat("")
+			.build();
+		assertEquals(false, y.hasCat());
+		
+		SearchCriteria z = new SearchCriteria.Builder()
+			.cat(null)
+			.build();
+		assertEquals(false, z.hasCat());
+	}
+	
+	@Test
 	public void shouldCheckIfEraCriteriaIsSet() {
 		SearchCriteria x = new SearchCriteria.Builder()
 			.era("IV")
@@ -139,6 +157,7 @@ public class SearchCriteriaTests {
 		SearchCriteria sc = new SearchCriteria.Builder()
 			.brand("ACME")
 			.category("electric-locomotives")
+			.cat("ac-electric-locomotives")
 			.era("IV")
 			.powerMethod("AC")
 			.railway("DB")
@@ -148,6 +167,7 @@ public class SearchCriteriaTests {
 		String expected = 
 				"{brand=ACME, " +
 				"category=electric-locomotives, "+
+				"cat=ac-electric-locomotives, "+
 				"era=IV, "+
 				"powerMethod=AC, "+
 				"railway=DB, "+
@@ -160,6 +180,7 @@ public class SearchCriteriaTests {
 		SearchCriteria sc = new SearchCriteria.Builder()
 			.brand("brand")
 			.category("category")
+			.cat("ac-electric-locomotives")
 			.era("era")
 			.powerMethod("powerMethod")
 			.railway("railway")
@@ -167,6 +188,7 @@ public class SearchCriteriaTests {
 			.build();
 		assertEquals("brand", sc.getBrand());
 		assertEquals("category", sc.getCategory());
+		assertEquals("ac-electric-locomotives", sc.getCat().toString());
 		assertEquals("era", sc.getEra());
 		assertEquals("powerMethod", sc.getPowerMethod());
 		assertEquals("scale", sc.getScale());
@@ -174,10 +196,11 @@ public class SearchCriteriaTests {
 	}
 
 	@Test
-	public void shouldTrueIfTwoCriteriaAreEquals() {
+	public void shouldReturnTrueIfTwoCriteriaAreEquals() {
 		SearchCriteria x = new SearchCriteria.Builder()
 			.brand("brand")
 			.category("category")
+			.cat("ac-electric-locomotives")
 			.era("era")
 			.powerMethod("powerMethod")
 			.railway("railway")
@@ -186,6 +209,7 @@ public class SearchCriteriaTests {
 		SearchCriteria y = new SearchCriteria.Builder()
 			.brand("brand")
 			.category("category")
+			.cat("ac-electric-locomotives")
 			.era("era")
 			.powerMethod("powerMethod")
 			.railway("railway")
@@ -195,10 +219,11 @@ public class SearchCriteriaTests {
 	}
 	
 	@Test
-	public void shouldFalseIfTwoCriteriaAreEquals() {
+	public void shouldReturnsFalseIfTwoCriteriaAreDifferent() {
 		SearchCriteria x = new SearchCriteria.Builder()
 			.brand("brand")
 			.category("category")
+			.cat("ac-electric-locomotives")
 			.era("era")
 			.powerMethod("DC")
 			.railway("railway")
@@ -207,6 +232,7 @@ public class SearchCriteriaTests {
 		SearchCriteria y = new SearchCriteria.Builder()
 			.brand("brand")
 			.category("category")
+			.cat("ac-electric-locomotives")
 			.era("era")
 			.powerMethod("AC")
 			.railway("railway")

@@ -17,6 +17,8 @@ package com.trenako;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.trenako.utility.Cat;
+
 /**
  * It represents an immutable rolling stock search criteria.
  * <p>
@@ -37,6 +39,7 @@ public class SearchCriteria {
 	private final String brand;
 	private final String scale;
 	private final String category;
+	private final Cat cat;
 	private final String era;
 	private final String railway;
 	
@@ -45,6 +48,7 @@ public class SearchCriteria {
 		this.brand = b.brand;
 		this.scale = b.scale;
 		this.category = b.category;
+		this.cat = b.cat;
 		this.era = b.era;
 		this.railway = b.railway;
 	}
@@ -59,6 +63,7 @@ public class SearchCriteria {
 		private String brand = null;
 		private String scale = null;
 		private String category = null;
+		private Cat cat = null;
 		private String era = null;
 		private String railway = null;
 		
@@ -114,12 +119,25 @@ public class SearchCriteria {
 		}
 		
 		/**
-		 * Sets the {@code category} criteria.
+		 * Sets the {@code powerMethod} and {@code category} criteria.
+		 * 
 		 * @param cat the category
 		 * @return a builder
 		 */
-		public Builder category(String cat) {
-			category = cat;
+		public Builder cat(String cat) {
+			if (cat!=null && !cat.isEmpty()) {
+				this.cat = Cat.parseString(cat);
+			}
+			return this;
+		}
+		
+		/**
+		 * Sets the {@code category} criteria.
+		 * @param category the category name
+		 * @return a builder
+		 */
+		public Builder category(String category) {
+			this.category = category;
 			return this;
 		}
 		
@@ -231,6 +249,28 @@ public class SearchCriteria {
 	}
 	
 	/**
+	 * Returns the {@code power method} and {@code category} search criteria.
+	 * <p>
+	 * The appropriate way to check whether a category is selected is using
+	 * the {@link SearchCriteria#hasCat()} method.
+	 * </p>
+	 * 
+	 * @return the criteria value
+	 * @see com.trenako.Cat
+	 */
+	public Cat getCat() {
+		return cat;
+	}
+
+	/**
+	 * Checks whether a {@code category} criteria is set.
+	 * @return {@code true} if a criteria exists; {@code false} otherwise
+	 */
+	public boolean hasCat() {
+		return cat!=null && !cat.equals("");
+	}
+	
+	/**
 	 * Returns the {@code era} search criteria.
 	 * <p>
 	 * The appropriate way to check whether an era is selected is using
@@ -285,6 +325,8 @@ public class SearchCriteria {
 			.append(getBrand())
 			.append(", category=")
 			.append(getCategory())
+			.append(", cat=")
+			.append(getCat())
 			.append(", era=")
 			.append(getEra())
 			.append(", powerMethod=")
@@ -316,6 +358,7 @@ public class SearchCriteria {
 			.append(railway, other.railway)
 			.append(brand, other.brand)
 			.append(category, other.category)
+			.append(cat, other.cat)
 			.append(powerMethod, other.powerMethod)
 			.isEquals();
 	}

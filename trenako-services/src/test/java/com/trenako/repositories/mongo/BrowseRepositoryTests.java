@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +32,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
+import com.trenako.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.BrowseRepository;
 import com.trenako.results.PaginatedResults;
@@ -44,10 +44,7 @@ import com.trenako.results.RangeRequest;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BrowseRepositoryTests {
-	
-	private final ObjectId MAX_ID = new ObjectId();
-	private final ObjectId SINCE_ID = new ObjectId();
+public class BrowseRepositoryTests {	
 		
 	@Mock MongoTemplate mongo;
 	BrowseRepository repo;
@@ -58,10 +55,9 @@ public class BrowseRepositoryTests {
 		repo = new BrowseRepositoryImpl(mongo);
 	}
 	
-	private RangeRequest buildRange() {
+	private RangeRequest buildRange(int count) {
 		RangeRequest range = new RangeRequest();
-		range.setMaxId(MAX_ID);
-		range.setCount(10);
+		range.setCount(count);
 		return range;
 	}
 	
@@ -82,7 +78,7 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByBrand() {
 		mockFindResults();
 		String brandName = "ACME";
-		RangeRequest range = buildRange();
+		RangeRequest range = buildRange(10);
 		
 		PaginatedResults<RollingStock> results = repo.findByBrand(brandName, range);
 		
@@ -95,8 +91,9 @@ public class BrowseRepositoryTests {
 		mockFindResults();
 		String brand = "ACME";
 		String era = "IV";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByBrandAndEra(brand, era);
+		PaginatedResults<RollingStock> results = repo.findByBrandAndEra(brand, era, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"brandName\" : \"ACME\" , \"era\" : \"IV\"}", "{ \"lastModified\" : -1}");
@@ -107,8 +104,9 @@ public class BrowseRepositoryTests {
 		mockFindResults();
 		String brand = "ACME";
 		String scale = "H0";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByBrandAndScale(brand, scale);
+		PaginatedResults<RollingStock> results = repo.findByBrandAndScale(brand, scale, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"brandName\" : \"ACME\" , \"scaleName\" : \"H0\"}", "{ \"lastModified\" : -1}");
@@ -119,8 +117,9 @@ public class BrowseRepositoryTests {
 		mockFindResults();
 		String brand = "ACME";
 		String category = "electric-locomotives";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByBrandAndCategory(brand, category);
+		PaginatedResults<RollingStock> results = repo.findByBrandAndCategory(brand, category, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"brandName\" : \"ACME\" , \"category\" : \"electric-locomotives\"}", 
@@ -132,8 +131,9 @@ public class BrowseRepositoryTests {
 		mockFindResults();
 		String brand = "ACME";
 		String railway = "DB";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByBrandAndRailway(brand, railway);
+		PaginatedResults<RollingStock> results = repo.findByBrandAndRailway(brand, railway, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"brandName\" : \"ACME\" , \"railwayName\" : \"DB\"}", 
@@ -144,8 +144,9 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByEra() {
 		mockFindResults();
 		String era = "IV";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByEra(era);
+		PaginatedResults<RollingStock> results = repo.findByEra(era, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"era\" : \"IV\"}", "{ \"lastModified\" : -1}");
@@ -155,8 +156,9 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByScale() {
 		mockFindResults();
 		String scale = "H0";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByScale(scale);
+		PaginatedResults<RollingStock> results = repo.findByScale(scale, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"scaleName\" : \"H0\"}", "{ \"lastModified\" : -1}");
@@ -166,8 +168,9 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByCategory() {
 		mockFindResults();
 		String category = "electric-locomotives";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByCategory(category);
+		PaginatedResults<RollingStock> results = repo.findByCategory(category, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"category\" : \"electric-locomotives\"}", "{ \"lastModified\" : -1}");
@@ -177,8 +180,9 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByRailway() {
 		mockFindResults();
 		String railway = "db";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByRailway(railway);
+		PaginatedResults<RollingStock> results = repo.findByRailway(railway, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"railwayName\" : \"db\"}", "{ \"lastModified\" : -1}");
@@ -188,8 +192,9 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByPowerMethod() {
 		mockFindResults();
 		String powerMethod = "dc";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByPowerMethod(powerMethod);
+		PaginatedResults<RollingStock> results = repo.findByPowerMethod(powerMethod, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"powerMethod\" : \"dc\"}", "{ \"lastModified\" : -1}");
@@ -199,10 +204,26 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByTag() {
 		mockFindResults();
 		String tag = "tagval";
+		RangeRequest range = buildRange(10);
 		
-		Iterable<RollingStock> results = repo.findByTag(tag);
+		PaginatedResults<RollingStock> results = repo.findByTag(tag, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"tag\" : \"tagval\"}", "{ \"lastModified\" : -1}");
+	}
+	
+	@Test
+	public void shouldFindRollingStocksBySearchCriteria() {
+		mockFindResults();
+		SearchCriteria sc = new SearchCriteria.Builder()
+			.cat("ac-electric-locomotives")
+			.build();
+		RangeRequest range = buildRange(10);
+		
+		PaginatedResults<RollingStock> results = repo.findByCriteria(sc, range);
+		
+		assertNotNull("Results is empty", results);
+		verifyMongoQuery("{ \"category\" : \"electric-locomotives\" , \"powerMethod\" : \"ac\"}", 
+				"{ \"lastModified\" : -1}");
 	}
 }
