@@ -18,6 +18,8 @@ package com.trenako.repositories.mongo;
 import static org.springframework.data.mongodb.core.query.Query.*;
 import static org.springframework.data.mongodb.core.query.Criteria.*;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Order;
@@ -26,9 +28,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import com.trenako.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.BrowseRepository;
+import com.trenako.results.PaginatedResults;
+import com.trenako.results.RangeRequest;
+import com.trenako.results.mongo.RollingStockResults;
 
 /**
- * 
+ * The concrete implementation for the browse repository.
  * @author Carlo Micieli
  *
  */
@@ -45,14 +50,20 @@ public class BrowseRepositoryImpl implements BrowseRepository {
 		this.mongo = mongo;
 	}
 
-	Iterable<RollingStock> runQuery(Query query) {
+	private Iterable<RollingStock> runQuery(Query query) {
+		query.sort().on("lastModified", Order.DESCENDING);
+		return mongo.find(query, RollingStock.class);
+	}
+	
+	private List<RollingStock> runQuery2(Query query) {
 		query.sort().on("lastModified", Order.DESCENDING);
 		return mongo.find(query, RollingStock.class);
 	}
 	
 	@Override
-	public Iterable<RollingStock> findByBrand(String brand) {
-		return runQuery(query(where("brandName").is(brand)));
+	public PaginatedResults<RollingStock> findByBrand(String brand, RangeRequest range) {
+		return new RollingStockResults(
+				runQuery2(query(where("brandName").is(brand))), range);
 	}
 
 	@Override

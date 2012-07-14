@@ -17,6 +17,9 @@ package com.trenako.results;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+
+import com.trenako.AppGlobals;
 
 /**
  * It represents the interface for a range information.
@@ -29,6 +32,11 @@ public class RangeRequest {
 	private ObjectId maxId;
 	private Sort sort;
 	private int count;
+	
+	/**
+	 * The default {@code Sort} for a range request.
+	 */
+	public final static Sort DEFAULT_SORT = new Sort(Direction.DESC, "lastModified");
 	
 	/**
 	 * Creates an empty {@code RangeRequest}.
@@ -73,6 +81,7 @@ public class RangeRequest {
 	 * @return the sorting
 	 */
 	public Sort getSort() {
+		if (sort==null) return DEFAULT_SORT;
 		return sort;
 	}
 
@@ -98,5 +107,22 @@ public class RangeRequest {
 	 */
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	/**
+	 * Sanitize the range values.
+	 * <p>
+	 * This method ensures the current range has a size less than max 
+	 * allowed value as set in {@link AppGlobals#MAX_RESULT_SET_SIZE}.
+	 * </p>
+	 */
+	public void sanitizeInput() {
+		if (getCount() > AppGlobals.MAX_RESULT_SET_SIZE) {
+			setCount(AppGlobals.MAX_RESULT_SET_SIZE);
+		}
+		
+		if (getCount()<=0) {
+			setCount(10);
+		}
 	}
 }

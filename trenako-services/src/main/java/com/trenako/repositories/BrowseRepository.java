@@ -15,8 +15,12 @@
  */
 package com.trenako.repositories;
 
+import org.bson.types.ObjectId;
+
 import com.trenako.SearchCriteria;
 import com.trenako.entities.RollingStock;
+import com.trenako.results.PaginatedResults;
+import com.trenako.results.RangeRequest;
 
 /**
  * It represents the repository for the rolling stocks browsing.
@@ -27,9 +31,10 @@ public interface BrowseRepository {
 	/**
 	 * Returns the {@code RollingStock} list by {@code Brand} name.
 	 * @param brand the brand name
+	 * @param range 
 	 * @return the {@code RollingStock} list
 	 */
-	Iterable<RollingStock> findByBrand(String brand);
+	PaginatedResults<RollingStock> findByBrand(String brand, RangeRequest range);
 	
 	/**
 	 * Returns the {@code RollingStock} list by {@code Era}.

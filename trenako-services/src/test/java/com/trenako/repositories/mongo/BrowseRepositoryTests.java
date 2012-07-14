@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,8 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.BrowseRepository;
+import com.trenako.results.PaginatedResults;
+import com.trenako.results.RangeRequest;
 
 /**
  * 
@@ -42,6 +45,10 @@ import com.trenako.repositories.BrowseRepository;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class BrowseRepositoryTests {
+	
+	private final ObjectId MAX_ID = new ObjectId();
+	private final ObjectId SINCE_ID = new ObjectId();
+		
 	@Mock MongoTemplate mongo;
 	BrowseRepository repo;
 	
@@ -49,6 +56,13 @@ public class BrowseRepositoryTests {
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		repo = new BrowseRepositoryImpl(mongo);
+	}
+	
+	private RangeRequest buildRange() {
+		RangeRequest range = new RangeRequest();
+		range.setMaxId(MAX_ID);
+		range.setCount(10);
+		return range;
 	}
 	
 	private void mockFindResults() {
@@ -68,8 +82,9 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByBrand() {
 		mockFindResults();
 		String brandName = "ACME";
+		RangeRequest range = buildRange();
 		
-		Iterable<RollingStock> results = repo.findByBrand(brandName);
+		PaginatedResults<RollingStock> results = repo.findByBrand(brandName, range);
 		
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"brandName\" : \"ACME\"}", "{ \"lastModified\" : -1}");

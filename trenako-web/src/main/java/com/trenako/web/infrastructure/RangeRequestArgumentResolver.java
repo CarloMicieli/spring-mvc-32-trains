@@ -77,7 +77,9 @@ public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolv
 					webBinder.createBinder(webRequest, rangeRequest, "rangeRequest");
 			wdb.registerCustomEditor(Sort.class, new SortPropertyEditor(propValues));
 			wdb.bind(propValues);
-					
+			
+			rangeRequest.sanitizeInput();
+			
 			return rangeRequest;
 		}
 		

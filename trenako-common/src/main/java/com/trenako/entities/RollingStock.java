@@ -130,6 +130,14 @@ public class RollingStock {
 	public RollingStock() {
 	}
 	
+	/**
+	 * Creates a new {@code RollingStock} with the provided id.
+	 * @param id the {@code RollingStock} id
+	 */
+	public RollingStock(ObjectId id) {
+		this.id = id;
+	}
+	
 	private RollingStock(Builder b) {
 		this.brand = b.brand;
 		this.itemNumber = b.itemNumber;

@@ -15,7 +15,7 @@
  */
 package com.trenako.results;
 
-import java.io.Serializable;
+import org.bson.types.ObjectId;
 
 /**
  * It represents the public interface for paginated result sets.
@@ -35,23 +35,22 @@ import java.io.Serializable;
  * </p>
  *
  * @param <T> the item type
- * @param <ID> the item id type
  *
  * @author Carlo Micieli
  */
-public interface PaginatedResults<T, ID extends Serializable> {
+public interface PaginatedResults<T> {
 
 	/**
 	 * Returns the minimum {@code id} in the result page.
 	 * @return the minimum {@code id}
 	 */
-	ID getSinceId();
+	ObjectId getSinceId();
 
 	/**
 	 * Returns the maximum {@code id} in the result page.
 	 * @return the maximum {@code id}
 	 */
-	ID getMaxId();
+	ObjectId getMaxId();
 	
 	/**
 	 * Returns the total number of items in the result set.
