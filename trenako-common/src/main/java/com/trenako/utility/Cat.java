@@ -55,6 +55,10 @@ public class Cat {
 			throw new IllegalArgumentException("Input string is null");
 		}
 		
+		if (s.length()<4) {
+			throw new CatFormatException("'" + s + "' is too short");
+		}
+		
 		String pm = s.substring(0, 2);
 		String c = s.substring(3); 
 		validate(pm, c);

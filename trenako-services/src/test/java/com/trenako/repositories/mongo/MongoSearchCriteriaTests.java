@@ -101,6 +101,20 @@ public class MongoSearchCriteriaTests {
 	}
 	
 	@Test
+	public void shouldBuildCriteriaWithOnlyOneCategoryAndPowerMethod() {
+		SearchCriteria sc = new SearchCriteria.Builder()
+			.cat("ac-electric-locomotives")
+			.category("diesel-locomotives")
+			.powerMethod("dc")
+			.build();
+		
+		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
+		
+		assertEquals("{ \"category\" : \"electric-locomotives\" , \"powerMethod\" : \"ac\"}", 
+				criteria.getCriteriaObject().toString());
+	}
+	
+	@Test
 	public void shouldBuildScaleCriteriaCommand() {
 		SearchCriteria sc = new SearchCriteria.Builder()
 			.scale("H0")

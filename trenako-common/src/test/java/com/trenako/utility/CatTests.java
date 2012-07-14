@@ -51,6 +51,11 @@ public class CatTests {
 		Cat cat = Cat.parseString("ac-electric-locomotives");
 		assertEquals("ac-electric-locomotives", cat.toString());
 	}
+
+	@Test(expected = CatFormatException.class)
+	public void shouldThrowExceptionForIllegalString() {
+		Cat.parseString("aa");
+	}
 	
 	@Test(expected = CatFormatException.class)
 	public void shouldThrowExceptionForIllegalPowerMethod() {

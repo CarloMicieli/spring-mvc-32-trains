@@ -41,16 +41,8 @@ public final class MongoSearchCriteria {
 			c.and("brandName").is(sc.getBrand());
 		}
 		
-		if (sc.hasCategory()) {
-			c.and("category").is(sc.getCategory());
-		}
-		
 		if (sc.hasEra()) {
 			c.and("era").is(sc.getEra());
-		}
-		
-		if (sc.hasPowerMethod()) {
-			c.and("powerMethod").is(sc.getPowerMethod());
 		}
 		
 		if (sc.hasRailway()) {
@@ -65,7 +57,15 @@ public final class MongoSearchCriteria {
 			c.and("category").is(sc.getCat().category())
 				.and("powerMethod").is(sc.getCat().powerMethod());
 		}
-			
+		
+		if (!sc.hasCat() && sc.hasPowerMethod()) {
+			c.and("powerMethod").is(sc.getPowerMethod());
+		}
+
+		if (!sc.hasCat() && sc.hasCategory()) {
+			c.and("category").is(sc.getCategory());
+		}
+		
 		return c;
 	}
 }
