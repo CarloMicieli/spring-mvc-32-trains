@@ -69,8 +69,8 @@ public enum PowerMethod {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Returns the list of {@code PowerMethod} labels.
+	 * @return the labels list
 	 */
 	public static List<String> list() {
 		int i = 0;

@@ -37,7 +37,7 @@ import com.trenako.entities.Account;
  * <p>
  * This class provides two basic functionalities: create new accounts and authenticate them
  * after their creation. Thanks to the latter, the users are automatically logged in after
- * they signup.
+ * they sign up.
  * </p>
  *
  * @author Carlo Micieli
@@ -52,7 +52,7 @@ public class SpringSignupService implements SignupService {
 	private SecurityContext securityContext;
 	
 	/**
-	 * Creates a new {@SpringSignupService}.
+	 * Creates a new {@code SpringSignupService}.
 	 *
 	 * @param repo the {@code Account} repository
 	 * @param passwordEncoder the password encoder

@@ -22,7 +22,7 @@ import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
 
 /**
- * 
+ * The interface for the select options repository.
  * @author Carlo Micieli
  *
  */
@@ -55,14 +55,14 @@ public interface SelectOptionsRepository {
 
 	/**
 	 * Finds the {@code Railway} with the provided id.
-	 * @param brandId the {@code Railway} id
+	 * @param railwayId the {@code Railway} id
 	 * @return a {@code Railway} if found; {@code null} otherwise
 	 */
 	Railway findRailway(ObjectId railwayId);
 
 	/**
 	 * Finds the {@code Scale} with the provided id.
-	 * @param brandId the {@code Scale} id
+	 * @param scaleId the {@code Scale} id
 	 * @return a {@code Scale} if found; {@code null} otherwise
 	 */
 	Scale findScale(ObjectId scaleId);

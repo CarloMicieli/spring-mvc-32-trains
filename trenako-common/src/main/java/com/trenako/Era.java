@@ -52,7 +52,7 @@ public enum Era {
 
 	/**
 	 * The list of labels for the {@code Era} enum.
-	 * @return
+	 * @return the labels list
 	 */
 	public static List<String> list() {
 		int i = 0;

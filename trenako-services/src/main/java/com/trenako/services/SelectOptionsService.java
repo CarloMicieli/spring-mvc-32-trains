@@ -30,47 +30,58 @@ public interface SelectOptionsService {
 
 	/**
 	 * Returns the list of {@code Brand}s.
-	 * @return
+	 * @return the {@code Brand} list
 	 */
 	Iterable<Brand> brands();
+
+	/**
+	 * Returns the list of {@code Railway}s.
+	 * @return the {@code Railway} list
+	 */
+	Iterable<Railway> railways();
+
+	/**
+	 * Returns the list of {@code Scale}s.
+	 * @return the {@code Scale} list
+	 */
+	Iterable<Scale> scales();
+
+	/**
+	 * Returns the list of categories.
+	 * @return the {@code Category} list
+	 */
+	Iterable<String> categories();
 	
+	/**
+	 * Returns the list of eras.
+	 * @return the {@code Era} list
+	 */
+	Iterable<String> eras();
+	
+	/**
+	 * Returns the list of power methods.
+	 * @return the {@code power method} list
+	 */
+	Iterable<String> powerMethods();
+
 	/**
 	 * Returns the {@code Brand} with the provided id.
 	 * @param brandId the {@code Brand} id
 	 * @return a {@code Brand} if found; {@code null} otherwise
 	 */
 	Brand findBrand(ObjectId brandId);
-
-	/**
-	 * Returns the list of {@code Railway}s.
-	 * @return
-	 */
-	Iterable<Railway> railways();
-
-	/**
-	 * Returns the list of {@code Scale}s.
-	 * @return
-	 */
-	Iterable<Scale> scales();
-
-	/**
-	 * Returns the list of categories.
-	 * @return
-	 */
-	Iterable<String> categories();
 	
 	/**
-	 * Returns the list of eras.
-	 * @return
+	 * Returns the {@code Scale} with the provided id.
+	 * @param scaleId the {@code Scale} id
+	 * @return a {@code Scale} if found; {@code null} otherwise
 	 */
-	Iterable<String> eras();
-	
-	/**
-	 * Returns the list of power methods.
-	 * @return
-	 */
-	Iterable<String> powerMethods();
-
 	Scale findScale(ObjectId scaleId);
+	
+	/**
+	 * Returns the {@code Railway} with the provided id.
+	 * @param railwayId the {@code Railway} id
+	 * @return a {@code Railway} if found; {@code null} otherwise
+	 */
 	Railway findRailway(ObjectId railwayId);
 }
