@@ -48,7 +48,7 @@ public class RollingStockQueryBuilder {
 			criteria.and("id").gt(range.getSinceId());
 		}
 		else if (range.getMaxId()!=null) {
-			criteria.and("id").lt(range.getSinceId());
+			criteria.and("id").lt(range.getMaxId());
 		}		
 		
 		final Query q = query(criteria);

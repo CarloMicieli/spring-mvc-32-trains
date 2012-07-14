@@ -21,6 +21,8 @@ import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.trenako.results.RangeRequest;
 
@@ -39,7 +41,7 @@ public class RollingStockQueryBuilderTests {
 	private final Criteria where = where("brandName").is("ACME");
 	
 	@Test
-	public void test() {
+	public void shouldBuildAQueryWithDefaultSortingAndCompleteRange() {
 		
 		RangeRequest range = new RangeRequest();
 		range.setMaxId(maxId);
@@ -51,9 +53,54 @@ public class RollingStockQueryBuilderTests {
 				" \"id\" : { \"$gt\" : { \"$oid\" : \"50013ff884aef01777a8b317\"} ," +
 				" \"$lt\" : { \"$oid\" : \"50013ff884aef01777a8b316\"}}}");
 		assertSort(query, "{ \"lastModified\" : -1}");
-		assertEquals(11, query.getLimit());
+		assertLimit(query, 11);
+	}
+	
+	@Test
+	public void shouldBuildQueryWithSinceValueOnly() {
+		
+		RangeRequest range = new RangeRequest();
+		range.setSinceId(sinceId);
+		range.setCount(10);
+		
+		Query query = RollingStockQueryBuilder.buildQuery(where, range);
+		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
+				" \"id\" : { \"$gt\" : { \"$oid\" : \"50013ff884aef01777a8b317\"}}}");
+		assertSort(query, "{ \"lastModified\" : -1}");
+		assertLimit(query, 11);
+	}
+	
+	@Test
+	public void shouldBuildQueryWithMaxValueOnly() {
+		
+		RangeRequest range = new RangeRequest();
+		range.setMaxId(maxId);
+		range.setCount(10);
+		
+		Query query = RollingStockQueryBuilder.buildQuery(where, range);
+		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
+				" \"id\" : { \"$lt\" : { \"$oid\" : \"50013ff884aef01777a8b316\"}}}");
+		assertSort(query, "{ \"lastModified\" : -1}");
+		assertLimit(query, 11);
 	}
 
+	@Test
+	public void shouldBuildQueryWithSorting() {
+		RangeRequest range = new RangeRequest();
+		range.setMaxId(maxId);
+		range.setCount(10);
+		range.setSort(new Sort(Direction.ASC, "powerMethod"));
+		
+		Query query = RollingStockQueryBuilder.buildQuery(where, range);
+		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
+				" \"id\" : { \"$lt\" : { \"$oid\" : \"50013ff884aef01777a8b316\"}}}");
+		assertSort(query, "{ \"powerMethod\" : 1}");
+		assertLimit(query, 11);
+	}
+	
+	private void assertLimit(Query query, int count) {
+		assertEquals(count, query.getLimit());
+	}
 	
 	private void assertQuery(Query query, String queryText) {
 		assertEquals(queryText, query.getQueryObject().toString());
