@@ -64,9 +64,12 @@ public abstract class AbstractSpringControllerTests {
 			.toString();
 	}
 
+	protected void init() {}
+	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		this.mockMvc = webApplicationContextSetup(this.wac).build();
+		init();
 	}
 }
