@@ -56,7 +56,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldHaveGetBrandMapping() throws Exception {
+	public void shouldGETBrands() throws Exception {
 		when(mockService.findById(eq(OID))).thenReturn(new Brand());
 		mockMvc().perform(get("/admin/brands/{id}", ID))
 			.andExpect(status().isOk())
@@ -131,16 +131,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 			.andExpect(flash().attribute("message", equalTo("Brand created")))
 			.andExpect(redirectedUrl("/admin/brands"));
 	}
-	
-//	@Test(expected = BindException.class)
-//	public void shouldRedirectAfterCreateValidationError() throws Exception {
-//		mockMvc().perform(fileUpload("/admin/brands"));
-//			.andExpect(status().isOk())
-//			.andExpect(model().size(1))
-//			.andExpect(model().attributeHasErrors("brand"))
-//			.andExpect(forwardedUrl(view("brand", "new")));
-//	}
-	
+		
 	@Test
 	public void shouldRenderTheEditBrandForm() throws Exception {
 		when(mockService.findById(eq(OID))).thenReturn(new Brand());
