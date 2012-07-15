@@ -1,4 +1,4 @@
-package com.trenako.web.infrastructure;
+package com.trenako.web.editors;
 
 import java.beans.PropertyEditorSupport;
 

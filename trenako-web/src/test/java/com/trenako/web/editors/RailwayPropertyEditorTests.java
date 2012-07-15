@@ -13,45 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.web.infrastructure;
+package com.trenako.web.editors;
 
 import static org.junit.Assert.*;
 
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
-import com.trenako.entities.Scale;
+import com.trenako.entities.Railway;
+import com.trenako.web.editors.RailwayPropertyEditor;
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-public class ScalePropertyEditorTests {
+public class RailwayPropertyEditorTests {
 
 	@Test
 	public void shouldSetValidValues() {
 		ObjectId id = new ObjectId();
 		
-		ScalePropertyEditor pe = new ScalePropertyEditor(true);
+		RailwayPropertyEditor pe = new RailwayPropertyEditor(true);
 		pe.setAsText(id.toString());
 		
-		Scale scale = (Scale) pe.getValue();
-		assertNotNull(scale);
-		assertEquals(id, scale.getId());
+		Railway railway = (Railway) pe.getValue();
+		assertNotNull(railway);
+		assertEquals(id, railway.getId());
 	}
 
 	@Test
 	public void shouldSetNullForEmptyStrings() {
-		ScalePropertyEditor pe = new ScalePropertyEditor(true);
+		RailwayPropertyEditor pe = new RailwayPropertyEditor(true);
 		pe.setAsText("");
-		Scale scale = (Scale) pe.getValue();
-		assertNull(scale);
+		Railway railway = (Railway) pe.getValue();
+		assertNull(railway);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowsExceptionWithInvalidValues() {
-		ScalePropertyEditor pe = new ScalePropertyEditor(true);
+		RailwayPropertyEditor pe = new RailwayPropertyEditor(true);
 		pe.setAsText("123456");
 	}
 	

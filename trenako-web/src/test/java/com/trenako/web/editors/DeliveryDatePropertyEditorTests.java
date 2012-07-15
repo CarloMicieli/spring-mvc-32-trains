@@ -13,46 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.web.infrastructure;
+package com.trenako.web.editors;
 
 import static org.junit.Assert.*;
 
-import org.bson.types.ObjectId;
 import org.junit.Test;
 
-import com.trenako.entities.Brand;
+import com.trenako.entities.DeliveryDate;
+import com.trenako.web.editors.DeliveryDatePropertyEditor;
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-public class BrandPropertyEditorTests {
+public class DeliveryDatePropertyEditorTests {
 
 	@Test
 	public void shouldSetValidValues() {
-		ObjectId id = new ObjectId();
+		DeliveryDatePropertyEditor pe = new DeliveryDatePropertyEditor(true);
+		pe.setAsText("2012/Q1");
 		
-		BrandPropertyEditor pe = new BrandPropertyEditor(true);
-		pe.setAsText(id.toString());
-		
-		Brand brand = (Brand) pe.getValue();
-		assertNotNull(brand);
-		assertEquals(id, brand.getId());
+		DeliveryDate dd = (DeliveryDate) pe.getValue();
+		assertNotNull(dd);
+		assertEquals("2012/Q1", dd.toString());
 	}
 
 	@Test
 	public void shouldSetNullForEmptyStrings() {
-		BrandPropertyEditor pe = new BrandPropertyEditor(true);
+		DeliveryDatePropertyEditor pe = new DeliveryDatePropertyEditor(true);
 		pe.setAsText("");
-		Brand brand = (Brand) pe.getValue();
-		assertNull(brand);
+		DeliveryDate dd = (DeliveryDate) pe.getValue();
+		assertNull(dd);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowsExceptionWithInvalidValues() {
-		BrandPropertyEditor pe = new BrandPropertyEditor(true);
+		DeliveryDatePropertyEditor pe = new DeliveryDatePropertyEditor(true);
 		pe.setAsText("123456");
 	}
-	
 }

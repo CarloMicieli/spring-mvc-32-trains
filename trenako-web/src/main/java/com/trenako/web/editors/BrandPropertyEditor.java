@@ -13,28 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.web.infrastructure;
+package com.trenako.web.editors;
 
 import java.beans.PropertyEditorSupport;
 
 import org.bson.types.ObjectId;
 import org.springframework.util.StringUtils;
 
-import com.trenako.entities.Railway;
+import com.trenako.entities.Brand;
 
 /**
- * 
+ * Custom {@code PropertyEditor} for fields with {@link Brand} type.
  * @author Carlo Micieli
  *
  */
-public class RailwayPropertyEditor extends PropertyEditorSupport {
+public class BrandPropertyEditor extends PropertyEditorSupport {
+	
 	private final boolean allowEmpty;
 	
 	/**
-	 * Creates a new {@code RailwayPropertyEditor}.
+	 * Creates a new {@code BrandPropertyEditor}.
 	 * @param allowEmpty if empty strings should be allowed
 	 */
-	public RailwayPropertyEditor(boolean allowEmpty) {
+	public BrandPropertyEditor(boolean allowEmpty) {
 		this.allowEmpty = allowEmpty;
 	}
 	
@@ -50,6 +51,7 @@ public class RailwayPropertyEditor extends PropertyEditorSupport {
 		}
 		
 		ObjectId id = new ObjectId(text);
-		setValue(new Railway(id));
+		setValue(new Brand(id));
 	}
+	
 }

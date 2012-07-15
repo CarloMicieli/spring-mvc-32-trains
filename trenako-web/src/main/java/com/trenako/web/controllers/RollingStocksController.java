@@ -40,12 +40,12 @@ import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
 import com.trenako.services.RollingStocksService;
 import com.trenako.services.SelectOptionsService;
+import com.trenako.web.editors.BrandPropertyEditor;
+import com.trenako.web.editors.DeliveryDatePropertyEditor;
+import com.trenako.web.editors.RailwayPropertyEditor;
+import com.trenako.web.editors.ScalePropertyEditor;
 import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.WebImageService;
-import com.trenako.web.infrastructure.BrandPropertyEditor;
-import com.trenako.web.infrastructure.DeliveryDatePropertyEditor;
-import com.trenako.web.infrastructure.RailwayPropertyEditor;
-import com.trenako.web.infrastructure.ScalePropertyEditor;
 
 /**
  * It represents the rolling stocks management controller.
