@@ -16,7 +16,10 @@
 package com.trenako.services;
 
 import com.trenako.SearchCriteria;
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.Scale;
 
 /**
  * It represents a service for the rolling stocks browsing.
@@ -111,4 +114,34 @@ public interface BrowseService {
 	 * @return the rolling stocks list.
 	 */
 	Iterable<RollingStock> findByTag(String tag);
+
+	/**
+	 * Returns the list of model railway {@code Era}.
+	 * @return the eras list
+	 */
+	Iterable<String> eras();
+
+	/**
+	 * Returns the list of model railway {@code Scale}.
+	 * @return the scales list
+	 */
+	Iterable<Scale> scales();
+	
+	/**
+	 * Returns the list of {@code Railway}.
+	 * @return the scales list
+	 */
+	Iterable<Railway> railways();
+
+	/**
+	 * Returns the list of model railway {@code Brand}.
+	 * @return the brands list
+	 */
+	Iterable<Brand> brands();
+
+	/**
+	 * Returns the list of model railway {@code Category}.
+	 * @return the brands list
+	 */
+	Iterable<String> categories();
 }

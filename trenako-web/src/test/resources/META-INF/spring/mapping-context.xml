@@ -33,6 +33,10 @@
         <constructor-arg name="classToBeMocked" value="com.trenako.services.RollingStocksService" />
     </bean>
 
+     <bean id="browseService" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.services.BrowseService" />
+    </bean>
+
      <bean id="opService" class="com.trenako.web.test.MockitoFactoryBean">
         <constructor-arg name="classToBeMocked" value="com.trenako.services.SelectOptionsService" />
     </bean>	
