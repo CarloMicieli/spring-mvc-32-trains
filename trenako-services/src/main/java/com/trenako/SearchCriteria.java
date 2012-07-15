@@ -35,13 +35,13 @@ import com.trenako.utility.Cat;
  *
  */
 public class SearchCriteria {
-	private final String powerMethod;
-	private final String brand;
-	private final String scale;
-	private final String category;
-	private final Cat cat;
-	private final String era;
-	private final String railway;
+	private String powerMethod;
+	private String brand;
+	private String scale;
+	private String category;
+	private Cat cat;
+	private String era;
+	private String railway;
 	
 	private SearchCriteria(Builder b) {
 		this.powerMethod = b.powerMethod;
@@ -53,6 +53,12 @@ public class SearchCriteria {
 		this.railway = b.railway;
 	}
 	
+	/**
+	 * Creates an empty {@code SearchCriteria}.
+	 */
+	public SearchCriteria() {
+	}
+
 	/**
 	 * It represents a {@code SearchCriteria} builder class.
 	 * @author Carlo Micieli
@@ -313,7 +319,63 @@ public class SearchCriteria {
 	public boolean hasRailway() {
 		return railway!=null && !railway.equals("");
 	}
-	
+
+	/**
+	 * Sets the {@code power method} search criteria.
+	 * @param powerMethod the {@code power method} 
+	 */
+	public void setPowerMethod(String powerMethod) {
+		this.powerMethod = powerMethod;
+	}
+
+	/**
+	 * Sets the {@code Brand} search criteria.
+	 * @param powerMethod the {@code Brand} 
+	 */
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	/**
+	 * Sets the {@code Scale} search criteria.
+	 * @param powerMethod the {@code Scale} 
+	 */
+	public void setScale(String scale) {
+		this.scale = scale;
+	}
+
+	/**
+	 * Sets the {@code Category} search criteria.
+	 * @param powerMethod the {@code Category} 
+	 */
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	/**
+	 * Sets the {@code Cat} search criteria.
+	 * @param powerMethod the {@code Cat} 
+	 */
+	public void setCat(Cat cat) {
+		this.cat = cat;
+	}
+
+	/**
+	 * Sets the {@code Era} search criteria.
+	 * @param powerMethod the {@code Era} 
+	 */
+	public void setEra(String era) {
+		this.era = era;
+	}
+
+	/**
+	 * Sets the {@code Railway} search criteria.
+	 * @param powerMethod the {@code Railway} 
+	 */
+	public void setRailway(String railway) {
+		this.railway = railway;
+	}
+
 	/**
 	 * Returns a string representation of the {@code SearchCriteria}.
 	 * @return a string representation of the {@code SearchCriteria}

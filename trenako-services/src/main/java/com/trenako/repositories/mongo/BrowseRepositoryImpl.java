@@ -15,28 +15,23 @@
  */
 package com.trenako.repositories.mongo;
 
-import static com.trenako.repositories.mongo.RollingStockQueryBuilder.*;
-import static org.springframework.data.mongodb.core.query.Criteria.*;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 
-import com.trenako.SearchCriteria;
-import com.trenako.entities.RollingStock;
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
+import com.trenako.entities.Scale;
 import com.trenako.repositories.BrowseRepository;
-import com.trenako.results.PaginatedResults;
-import com.trenako.results.RangeRequest;
-import com.trenako.results.mongo.RollingStockResults;
 
 /**
  * The concrete implementation for the browse repository.
  * @author Carlo Micieli
  *
  */
+@Repository("browseRepository")
 public class BrowseRepositoryImpl implements BrowseRepository {
 	
 	private final MongoTemplate mongo;
@@ -51,68 +46,23 @@ public class BrowseRepositoryImpl implements BrowseRepository {
 	}
 
 	@Override
-	public PaginatedResults<RollingStock> findByBrand(String brand, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand), range);
+	public Iterable<Brand> getBrands() {
+		return findAll(Brand.class);
 	}
 
 	@Override
-	public PaginatedResults<RollingStock> findByEra(String era, RangeRequest range) {
-		return runRangeQuery(where("era").is(era), range);
+	public Iterable<Scale> getScales() {
+		return findAll(Scale.class);
 	}
 
 	@Override
-	public PaginatedResults<RollingStock> findByScale(String scale, RangeRequest range) {
-		return runRangeQuery(where("scaleName").is(scale), range);
+	public Iterable<Railway> getRailways() {
+		return findAll(Railway.class);
 	}
 
-	@Override
-	public PaginatedResults<RollingStock> findByCategory(String category, RangeRequest range) {
-		return runRangeQuery(where("category").is(category), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByPowerMethod(String powerMethod, RangeRequest range) {
-		return runRangeQuery(where("powerMethod").is(powerMethod), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByRailway(String railway, RangeRequest range) {
-		return runRangeQuery(where("railwayName").is(railway), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByBrandAndEra(String brand, String era, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand).and("era").is(era), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByBrandAndScale(String brand, String scale, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand).and("scaleName").is(scale), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByBrandAndCategory(String brand, String category, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand).and("category").is(category), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByBrandAndRailway(String brand, String railway, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand).and("railwayName").is(railway), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range) {
-		return runRangeQuery(MongoSearchCriteria.buildCriteria(sc), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range) {
-		return runRangeQuery(where("tag").is(tag), range);
-	}
-	
-	private RollingStockResults runRangeQuery(Criteria criteria, RangeRequest range) {
-		final Query query = buildQuery(criteria, range);
-		final List<RollingStock> results = mongo.find(query, RollingStock.class);
-		return new RollingStockResults(results, range);
+	private <T> Iterable<T> findAll(Class<T> clazz) {
+		Query query = new Query();
+		query.sort().on("name", Order.ASCENDING);
+		return mongo.find(query, clazz);
 	}
 }

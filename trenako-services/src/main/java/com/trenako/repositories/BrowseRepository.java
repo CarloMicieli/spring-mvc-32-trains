@@ -15,10 +15,9 @@
  */
 package com.trenako.repositories;
 
-import com.trenako.SearchCriteria;
-import com.trenako.entities.RollingStock;
-import com.trenako.results.PaginatedResults;
-import com.trenako.results.RangeRequest;
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
+import com.trenako.entities.Scale;
 
 /**
  * It represents the repository for the rolling stocks browsing.
@@ -26,103 +25,23 @@ import com.trenako.results.RangeRequest;
  *
  */
 public interface BrowseRepository {
-	/**
-	 * Returns the {@code RollingStock} list by {@code Brand} name.
-	 * @param brand the brand name
-	 * @param range the {@code RangeRequest} information
-	 * @return the {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByBrand(String brand, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list by {@code Era}.
-	 * @param era the era
-	 * @param range the {@code RangeRequest} information
-	 * @return the {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByEra(String era, RangeRequest range);
 
 	/**
-	 * Returns the {@code RollingStock} list by {@code Scale} name.
-	 * @param scale the {@code Scale} name
-	 * @param range the {@code RangeRequest} information
-	 * @return the {@code RollingStock} list
+	 * Returns the list of {@code Brand}s.
+	 * @return a list of {@code Brand}s
 	 */
-	PaginatedResults<RollingStock> findByScale(String scale, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list by {@code Category} name.
-	 * @param category the {@code Category} name
-	 * @param range the {@code RangeRequest} information
-	 * @return the {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByCategory(String category, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list by power method.
-	 * @param powerMethod the power method
-	 * @param range the {@code RangeRequest} information
-	 * @return the {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByPowerMethod(String powerMethod, RangeRequest range);
+	Iterable<Brand> getBrands();
 
 	/**
-	 * Returns the {@code RollingStock} list by {@code Railway} name.
-	 * @param railway the {@code Railway} name
-	 * @return the {@code RollingStock} list
+	 * Returns the list of {@code Scale}s.
+	 * @return a list of {@code Scale}s
 	 */
-	PaginatedResults<RollingStock> findByRailway(String railway, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list by {@code Brand} name and era.
-	 * @param brand the {@code Brand} name
-	 * @param era the era
-	 * @param range the {@code RangeRequest} information
-	 * @return the {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByBrandAndEra(String brand, String era, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list by {@code Brand} name and {@code Scale} name.
-	 * @param brand the {@code Brand} name
-	 * @param scale the {@code Scale} name
-	 * @param range the {@code RangeRequest} information
-	 * @return the {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByBrandAndScale(String brand, String scale, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list by {@code Brand} name and category.
-	 * @param brand the {@code Brand} name
-	 * @param category the category name
-	 * @param range the {@code RangeRequest} information
-	 * @return the {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByBrandAndCategory(String brand, String category, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list by {@code Brand} name and {@code Railway} name.
-	 * @param brand the {@code Brand} name
-	 * @param railway the {@code Railway} name
-	 * @param range the {@code RangeRequest} information
-	 * @return the {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByBrandAndRailway(String brand, String railway, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list according the provided search criteria.
-	 * @param sc the search criteria
-	 * @param range the {@code RangeRequest} information
-	 * @return a {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list with the provided tag.
-	 * @param tag the tag value
-	 * @param range the {@code RangeRequest} information
-	 * @return a {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range);
+	Iterable<Scale> getScales();
 
+	/**
+	 * Returns the list of {@code Railway}s.
+	 * @return a list of {@code Railway}s
+	 */
+	Iterable<Railway> getRailways();
+	
 }
