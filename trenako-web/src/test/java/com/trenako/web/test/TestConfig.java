@@ -15,20 +15,9 @@
  */
 package com.trenako.web.test;
 
-import static org.mockito.Mockito.*;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-
-import com.trenako.services.BrandsService;
-import com.trenako.services.RailwaysService;
-import com.trenako.services.RollingStocksService;
-import com.trenako.services.ScalesService;
-import com.trenako.services.SelectOptionsService;
-import com.trenako.web.images.WebImageService;
-import com.trenako.web.security.SignupService;
 
 /**
  * 
@@ -36,34 +25,7 @@ import com.trenako.web.security.SignupService;
  *
  */
 @Configuration
-@ComponentScan("com.trenako.web.controllers")
 @Profile("test")
+@ImportResource("classpath:META-INF/spring/mapping-context.xml")
 public class TestConfig {
-	public @Bean BrandsService brandsService() {
-		return mock(BrandsService.class);
-	}
-	
-	public @Bean WebImageService imagesService() {
-		return mock(WebImageService.class);
-	}
-
-	public @Bean RailwaysService railwaysService() {
-		return mock(RailwaysService.class);
-	}
-
-	public @Bean ScalesService scalesService() {
-		return mock(ScalesService.class);
-	}
-	
-	public @Bean SignupService signupService() {
-		return mock(SignupService.class);
-	}
-	
-	public @Bean RollingStocksService rsService() {
-		return mock(RollingStocksService.class);
-	}
-	
-	public @Bean SelectOptionsService opService() {
-		return mock(SelectOptionsService.class);
-	}
 }
