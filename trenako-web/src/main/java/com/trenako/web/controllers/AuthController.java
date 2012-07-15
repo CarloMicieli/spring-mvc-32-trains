@@ -44,9 +44,6 @@ public class AuthController {
 		this.signupService = signupService;
 	}
 	
-	// for testing 
-	// void setSecurityService(SecurityService 
-	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 		return "auth/login";
