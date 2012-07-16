@@ -16,7 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.entities.Scale;
 
@@ -25,7 +25,7 @@ import com.trenako.entities.Scale;
  * @author Carlo Micieli
  *
  */
-public interface ScalesRepository extends PagingAndSortingRepository<Scale, ObjectId> {
+public interface ScalesRepository extends MongoRepository<Scale, ObjectId> {
 	/**
 	 * Returns the {@code Scale} with the provided name.
 	 * @param name the {@code Scale} name.

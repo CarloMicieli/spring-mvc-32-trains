@@ -16,7 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.entities.RollingStock;
 
@@ -25,7 +25,7 @@ import com.trenako.entities.RollingStock;
  * @author Carlo Micieli
  *
  */
-public interface RollingStocksRepository extends CrudRepository<RollingStock, ObjectId> {
+public interface RollingStocksRepository extends MongoRepository<RollingStock, ObjectId> {
 	
 	/**
 	 Finds the rolling stock document in the collection by slug.

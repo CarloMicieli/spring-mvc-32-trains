@@ -16,7 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.entities.Railway;
 
@@ -25,7 +25,7 @@ import com.trenako.entities.Railway;
  * @author Carlo Micieli
  *
  */
-public interface RailwaysRepository extends PagingAndSortingRepository<Railway, ObjectId> {
+public interface RailwaysRepository extends MongoRepository<Railway, ObjectId> {
 	/**
 	 * Returns the {@code Railway} with the provided name.
 	 * @param name the {@code Railway} name

@@ -16,7 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.entities.Brand;
 
@@ -26,7 +26,7 @@ import com.trenako.entities.Brand;
  * @author Carlo Micieli
  *
  */
-public interface BrandsRepository extends PagingAndSortingRepository<Brand, ObjectId> {
+public interface BrandsRepository extends MongoRepository<Brand, ObjectId> {
 	/**
 	 * Returns the {@code Brand} with the provided id.
 	 * @param id the {@code Brand} id.

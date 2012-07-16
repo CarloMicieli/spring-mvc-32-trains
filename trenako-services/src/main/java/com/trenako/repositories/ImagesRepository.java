@@ -16,7 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.entities.Image;
 
@@ -26,7 +26,7 @@ import com.trenako.entities.Image;
  * @author Carlo Micieli
  *
  */
-public interface ImagesRepository extends CrudRepository<Image, ObjectId> {
+public interface ImagesRepository extends MongoRepository<Image, ObjectId> {
 
 	/**
 	 * Returns the {@link Image} for the provided parent document id.

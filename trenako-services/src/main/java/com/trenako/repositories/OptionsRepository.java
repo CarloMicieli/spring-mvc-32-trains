@@ -16,7 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.entities.Option;
 import com.trenako.entities.OptionFamily;
@@ -26,7 +26,7 @@ import com.trenako.entities.OptionFamily;
  * @author Carlo Micieli
  *
  */
-public interface OptionsRepository extends CrudRepository<Option, ObjectId> {
+public interface OptionsRepository extends MongoRepository<Option, ObjectId> {
 
 	/**
 	 * Returns the option document by option name.
