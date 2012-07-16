@@ -40,8 +40,4 @@
      <bean id="rsSearchService" class="com.trenako.web.test.MockitoFactoryBean">
         <constructor-arg name="classToBeMocked" value="com.trenako.services.RollingStockSearchService" />
     </bean>
-
-     <bean id="opService" class="com.trenako.web.test.MockitoFactoryBean">
-        <constructor-arg name="classToBeMocked" value="com.trenako.services.SelectOptionsService" />
-    </bean>	
 </beans>

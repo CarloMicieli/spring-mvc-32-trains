@@ -34,22 +34,22 @@ import com.trenako.web.test.AbstractSpringControllerTests;
  * @author Carlo Micieli
  *
  */
-public class RollingStockSearchControllerMappingTests extends AbstractSpringControllerTests {
-	
-	private @Autowired RollingStockSearchService mockService;
-	
-	@After
-	public void cleanUp() {
-		reset(mockService);
-	}
-	
-	@Test
-	public void shouldPerformSearch() throws Exception {
-		
-		mockMvc().perform(get("/rs/brand/{brand}", "ACME"))
-			.andExpect(status().isOk());
-		
-		ArgumentCaptor<SearchCriteria> arg = ArgumentCaptor.forClass(SearchCriteria.class);
-		verify(mockService, times(1)).findByCriteria(arg.capture(), isA(RangeRequest.class));
-	}
-}
+//public class RollingStockSearchControllerMappingTests extends AbstractSpringControllerTests {
+//	
+//	private @Autowired RollingStockSearchService mockService;
+//	
+//	@After
+//	public void cleanUp() {
+//		reset(mockService);
+//	}
+//	
+//	@Test
+//	public void shouldPerformSearch() throws Exception {
+//		
+//		mockMvc().perform(get("/rs/brand/{brand}", "ACME"))
+//			.andExpect(status().isOk());
+//		
+//		ArgumentCaptor<SearchCriteria> arg = ArgumentCaptor.forClass(SearchCriteria.class);
+//		verify(mockService, times(1)).findByCriteria(arg.capture(), isA(RangeRequest.class));
+//	}
+//}

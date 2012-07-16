@@ -41,7 +41,6 @@ import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
 import com.trenako.services.RollingStocksService;
-import com.trenako.services.SelectOptionsService;
 import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.WebImageService;
 
@@ -58,14 +57,13 @@ public class RollingStocksControllerTests {
 	@Mock BindingResult mockResult;
 	@Mock WebImageService imgService;
 	@Mock RollingStocksService service;
-	@Mock SelectOptionsService soService;
 	
 	RollingStocksController controller;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new RollingStocksController(service, soService, imgService);
+		controller = new RollingStocksController(service, imgService);
 	}
 	
 	@Test
@@ -98,14 +96,14 @@ public class RollingStocksControllerTests {
 		List<Railway> railwayValue = Arrays.asList(new Railway(), new Railway());
 		List<Scale> scaleValue = Arrays.asList(new Scale(), new Scale());
 
-		when(soService.brands()).thenReturn(brandValue);
-		when(soService.railways()).thenReturn(railwayValue);
-		when(soService.scales()).thenReturn(scaleValue);
+		when(service.brands()).thenReturn(brandValue);
+		when(service.railways()).thenReturn(railwayValue);
+		when(service.scales()).thenReturn(scaleValue);
 		
 		List<String> value = Arrays.asList("aaa", "bbb");
-		when(soService.categories()).thenReturn(value);
-		when(soService.eras()).thenReturn(value);
-		when(soService.powerMethods()).thenReturn(value);
+		when(service.categories()).thenReturn(value);
+		when(service.eras()).thenReturn(value);
+		when(service.powerMethods()).thenReturn(value);
 		
 		ModelAndView mav = controller.createNew();
 		
@@ -131,9 +129,9 @@ public class RollingStocksControllerTests {
 	}
 		
 	RollingStock build(ObjectId rsId, ObjectId brandId, ObjectId railwayId, ObjectId scaleId) {
-		when(soService.findBrand(eq(brandId))).thenReturn(new Brand("ACME"));
-		when(soService.findRailway(eq(railwayId))).thenReturn(new Railway("DB"));
-		when(soService.findScale(eq(scaleId))).thenReturn(new Scale("H0"));
+		when(service.findBrand(eq(brandId))).thenReturn(new Brand("ACME"));
+		when(service.findRailway(eq(railwayId))).thenReturn(new Railway("DB"));
+		when(service.findScale(eq(scaleId))).thenReturn(new Scale("H0"));
 	
 		return new RollingStock.Builder(new Brand(brandId), "123456")
 			.id(rsId)
@@ -172,14 +170,14 @@ public class RollingStocksControllerTests {
 		List<Railway> railwayValue = Arrays.asList(new Railway(), new Railway());
 		List<Scale> scaleValue = Arrays.asList(new Scale(), new Scale());
 
-		when(soService.brands()).thenReturn(brandValue);
-		when(soService.railways()).thenReturn(railwayValue);
-		when(soService.scales()).thenReturn(scaleValue);
+		when(service.brands()).thenReturn(brandValue);
+		when(service.railways()).thenReturn(railwayValue);
+		when(service.scales()).thenReturn(scaleValue);
 		
 		List<String> list = Arrays.asList("aaa", "bbb");
-		when(soService.categories()).thenReturn(list);
-		when(soService.eras()).thenReturn(list);
-		when(soService.powerMethods()).thenReturn(list);
+		when(service.categories()).thenReturn(list);
+		when(service.eras()).thenReturn(list);
+		when(service.powerMethods()).thenReturn(list);
 		
 		ModelAndView mav = controller.editForm(slug);
 		

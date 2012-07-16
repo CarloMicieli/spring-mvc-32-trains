@@ -18,7 +18,10 @@ package com.trenako.services;
 import org.bson.types.ObjectId;
 
 import com.trenako.SearchCriteria;
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.Scale;
 
 /**
  * The interface for the rolling stocks service.
@@ -72,4 +75,61 @@ public interface RollingStocksService {
 	 * @param rs the {@code RollingStock} to be removed
 	 */
 	void remove(RollingStock rs);
+	
+	/**
+	 * Returns the list of {@code Brand}s.
+	 * @return the {@code Brand} list
+	 */
+	Iterable<Brand> brands();
+
+	/**
+	 * Returns the list of {@code Railway}s.
+	 * @return the {@code Railway} list
+	 */
+	Iterable<Railway> railways();
+
+	/**
+	 * Returns the list of {@code Scale}s.
+	 * @return the {@code Scale} list
+	 */
+	Iterable<Scale> scales();
+
+	/**
+	 * Returns the list of categories.
+	 * @return the {@code Category} list
+	 */
+	Iterable<String> categories();
+	
+	/**
+	 * Returns the list of eras.
+	 * @return the {@code Era} list
+	 */
+	Iterable<String> eras();
+	
+	/**
+	 * Returns the list of power methods.
+	 * @return the {@code power method} list
+	 */
+	Iterable<String> powerMethods();
+
+	/**
+	 * Returns the {@code Brand} with the provided id.
+	 * @param brandId the {@code Brand} id
+	 * @return a {@code Brand} if found; {@code null} otherwise
+	 */
+	Brand findBrand(ObjectId brandId);
+	
+	/**
+	 * Returns the {@code Scale} with the provided id.
+	 * @param scaleId the {@code Scale} id
+	 * @return a {@code Scale} if found; {@code null} otherwise
+	 */
+	Scale findScale(ObjectId scaleId);
+	
+	/**
+	 * Returns the {@code Railway} with the provided id.
+	 * @param railwayId the {@code Railway} id
+	 * @return a {@code Railway} if found; {@code null} otherwise
+	 */
+	Railway findRailway(ObjectId railwayId);
 }

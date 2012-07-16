@@ -39,7 +39,6 @@ import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
 import com.trenako.services.RollingStocksService;
-import com.trenako.services.SelectOptionsService;
 import com.trenako.web.editors.BrandPropertyEditor;
 import com.trenako.web.editors.DeliveryDatePropertyEditor;
 import com.trenako.web.editors.RailwayPropertyEditor;
@@ -57,20 +56,17 @@ import com.trenako.web.images.WebImageService;
 public class RollingStocksController {
 
 	private final RollingStocksService service;
-	private final SelectOptionsService soService;
 	private final WebImageService imgService;
 	
 	/**
 	 * Creates a new {@code RollingStocksController}.
 	 * @param service 
-	 * @param soService the service used to fill the drop down lists
+	 * @param imgService the upload files service
 	 */
 	@Autowired
 	public RollingStocksController(RollingStocksService service, 
-			SelectOptionsService soService,
 			WebImageService imgService) {
 		this.service = service;
-		this.soService = soService;
 		this.imgService = imgService;
 	}
 	
@@ -183,28 +179,28 @@ public class RollingStocksController {
 	
 	private void loadBrand(RollingStock rs) {
 		final ObjectId brandId = rs.getBrand().getId();
-		final Brand brand = soService.findBrand(brandId);
+		final Brand brand = service.findBrand(brandId);
 		rs.setBrand(brand);		
 	}
 	
 	private void loadRailway(RollingStock rs) {
 		final ObjectId railwayId = rs.getRailway().getId();
-		final Railway railway = soService.findRailway(railwayId);
+		final Railway railway = service.findRailway(railwayId);
 		rs.setRailway(railway);		
 	}
 	
 	private void loadScale(RollingStock rs) {
 		final ObjectId scaleId = rs.getScale().getId();
-		final Scale scale = soService.findScale(scaleId);
+		final Scale scale = service.findScale(scaleId);
 		rs.setScale(scale);		
 	}
 	
 	private void fillDropdownLists(ModelAndView mav) {
-		mav.addObject("brands", soService.brands());
-		mav.addObject("scales", soService.scales());
-		mav.addObject("railways", soService.railways());
-		mav.addObject("categories", soService.categories());
-		mav.addObject("eras", soService.eras());
-		mav.addObject("powerMethods", soService.powerMethods());
+		mav.addObject("brands", service.brands());
+		mav.addObject("scales", service.scales());
+		mav.addObject("railways", service.railways());
+		mav.addObject("categories", service.categories());
+		mav.addObject("eras", service.eras());
+		mav.addObject("powerMethods", service.powerMethods());
 	}
 }
