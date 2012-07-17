@@ -65,7 +65,7 @@ allprojects {
 
 			//default settings for dependencies sources/javadoc download:
 			downloadSources = true
-			downloadJavadoc = false
+			downloadJavadoc = true
 		}
 	}
 
@@ -166,6 +166,9 @@ project("trenako-web") {
 		compile("org.springframework.security:spring-security-web:${securityVersion}") {
 			exclude group: "commons-logging", module: "commons-logging"
 		}
+		compile("org.springframework.security:spring-security-config:${securityVersion}") {
+			exclude group: "commons-logging", module: "commons-logging"
+		}
 		compile "org.springframework.security:spring-security-taglibs:${securityVersion}"
 
 		// GCLIB, required for @Configuration usage
@@ -189,7 +192,7 @@ project("trenako-web") {
 			"commons-io:commons-io:2.1"
 
 		// Servlet Api
-		providedCompile "javax.servlet:servlet-api:2.5"
+		providedCompile "javax.servlet:javax.servlet-api:3.0.1"
 		compile "javax.servlet:jstl:1.2"
 
 		// Spring test mvc
