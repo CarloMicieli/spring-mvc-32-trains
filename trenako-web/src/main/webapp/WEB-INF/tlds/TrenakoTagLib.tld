@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+	version="2.1">
+
+   <tlibversion>1.0</tlibversion>
+   <info>The custom tags library</info>
+
+  <tag>
+    <name>breadcrumb</name>
+    <tagclass>com.trenako.web.tags.BreadcrumbTags</tagclass>
+    <bodycontent>empty</bodycontent>
+   	<description>
+   		Display breadcrumb for rolling stock search.
+   	</description>
+    <attribute>
+		<name>criteria</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+		<type>com.trenako.SearchCriteria</type>
+    </attribute>
+  </tag>         
+</taglib>

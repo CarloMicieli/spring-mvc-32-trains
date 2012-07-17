@@ -193,7 +193,8 @@ project("trenako-web") {
 
 		// Servlet Api
 		providedCompile "javax.servlet:javax.servlet-api:3.0.1"
-		compile "javax.servlet:jstl:1.2"
+		compile "javax.servlet:jstl:1.2",
+			"javax.servlet.jsp:javax.servlet.jsp-api:2.2.1"
 
 		// Spring test mvc
 		testCompile "org.springframework:spring-test-mvc:1.0.0.BUILD-SNAPSHOT",

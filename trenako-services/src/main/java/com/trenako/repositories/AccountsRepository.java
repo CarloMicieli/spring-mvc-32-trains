@@ -16,7 +16,7 @@
 package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.entities.Account;
 
@@ -26,7 +26,7 @@ import com.trenako.entities.Account;
  * @author Carlo Micieli
  *
  */
-public interface AccountsRepository extends CrudRepository<Account, ObjectId> {
+public interface AccountsRepository extends MongoRepository<Account, ObjectId> {
 	
 	/**
 	 * Returns the {@code Account} with the provided email address.
