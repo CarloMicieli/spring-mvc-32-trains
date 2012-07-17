@@ -330,7 +330,7 @@ public class SearchCriteria {
 
 	/**
 	 * Sets the {@code Brand} search criteria.
-	 * @param powerMethod the {@code Brand} 
+	 * @param brand the {@code Brand} 
 	 */
 	public void setBrand(String brand) {
 		this.brand = brand;
@@ -338,7 +338,7 @@ public class SearchCriteria {
 
 	/**
 	 * Sets the {@code Scale} search criteria.
-	 * @param powerMethod the {@code Scale} 
+	 * @param scale the {@code Scale} 
 	 */
 	public void setScale(String scale) {
 		this.scale = scale;
@@ -346,7 +346,7 @@ public class SearchCriteria {
 
 	/**
 	 * Sets the {@code Category} search criteria.
-	 * @param powerMethod the {@code Category} 
+	 * @param category the {@code Category} 
 	 */
 	public void setCategory(String category) {
 		this.category = category;
@@ -354,7 +354,7 @@ public class SearchCriteria {
 
 	/**
 	 * Sets the {@code Cat} search criteria.
-	 * @param powerMethod the {@code Cat} 
+	 * @param cat the {@code Cat} 
 	 */
 	public void setCat(Cat cat) {
 		this.cat = cat;
@@ -362,7 +362,7 @@ public class SearchCriteria {
 
 	/**
 	 * Sets the {@code Era} search criteria.
-	 * @param powerMethod the {@code Era} 
+	 * @param era the {@code Era} 
 	 */
 	public void setEra(String era) {
 		this.era = era;
@@ -370,7 +370,7 @@ public class SearchCriteria {
 
 	/**
 	 * Sets the {@code Railway} search criteria.
-	 * @param powerMethod the {@code Railway} 
+	 * @param railway the {@code Railway} 
 	 */
 	public void setRailway(String railway) {
 		this.railway = railway;
