@@ -30,6 +30,7 @@
 		<intercept-url pattern="/auth/signup*" access="permitAll" />
 		<intercept-url pattern="/auth/logout*" access="permitAll" />
 		<intercept-url pattern="/images/**" access="permitAll" />
+		<intercept-url pattern="/rs/**" access="permitAll" />
 		<intercept-url pattern="/browse/**" access="permitAll" />
 		<intercept-url pattern="/default" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/**" access="isAuthenticated()" />
