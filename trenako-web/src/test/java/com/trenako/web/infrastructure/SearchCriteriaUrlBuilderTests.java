@@ -29,13 +29,22 @@ import com.trenako.SearchCriteria;
 public class SearchCriteriaUrlBuilderTests {
 
 	@Test
+	public void shouldBuildUrlsForEmptySearch() {
+		SearchCriteria sc = new SearchCriteria();
+		
+		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
+		
+		assertEquals("/rs", url);
+	}
+	
+	@Test
 	public void shouldBuildBrandUrls() {
 		SearchCriteria sc = new SearchCriteria.Builder()
 			.brand("ACME").build();
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/brand/ACME", url);
+		assertEquals("/rs/brand/ACME", url);
 	}
 
 	@Test
@@ -47,7 +56,7 @@ public class SearchCriteriaUrlBuilderTests {
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/brand/ACME/scale/H0", url);
+		assertEquals("/rs/brand/ACME/scale/H0", url);
 	}
 	
 	@Test
@@ -60,7 +69,7 @@ public class SearchCriteriaUrlBuilderTests {
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/brand/ACME/scale/H0/cat/ac-electric-locomotives", url);
+		assertEquals("/rs/brand/ACME/scale/H0/cat/ac-electric-locomotives", url);
 	}
 	
 	@Test
@@ -74,7 +83,7 @@ public class SearchCriteriaUrlBuilderTests {
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/brand/ACME/scale/H0/cat/ac-electric-locomotives/railway/DB", url);
+		assertEquals("/rs/brand/ACME/scale/H0/cat/ac-electric-locomotives/railway/DB", url);
 	}
 	
 	@Test
@@ -89,7 +98,7 @@ public class SearchCriteriaUrlBuilderTests {
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/brand/ACME/scale/H0/cat/ac-electric-locomotives/railway/DB/era/IV", url);
+		assertEquals("/rs/brand/ACME/scale/H0/cat/ac-electric-locomotives/railway/DB/era/IV", url);
 	}
 	
 	@Test
@@ -101,6 +110,6 @@ public class SearchCriteriaUrlBuilderTests {
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/powermethod/ac/category/electric-locomotives", url);
+		assertEquals("/rs/powermethod/ac/category/electric-locomotives", url);
 	}
 }

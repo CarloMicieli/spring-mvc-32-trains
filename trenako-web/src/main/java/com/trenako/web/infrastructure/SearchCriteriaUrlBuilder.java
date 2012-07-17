@@ -36,6 +36,8 @@ public class SearchCriteriaUrlBuilder {
 	public static String buildUrl(SearchCriteria sc) {
 		StringBuilder sb = new StringBuilder();
 		
+		sb.append("/rs");
+		
 		if (sc.hasBrand()) {
 			append(sb, "brand", sc.getBrand());
 		}
