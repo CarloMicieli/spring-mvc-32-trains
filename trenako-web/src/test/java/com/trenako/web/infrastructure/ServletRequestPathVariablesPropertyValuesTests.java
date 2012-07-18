@@ -31,7 +31,7 @@ public class ServletRequestPathVariablesPropertyValuesTests {
 	@Test
 	public void shouldFillPropertyValues() {
 		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.setServletPath("/rs/brand/ACME");
+		request.setRequestURI("/trenako-web/rs/brand/ACME");
 		
 		PropertyValues pvs =
 				new ServletRequestPathVariablesPropertyValues(request);
@@ -40,5 +40,4 @@ public class ServletRequestPathVariablesPropertyValuesTests {
 		assertEquals(1, pvs.getPropertyValues().length);
 		assertEquals("ACME", pvs.getPropertyValue("brand").getValue());
 	}
-
 }

@@ -41,6 +41,6 @@ public class ServletRequestPathVariablesPropertyValues
 	 * @param servletRequest the {@code ServletRequest}
 	 */
 	public ServletRequestPathVariablesPropertyValues(HttpServletRequest servletRequest) {
-		super(SearchCriteriaUrlParser.parseUrl(servletRequest.getServletPath()));
+		super(SearchCriteriaUrlParser.parseUrl(servletRequest.getRequestURI()));
 	}
 }
