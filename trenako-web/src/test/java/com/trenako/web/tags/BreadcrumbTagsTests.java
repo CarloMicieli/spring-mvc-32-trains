@@ -33,7 +33,7 @@ import com.trenako.web.test.AbstractSpringTagsTest;
  * @author Carlo Micieli
  *
  */
-public class BreadcrumbTests extends AbstractSpringTagsTest {
+public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 
     private BreadcrumbTags tag;
 	
