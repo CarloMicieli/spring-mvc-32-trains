@@ -19,6 +19,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
+import com.trenako.entities.Scale;
+
 /**
  * 
  * @author Carlo Micieli
@@ -239,5 +243,85 @@ public class SearchCriteriaTests {
 			.scale("scale")
 			.build();
 		assertEquals(false, x.equals(y));
+	}
+	
+	@Test
+	public void shouldAppendNewBrands() {
+		Brand brand = new Brand.Builder("Rivarossi")
+			.slug("rivarossi")
+			.build();
+
+		SearchCriteria x = new SearchCriteria();
+		assertEquals("rivarossi", x.appendBrand(brand).getBrand());
+		
+		SearchCriteria y = new SearchCriteria.Builder()
+			.brand("ACME")
+			.build();
+		assertEquals("rivarossi", y.appendBrand(brand).getBrand());
+	}
+	
+	@Test
+	public void shouldAppendNewScales() {
+		Scale scale = new Scale("H0");
+
+		SearchCriteria x = new SearchCriteria();
+		assertEquals("H0", x.appendScale(scale).getScale());
+		
+		SearchCriteria y = new SearchCriteria.Builder()
+			.scale("N")
+			.build();
+		assertEquals("H0", y.appendScale(scale).getScale());
+	}
+	
+	@Test
+	public void shouldAppendNewRailways() {
+		Railway railway = new Railway("FS");
+
+		SearchCriteria x = new SearchCriteria();
+		assertEquals("fs", x.appendRailway(railway).getRailway());
+		
+		SearchCriteria y = new SearchCriteria.Builder()
+			.railway("DB")
+			.build();
+		assertEquals("fs", y.appendRailway(railway).getRailway());
+	}
+	
+	@Test
+	public void shouldAppendNewEras() {
+		String era = "III";
+
+		SearchCriteria x = new SearchCriteria();
+		assertEquals("III", x.appendEra(era).getEra());
+		
+		SearchCriteria y = new SearchCriteria.Builder()
+			.era("IV")
+			.build();
+		assertEquals("III", y.appendEra(era).getEra());
+	}
+	
+	@Test
+	public void shouldAppendNewPowerMethods() {
+		String pm = "ac";
+
+		SearchCriteria x = new SearchCriteria();
+		assertEquals("ac", x.appendPowerMethod(pm).getPowerMethod());
+		
+		SearchCriteria y = new SearchCriteria.Builder()
+			.powerMethod("dc")
+			.build();
+		assertEquals("ac", y.appendPowerMethod(pm).getPowerMethod());
+	}
+	
+	@Test
+	public void shouldAppendNewCategories() {
+		String c = "electric-locomotives";
+
+		SearchCriteria x = new SearchCriteria();
+		assertEquals("electric-locomotives", x.appendCategory(c).getCategory());
+		
+		SearchCriteria y = new SearchCriteria.Builder()
+			.category("diesel-locomotives")
+			.build();
+		assertEquals("electric-locomotives", y.appendCategory(c).getCategory());
 	}
 }

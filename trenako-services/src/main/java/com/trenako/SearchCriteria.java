@@ -17,6 +17,9 @@ package com.trenako;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
+import com.trenako.entities.Scale;
 import com.trenako.utility.Cat;
 
 /**
@@ -167,6 +170,24 @@ public class SearchCriteria {
 	}
 
 	/**
+	 * Appends a new {@code Brand} to the current {@code SearchCriteria}.
+	 * @param powerMethod the {@code Brand} added or replaced
+	 * @return the modified {@code SearchCriteria}
+	 */
+	public SearchCriteria appendPowerMethod(String powerMethod) {
+		setPowerMethod(powerMethod);
+		return this;
+	}
+	
+	/**
+	 * Sets the {@code power method} search criteria.
+	 * @param powerMethod the {@code power method} 
+	 */
+	public void setPowerMethod(String powerMethod) {
+		this.powerMethod = powerMethod;
+	}
+	
+	/**
 	 * Returns the {@code power method} search criteria.
 	 * <p>
 	 * The appropriate way to check whether a power method is selected is using
@@ -186,6 +207,24 @@ public class SearchCriteria {
 	 */
 	public boolean hasPowerMethod() {
 		return powerMethod!=null && !powerMethod.equals("");
+	}
+
+	/**
+	 * Appends a new {@code Brand} to the current {@code SearchCriteria}.
+	 * @param brand the {@code Brand} added or replaced
+	 * @return the modified {@code SearchCriteria}
+	 */
+	public SearchCriteria appendBrand(Brand brand) {
+		setBrand(brand.getSlug());
+		return this;
+	}
+	
+	/**
+	 * Sets the {@code Brand} search criteria.
+	 * @param brand the {@code Brand} 
+	 */
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 	
 	/**
@@ -211,6 +250,24 @@ public class SearchCriteria {
 	}
 
 	/**
+	 * Appends a new {@code Scale} to the current {@code SearchCriteria}.
+	 * @param scale the {@code Scale} added or replaced
+	 * @return the modified {@code SearchCriteria}
+	 */
+	public SearchCriteria appendScale(Scale scale) {
+		setScale(scale.getName());
+		return this;
+	}
+
+	/**
+	 * Sets the {@code Scale} search criteria.
+	 * @param scale the {@code Scale} 
+	 */
+	public void setScale(String scale) {
+		this.scale = scale;
+	}
+	
+	/**
 	 * Returns the {@code scale} search criteria.
 	 * <p>
 	 * The appropriate way to check whether a scale is selected is using
@@ -230,6 +287,24 @@ public class SearchCriteria {
 	 */
 	public boolean hasScale() {
 		return scale!=null && !scale.equals("");
+	}
+
+	/**
+	 * Appends a new {@code Category} to the current {@code SearchCriteria}.
+	 * @param category the {@code Category} added or replaced
+	 * @return the modified {@code SearchCriteria}
+	 */
+	public SearchCriteria appendCategory(String category) {
+		setCategory(category);
+		return this;
+	}
+
+	/**
+	 * Sets the {@code Category} search criteria.
+	 * @param category the {@code Category} 
+	 */
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	
 	/**
@@ -255,6 +330,14 @@ public class SearchCriteria {
 	}
 	
 	/**
+	 * Sets the {@code Cat} search criteria.
+	 * @param cat the {@code Cat} 
+	 */
+	public void setCat(Cat cat) {
+		this.cat = cat;
+	}
+	
+	/**
 	 * Returns the {@code power method} and {@code category} search criteria.
 	 * <p>
 	 * The appropriate way to check whether a category is selected is using
@@ -274,6 +357,24 @@ public class SearchCriteria {
 	 */
 	public boolean hasCat() {
 		return cat!=null && !cat.equals("");
+	}
+
+	/**
+	 * Appends a new {@code Era} to the current {@code SearchCriteria}.
+	 * @param era the {@code Era} added or replaced
+	 * @return the modified {@code SearchCriteria}
+	 */
+	public SearchCriteria appendEra(String era) {
+		setEra(era);
+		return this;
+	}
+	
+	/**
+	 * Sets the {@code Era} search criteria.
+	 * @param era the {@code Era} 
+	 */
+	public void setEra(String era) {
+		this.era = era;
 	}
 	
 	/**
@@ -299,6 +400,24 @@ public class SearchCriteria {
 	}
 	
 	/**
+	 * Appends a new {@code Railway} to the current {@code SearchCriteria}.
+	 * @param railway the {@code Railway} added or replaced
+	 * @return the modified {@code SearchCriteria}
+	 */
+	public SearchCriteria appendRailway(Railway railway) {
+		setRailway(railway.getSlug());
+		return this;
+	}
+	
+	/**
+	 * Sets the {@code Railway} search criteria.
+	 * @param railway the {@code Railway} 
+	 */
+	public void setRailway(String railway) {
+		this.railway = railway;
+	}
+	
+	/**
 	 * Returns the {@code railway} search criteria.
 	 * <p>
 	 * The appropriate way to check whether a railway is selected is using
@@ -318,62 +437,6 @@ public class SearchCriteria {
 	 */
 	public boolean hasRailway() {
 		return railway!=null && !railway.equals("");
-	}
-
-	/**
-	 * Sets the {@code power method} search criteria.
-	 * @param powerMethod the {@code power method} 
-	 */
-	public void setPowerMethod(String powerMethod) {
-		this.powerMethod = powerMethod;
-	}
-
-	/**
-	 * Sets the {@code Brand} search criteria.
-	 * @param brand the {@code Brand} 
-	 */
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
-	/**
-	 * Sets the {@code Scale} search criteria.
-	 * @param scale the {@code Scale} 
-	 */
-	public void setScale(String scale) {
-		this.scale = scale;
-	}
-
-	/**
-	 * Sets the {@code Category} search criteria.
-	 * @param category the {@code Category} 
-	 */
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	/**
-	 * Sets the {@code Cat} search criteria.
-	 * @param cat the {@code Cat} 
-	 */
-	public void setCat(Cat cat) {
-		this.cat = cat;
-	}
-
-	/**
-	 * Sets the {@code Era} search criteria.
-	 * @param era the {@code Era} 
-	 */
-	public void setEra(String era) {
-		this.era = era;
-	}
-
-	/**
-	 * Sets the {@code Railway} search criteria.
-	 * @param railway the {@code Railway} 
-	 */
-	public void setRailway(String railway) {
-		this.railway = railway;
 	}
 
 	/**
