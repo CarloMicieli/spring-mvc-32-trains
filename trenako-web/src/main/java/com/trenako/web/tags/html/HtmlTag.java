@@ -47,7 +47,10 @@ public abstract class HtmlTag {
 	
 	public String build() {
 		StringBuilder sb = new StringBuilder();
-		if (tagType == TagType.EMPTY) {
+		if (name == null || name.isEmpty()) {
+			sb.append(appendBody());
+		}
+		else if (tagType == TagType.EMPTY) {
 			sb.append("<")
 				.append(name)
 				.append(appendAttributes())

@@ -15,6 +15,8 @@
  */
 package com.trenako.web.infrastructure;
 
+import java.beans.PropertyEditorSupport;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.PropertyValues;
@@ -27,7 +29,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.trenako.SearchCriteria;
-
+import com.trenako.utility.Cat;
 /**
  * Resolves {@link SearchCriteria} method arguments for controller actions
  * annotated with @{@code {@link ModelAttribute}.
@@ -49,6 +51,7 @@ public class SearchCriteriaArgumentResolver implements HandlerMethodArgumentReso
 		HttpServletRequest request = 
 				(HttpServletRequest) webRequest.getNativeRequest();
 		PropertyValues pvs = new ServletRequestPathVariablesPropertyValues(request);
+		webBinder.registerCustomEditor(Cat.class, new CatPropertyEditor());
 		webBinder.bind(pvs);
 		return searchCriteria;
 	}
@@ -57,5 +60,16 @@ public class SearchCriteriaArgumentResolver implements HandlerMethodArgumentReso
 	public boolean supportsParameter(MethodParameter par) {
 		Class<?> paramType = par.getParameterType();
 		return SearchCriteria.class.isAssignableFrom(paramType);
+	}
+	
+	private static class CatPropertyEditor extends PropertyEditorSupport {
+		
+		@Override
+		public void setAsText(String text) throws IllegalArgumentException {
+			if (text==null || text.isEmpty())
+				setValue(null);
+			
+			setValue(Cat.parseString(text));
+		}
 	}
 }

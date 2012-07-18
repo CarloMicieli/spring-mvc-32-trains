@@ -1,6 +1,8 @@
 package com.trenako.web.tags;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -12,9 +14,12 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.trenako.SearchCriteria;
+import com.trenako.web.tags.html.HtmlTag;
+
+import static com.trenako.web.tags.html.HtmlBuilder.*;
 
 /**
- * 
+ * It represent a "breadcrumb" tag.
  * <p>
  * Example usage:
  * <blockquote>
@@ -43,25 +48,37 @@ public class BreadcrumbTags extends TagSupport {
 		StringBuilder url = new StringBuilder();
 		url.append(request.getContextPath());
 		
+		WebApplicationContext springContext = getSpringContext();
 		JspWriter out = pageContext.getOut();
 		
 		try {
-			out.println("<ul class=\"breadcrumb\">");
-
+			
+			List<HtmlTag> items = new ArrayList<HtmlTag>();
 			if (criteria.hasBrand()) {
-				appendCriteria(out, "brand", criteria.getBrand());
-			}
-			if (criteria.hasRailway()) {
-				appendCriteria(out, "railway", criteria.getRailway());
-			}
-			if (criteria.hasEra()) {
-				appendCriteria(out, "era", criteria.getEra());
+				items.add(listItem(request, springContext, "brand", criteria.getBrand()));
 			}
 			if (criteria.hasScale()) {
-				appendCriteria(out, "scale", criteria.getScale());
+				items.add(listItem(request, springContext, "scale", criteria.getScale()));
+			}
+			if (criteria.hasCat()) {
+				items.add(listItem(request, springContext, "cat", criteria.getCat().toString()));
+			}
+			if (criteria.hasPowerMethod()) {
+				items.add(listItem(request, springContext, "powerMethod", criteria.getPowerMethod()));
+			}
+			if (criteria.hasCategory()) {
+				items.add(listItem(request, springContext, "category", criteria.getCategory()));
+			}
+			if (criteria.hasRailway()) {
+				items.add(listItem(request, springContext, "railway", criteria.getRailway()));
+			}
+			if (criteria.hasEra()) {
+				items.add(listItem(request, springContext, "era", criteria.getEra()));
 			}
 			
-			out.println("</ul>");
+			HtmlTag list = ul(tags(items))
+					.cssClass("breadcrumb");
+			out.println(list.build());
 			
 		} catch (IOException e) {
 			throw new JspException(e);
@@ -70,26 +87,32 @@ public class BreadcrumbTags extends TagSupport {
 		return Tag.SKIP_BODY;
 	}
 	
-	private void appendCriteria(JspWriter out, String key, String value) throws IOException {
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		StringBuilder url = new StringBuilder()
-			.append(request.getContextPath())
+	private HtmlTag listItem(HttpServletRequest request, WebApplicationContext springContext, String key, String value) {
+		String path = new StringBuilder()
 			.append("/rs/")
 			.append(key)
 			.append("/")
-			.append(value);
+			.append(value).toString();
+
+		String label = springContext.getMessage("breadcrumb."+key+".label", null, key, null);
+		String title = springContext.getMessage("breadcrumb."+key+".title.label", null, key, null);
 		
-		String label = getMessage("rollingStock.brand.label", null, key);
-		
-		out.println("<li class=\"active\">" + label + " <span class=\"divider\">/</span></li>");
-		out.println("<li>");
-		out.println("<a title=\"Click here\" href=\"" + url.toString() + "\">" + value + "</a>");
-		out.println(" <span class=\"divider\">/</span></li>");
+		 return snippet(
+			li(
+				plain(label + " "),
+				span("/").cssClass("divider")
+					).cssClass("active"),
+			
+			li(
+				a(value).href(request, path).title(title),
+				plain(" "),
+				span("/").cssClass("divider")
+					));
 	}
-	
-	protected String getMessage(String code, Object[] args, String defaultMessage) {
+		
+	private WebApplicationContext getSpringContext() {
 		WebApplicationContext springContext = 
 			    WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext());
-		return springContext.getMessage(code, args, defaultMessage, null);
+		return springContext;
 	}
 }

@@ -18,6 +18,7 @@ package com.trenako.web.tags.html;
 import static com.trenako.web.tags.html.HtmlBuilder.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
  * 
@@ -41,6 +42,28 @@ public class HtmlTagTests {
 	}
 	
 	@Test
+	public void shouldRenderSpans() {
+		String html = "";
+		
+		html = span().build();
+		assertEquals("<span></span>", html);
+		
+		html = span("text").build();
+		assertEquals("<span>text</span>", html);
+		
+		html = span(a("link").href("http://localhost")).build();
+		assertEquals("<span>\n<a href=\"http://localhost\">link</a></span>", html);
+	}
+	
+	@Test
+	public void shouldRenderHtmlSnippets() {
+		String html = "";
+		
+		html = snippet(plain("text "), span("span")).build();
+		assertEquals("\ntext \n<span>span</span>", html);
+	}
+	
+	@Test
 	public void shouldRenderUnorderedLists() {
 		String html = "";
 		
@@ -56,12 +79,21 @@ public class HtmlTagTests {
 	
 	@Test
 	public void shouldRenderALink() {
+		String html = "";
 		
-		String html = HtmlBuilder.a("link")
+		html = a("link")
 			.href("http://localhost")
 			.title("title")
 			.build();
 			
 		assertEquals("<a href=\"http://localhost\" title=\"title\">link</a>", html);
+		
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setContextPath("http://localhost:8080/app");
+		
+		html = a("link")
+				.href(request, "/path/name")
+				.build();
+		assertEquals("<a href=\"http://localhost:8080/app/path/name\">link</a>", html);
 	}
 }

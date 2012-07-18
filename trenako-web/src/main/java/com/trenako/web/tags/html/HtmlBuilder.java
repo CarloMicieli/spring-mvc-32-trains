@@ -15,12 +15,21 @@
  */
 package com.trenako.web.tags.html;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * It represents a HTML tags builder.
  * @author Carlo Micieli
  *
  */
 public class HtmlBuilder {
+	
+	public static HtmlTag[] tags(List<HtmlTag> list) {
+		return list.toArray(new HtmlTag[list.size()]);
+	}
+	
 	/**
 	 * An anchor tag ({@code <a>}).
 	 * @param body the String body
@@ -35,7 +44,7 @@ public class HtmlBuilder {
 	 * @param items the list of items in the list
 	 * @return a tag
 	 */
-	public static ul ul(li... items) {
+	public static ul ul(HtmlTag... items) {
 		return (HtmlBuilder.ul) new ul(items);
 	}
 
@@ -56,6 +65,33 @@ public class HtmlBuilder {
 	public static div div(HtmlTag... innerTags) {
 		return (HtmlBuilder.div) new div(innerTags);
 	}
+
+	/**
+	 * A document section ({@code <span>}).
+	 * @param body the tag inner text
+	 * @return a tag
+	 */
+	public static span span(String body) {
+		return (HtmlBuilder.span) new span(body);
+	}
+	
+	/**
+	 * A document section ({@code <span>}).
+	 * @param innerTags the list of inner tags
+	 * @return a tag
+	 */
+	public static span span(HtmlTag... innerTags) {
+		return (HtmlBuilder.span) new span(innerTags);
+	}
+
+	/**
+	 * A plain text content.
+	 * @param body the text to be rendered
+	 * @return a tag
+	 */
+	public static plain plain(String body) {
+		return (HtmlBuilder.plain) new plain(body);
+	}
 	
 	/**
 	 * A list item ({@code <li>}).
@@ -65,9 +101,22 @@ public class HtmlBuilder {
 	public static li li(String body) {
 		return (HtmlBuilder.li) new li(body);
 	}
+
+	/**
+	 * A list item ({@code <li>}).
+	 * @param body the item inner text
+	 * @return a tag
+	 */
+	public static li li(HtmlTag... innerTags) {
+		return (HtmlBuilder.li) new li(innerTags);
+	}
 	
-	static class ul extends HtmlTag {
-		public ul(li... tags) {
+	public static snippet snippet(HtmlTag... innerTags) {
+		return (HtmlBuilder.snippet) new snippet(innerTags);
+	}
+	
+	public static class ul extends HtmlTag {
+		public ul(HtmlTag... tags) {
 			super("ul", TagType.INNER_TAGS);
 			setInnerTags(tags);
 		}
@@ -78,7 +127,14 @@ public class HtmlBuilder {
 		}
 	}
 	
-	static class div extends HtmlTag {
+	public static class plain extends HtmlTag {
+		public plain(String body) {
+			super("", TagType.TEXT_BODY);
+			setBody(body);
+		}
+	}
+	
+	public static class div extends HtmlTag {
 		public div(String body) {
 			super("div", TagType.TEXT_BODY);
 			setBody(body);
@@ -94,11 +150,33 @@ public class HtmlBuilder {
 			return this;
 		}
 	}
+
+	public static class span extends HtmlTag {
+		public span(String body) {
+			super("span", TagType.TEXT_BODY);
+			setBody(body);
+		}
+		
+		public span(HtmlTag... tags) {
+			super("span", TagType.INNER_TAGS);
+			setInnerTags(tags);
+		}
+		
+		public span cssClass(String value) {
+			addAttribute("class", value);
+			return this;
+		}
+	}
 	
-	static class li extends HtmlTag {
+	public static class li extends HtmlTag {
 		public li(String body) {
 			super("li", TagType.TEXT_BODY);
 			setBody(body);
+		}
+
+		public li(HtmlTag... tags) {
+			super("li", TagType.INNER_TAGS);
+			setInnerTags(tags);
 		}
 		
 		public li cssClass(String value) {
@@ -107,7 +185,7 @@ public class HtmlBuilder {
 		}
 	}
 	
-	static class a extends HtmlTag {
+	public static class a extends HtmlTag {
 		public a(String body) {
 			super("a", TagType.TEXT_BODY);
 			setBody(body);
@@ -118,9 +196,24 @@ public class HtmlBuilder {
 			return this;
 		}
 
+		public a href(HttpServletRequest request, String path) {		
+			StringBuilder url = new StringBuilder()
+				.append(request.getContextPath())
+				.append(path);
+			addAttribute("href", url.toString());
+			return this;
+		}	
+		
 		public a title(String value) {
 			addAttribute("title", value);
 			return this;
+		}
+	}
+	
+	public static class snippet extends HtmlTag {
+		public snippet(HtmlTag... tags) {
+			super("", TagType.INNER_TAGS);
+			setInnerTags(tags);
 		}
 	}
 }
