@@ -20,5 +20,66 @@
 		<rtexprvalue>true</rtexprvalue>
 		<type>com.trenako.SearchCriteria</type>
     </attribute>
-  </tag>         
+  </tag>
+  
+  <tag>
+    <name>searchBar</name>
+    <tagclass>com.trenako.web.tags.SearchBarTags</tagclass>
+    <bodycontent>scriptless</bodycontent>
+   	<description>
+   		Display the search bar rolling stock search.
+   	</description>
+    <attribute>
+		<name>criteria</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+		<type>com.trenako.SearchCriteria</type>
+    </attribute>
+    <attribute>
+		<name>range</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+		<type>com.trenako.results.RangeRequest</type>
+    </attribute>    
+  </tag>
+
+  <tag>
+    <name>brands</name>
+    <tagclass>com.trenako.web.tags.BrandsSearchTags</tagclass>
+    <bodycontent>empty</bodycontent>
+   	<description>
+   		Display the brands for the search bar rolling stock search.
+   	</description>
+   	<attribute>
+		<name>label</name>
+		<required>false</required>
+	</attribute>
+  </tag>
+
+  <tag>
+    <name>scales</name>
+    <tagclass>com.trenako.web.tags.ScalesSearchTags</tagclass>
+    <bodycontent>empty</bodycontent>
+   	<description>
+   		Display the scales for the search bar rolling stock search.
+   	</description>
+   	<attribute>
+		<name>label</name>
+		<required>false</required>
+	</attribute>
+  </tag>
+  
+    <tag>
+    <name>railways</name>
+    <tagclass>com.trenako.web.tags.RailwaysSearchTags</tagclass>
+    <bodycontent>empty</bodycontent>
+   	<description>
+   		Display the railways for the search bar rolling stock search.
+   	</description>
+   	<attribute>
+		<name>label</name>
+		<required>false</required>
+	</attribute>
+  </tag>
+
 </taglib>

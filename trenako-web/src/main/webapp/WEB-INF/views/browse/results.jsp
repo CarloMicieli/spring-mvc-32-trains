@@ -12,6 +12,11 @@
 
 	<div class="row-fluid">
 		<div class="span2">
+			<tk:searchBar range="${range}" criteria="${criteria}">
+				<tk:brands label="name" />
+				<tk:railways  label="name" />
+				<tk:scales />
+			</tk:searchBar>
 		</div>
 		<div class="span10">
 			<tk:breadcrumb criteria="${criteria}" />

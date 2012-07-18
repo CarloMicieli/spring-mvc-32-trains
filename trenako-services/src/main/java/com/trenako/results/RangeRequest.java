@@ -15,9 +15,12 @@
  */
 package com.trenako.results;
 
+import java.util.Iterator;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 
 import com.trenako.AppGlobals;
 
@@ -27,7 +30,12 @@ import com.trenako.AppGlobals;
  *
  */
 public class RangeRequest {
-		
+	
+	/**
+	 * The name for the sort order as used for the query parameters.
+	 */
+	public final static String ORDER_NAME = "order"; 
+	
 	private ObjectId sinceId;
 	private ObjectId maxId;
 	private Sort sort;
@@ -77,6 +85,19 @@ public class RangeRequest {
 	}
 
 	/**
+	 * Returns the first {@code Sort} set for the current range.
+	 * @return the {@code Sort}
+	 */
+	public Order getFirstOrder() {
+		Iterator<Order> it = getSort().iterator();
+		while (it.hasNext()) {
+			return it.next();
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Returns the sorting parameters.
 	 * @return the sorting
 	 */
@@ -98,6 +119,12 @@ public class RangeRequest {
 	 * @return the size
 	 */
 	public int getCount() {
+		if (count > AppGlobals.MAX_RESULT_SET_SIZE) {
+			count = AppGlobals.MAX_RESULT_SET_SIZE;
+		}
+		if (count <= 0)
+			count = 10;
+		
 		return count;
 	}
 

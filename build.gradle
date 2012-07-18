@@ -177,6 +177,8 @@ project("trenako-web") {
 		// Sitemesh
 		compile "opensymphony:sitemesh:2.4.2"
 
+		compile "commons-beanutils:commons-beanutils-core:1.8.3"
+
 		// spring data commons
 		compile "org.springframework.data:spring-data-commons-core:1.1.0.RELEASE"
 

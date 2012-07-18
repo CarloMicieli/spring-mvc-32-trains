@@ -15,9 +15,13 @@
  */
 package com.trenako.web.tags;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.tags.RequestContextAwareTag;
+import org.springframework.web.servlet.tags.HtmlEscapingAwareTag;
 
 /**
  * It represent a jsp tag support class Spring context aware.
@@ -25,13 +29,24 @@ import org.springframework.web.servlet.tags.RequestContextAwareTag;
  *
  */
 @SuppressWarnings("serial")
-public abstract class SpringTagSupport extends RequestContextAwareTag {
+public abstract class SpringTagSupport extends HtmlEscapingAwareTag {
 
-	protected void initContext() {
+	private void init() {
 		WebApplicationContext wac = getRequestContext().getWebApplicationContext();
         AutowireCapableBeanFactory acbf = wac.getAutowireCapableBeanFactory();
         acbf.autowireBean(this);
 	}
 	
+	@Override
+	protected int doStartTagInternal() throws Exception {
+		init();
+		
+		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		String contextPath = request.getContextPath();
+
+		return writeTagContent(pageContext.getOut(), contextPath);
+	}
 	
+	protected abstract int writeTagContent(JspWriter jspWriter, String contextPath) 
+			throws JspException;
 }

@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.Tag;
@@ -63,43 +62,34 @@ public class BreadcrumbTags extends SpringTagSupport {
 	}
 
 	@Override
-	protected int doStartTagInternal() throws Exception {
-		initContext();
-		
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		StringBuilder url = new StringBuilder();
-		url.append(request.getContextPath());
-
-		JspWriter out = pageContext.getOut();
-		
+	protected int writeTagContent(JspWriter out, String contextPath) throws JspException {
 		try {
 			
 			List<HtmlTag> items = new ArrayList<HtmlTag>();
 			if (criteria.hasBrand()) {
-				items.add(listItem(request, "brand", criteria.getBrand()));
+				items.add(listItem(contextPath, "brand", criteria.getBrand()));
 			}
 			if (criteria.hasScale()) {
-				items.add(listItem(request, "scale", criteria.getScale()));
+				items.add(listItem(contextPath, "scale", criteria.getScale()));
 			}
 			if (criteria.hasCat()) {
-				items.add(listItem(request, "cat", criteria.getCat().toString()));
+				items.add(listItem(contextPath, "cat", criteria.getCat().toString()));
 			}
 			if (criteria.hasPowerMethod()) {
-				items.add(listItem(request, "powerMethod", criteria.getPowerMethod()));
+				items.add(listItem(contextPath, "powerMethod", criteria.getPowerMethod()));
 			}
 			if (criteria.hasCategory()) {
-				items.add(listItem(request, "category", criteria.getCategory()));
+				items.add(listItem(contextPath, "category", criteria.getCategory()));
 			}
 			if (criteria.hasRailway()) {
-				items.add(listItem(request, "railway", criteria.getRailway()));
+				items.add(listItem(contextPath, "railway", criteria.getRailway()));
 			}
 			if (criteria.hasEra()) {
-				items.add(listItem(request, "era", criteria.getEra()));
+				items.add(listItem(contextPath, "era", criteria.getEra()));
 			}
 			
-			HtmlTag list = ul(tags(items))
-					.cssClass("breadcrumb");
-			out.println(list.build());
+			HtmlTag list = ul(tags(items)).cssClass("breadcrumb");
+			out.println(list.toString());
 			
 		} catch (IOException e) {
 			throw new JspException(e);
@@ -108,7 +98,7 @@ public class BreadcrumbTags extends SpringTagSupport {
 		return Tag.SKIP_BODY;
 	}
 	
-	private HtmlTag listItem(HttpServletRequest request, String key, String value) {
+	private HtmlTag listItem(String contextPath, String key, String value) {
 		String path = new StringBuilder()
 			.append("/rs/")
 			.append(key)
@@ -125,9 +115,10 @@ public class BreadcrumbTags extends SpringTagSupport {
 					).cssClass("active"),
 			
 			li(
-				a(value).href(request, path).title(title),
+				a(value).href(contextPath, path).title(title),
 				plain(" "),
 				span("/").cssClass("divider")
 					));
 	}
+
 }

@@ -45,6 +45,11 @@ public abstract class HtmlTag {
 		this.tagType = tagType;
 	}
 	
+	@Override
+	public String toString() {
+		return this.build();
+	}
+	
 	public String build() {
 		StringBuilder sb = new StringBuilder();
 		if (name == null || name.isEmpty()) {

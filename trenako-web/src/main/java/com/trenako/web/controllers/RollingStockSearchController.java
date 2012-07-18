@@ -54,6 +54,7 @@ public class RollingStockSearchController {
 		
 		mav.addObject("results", rsService.findByCriteria(sc, range));
 		mav.addObject("criteria", sc);
+		mav.addObject("range", range);
 		
 		return mav;
 	}

@@ -106,7 +106,7 @@ public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolv
 		
 		@Override
 		public void setAsText(String text) throws IllegalArgumentException {
-			PropertyValue rawOrder = values.getPropertyValue("order");
+			PropertyValue rawOrder = values.getPropertyValue(RangeRequest.ORDER_NAME);
 	           Direction order = null == rawOrder 
 	        		   ? Direction.ASC : Direction.fromString(rawOrder.getValue().toString());
 	 

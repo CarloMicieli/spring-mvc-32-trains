@@ -15,11 +15,25 @@
  */
 package com.trenako.web.tags;
 
+import javax.servlet.jsp.PageContext;
+
+import org.springframework.context.MessageSource;
+
+import com.trenako.web.test.AbstractSpringTagsTest;
+
 /**
  * 
  * @author Carlo Micieli
  *
  */
-public class SearchBarTagsTests {
+public class SearchBarTagsTests extends AbstractSpringTagsTest {
+
+	@Override
+	protected void setupTag(PageContext pageContext, MessageSource messageSource) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	
 }

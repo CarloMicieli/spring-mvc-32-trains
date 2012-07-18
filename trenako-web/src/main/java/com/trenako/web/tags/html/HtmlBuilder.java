@@ -196,6 +196,14 @@ public class HtmlBuilder {
 			return this;
 		}
 
+		public a href(String context, String path) {		
+			StringBuilder url = new StringBuilder()
+				.append(context)
+				.append(path);
+			addAttribute("href", url.toString());
+			return this;
+		}
+		
 		public a href(HttpServletRequest request, String path) {		
 			StringBuilder url = new StringBuilder()
 				.append(request.getContextPath())
