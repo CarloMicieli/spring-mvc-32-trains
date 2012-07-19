@@ -15,7 +15,16 @@
  */
 package com.trenako.web.tags;
 
+import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.buildUrlAdding;
+import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.buildUrlRemoving;
+import static com.trenako.web.tags.html.HtmlBuilder.a;
+import static com.trenako.web.tags.html.HtmlBuilder.li;
+import static com.trenako.web.tags.html.HtmlBuilder.snippet;
+import static com.trenako.web.tags.html.HtmlBuilder.tags;
 import static org.apache.commons.beanutils.BeanUtils.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -23,6 +32,7 @@ import org.springframework.context.MessageSource;
 import com.trenako.SearchCriteria;
 import com.trenako.results.RangeRequest;
 import com.trenako.services.BrowseService;
+import com.trenako.web.tags.html.HtmlTag;
 
 /**
  * 
@@ -36,6 +46,7 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 	private @Autowired BrowseService service;
 	
 	private String label;
+	private SearchCriteria criteria;
 	
 	public void setService(BrowseService service) {
 		this.service = service;
@@ -62,11 +73,14 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 	}
 	
 	public SearchCriteria getCriteria() {
+		if (criteria != null) return criteria;
+		
 		if (getParent() != null &&
 			getParent().getClass().isAssignableFrom(SearchBarTags.class)) {
 			
 			SearchBarTags searchBar = (SearchBarTags) getParent();
-			return searchBar.getCriteria();
+			criteria = searchBar.getCriteria();
+			return criteria;
 		}
 		
 		return new SearchCriteria();
@@ -92,5 +106,37 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 		}
 		
 		return obj.toString();
+	}
+	
+	protected <E> HtmlTag render(Iterable<E> items, String criteriaName, String contextPath) {
+		List<HtmlTag> tagsList = new ArrayList<HtmlTag>();
+		String label = getMessageSource().getMessage("searchBar." + criteriaName + ".title.label", 
+				null, 
+				criteriaName, 
+				null);
+		
+		tagsList.add(li(label).cssClass("nav-header"));
+		
+		// check if a criteria for this class has been already selected
+		if (getCriteria().has(criteriaName)) {
+			String url = buildUrlRemoving(getCriteria(), criteriaName);
+			
+			tagsList.add(a(getCriteria().get(criteriaName).getValue()).href("#").cssClass("active"));
+			tagsList.add(a("remove").href(contextPath, url));
+		}
+		else {
+			for (E it : items) {
+				String url = buildUrlAdding(getCriteria(), criteriaName, it);
+				
+				tagsList.add(snippet(li(a(labelFor(it)).href(contextPath, url))));
+			}
+		}
+		
+		return snippet(tags(tagsList));
+	}
+	
+	// for testing
+	void setCriteria(SearchCriteria criteria) {
+		this.criteria = criteria;
 	}
 }

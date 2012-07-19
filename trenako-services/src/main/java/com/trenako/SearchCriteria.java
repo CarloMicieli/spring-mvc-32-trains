@@ -22,11 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.util.Assert;
 
-import com.trenako.entities.Brand;
-import com.trenako.entities.Railway;
-import com.trenako.entities.Scale;
 import com.trenako.utility.Cat;
 
 /**
@@ -48,7 +47,7 @@ public class SearchCriteria implements Cloneable {
 	
 	private Map<String,String> values = new HashMap<String, String>();
 
-	private final static String POWER_METHOD_KEY = "powerMethod";
+	private final static String POWER_METHOD_KEY = "powermethod";
 	private final static String BRAND_KEY = "brand";
 	private final static String SCALE_KEY = "scale";
 	private final static String CATEGORY_KEY = "category";
@@ -56,8 +55,17 @@ public class SearchCriteria implements Cloneable {
 	private final static String ERA_KEY = "era";
 	private final static String RAILWAY_KEY = "railway";
 	
-	private final static List<String> KEYS = 
-			Collections.unmodifiableList(Arrays.asList(POWER_METHOD_KEY, BRAND_KEY, SCALE_KEY, CATEGORY_KEY, CAT_KEY, ERA_KEY, RAILWAY_KEY));
+	/**
+	 * The allowed search criteria names.
+	 * <p>
+	 * The keys are listed in importance order. Other application components
+	 * depend on this particular order; any change can break something.
+	 * </p>
+	 */
+	public final static List<String> KEYS = 
+			Collections.unmodifiableList(
+					Arrays.asList(BRAND_KEY, SCALE_KEY, CAT_KEY, RAILWAY_KEY, ERA_KEY, POWER_METHOD_KEY, CATEGORY_KEY));
+	 
 	
 	private SearchCriteria(Map<String, String> values) {
 		this.values = values;
@@ -202,16 +210,6 @@ public class SearchCriteria implements Cloneable {
 	}
 	
 	/**
-	 * Appends a new {@code Brand} to the current {@code SearchCriteria}.
-	 * @param powerMethod the {@code Brand} added or replaced
-	 * @return the modified {@code SearchCriteria}
-	 */
-	public SearchCriteria appendPowerMethod(String powerMethod) {
-		setPowerMethod(powerMethod);
-		return this;
-	}
-	
-	/**
 	 * Sets the {@code power method} search criteria.
 	 * @param powerMethod the {@code power method} 
 	 */
@@ -241,16 +239,6 @@ public class SearchCriteria implements Cloneable {
 		return values.containsKey(POWER_METHOD_KEY);
 	}
 
-	/**
-	 * Appends a new {@code Brand} to the current {@code SearchCriteria}.
-	 * @param brand the {@code Brand} added or replaced
-	 * @return the modified {@code SearchCriteria}
-	 */
-	public SearchCriteria appendBrand(Brand brand) {
-		setBrand(brand.getSlug());
-		return this;
-	}
-	
 	/**
 	 * Sets the {@code Brand} search criteria.
 	 * @param brand the {@code Brand} 
@@ -282,16 +270,6 @@ public class SearchCriteria implements Cloneable {
 	}
 
 	/**
-	 * Appends a new {@code Scale} to the current {@code SearchCriteria}.
-	 * @param scale the {@code Scale} added or replaced
-	 * @return the modified {@code SearchCriteria}
-	 */
-	public SearchCriteria appendScale(Scale scale) {
-		setScale(scale.getName());
-		return this;
-	}
-
-	/**
 	 * Sets the {@code Scale} search criteria.
 	 * @param scale the {@code Scale} 
 	 */
@@ -319,16 +297,6 @@ public class SearchCriteria implements Cloneable {
 	 */
 	public boolean hasScale() {
 		return values.containsKey(SCALE_KEY);
-	}
-
-	/**
-	 * Appends a new {@code Category} to the current {@code SearchCriteria}.
-	 * @param category the {@code Category} added or replaced
-	 * @return the modified {@code SearchCriteria}
-	 */
-	public SearchCriteria appendCategory(String category) {
-		setCategory(category);
-		return this;
 	}
 
 	/**
@@ -394,16 +362,6 @@ public class SearchCriteria implements Cloneable {
 	public boolean hasCat() {
 		return values.containsKey(CAT_KEY);
 	}
-
-	/**
-	 * Appends a new {@code Era} to the current {@code SearchCriteria}.
-	 * @param era the {@code Era} added or replaced
-	 * @return the modified {@code SearchCriteria}
-	 */
-	public SearchCriteria appendEra(String era) {
-		setEra(era);
-		return this;
-	}
 	
 	/**
 	 * Sets the {@code Era} search criteria.
@@ -433,16 +391,6 @@ public class SearchCriteria implements Cloneable {
 	 */
 	public boolean hasEra() {
 		return values.containsKey(ERA_KEY);
-	}
-	
-	/**
-	 * Appends a new {@code Railway} to the current {@code SearchCriteria}.
-	 * @param railway the {@code Railway} added or replaced
-	 * @return the modified {@code SearchCriteria}
-	 */
-	public SearchCriteria appendRailway(Railway railway) {
-		setRailway(railway.getSlug());
-		return this;
 	}
 	
 	/**
@@ -524,6 +472,10 @@ public class SearchCriteria implements Cloneable {
 			.isEquals();
 	}
 	
+	/**
+	 * Clones the current {@code SearchCriteria} object.
+	 * @return a clone
+	 */
 	public SearchCriteria clone() {
 		try {
 			
@@ -534,6 +486,33 @@ public class SearchCriteria implements Cloneable {
 			// so this exception is never actually thrown
 			throw new RuntimeException(ex);
 		}
+	}
+	
+	/**
+	 * Indicates whether the current object has a criteria
+	 * for the provided key.
+	 * @param key the criteria name
+	 * @return {@code true} if the criteria exists; {@code false} otherwise
+	 */
+	public boolean has(String key) {
+		validateKey(key);
+		return values.containsKey(key);
+	}
+	
+	/**
+	 * Returns the {@code key} and {@code label} for the search criteria
+	 * for the provided value (if any).
+	 * @param key the criteria key name
+	 * @return a pair if found; {@code null} otherwise
+	 */
+	public Pair<String, String> get(String key) {
+		validateKey(key);
+
+		if (values.containsKey(key)) {
+			return new ImmutablePair<String, String>(getValue(key), getValue(key));
+		}
+		
+		return null;
 	}
 	
 	private void addValue(String key, String value) {

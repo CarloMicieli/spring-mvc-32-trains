@@ -23,6 +23,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import com.trenako.entities.Railway;
+import com.trenako.entities.Scale;
 
 import static com.trenako.web.tags.html.HtmlBuilder.*;
 
@@ -33,30 +34,23 @@ import static com.trenako.web.tags.html.HtmlBuilder.*;
  */
 @SuppressWarnings("serial")
 public class RailwaysSearchTags extends SearchBarItemTags {
-	
+
 	@Override
 	protected int writeTagContent(JspWriter jspWriter, String contextPath)
 			throws JspException {
 
 		try {
-			String label = getMessageSource().getMessage("searchBar.railways.title.label", null, "Railways", null);
-			
-			jspWriter.append(li(label).cssClass("nav-header").toString());
-						
-			Iterable<Railway> railways = getService().railways();
-			for (Railway r : railways) {
-				String url = buildUrl(getCriteria().appendRailway(r));
-				
-				jspWriter.append(
-						snippet(li(a(labelFor(r)).href(contextPath, url))).toString());
+			Iterable<Railway> railways = null;
+			if (!getCriteria().has("railway")) {
+				railways = getService().railways();
 			}
 			
-			jspWriter.append("</li>");
+			jspWriter.append(render(railways, "railway", contextPath).toString());
 			
 		} catch (IOException e) {
 			throw new JspException(e);
 		}
 		
 		return SKIP_BODY;
-	}
+	}	
 }

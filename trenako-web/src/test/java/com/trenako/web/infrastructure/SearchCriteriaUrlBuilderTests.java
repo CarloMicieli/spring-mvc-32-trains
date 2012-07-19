@@ -15,11 +15,13 @@
  */
 package com.trenako.web.infrastructure;
 
+import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import com.trenako.SearchCriteria;
+import com.trenako.entities.Scale;
 
 /**
  * 
@@ -28,6 +30,43 @@ import com.trenako.SearchCriteria;
  */
 public class SearchCriteriaUrlBuilderTests {
 
+	@Test
+	public void shouldExtractPropertyValueFromObjects() {
+		SearchCriteria sc = new SearchCriteria.Builder()
+			.brand("ACME").build();
+		
+		Scale scale = new Scale.Builder("AA")
+			.slug("H0")
+			.build();
+		
+		String url = buildUrlAdding(sc, "scale", scale);
+		
+		assertEquals("/rs/brand/ACME/scale/H0", url);
+	}
+	
+	@Test
+	public void shouldBuildUrlsReplacingValues() {
+		SearchCriteria sc = new SearchCriteria.Builder()
+			.brand("ACME").build();
+		
+		String url = buildUrlAdding(sc, "brand", "rivarossi");
+		
+		assertEquals("/rs/brand/rivarossi", url);
+	}
+	
+	@Test
+	public void shouldBuildUrlsRemovingValues() {
+		SearchCriteria sc = new SearchCriteria.Builder()
+			.brand("ACME")
+			.railway("DB")
+			.build();
+		assertEquals("/rs/brand/ACME/railway/DB", buildUrl(sc));
+		
+		String url = buildUrlRemoving(sc, "brand");
+		
+		assertEquals("/rs/railway/DB", url);
+	}
+	
 	@Test
 	public void shouldBuildUrlsForEmptySearch() {
 		SearchCriteria sc = new SearchCriteria();

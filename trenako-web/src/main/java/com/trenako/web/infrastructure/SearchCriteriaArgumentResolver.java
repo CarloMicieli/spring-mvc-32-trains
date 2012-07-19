@@ -53,7 +53,7 @@ public class SearchCriteriaArgumentResolver implements HandlerMethodArgumentReso
 		PropertyValues pvs = new ServletRequestPathVariablesPropertyValues(request);
 		webBinder.registerCustomEditor(Cat.class, new CatPropertyEditor());
 		webBinder.bind(pvs);
-		return searchCriteria;
+		return SearchCriteria.unmodifiableSearchCriteria(searchCriteria);
 	}
 
 	@Override

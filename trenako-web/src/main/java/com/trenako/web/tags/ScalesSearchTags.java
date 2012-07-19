@@ -17,14 +17,10 @@ package com.trenako.web.tags;
 
 import java.io.IOException;
 
-import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.*;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import com.trenako.entities.Scale;
-
-import static com.trenako.web.tags.html.HtmlBuilder.*;
 
 /**
  * 
@@ -39,19 +35,12 @@ public class ScalesSearchTags extends SearchBarItemTags {
 			throws JspException {
 
 		try {
-			String label = getMessageSource().getMessage("searchBar.scales.title.label", null, "Scales", null);
-			
-			jspWriter.append(li(label).cssClass("nav-header").toString());
-						
-			Iterable<Scale> scales = getService().scales();
-			for (Scale s : scales) {
-				String url = buildUrl(getCriteria().appendScale(s));
-				
-				jspWriter.append(
-						snippet(li(a(labelFor(s)).href(contextPath, url))).toString());
+			Iterable<Scale> scales = null;
+			if (!getCriteria().has("scale")) {
+				scales = getService().scales();
 			}
 			
-			jspWriter.append("</li>");
+			jspWriter.append(render(scales, "scale", contextPath).toString());
 			
 		} catch (IOException e) {
 			throw new JspException(e);

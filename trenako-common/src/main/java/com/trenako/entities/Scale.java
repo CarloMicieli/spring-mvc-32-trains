@@ -104,6 +104,7 @@ public class Scale {
 		this.ratio = b.ratio;
 		this.gauge = b.gauge;
 		this.narrow = b.narrow;
+		this.slug = b.slug;
 	}
 	
 	/**
@@ -116,6 +117,7 @@ public class Scale {
 		private final String name;
 		
 		// optional fields
+		private String slug;
 		private int ratio = 0;
 		private int gauge = 0;
 		private boolean narrow = false;
@@ -126,6 +128,16 @@ public class Scale {
 		 */
 		public Builder(String name) {
 			this.name = name;
+		}
+		
+		/**
+		 * Sets the {@code slug}.
+		 * @param slug the slug
+		 * @return a builder
+		 */
+		public Builder slug(String slug) {
+			this.slug = slug;
+			return this;
 		}
 		
 		/**

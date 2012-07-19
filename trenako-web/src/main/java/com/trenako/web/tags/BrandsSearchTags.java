@@ -17,13 +17,10 @@ package com.trenako.web.tags;
 
 import java.io.IOException;
 
-import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.*;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import com.trenako.entities.Brand;
-import static com.trenako.web.tags.html.HtmlBuilder.*;
 
 /**
  * 
@@ -38,19 +35,12 @@ public class BrandsSearchTags extends SearchBarItemTags {
 			throws JspException {
 
 		try {
-			String label = getMessageSource().getMessage("searchBar.brands.title.label", null, "Brands", null);
-			
-			jspWriter.append(li(label).cssClass("nav-header").toString());
-						
-			Iterable<Brand> brands = getService().brands();
-			for (Brand b : brands) {
-				String url = buildUrl(getCriteria().appendBrand(b));
-				
-				jspWriter.append(
-						snippet(li(a(labelFor(b)).href(contextPath, url))).toString());
+			Iterable<Brand> brands = null;
+			if (!getCriteria().has("brand")) {
+				brands = getService().brands();
 			}
 			
-			jspWriter.append("</li>");
+			jspWriter.append(render(brands, "brand", contextPath).toString());
 			
 		} catch (IOException e) {
 			throw new JspException(e);

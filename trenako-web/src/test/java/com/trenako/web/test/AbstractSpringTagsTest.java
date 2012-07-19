@@ -17,6 +17,8 @@ package com.trenako.web.test;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
+
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -29,6 +31,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
@@ -80,6 +83,10 @@ public abstract class AbstractSpringTagsTest {
 		
 		// give the tag under test the chance to setup itself
 		setupTag(mockPageContext, mockMessageSource);
+	}
+	
+	public String renderTag() throws UnsupportedEncodingException {
+		return ((MockHttpServletResponse) pageContext().getResponse()).getContentAsString();
 	}
 	
 	public ServletContext servletContext() {

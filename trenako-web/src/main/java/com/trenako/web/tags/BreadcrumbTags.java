@@ -23,6 +23,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.Tag;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import com.trenako.SearchCriteria;
@@ -60,32 +61,18 @@ public class BreadcrumbTags extends SpringTagSupport {
 	void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
+	
+	public SearchCriteria getCriteria() {
+		return criteria;
+	}
 
 	@Override
 	protected int writeTagContent(JspWriter out, String contextPath) throws JspException {
 		try {
 			
 			List<HtmlTag> items = new ArrayList<HtmlTag>();
-			if (criteria.hasBrand()) {
-				items.add(listItem(contextPath, "brand", criteria.getBrand()));
-			}
-			if (criteria.hasScale()) {
-				items.add(listItem(contextPath, "scale", criteria.getScale()));
-			}
-			if (criteria.hasCat()) {
-				items.add(listItem(contextPath, "cat", criteria.getCat().toString()));
-			}
-			if (criteria.hasPowerMethod()) {
-				items.add(listItem(contextPath, "powerMethod", criteria.getPowerMethod()));
-			}
-			if (criteria.hasCategory()) {
-				items.add(listItem(contextPath, "category", criteria.getCategory()));
-			}
-			if (criteria.hasRailway()) {
-				items.add(listItem(contextPath, "railway", criteria.getRailway()));
-			}
-			if (criteria.hasEra()) {
-				items.add(listItem(contextPath, "era", criteria.getEra()));
+			for (String criteriaName : SearchCriteria.KEYS) {
+				addElement(items, contextPath, criteriaName);
 			}
 			
 			HtmlTag list = ul(tags(items)).cssClass("breadcrumb");
@@ -98,27 +85,31 @@ public class BreadcrumbTags extends SpringTagSupport {
 		return Tag.SKIP_BODY;
 	}
 	
-	private HtmlTag listItem(String contextPath, String key, String value) {
+	private void addElement(List<HtmlTag> items, String contextPath, String criteriaName) {
+		Pair<String, String> crit = getCriteria().get(criteriaName);
+		if (crit == null) return;
+		
 		String path = new StringBuilder()
 			.append("/rs/")
-			.append(key)
+			.append(criteriaName)
 			.append("/")
-			.append(value).toString();
-
-		String label = messageSource.getMessage("breadcrumb."+key+".label", null, key, null);
-		String title = messageSource.getMessage("breadcrumb."+key+".title.label", null, key, null);
+			.append(crit.getKey()).toString();
 		
-		 return snippet(
-			li(
-				plain(label + " "),
-				span("/").cssClass("divider")
-					).cssClass("active"),
-			
-			li(
-				a(value).href(contextPath, path).title(title),
-				plain(" "),
-				span("/").cssClass("divider")
-					));
+		String label = messageSource.getMessage("breadcrumb." + criteriaName + ".label", 
+				null, criteriaName, null);
+		String title = messageSource.getMessage("breadcrumb." + criteriaName + ".title.label", 
+				null, criteriaName, null);
+		
+		items.add(snippet(
+				li(
+					plain(label + " "),
+					span("/").cssClass("divider")
+						).cssClass("active"),
+					
+				li(
+					a(crit.getValue()).href(contextPath, path).title(title),
+					plain(" "),
+					span("/").cssClass("divider")
+						)));
 	}
-
 }

@@ -15,6 +15,9 @@
  */
 package com.trenako.web.infrastructure;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.trenako.SearchCriteria;
 
 /**
@@ -25,6 +28,7 @@ import com.trenako.SearchCriteria;
 public class SearchCriteriaUrlBuilder {
 	
 	private SearchCriteriaUrlBuilder() {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -34,46 +38,86 @@ public class SearchCriteriaUrlBuilder {
 	 * @return the context path
 	 */
 	public static String buildUrl(SearchCriteria sc) {
+		return buildInternal(sc, null, null, null);
+	}
+		
+	public static String buildUrlAdding(SearchCriteria sc, String criteriaName, Object obj) {
+		return buildInternal(sc, criteriaName, obj, null);
+	}
+	
+	public static String buildUrlRemoving(SearchCriteria sc, String criteriaName) {
+		return buildInternal(sc, null, null, criteriaName);
+	}
+	
+	private static String extractValue(Object obj) {
+		String val = "";
+		if (obj.getClass().equals(String.class)) {
+			// don't use reflection for strings
+			return obj.toString();
+		}
+		else if (obj.getClass().isEnum()) {
+			val = safeGetProperty(obj, "label");
+		}
+		else {
+			val = safeGetProperty(obj, "slug");
+		}
+		
+		return val;
+	}
+	
+	private static String safeGetProperty(Object bean, String propertyName) {
+		String val = null;
+		try {
+			val = BeanUtils.getProperty(bean, propertyName);
+		} catch (Exception e) {
+			val = bean.toString();
+		}
+		
+		return val;
+	}
+		
+	private static String buildInternal(SearchCriteria sc,
+			String addedCriteriaName,
+			Object addedObj,
+			String removedCriteriaName) {
+		
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("/rs");
 		
-		if (sc.hasBrand()) {
-			append(sb, "brand", sc.getBrand());
+		String newValue = "";
+		for (String criteria : SearchCriteria.KEYS) {
+			// added/replace a criteria with the provided value
+			if (addedCriteriaName != null && addedCriteriaName.equals(criteria)) {
+				newValue = extractValue(addedObj);
+				append(sb, addedCriteriaName, newValue);
+			}
+			// remove the criteria
+			else if (removedCriteriaName != null && removedCriteriaName.equals(criteria)) {
+				continue;
+			}
+			else {
+				append(sc, sb, criteria);
+			}
 		}
-		
-		if (sc.hasScale()) {
-			append(sb, "scale", sc.getScale());
-		}
-
-		if (sc.hasCat()) {
-			append(sb, "cat", sc.getCat().toString());
-		}
-		
-		if (sc.hasRailway()) {
-			append(sb, "railway", sc.getRailway());
-		}
-		
-		if (sc.hasEra()) {
-			append(sb, "era", sc.getEra());
-		}
-		
-		if (sc.hasPowerMethod()) {
-			append(sb, "powermethod", sc.getPowerMethod());
-		}
-		
-		if (sc.hasCategory()) {
-			append(sb, "category", sc.getCategory());
-		}
-		
+			
 		return sb.toString();
 	}
 	
-	private static void append(StringBuilder sb, String key, String value) {
-		sb.append("/");
-		sb.append(key);
-		sb.append("/");
-		sb.append(value);
+	private static void append(SearchCriteria sc, StringBuilder sb, String criteriaName) {
+		Pair<String, String> criteria = sc.get(criteriaName);
+		if (criteria == null) return;
+		
+		sb.append("/")
+			.append(criteriaName)
+			.append("/")
+			.append(criteria.getKey());
 	}
-
+	
+	private static void append(StringBuilder sb, String criteriaName, String criteriaValue) {
+		sb.append("/")
+			.append(criteriaName)
+			.append("/")
+			.append(criteriaValue);
+	}
 }

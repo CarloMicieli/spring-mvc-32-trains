@@ -212,6 +212,11 @@ public class HtmlBuilder {
 			return this;
 		}	
 		
+		public a cssClass(String value) {
+			addAttribute("class", value);
+			return this;
+		}
+		
 		public a title(String value) {
 			addAttribute("title", value);
 			return this;
