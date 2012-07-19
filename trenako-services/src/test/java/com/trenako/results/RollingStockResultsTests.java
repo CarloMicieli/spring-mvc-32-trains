@@ -67,6 +67,20 @@ public class RollingStockResultsTests {
 	}
 	
 	@Test
+	public void shouldFillEmptyResults() {
+		RangeRequest range = buildRange(10);
+		
+		PaginatedResults<RollingStock> pagResults =
+				new RollingStockResults(new ArrayList<RollingStock>(), range);
+		
+		assertEquals(0, ((List<RollingStock>)pagResults.getItems()).size());
+		assertEquals(null, pagResults.getSinceId());
+		assertEquals(null, pagResults.getMaxId());
+		assertEquals(false, pagResults.hasNextPage());
+		assertEquals(false, pagResults.hasPreviousPage());
+	}
+	
+	@Test
 	public void shouldFillTheResults() {
 		List<RollingStock> results = buildResults(10, false);
 		RangeRequest range = buildRange(10);

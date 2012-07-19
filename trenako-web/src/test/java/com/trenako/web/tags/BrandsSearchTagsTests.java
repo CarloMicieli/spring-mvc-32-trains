@@ -98,8 +98,8 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 		
 		HtmlTag html = snippet(
 				li("brand").cssClass("nav-header"),
-				a("ACME").href("#").cssClass("active"),
-				a("remove").href("/trenako-web/rs/railway/DB")
+				li(a("ACME").href("#")).cssClass("active"),
+				li(a("remove").href("/trenako-web/rs/railway/DB"))
 			);
 		
 		String output = renderTag();

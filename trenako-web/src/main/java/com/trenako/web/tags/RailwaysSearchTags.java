@@ -17,15 +17,10 @@ package com.trenako.web.tags;
 
 import java.io.IOException;
 
-import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.*;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import com.trenako.entities.Railway;
-import com.trenako.entities.Scale;
-
-import static com.trenako.web.tags.html.HtmlBuilder.*;
 
 /**
  * 

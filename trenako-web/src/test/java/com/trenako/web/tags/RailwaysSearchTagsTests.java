@@ -99,8 +99,8 @@ public class RailwaysSearchTagsTests extends AbstractSpringTagsTest {
 		
 		HtmlTag html = snippet(
 				li("railway").cssClass("nav-header"),
-				a("DB").href("#").cssClass("active"),
-				a("remove").href("/trenako-web/rs/scale/H0")
+				li(a("DB").href("#")).cssClass("active"),
+				li(a("remove").href("/trenako-web/rs/scale/H0"))
 			);
 		
 		String output = renderTag();

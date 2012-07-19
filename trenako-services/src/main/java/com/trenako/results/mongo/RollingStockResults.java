@@ -69,14 +69,22 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 		this.results = results.subList(0, size);
 		this.range = range;
 
-		RollingStock min = results.get(0);
-		RollingStock max = results.get(size - 1);
-	
-		this.sinceId = min.getId();
-		this.maxId = max.getId();
+		if (results.size() > 0) {
+			RollingStock min = results.get(0);
+			RollingStock max = results.get(size - 1);
 		
-		this.hasPrevious = range.getSinceId() != null;
-		this.hasNext = results.size() > range.getCount();
+			this.sinceId = min.getId();
+			this.maxId = max.getId();
+			
+			this.hasPrevious = range.getSinceId() != null;
+			this.hasNext = results.size() > range.getCount();
+		}
+		else {
+			this.sinceId = null;
+			this.maxId = null;
+			this.hasPrevious = false;
+			this.hasNext = false;
+		}
 	}
 	
 	@Override

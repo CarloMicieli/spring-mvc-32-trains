@@ -98,8 +98,8 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 		
 		HtmlTag html = snippet(
 				li("scale").cssClass("nav-header"),
-				a("H0").href("#").cssClass("active"),
-				a("remove").href("/trenako-web/rs/railway/DB")
+				li(a("H0").href("#")).cssClass("active"),
+				li(a("remove").href("/trenako-web/rs/railway/DB"))
 			);
 		
 		String output = renderTag();
