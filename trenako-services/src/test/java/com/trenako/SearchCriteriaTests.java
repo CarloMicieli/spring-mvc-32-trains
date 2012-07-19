@@ -30,6 +30,33 @@ import com.trenako.entities.Scale;
  */
 public class SearchCriteriaTests {
 
+	@Test(expected = UnsupportedOperationException.class)
+	public void shouldCreateReadonlySearchCriterias() {
+		SearchCriteria x = new SearchCriteria.Builder()
+			.brand("ACME")
+			.build();
+		
+		SearchCriteria y = SearchCriteria.unmodifiableSearchCriteria(x);
+		y.setCategory("category");
+	}
+	
+	@Test
+	public void shouldCloneSearchCriterias() {
+		SearchCriteria sc = new SearchCriteria.Builder()
+			.brand("ACME")
+			.category("electric-locomotives")
+			.cat("ac-electric-locomotives")
+			.era("IV")
+			.powerMethod("AC")
+			.railway("DB")
+			.scale("H0")
+			.build();
+		
+		SearchCriteria clone = sc.clone();
+		assertFalse(clone == sc);
+		assertTrue(clone.equals(sc));
+	}
+	
 	@Test
 	public void shouldCheckIfBrandCriteriaIsSet() {
 		SearchCriteria x = new SearchCriteria.Builder()

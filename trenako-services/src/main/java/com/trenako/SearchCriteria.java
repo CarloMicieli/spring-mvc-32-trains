@@ -15,7 +15,14 @@
  */
 package com.trenako;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.springframework.util.Assert;
 
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
@@ -23,7 +30,7 @@ import com.trenako.entities.Scale;
 import com.trenako.utility.Cat;
 
 /**
- * It represents an immutable rolling stock search criteria.
+ * It represents an mutable rolling stock search criteria.
  * <p>
  * The best way to create a {@code SearchCriteria} is using the
  * {@link SearchCriteria.Builder} class.
@@ -31,35 +38,60 @@ import com.trenako.utility.Cat;
  * <p>
  * This {@code SearchCriteria} is independent from the data
  * store in use. The main purpose for the objects of this
- * class is to be containers for the search criteria values. 
+ * class is to be containers for the search criteria. 
  * </p>
  * 
  * @author Carlo Micieli
  *
  */
-public class SearchCriteria {
-	private String powerMethod;
-	private String brand;
-	private String scale;
-	private String category;
-	private Cat cat;
-	private String era;
-	private String railway;
+public class SearchCriteria implements Cloneable {
+	
+	private Map<String,String> values = new HashMap<String, String>();
+
+	private final static String POWER_METHOD_KEY = "powerMethod";
+	private final static String BRAND_KEY = "brand";
+	private final static String SCALE_KEY = "scale";
+	private final static String CATEGORY_KEY = "category";
+	private final static String CAT_KEY = "cat";
+	private final static String ERA_KEY = "era";
+	private final static String RAILWAY_KEY = "railway";
+	
+	private final static List<String> KEYS = 
+			Collections.unmodifiableList(Arrays.asList(POWER_METHOD_KEY, BRAND_KEY, SCALE_KEY, CATEGORY_KEY, CAT_KEY, ERA_KEY, RAILWAY_KEY));
+	
+	private SearchCriteria(Map<String, String> values) {
+		this.values = values;
+	}
 	
 	private SearchCriteria(Builder b) {
-		this.powerMethod = b.powerMethod;
-		this.brand = b.brand;
-		this.scale = b.scale;
-		this.category = b.category;
-		this.cat = b.cat;
-		this.era = b.era;
-		this.railway = b.railway;
+		setPowerMethod(b.powerMethod);
+		setBrand(b.brand);
+		setScale(b.scale);
+		setCategory(b.category);
+		setCat(b.cat);
+		setEra(b.era);
+		setRailway(b.railway);
 	}
 	
 	/**
 	 * Creates an empty {@code SearchCriteria}.
 	 */
 	public SearchCriteria() {
+	}
+	
+	/**
+	 * Returns an unmodifiable copy of the provided {@code SearchCriteria}.
+	 * <p>
+	 * Only read operations are allowed; any attempt to modify the returned 
+	 * {@code SearchCriteria} will result in an {@code UnsupportedOperationException}.
+	 * </p>
+	 * 
+	 * @param sc
+	 * @return
+	 */
+	public static SearchCriteria unmodifiableSearchCriteria(SearchCriteria sc) {
+		return new SearchCriteria(
+				Collections.unmodifiableMap(sc.values));
 	}
 
 	/**
@@ -168,7 +200,7 @@ public class SearchCriteria {
 			return new SearchCriteria(this);
 		}
 	}
-
+	
 	/**
 	 * Appends a new {@code Brand} to the current {@code SearchCriteria}.
 	 * @param powerMethod the {@code Brand} added or replaced
@@ -184,7 +216,7 @@ public class SearchCriteria {
 	 * @param powerMethod the {@code power method} 
 	 */
 	public void setPowerMethod(String powerMethod) {
-		this.powerMethod = powerMethod;
+		addValue(POWER_METHOD_KEY, powerMethod);
 	}
 	
 	/**
@@ -198,7 +230,7 @@ public class SearchCriteria {
 	 * @see com.trenako.PowerMethod
 	 */
 	public String getPowerMethod() {
-		return powerMethod;
+		return getValue(POWER_METHOD_KEY);
 	}
 
 	/**
@@ -206,7 +238,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasPowerMethod() {
-		return powerMethod!=null && !powerMethod.equals("");
+		return values.containsKey(POWER_METHOD_KEY);
 	}
 
 	/**
@@ -224,7 +256,7 @@ public class SearchCriteria {
 	 * @param brand the {@code Brand} 
 	 */
 	public void setBrand(String brand) {
-		this.brand = brand;
+		addValue(BRAND_KEY, brand);
 	}
 	
 	/**
@@ -238,7 +270,7 @@ public class SearchCriteria {
 	 * @see com.trenako.entities.Brand
 	 */
 	public String getBrand() {
-		return brand;
+		return getValue(BRAND_KEY);
 	}
 	
 	/**
@@ -246,7 +278,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasBrand() {
-		return brand!=null && !brand.equals("");
+		return values.containsKey(BRAND_KEY);
 	}
 
 	/**
@@ -264,7 +296,7 @@ public class SearchCriteria {
 	 * @param scale the {@code Scale} 
 	 */
 	public void setScale(String scale) {
-		this.scale = scale;
+		addValue(SCALE_KEY, scale);
 	}
 	
 	/**
@@ -278,7 +310,7 @@ public class SearchCriteria {
 	 * @see com.trenako.entities.Scale
 	 */
 	public String getScale() {
-		return scale;
+		return getValue(SCALE_KEY);
 	}
 
 	/**
@@ -286,7 +318,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasScale() {
-		return scale!=null && !scale.equals("");
+		return values.containsKey(SCALE_KEY);
 	}
 
 	/**
@@ -304,7 +336,7 @@ public class SearchCriteria {
 	 * @param category the {@code Category} 
 	 */
 	public void setCategory(String category) {
-		this.category = category;
+		addValue(CATEGORY_KEY, category);
 	}
 	
 	/**
@@ -318,7 +350,7 @@ public class SearchCriteria {
 	 * @see com.trenako.Category
 	 */
 	public String getCategory() {
-		return category;
+		return getValue(CATEGORY_KEY);
 	}
 
 	/**
@@ -326,7 +358,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasCategory() {
-		return category!=null && !category.equals("");
+		return values.containsKey(CATEGORY_KEY);
 	}
 	
 	/**
@@ -334,7 +366,9 @@ public class SearchCriteria {
 	 * @param cat the {@code Cat} 
 	 */
 	public void setCat(Cat cat) {
-		this.cat = cat;
+		if (cat!=null) {
+			addValue(CAT_KEY, cat.toString());
+		}
 	}
 	
 	/**
@@ -348,7 +382,9 @@ public class SearchCriteria {
 	 * @see com.trenako.Cat
 	 */
 	public Cat getCat() {
-		return cat;
+		String c = getValue(CAT_KEY);
+		if (c!=null) return Cat.parseString(c);
+		return null;
 	}
 
 	/**
@@ -356,7 +392,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasCat() {
-		return cat!=null && !cat.equals("");
+		return values.containsKey(CAT_KEY);
 	}
 
 	/**
@@ -374,7 +410,7 @@ public class SearchCriteria {
 	 * @param era the {@code Era} 
 	 */
 	public void setEra(String era) {
-		this.era = era;
+		addValue(ERA_KEY, era);
 	}
 	
 	/**
@@ -388,7 +424,7 @@ public class SearchCriteria {
 	 * @see com.trenako.Era
 	 */
 	public String getEra() {
-		return era;
+		return getValue(ERA_KEY);
 	}
 
 	/**
@@ -396,7 +432,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasEra() {
-		return era!=null && !era.equals("");
+		return values.containsKey(ERA_KEY);
 	}
 	
 	/**
@@ -414,7 +450,7 @@ public class SearchCriteria {
 	 * @param railway the {@code Railway} 
 	 */
 	public void setRailway(String railway) {
-		this.railway = railway;
+		addValue(RAILWAY_KEY, railway);
 	}
 	
 	/**
@@ -428,7 +464,7 @@ public class SearchCriteria {
 	 * @see com.trenako.entities.Railway
 	 */
 	public String getRailway() {
-		return railway;
+		return getValue(RAILWAY_KEY);
 	}
 
 	/**
@@ -436,7 +472,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasRailway() {
-		return railway!=null && !railway.equals("");
+		return values.containsKey(RAILWAY_KEY);
 	}
 
 	/**
@@ -478,13 +514,51 @@ public class SearchCriteria {
 		
 		SearchCriteria other = (SearchCriteria) obj;
 		return new EqualsBuilder()
-			.append(era, other.era)
-			.append(scale, other.scale)
-			.append(railway, other.railway)
-			.append(brand, other.brand)
-			.append(category, other.category)
-			.append(cat, other.cat)
-			.append(powerMethod, other.powerMethod)
+			.append(getEra(), other.getEra())
+			.append(getScale(), other.getScale())
+			.append(getRailway(), other.getRailway())
+			.append(getBrand(), other.getBrand())
+			.append(getCategory(), other.getCategory())
+			.append(getCat(), other.getCat())
+			.append(getPowerMethod(), other.getPowerMethod())
 			.isEquals();
+	}
+	
+	public SearchCriteria clone() {
+		try {
+			
+			return (SearchCriteria)super.clone();
+			
+		} catch (CloneNotSupportedException ex) {
+			// this class implements Cloneable 
+			// so this exception is never actually thrown
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	private void addValue(String key, String value) {
+		Assert.notNull("Key must be not null", key);
+		if (!KEYS.contains(key)) {
+			throw new IllegalArgumentException(key + " is not a valid key name");
+		}
+		
+		if (value == null || value.isEmpty()) {
+			values.remove(key);
+		}
+		else {
+			values.put(key, value);	
+		}
+	}
+	
+	private String getValue(String key) {
+		validateKey(key);
+		return values.get(key);
+	}
+	
+	private void validateKey(String key) {
+		Assert.notNull("Key must be not null", key);
+		if (!KEYS.contains(key)) {
+			throw new IllegalArgumentException(key + " is not a valid key name");
+		}
 	}
 }
