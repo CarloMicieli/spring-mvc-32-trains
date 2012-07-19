@@ -63,13 +63,19 @@ public class RailwaysSearchTagsTests extends AbstractSpringTagsTest {
 		tag.setService(service);
 	}
 	
+	private void setCriteria(SearchCriteria sc) {
+		SearchBarTags parent = new SearchBarTags();
+		parent.setCriteria(sc);
+		tag.setParent(parent);
+	}
+	
 	@Test
 	public void shouldRenderRailwaysNavigationList() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
 			.brand("ACME")
 			.build();
 		
-		tag.setCriteria(sc);
+		setCriteria(sc);
 		tag.setLabel("name");
 		
 		int rv = tag.doStartTag();
@@ -92,7 +98,7 @@ public class RailwaysSearchTagsTests extends AbstractSpringTagsTest {
 			.railway("DB")
 			.build();
 		
-		tag.setCriteria(sc);
+		setCriteria(sc);
 		
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);

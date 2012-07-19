@@ -63,13 +63,19 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 		tag.setService(service);
 	}
 	
+	private void setCriteria(SearchCriteria sc) {
+		SearchBarTags parent = new SearchBarTags();
+		parent.setCriteria(sc);
+		tag.setParent(parent);
+	}
+	
 	@Test
 	public void shouldRenderBrandsNavigationList() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
 			.railway("DB")
 			.build();
 		
-		tag.setCriteria(sc);
+		setCriteria(sc);
 		
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);
@@ -91,7 +97,7 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 			.railway("DB")
 			.build();
 		
-		tag.setCriteria(sc);
+		setCriteria(sc);
 		
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);

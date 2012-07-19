@@ -46,8 +46,7 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 	private @Autowired BrowseService service;
 	
 	private String label;
-	private SearchCriteria criteria;
-	
+
 	public void setService(BrowseService service) {
 		this.service = service;
 	}
@@ -73,14 +72,11 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 	}
 	
 	public SearchCriteria getCriteria() {
-		if (criteria != null) return criteria;
-		
 		if (getParent() != null &&
 			getParent().getClass().isAssignableFrom(SearchBarTags.class)) {
 			
 			SearchBarTags searchBar = (SearchBarTags) getParent();
-			criteria = searchBar.getCriteria();
-			return criteria;
+			return searchBar.getCriteria();
 		}
 		
 		return new SearchCriteria();
@@ -133,10 +129,5 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 		}
 		
 		return snippet(tags(tagsList));
-	}
-	
-	// for testing
-	void setCriteria(SearchCriteria criteria) {
-		this.criteria = criteria;
 	}
 }
