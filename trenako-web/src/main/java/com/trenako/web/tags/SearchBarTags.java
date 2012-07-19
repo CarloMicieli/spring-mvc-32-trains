@@ -65,7 +65,7 @@ public class SearchBarTags extends SpringTagSupport {
 			throws JspException {
 		
 		try {
-			jspWriter.write("<ul class=\"nav nav-list\">");
+			jspWriter.write("<div class=\"well\" style=\"padding: 8px 0;\"><ul class=\"nav nav-list\">");
 		} catch (IOException ex) {
 			throw new JspException("Unable to write to JspWriter", ex);
 		}
@@ -75,7 +75,7 @@ public class SearchBarTags extends SpringTagSupport {
 	@Override
 	public int doEndTag() throws JspException {
 		try {
-			pageContext.getOut().append("</ul>");
+			pageContext.getOut().append("</ul></div>");
 		} catch (IOException ex) {
 			throw new JspException("Unable to write to JspWriter", ex);
 		}
