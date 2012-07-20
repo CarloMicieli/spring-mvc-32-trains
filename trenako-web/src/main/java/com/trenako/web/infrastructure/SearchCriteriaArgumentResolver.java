@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.PropertyValues;
 import org.springframework.core.MethodParameter;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -39,13 +40,22 @@ import com.trenako.utility.Cat;
  */
 public class SearchCriteriaArgumentResolver implements HandlerMethodArgumentResolver {
 	
+	private final SearchCriteria searchCriteria;
+	
+	public SearchCriteriaArgumentResolver() {
+		this(new SearchCriteria());
+	}
+	
+	public SearchCriteriaArgumentResolver(SearchCriteria failbackCriteria) {
+		this.searchCriteria = failbackCriteria;
+	}
+	
 	@Override
 	public Object resolveArgument(MethodParameter parameter,
 			ModelAndViewContainer mavContainer, 
 			NativeWebRequest webRequest,
 			WebDataBinderFactory binderFactory) throws Exception {
 
-		SearchCriteria searchCriteria = new SearchCriteria();
 		WebDataBinder webBinder = binderFactory.createBinder(webRequest, searchCriteria, "");
 		
 		HttpServletRequest request = 
@@ -53,7 +63,7 @@ public class SearchCriteriaArgumentResolver implements HandlerMethodArgumentReso
 		PropertyValues pvs = new ServletRequestPathVariablesPropertyValues(request);
 		webBinder.registerCustomEditor(Cat.class, new CatPropertyEditor());
 		webBinder.bind(pvs);
-		return SearchCriteria.unmodifiableSearchCriteria(searchCriteria);
+		return searchCriteria;
 	}
 
 	@Override
@@ -63,10 +73,9 @@ public class SearchCriteriaArgumentResolver implements HandlerMethodArgumentReso
 	}
 	
 	private static class CatPropertyEditor extends PropertyEditorSupport {
-		
 		@Override
 		public void setAsText(String text) throws IllegalArgumentException {
-			if (text==null || text.isEmpty())
+			if (!StringUtils.hasText(text))
 				setValue(null);
 			
 			setValue(Cat.parseString(text));

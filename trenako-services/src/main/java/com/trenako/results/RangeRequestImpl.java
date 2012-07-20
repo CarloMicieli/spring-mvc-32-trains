@@ -129,6 +129,19 @@ public class RangeRequestImpl implements RangeRequest {
 		return new ImmutableRangeRequest(count, sinceId, maxId, sort);
 	}
 	
+	@Override
+	public String toString() {
+		return new StringBuilder()
+			.append("maxid=")
+			.append(getMaxId())
+			.append(",sinceid=")
+			.append(getSinceId())
+			.append(",count=")
+			.append(getCount())
+			.append(",sort=")
+			.append(getFirstOrder()).toString();
+	}
+	
 	private static int validateCount(int value, int defaultValue) {
 		if (value > AppGlobals.MAX_RESULT_SET_SIZE) {
 			return AppGlobals.MAX_RESULT_SET_SIZE;

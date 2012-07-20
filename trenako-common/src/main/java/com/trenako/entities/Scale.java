@@ -413,6 +413,23 @@ public class Scale {
 	}
 	
 	/**
+	 * Returns a label for the current {@code Scale}.
+	 * <p>
+	 * The application will show this value as string representation
+	 * for the current {@code Scale} instead of the usual {@code Scale#toString()}.
+	 * </p>
+	 * @return
+	 */
+	public String label() {
+		return new StringBuffer()
+			.append(getName())
+			.append(" (")
+			.append(getRatioText())
+			.append(")")
+			.toString();
+	}
+	
+	/**
 	 * Returns a string representation of this object.
 	 * @return a string representation of the object.
 	 */	
@@ -459,5 +476,4 @@ public class Scale {
 			.append(gauge)
 			.hashCode();
 	}
-
 }

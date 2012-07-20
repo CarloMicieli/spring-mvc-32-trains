@@ -27,6 +27,12 @@ import org.junit.Test;
 public class RailwayTests {
 
 	@Test
+	public void shouldReturnRailwayLabels() {
+		Railway x = new Railway.Builder("DB").companyName("Die bahn").build();
+		assertEquals("DB (Die bahn)", x.label());		
+	}
+	
+	@Test
 	public void equalsShouldFalseForDifferentRailways() {
 		Railway x = new Railway("DB");
 		Railway y = new Railway("Sncf");

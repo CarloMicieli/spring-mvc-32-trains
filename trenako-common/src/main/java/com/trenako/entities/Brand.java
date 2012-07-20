@@ -418,6 +418,18 @@ public class Brand {
 	}
 
 	/**
+	 * Returns a label for the current {@code Brand}.
+	 * <p>
+	 * The application will show this value as string representation
+	 * for the current {@code Brand} instead of the usual {@code Brand#toString()}.
+	 * </p>
+	 * @return
+	 */
+	public String label() {
+		return name;
+	}
+	
+	/**
 	 * Returns a string representation of this {@code Brand}.
 	 * @return a string representation of the object
 	 */

@@ -58,25 +58,8 @@ public class SearchCriteriaTests {
 			.brand("ACME")
 			.build();
 		
-		SearchCriteria y = SearchCriteria.unmodifiableSearchCriteria(x);
+		SearchCriteria y = SearchCriteria.immutableSearchCriteria(x);
 		y.setCategory("category");
-	}
-	
-	@Test
-	public void shouldCloneSearchCriteria() {
-		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.category("electric-locomotives")
-			.cat("ac-electric-locomotives")
-			.era("IV")
-			.powerMethod("AC")
-			.railway("DB")
-			.scale("H0")
-			.build();
-		
-		SearchCriteria clone = sc.clone();
-		assertFalse(clone == sc);
-		assertTrue(clone.equals(sc));
 	}
 	
 	@Test

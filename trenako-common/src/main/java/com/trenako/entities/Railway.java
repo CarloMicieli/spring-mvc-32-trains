@@ -293,6 +293,22 @@ public class Railway {
 	}
 
 	/**
+	 * Returns a label for the current {@code Railway}.
+	 * <p>
+	 * The application will show this value as string representation
+	 * for the current {@code Railway} instead of the usual {@code Railway#toString()}.
+	 * </p>
+	 * @return
+	 */
+	public String label() {
+		return new StringBuilder()
+			.append(getName())
+			.append(" (")
+			.append(getCompanyName())
+			.append(")").toString();
+	}
+	
+	/**
 	 * Returns a string representation of the object.
 	 * @return a string representation of the object
 	 */

@@ -43,10 +43,10 @@ import com.trenako.utility.Cat;
  * @author Carlo Micieli
  *
  */
-public class SearchCriteria implements Cloneable {
+public class SearchCriteria {
 	
-	private Map<String,String> values = new HashMap<String, String>();
-
+	private Map<String, String> values = new HashMap<String, String>();
+	
 	private final static String POWER_METHOD_KEY = "powermethod";
 	private final static String BRAND_KEY = "brand";
 	private final static String SCALE_KEY = "scale";
@@ -65,7 +65,6 @@ public class SearchCriteria implements Cloneable {
 	public final static List<String> KEYS = 
 			Collections.unmodifiableList(
 					Arrays.asList(BRAND_KEY, SCALE_KEY, CAT_KEY, RAILWAY_KEY, ERA_KEY, POWER_METHOD_KEY, CATEGORY_KEY));
-	 
 	
 	private SearchCriteria(Map<String, String> values) {
 		this.values = values;
@@ -88,7 +87,7 @@ public class SearchCriteria implements Cloneable {
 	}
 	
 	/**
-	 * Returns an unmodifiable copy of the provided {@code SearchCriteria}.
+	 * Returns an immutable copy of the provided {@code SearchCriteria}.
 	 * <p>
 	 * Only read operations are allowed; any attempt to modify the returned 
 	 * {@code SearchCriteria} will result in an {@code UnsupportedOperationException}.
@@ -97,7 +96,7 @@ public class SearchCriteria implements Cloneable {
 	 * @param sc
 	 * @return
 	 */
-	public static SearchCriteria unmodifiableSearchCriteria(SearchCriteria sc) {
+	public static SearchCriteria immutableSearchCriteria(SearchCriteria sc) {
 		return new SearchCriteria(
 				Collections.unmodifiableMap(sc.values));
 	}
@@ -395,6 +394,11 @@ public class SearchCriteria implements Cloneable {
 	
 	/**
 	 * Sets the {@code Railway} search criteria.
+	 * <p>
+	 * This method will use {@link Railway#getSlug()} as {@code key} and
+	 * {@link Railway#getSlug()} as value for the railway criteria.
+	 * </p>
+	 * 
 	 * @param railway the {@code Railway} 
 	 */
 	public void setRailway(String railway) {
@@ -473,22 +477,6 @@ public class SearchCriteria implements Cloneable {
 	}
 	
 	/**
-	 * Clones the current {@code SearchCriteria} object.
-	 * @return a clone
-	 */
-	public SearchCriteria clone() {
-		try {
-			
-			return (SearchCriteria)super.clone();
-			
-		} catch (CloneNotSupportedException ex) {
-			// this class implements Cloneable 
-			// so this exception is never actually thrown
-			throw new RuntimeException(ex);
-		}
-	}
-	
-	/**
 	 * Indicates whether the current object has a criteria
 	 * for the provided key.
 	 * @param key the criteria name
@@ -524,10 +512,7 @@ public class SearchCriteria implements Cloneable {
 	}
 	
 	private void addValue(String key, String value) {
-		Assert.notNull("Key must be not null", key);
-		if (!KEYS.contains(key)) {
-			throw new IllegalArgumentException(key + " is not a valid key name");
-		}
+		validateKey(key);
 		
 		if (value == null || value.isEmpty()) {
 			values.remove(key);

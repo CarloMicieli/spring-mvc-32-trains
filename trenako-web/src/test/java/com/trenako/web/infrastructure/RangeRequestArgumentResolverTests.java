@@ -15,34 +15,36 @@
  */
 package com.trenako.web.infrastructure;
 
-import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder;
 
 import com.trenako.SearchCriteria;
 import com.trenako.results.RangeRequest;
+import com.trenako.results.RangeRequestImpl;
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-public class SearchCriteriaArgumentResolverTests {
-	SearchCriteria searchCriteria = new SearchCriteria();
-	SearchCriteriaArgumentResolver resolver = new SearchCriteriaArgumentResolver(searchCriteria);
+public class RangeRequestArgumentResolverTests {
 	
+	RangeRequest rangeRequest = new RangeRequestImpl();
+	RangeRequestArgumentResolver resolver = new RangeRequestArgumentResolver(rangeRequest);
+
 	MethodParameter parSearchCriteria;
 	MethodParameter parRangeRequest;
 	
@@ -54,39 +56,40 @@ public class SearchCriteriaArgumentResolverTests {
 	}
 	
 	@Test
-	public void shouldSupportsSearchCriteriaParameters() {
-		assertTrue(resolver.supportsParameter(parSearchCriteria));
-		assertFalse(resolver.supportsParameter(parRangeRequest));
+	public void shouldSupportRangeRequestParameters() {
+		assertFalse(resolver.supportsParameter(parSearchCriteria));
+		assertTrue(resolver.supportsParameter(parRangeRequest));
 	}
-	
+
 	@Test
-	public void shouldResolveRequestAsSearchCriteria() throws Exception {
-		HttpServletRequest request = new MockHttpServletRequest();
-		((MockHttpServletRequest)request).setRequestURI("/trenako-web/rs/brand/acme/railway/fs");
+	public void shouldResolveRequestAsRangeRequest() throws Exception {
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.addParameter("maxId", "47cc67093475061e3d95369d");
+		request.addParameter("sinceId", "47cc67093475061e3d95369e");
+		request.addParameter("count", "50");
+		request.addParameter("sort", "name");
+		request.addParameter("order", "desc");
+		
 		NativeWebRequest webRequest = mock(NativeWebRequest.class);
 		when(webRequest.getNativeRequest()).thenReturn(request);
 		
 		WebDataBinderFactory binderFactory = mock(WebDataBinderFactory.class);
-		when(binderFactory.createBinder(eq(webRequest), isA(SearchCriteria.class), eq("")))
-			.thenReturn(new ExtendedServletRequestDataBinder(searchCriteria, ""));
+		when(binderFactory.createBinder(eq(webRequest), isA(RangeRequest.class), eq("")))
+			.thenReturn(new ExtendedServletRequestDataBinder(rangeRequest, ""));
 		
-		Object obj = resolver.resolveArgument(parSearchCriteria,
+		Object obj = resolver.resolveArgument(parRangeRequest,
 				null, 
 				webRequest,
 				binderFactory);
 		
 		assertNotNull(obj);
-		assertTrue(obj instanceof SearchCriteria);
+		assertTrue(obj instanceof RangeRequest);
 		
-		SearchCriteria expected = new SearchCriteria.Builder()
-			.brand("acme")
-			.railway("fs")
-			.build();
-		
-		assertEquals(expected, (SearchCriteria) obj);
+		assertEquals("maxid=47cc67093475061e3d95369d,sinceid=47cc67093475061e3d95369e,count=50,sort=name: DESC", 
+				obj.toString());
 	}
 	
-	// helper method for testing
-	public void testmethod(@ModelAttribute SearchCriteria sc, @ModelAttribute RangeRequest range) {
+	// template method for testing
+	public void testmethod(SearchCriteria sc, RangeRequest range) {
 	}
 }

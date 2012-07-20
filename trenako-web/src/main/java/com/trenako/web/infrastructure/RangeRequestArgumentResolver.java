@@ -19,11 +19,13 @@ import java.beans.PropertyEditorSupport;
 
 import javax.servlet.ServletRequest;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.PropertyValues;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.ServletRequestParameterPropertyValues;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -75,8 +77,9 @@ public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolv
 					new ServletRequestParameterPropertyValues(request);
 			
 			WebDataBinder wdb = 
-					webBinder.createBinder(webRequest, rangeRequest, "rangeRequest");
+					webBinder.createBinder(webRequest, rangeRequest, "");
 			wdb.registerCustomEditor(Sort.class, new SortPropertyEditor(propValues));
+			wdb.registerCustomEditor(ObjectId.class, new ObjectIdPropertyEditor());
 			wdb.bind(propValues);
 			
 			return rangeRequest.immutableRange();
@@ -89,6 +92,17 @@ public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolv
 	public boolean supportsParameter(MethodParameter par) {
 		Class<?> paramType = par.getParameterType();
 		return RangeRequest.class.isAssignableFrom(paramType);
+	}
+	
+	private static class ObjectIdPropertyEditor extends PropertyEditorSupport {
+		@Override
+		public void setAsText(String text) throws IllegalArgumentException {
+			if (!StringUtils.hasText(text)) {
+				setValue(null);
+			}
+			
+			setValue(new ObjectId(text));
+		}
 	}
 	
 	/**

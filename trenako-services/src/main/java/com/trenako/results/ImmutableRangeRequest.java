@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort.Order;
  * @author Carlo Micieli
  *
  */
-public class ImmutableRangeRequest implements RangeRequest {
+public final class ImmutableRangeRequest implements RangeRequest {
 
 	private final ObjectId sinceId;
 	private final ObjectId maxId;
@@ -51,6 +51,19 @@ public class ImmutableRangeRequest implements RangeRequest {
 	@Override
 	public RangeRequest immutableRange() {
 		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder()
+			.append("maxid=")
+			.append(getMaxId())
+			.append(",sinceid=")
+			.append(getSinceId())
+			.append(",count=")
+			.append(getCount())
+			.append(",sort=")
+			.append(getSort().toString()).toString();
 	}
 
 }

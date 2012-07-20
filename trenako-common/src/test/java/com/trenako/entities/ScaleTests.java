@@ -33,6 +33,22 @@ import static org.junit.Assert.*;
 public class ScaleTests {
 	
 	@Test
+	public void shouldReturnScaleLabels() {
+		Scale s = new Scale.Builder("H0")
+		.ratio(870) // stored as integer
+		.build();
+	assertEquals("H0 (1:87)", s.label());	
+	}
+	
+	@Test
+	public void shouldReturnTheRatioText() {
+		Scale s = new Scale.Builder("H0")
+			.ratio(435) // stored as integer
+			.build();
+		assertEquals("1:43.5", s.getRatioText());		
+	}
+	
+	@Test
 	public void shouldReturnTheGaugeInMillimeters() {
 		Scale s = new Scale.Builder("H0")
 			.gauge(1650) // stored as integer
