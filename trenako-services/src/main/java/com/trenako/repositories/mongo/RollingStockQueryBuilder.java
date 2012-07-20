@@ -49,7 +49,7 @@ public class RollingStockQueryBuilder {
 		}
 		else if (range.getMaxId()!=null) {
 			criteria.and("id").lt(range.getMaxId());
-		}		
+		}
 		
 		final Query q = query(criteria);
 		q.limit(range.getCount() + 1);

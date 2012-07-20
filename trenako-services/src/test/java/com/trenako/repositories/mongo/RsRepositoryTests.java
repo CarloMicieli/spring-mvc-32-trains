@@ -39,6 +39,7 @@ import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RsRepository;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
+import com.trenako.results.RangeRequestImpl;
 
 /**
  * 
@@ -58,7 +59,7 @@ public class RsRepositoryTests {
 	}
 	
 	private RangeRequest buildRange(int count) {
-		RangeRequest range = new RangeRequest();
+		RangeRequestImpl range = new RangeRequestImpl();
 		range.setCount(count);
 		return range;
 	}

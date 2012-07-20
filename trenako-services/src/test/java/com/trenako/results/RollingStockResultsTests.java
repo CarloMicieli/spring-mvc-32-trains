@@ -53,13 +53,13 @@ public class RollingStockResultsTests {
 	}
 
 	private RangeRequest buildRange(int count) {
-		RangeRequest r = new RangeRequest();
+		RangeRequestImpl r = new RangeRequestImpl();
 		r.setCount(count);
 		return r;
 	}
 	
 	private RangeRequest buildRange(int count, ObjectId since, ObjectId max) {
-		RangeRequest r = new RangeRequest();
+		RangeRequestImpl r = new RangeRequestImpl();
 		r.setSinceId(since);
 		r.setMaxId(max);
 		r.setCount(count);

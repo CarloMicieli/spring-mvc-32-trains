@@ -15,31 +15,22 @@
  */
 package com.trenako.results;
 
-import java.util.Iterator;
-
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 
-import com.trenako.AppGlobals;
-
 /**
- * It represents the interface for a range information.
+ * 
  * @author Carlo Micieli
  *
  */
-public class RangeRequest {
-	
+public interface RangeRequest {
+
 	/**
 	 * The name for the sort order as used for the query parameters.
 	 */
 	public final static String ORDER_NAME = "order"; 
-	
-	private ObjectId sinceId;
-	private ObjectId maxId;
-	private Sort sort;
-	private int count;
 	
 	/**
 	 * The default {@code Sort} for a range request.
@@ -47,109 +38,39 @@ public class RangeRequest {
 	public final static Sort DEFAULT_SORT = new Sort(Direction.DESC, "lastModified");
 	
 	/**
-	 * Creates an empty {@code RangeRequest}.
-	 */
-	public RangeRequest() {
-	}
-
-	/**
 	 * Returns the minimum {@code id} in the result page.
 	 * @return the minimum {@code id}
 	 */
-	public ObjectId getSinceId() {
-		return sinceId;
-	}
-
-	/**
-	 * Sets the minimum {@code id} in the result page.
-	 * @param sinceId the minimum {@code id}
-	 */
-	public void setSinceId(ObjectId sinceId) {
-		this.sinceId = sinceId;
-	}
+	ObjectId getSinceId();
 
 	/**
 	 * Returns the maximum {@code id} in the result page.
 	 * @return the maximum {@code id}
 	 */
-	public ObjectId getMaxId() {
-		return maxId;
-	}
-
-	/**
-	 * Sets the maximum {@code id} in the result page.
-	 * @param maxId the maximum {@code id}
-	 */
-	public void setMaxId(ObjectId maxId) {
-		this.maxId = maxId;
-	}
+	ObjectId getMaxId();
 
 	/**
 	 * Returns the first {@code Sort} set for the current range.
 	 * @return the {@code Sort}
 	 */
-	public Order getFirstOrder() {
-		Iterator<Order> it = getSort().iterator();
-		while (it.hasNext()) {
-			return it.next();
-		}
-		
-		return null;
-	}
-	
+	Order getFirstOrder();
+
 	/**
 	 * Returns the sorting parameters.
 	 * @return the sorting
 	 */
-	public Sort getSort() {
-		if (sort==null) return DEFAULT_SORT;
-		return sort;
-	}
-
-	/**
-	 * Sets the sorting parameters.
-	 * @param sort the sorting
-	 */
-	public void setSort(Sort sort) {
-		this.sort = sort;
-	}
+	Sort getSort();
 
 	/**
 	 * Returns the page size.
 	 * @return the size
 	 */
-	public int getCount() {
-		if (count > AppGlobals.MAX_RESULT_SET_SIZE) {
-			count = AppGlobals.MAX_RESULT_SET_SIZE;
-		}
-		if (count <= 0)
-			count = 10;
-		
-		return count;
-	}
+	int getCount();
 
 	/**
-	 * Sets the page size.
-	 * @param count the size
+	 * 
+	 * @return
 	 */
-	public void setCount(int count) {
-		this.count = count;
-	}
+	RangeRequest immutableRange();
 
-	/**
-	 * Sanitize the range values.
-	 * <p>
-	 * This method ensures the current range has a size less than max 
-	 * allowed value as set in {@link AppGlobals#MAX_RESULT_SET_SIZE}.
-	 * </p>
-	 */
-	public void sanitizeInput() {
-		if (getCount() > AppGlobals.MAX_RESULT_SET_SIZE) {
-			setCount(AppGlobals.MAX_RESULT_SET_SIZE);
-		}
-		
-		if (getCount()<=0) {
-			setCount(10);
-		}
-	}
 }

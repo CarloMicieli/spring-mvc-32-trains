@@ -24,7 +24,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import com.trenako.results.RangeRequest;
+import com.trenako.results.RangeRequestImpl;
 
 
 import static org.springframework.data.mongodb.core.query.Criteria.*;
@@ -43,7 +43,7 @@ public class RollingStockQueryBuilderTests {
 	@Test
 	public void shouldBuildAQueryWithDefaultSortingAndCompleteRange() {
 		
-		RangeRequest range = new RangeRequest();
+		RangeRequestImpl range = new RangeRequestImpl();
 		range.setMaxId(maxId);
 		range.setSinceId(sinceId);
 		range.setCount(10);
@@ -59,7 +59,7 @@ public class RollingStockQueryBuilderTests {
 	@Test
 	public void shouldBuildQueryWithSinceValueOnly() {
 		
-		RangeRequest range = new RangeRequest();
+		RangeRequestImpl range = new RangeRequestImpl();
 		range.setSinceId(sinceId);
 		range.setCount(10);
 		
@@ -73,7 +73,7 @@ public class RollingStockQueryBuilderTests {
 	@Test
 	public void shouldBuildQueryWithMaxValueOnly() {
 		
-		RangeRequest range = new RangeRequest();
+		RangeRequestImpl range = new RangeRequestImpl();
 		range.setMaxId(maxId);
 		range.setCount(10);
 		
@@ -86,7 +86,7 @@ public class RollingStockQueryBuilderTests {
 
 	@Test
 	public void shouldBuildQueryWithSorting() {
-		RangeRequest range = new RangeRequest();
+		RangeRequestImpl range = new RangeRequestImpl();
 		range.setMaxId(maxId);
 		range.setCount(10);
 		range.setSort(new Sort(Direction.ASC, "powerMethod"));

@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
 import com.trenako.results.RangeRequest;
+import com.trenako.results.RangeRequestImpl;
 
 /**
  * 
@@ -30,18 +31,18 @@ import com.trenako.results.RangeRequest;
  *
  */
 public class RangeRequestQueryParamsBuilderTests {
+	
+	RangeRequest rangeRequest = new RangeRequestImpl();
 
 	@Test
 	public void shouldBuildQueryParamsForDefaultRanges() {
-		RangeRequest rangeRequest = new RangeRequest();
 		String queryParams = buildQueryParams(rangeRequest);
 		assertEquals("?count=10", queryParams);
 	}
 
 	@Test
 	public void shouldBuildQueryParamsForRangesWithCountOnly() {
-		RangeRequest rangeRequest = new RangeRequest();
-		rangeRequest.setCount(50);
+		((RangeRequestImpl)rangeRequest).setCount(50);
 		
 		String queryParams = buildQueryParams(rangeRequest);
 		assertEquals("?count=50", queryParams);
@@ -49,9 +50,8 @@ public class RangeRequestQueryParamsBuilderTests {
 
 	@Test
 	public void shouldBuildQueryParamsForRangesWithCountAndSort() {
-		RangeRequest rangeRequest = new RangeRequest();
-		rangeRequest.setCount(25);
-		rangeRequest.setSort(new Sort(Direction.DESC, "name"));
+		((RangeRequestImpl)rangeRequest).setCount(25);
+		((RangeRequestImpl)rangeRequest).setSort(new Sort(Direction.DESC, "name"));
 		
 		String queryParams = buildQueryParams(rangeRequest);
 		assertEquals("?count=25&sort=name&order=DESC", queryParams);

@@ -18,6 +18,8 @@ package com.trenako.results;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.trenako.AppGlobals;
 
@@ -27,28 +29,36 @@ import com.trenako.AppGlobals;
  *
  */
 public class RangeRequestTests {
-
+	RangeRequest range = new RangeRequestImpl();
+	
 	@Test
-	public void shouldSanitizeRangeInputs() {
-		RangeRequest range = new RangeRequest();
-		
-		range.setCount(1000);
-		range.sanitizeInput();
+	public void shouldSetOnlyValidCountValues() {
+		((RangeRequestImpl)range).setCount(1000);
 		assertEquals(AppGlobals.MAX_RESULT_SET_SIZE, range.getCount());		
 	
-		range.setCount(0);
-		range.sanitizeInput();
+		((RangeRequestImpl)range).setCount(0);
 		assertEquals(10, range.getCount());		
 		
-		range.setCount(-10);
-		range.sanitizeInput();
+		((RangeRequestImpl)range).setCount(-10);
 		assertEquals(10, range.getCount());	
 	}
 
 	@Test
 	public void shouldReturnTheDefaultSort() {
-		RangeRequest range = new RangeRequest();
-		assertEquals(RangeRequest.DEFAULT_SORT, range.getSort());
+		assertEquals(RangeRequestImpl.DEFAULT_SORT, range.getSort());
 	}
 	
+	@Test
+	public void shouldReturnTheFirstOrder() {
+		((RangeRequestImpl)range).setSort(new Sort(Direction.ASC, "name"));
+		assertEquals("name", range.getFirstOrder().getProperty());
+		assertEquals(Direction.ASC, range.getFirstOrder().getDirection());
+	}
+	
+	@Test
+	public void shouldCreateImmutableObjects() {
+		RangeRequest immutable = range.immutableRange();
+		assertNotNull(immutable);
+		assertTrue(immutable instanceof ImmutableRangeRequest);
+	}
 }

@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trenako.SearchCriteria;
 import com.trenako.results.RangeRequest;
+import com.trenako.results.RangeRequestImpl;
 import com.trenako.results.mongo.RollingStockResults;
 import com.trenako.services.RollingStockSearchService;
 
@@ -51,7 +52,7 @@ public class RollingStockSearchControllerTests {
 	@Test
 	public void shouldSearchRollingStocks() {
 		SearchCriteria sc = new SearchCriteria();
-		RangeRequest range = new RangeRequest();
+		RangeRequest range = new RangeRequestImpl();
 		
 		RollingStockResults value = mock(RollingStockResults.class);
 		when(mockService.findByCriteria(eq(sc), eq(range))).thenReturn(value);

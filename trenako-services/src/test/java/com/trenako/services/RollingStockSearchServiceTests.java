@@ -26,7 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trenako.SearchCriteria;
 import com.trenako.repositories.RsRepository;
-import com.trenako.results.RangeRequest;
+import com.trenako.results.RangeRequestImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStockSearchServiceTests {
@@ -46,7 +46,7 @@ public class RollingStockSearchServiceTests {
 			.brand("ACME")
 			.railway("FS")
 			.build();
-		RangeRequest range = new RangeRequest();
+		RangeRequestImpl range = new RangeRequestImpl();
 		range.setCount(10);
 		
 		service.findByCriteria(sc, range);

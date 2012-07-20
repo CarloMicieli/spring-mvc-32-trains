@@ -167,7 +167,7 @@ class RollingStocksServiceSpecification extends Specification {
 		
 		def rs = mongoTemplate.findOne query(where("slug").is("acme-123456")), rollingStocks
 		rs != null
-		rs.brandName == "ACME"
+		rs.brandName == "acme"
 		rs.itemNumber == "123456"
 		rs.description == "Description"
 		rs.details == "Details"
