@@ -118,6 +118,7 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 			String url = buildUrlRemoving(getCriteria(), criteriaName);
 			
 			tagsList.add(li(a(getCriteria().get(criteriaName).getValue()).href("#")).cssClass("active"));
+			tagsList.add(li("").cssClass("divider"));
 			tagsList.add(li(a("remove").href(contextPath, url)));
 		}
 		else {

@@ -195,24 +195,27 @@ public class RollingStockTests {
 	
 	@Test
 	public void shouldFillTheBrandName() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		assertEquals("ACME", rs.getBrandName());
+		Brand brand = new Brand.Builder("ACME").slug("acme").build();
+		RollingStock rs = new RollingStock.Builder(brand, "123456").build();
+		assertEquals(brand.getSlug(), rs.getBrandName());
 	}
 	
 	@Test
 	public void shouldFillTheRailwayName() {
+		Railway railway = new Railway.Builder("SCNF").slug("scnf").build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.railway("DB")
+			.railway(railway)
 			.build();
-		assertEquals("DB", rs.getRailwayName());
+		assertEquals(railway.getSlug(), rs.getRailwayName());
 	}
 	
 	@Test
 	public void shouldFillTheScaleName() {
+		Scale scale = new Scale.Builder("H0").slug("h0").build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.scale("H0")
+			.scale(scale)
 			.build();
-		assertEquals("H0", rs.getScaleName());
+		assertEquals(scale.getSlug(), rs.getScaleName());
 	}
 	
 	@Test

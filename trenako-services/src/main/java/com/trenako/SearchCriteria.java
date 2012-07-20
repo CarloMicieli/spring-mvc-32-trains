@@ -515,6 +515,14 @@ public class SearchCriteria implements Cloneable {
 		return null;
 	}
 	
+	/**
+	 * Indicates whether the current {@code SearchCriteria} is empty.
+	 * @return {@code true} if it is empty; {@code false} otherwise
+	 */
+	public boolean isEmpty() {
+		return values.isEmpty();
+	}
+	
 	private void addValue(String key, String value) {
 		Assert.notNull("Key must be not null", key);
 		if (!KEYS.contains(key)) {

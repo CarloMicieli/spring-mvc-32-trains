@@ -105,6 +105,7 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 		HtmlTag html = snippet(
 				li("brand").cssClass("nav-header"),
 				li(a("ACME").href("#")).cssClass("active"),
+				li("").cssClass("divider"),
 				li(a("remove").href("/trenako-web/rs/railway/DB"))
 			);
 		

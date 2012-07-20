@@ -54,7 +54,7 @@ public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 		assertEquals(TagSupport.SKIP_BODY, rv);
 		
 		String output = ((MockHttpServletResponse) pageContext().getResponse()).getContentAsString();
-		assertEquals("<ul class=\"breadcrumb\"></ul>\n", output);
+		assertEquals("", output);
 	}
 	
 	@Test

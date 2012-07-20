@@ -68,8 +68,12 @@ public class BreadcrumbTags extends SpringTagSupport {
 
 	@Override
 	protected int writeTagContent(JspWriter out, String contextPath) throws JspException {
+
+		if (getCriteria().isEmpty()) {
+			return Tag.SKIP_BODY;
+		}
+		
 		try {
-			
 			List<HtmlTag> items = new ArrayList<HtmlTag>();
 			for (String criteriaName : SearchCriteria.KEYS) {
 				addElement(items, contextPath, criteriaName);

@@ -20,8 +20,10 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
+import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.Scale;
 
 /**
  * 
@@ -33,21 +35,28 @@ public class RollingStocksEventListenerTests {
 	public void shouldFillTheValuesBeforeSave() {
 		RollingStocksEventListener listener = new RollingStocksEventListener();
 		
-		Railway DB = new Railway.Builder("DB")
-			.country("DEU").build();
+		Railway railway = new Railway.Builder("S.N.C.F.")
+			.slug("sncf")
+			.country("de").build();
 		
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.scale("H0")
-			.railway(DB)
+		Scale scale = new Scale.Builder("H0")
+			.slug("h0").build();
+		
+		Brand brand = new Brand.Builder("ACME")
+			.slug("acme").build();
+		
+		RollingStock rs = new RollingStock.Builder(brand, "123456")
+			.scale(scale)
+			.railway(railway)
 			.build();
 		BasicDBObject dbo = new BasicDBObject();
 		listener.onBeforeSave(rs, dbo);
 		
 		assertNotNull(dbo.get("lastModified"));
-		assertEquals("H0", dbo.get("scaleName"));
-		assertEquals("DB", dbo.get("railwayName"));
-		assertEquals("ACME", dbo.get("brandName"));
-		assertEquals("DEU", dbo.get("country"));
+		assertEquals("h0", dbo.get("scaleName"));
+		assertEquals("sncf", dbo.get("railwayName"));
+		assertEquals("acme", dbo.get("brandName"));
+		assertEquals("de", dbo.get("country"));
 	}
 	
 	@Test

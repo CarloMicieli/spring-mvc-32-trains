@@ -81,5 +81,4 @@ public class SearchBarTags extends SpringTagSupport {
 		}
 		return EVAL_PAGE;
 	}
-
 }

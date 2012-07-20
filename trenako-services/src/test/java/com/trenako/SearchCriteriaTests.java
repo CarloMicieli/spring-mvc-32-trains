@@ -28,6 +28,17 @@ import org.junit.Test;
 public class SearchCriteriaTests {
 
 	@Test
+	public void shouldCheckIfSearchCriteriaIsEmpty() {
+		SearchCriteria x = new SearchCriteria();
+		assertTrue(x.isEmpty());
+		
+		SearchCriteria y = new SearchCriteria.Builder()
+			.brand("ACME")
+			.build();
+		assertFalse(y.isEmpty());
+	}
+	
+	@Test
 	public void shouldGetPairsFromSearchCriteria() {
 		SearchCriteria x = new SearchCriteria.Builder()
 			.brand("ACME")

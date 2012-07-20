@@ -12,14 +12,12 @@
 
 	<div class="row-fluid">
 		<div class="span2">
-			<p>
-				<a href="#" class="btn btn-danger">New rolling stock</a>
-			</p>
-			
 			<tk:searchBar range="${range}" criteria="${criteria}">
 				<tk:brands label="name" />
 				<tk:railways  label="name" />
 				<tk:scales />
+				<tk:eras />
+				<tk:categories />
 			</tk:searchBar>
 		</div>
 		<div class="span10">

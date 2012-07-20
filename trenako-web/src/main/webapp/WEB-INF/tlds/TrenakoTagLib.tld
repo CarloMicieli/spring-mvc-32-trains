@@ -1,85 +1,102 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<taglib xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
 	version="2.1">
 
-   <tlibversion>1.0</tlibversion>
-   <info>The custom tags library</info>
+	<tlibversion>1.0</tlibversion>
+	<info>The custom tags library</info>
 
-  <tag>
-    <name>breadcrumb</name>
-    <tagclass>com.trenako.web.tags.BreadcrumbTags</tagclass>
-    <bodycontent>empty</bodycontent>
-   	<description>
-   		Display breadcrumb for rolling stock search.
-   	</description>
-    <attribute>
-		<name>criteria</name>
-		<required>true</required>
-		<rtexprvalue>true</rtexprvalue>
-		<type>com.trenako.SearchCriteria</type>
-    </attribute>
-  </tag>
-  
-  <tag>
-    <name>searchBar</name>
-    <tagclass>com.trenako.web.tags.SearchBarTags</tagclass>
-    <bodycontent>scriptless</bodycontent>
-   	<description>
-   		Display the search bar rolling stock search.
-   	</description>
-    <attribute>
-		<name>criteria</name>
-		<required>true</required>
-		<rtexprvalue>true</rtexprvalue>
-		<type>com.trenako.SearchCriteria</type>
-    </attribute>
-    <attribute>
-		<name>range</name>
-		<required>true</required>
-		<rtexprvalue>true</rtexprvalue>
-		<type>com.trenako.results.RangeRequest</type>
-    </attribute>    
-  </tag>
+	<tag>
+		<name>breadcrumb</name>
+		<tagclass>com.trenako.web.tags.BreadcrumbTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display breadcrumb for rolling stock search.
+		</description>
+		<attribute>
+			<name>criteria</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.trenako.SearchCriteria</type>
+		</attribute>
+	</tag>
 
-  <tag>
-    <name>brands</name>
-    <tagclass>com.trenako.web.tags.BrandsSearchTags</tagclass>
-    <bodycontent>empty</bodycontent>
-   	<description>
-   		Display the brands for the search bar rolling stock search.
-   	</description>
-   	<attribute>
-		<name>label</name>
-		<required>false</required>
-	</attribute>
-  </tag>
+	<tag>
+		<name>searchBar</name>
+		<tagclass>com.trenako.web.tags.SearchBarTags</tagclass>
+		<bodycontent>scriptless</bodycontent>
+		<description>
+			Display the search bar rolling stock search.
+		</description>
+		<attribute>
+			<name>criteria</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.trenako.SearchCriteria</type>
+		</attribute>
+		<attribute>
+			<name>range</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.trenako.results.RangeRequest</type>
+		</attribute>
+	</tag>
 
-  <tag>
-    <name>scales</name>
-    <tagclass>com.trenako.web.tags.ScalesSearchTags</tagclass>
-    <bodycontent>empty</bodycontent>
-   	<description>
-   		Display the scales for the search bar rolling stock search.
-   	</description>
-   	<attribute>
-		<name>label</name>
-		<required>false</required>
-	</attribute>
-  </tag>
-  
-    <tag>
-    <name>railways</name>
-    <tagclass>com.trenako.web.tags.RailwaysSearchTags</tagclass>
-    <bodycontent>empty</bodycontent>
-   	<description>
-   		Display the railways for the search bar rolling stock search.
-   	</description>
-   	<attribute>
-		<name>label</name>
-		<required>false</required>
-	</attribute>
-  </tag>
+	<tag>
+		<name>brands</name>
+		<tagclass>com.trenako.web.tags.BrandsSearchTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display the brands for the search bar rolling stock search.
+		</description>
+		<attribute>
+			<name>label</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>scales</name>
+		<tagclass>com.trenako.web.tags.ScalesSearchTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display the scales for the search bar rolling stock search.
+		</description>
+		<attribute>
+			<name>label</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>railways</name>
+		<tagclass>com.trenako.web.tags.RailwaysSearchTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display the railways for the search bar rolling stock search.
+		</description>
+		<attribute>
+			<name>label</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>eras</name>
+		<tagclass>com.trenako.web.tags.ErasSearchTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display the eras for the search bar rolling stock search.
+		</description>
+	</tag>
+
+	<tag>
+		<name>categories</name>
+		<tagclass>com.trenako.web.tags.CategoriesSearchTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display the categories for the search bar rolling stock search.
+		</description>
+	</tag>
 
 </taglib>

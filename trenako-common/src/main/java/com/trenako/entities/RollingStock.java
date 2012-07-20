@@ -368,12 +368,12 @@ public class RollingStock {
 	 * Returns the brand name.
 	 * <p>
 	 * If the brand name is not set then the class is getting a 
-	 * value from {@link Brand#getName()}.
+	 * value from {@link Brand#getSlug()}.
 	 * </p>
 	 * @return the brand name
 	 */		
 	public String getBrandName() {
-		if( brandName==null) brandName = getBrand().getName();
+		if( brandName==null) brandName = getBrand().getSlug();
 		return brandName;
 	}
 
@@ -526,14 +526,14 @@ public class RollingStock {
 	 * Returns the railway name.
 	 * <p>
 	 * If the railway name is not set then this class is getting a value
-	 * from {@link Railway#getName()}.
+	 * from {@link Railway#getSlug()}.
 	 * </p>
 	 * 
 	 * @return the railway name
 	 */
 
 	public String getRailwayName() {
-		if( railwayName==null ) railwayName = getRailway().getName();
+		if( railwayName==null ) railwayName = getRailway().getSlug();
 		return railwayName;
 	}
 
@@ -565,13 +565,13 @@ public class RollingStock {
 	 * Returns the scale name.
 	 * <p>
 	 * If the scale name is not set then the class is getting a 
-	 * value from {@link Scale#getName()}.
+	 * value from {@link Scale#getSlug()}.
 	 * </p>
 	 * 
 	 * @return the scale name
 	 */
 	public String getScaleName() {
-		if( scaleName==null ) scaleName = getScale().getName();
+		if( scaleName==null ) scaleName = getScale().getSlug();
 		return scaleName;
 	}
 
