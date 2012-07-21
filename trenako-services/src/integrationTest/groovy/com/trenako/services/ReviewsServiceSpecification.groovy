@@ -15,20 +15,10 @@
 */
 package com.trenako.services
 
-import java.util.List;
-
 import spock.lang.*
 
-import org.bson.types.ObjectId;
-import org.junit.Test;
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Query
-
-import static org.springframework.data.mongodb.core.query.Query.*
-import static org.springframework.data.mongodb.core.query.Criteria.*
 
 import com.trenako.entities.Account
 import com.trenako.entities.Brand
@@ -36,88 +26,86 @@ import com.trenako.entities.Scale
 import com.trenako.entities.Review
 import com.trenako.entities.Railway
 import com.trenako.entities.RollingStock
+
+import com.mongodb.DBRef
+
 import com.trenako.services.ReviewsService
 
 /**
- *
+ * 
  * @author Carlo Micieli
  *
  */
-@ContextConfiguration(locations = "classpath:META-INF/spring-context.xml")
-class ReviewsServiceSpecification extends Specification {
-	@Autowired MongoTemplate mongo
+class ReviewsServiceSpecification extends MongoSpecification {
+
 	@Autowired ReviewsService service;
 	
 	def setup() {
-		def acme = new Brand(name: "ACME")
-		mongo.save acme
+		def acme = [name: 'ACME']
+		db.brands.insert(name: 'ACME')
+		def H0 = [name: 'H0', ratio: 870]
+		db.scales.insert(H0)
+		def DB = [name: 'DB', country: 'de']
+		db.railways.insert(DB)
 		
-		def H0 = new Scale(name: "H0", ratio: 87)
-		mongo.save H0
+		db.rollingStocks.insert(
+			brand: new DBRef(null, 'brands', acme._id),
+			slug: 'acme-69501',
+			itemNumber: '69501',
+			description: 'Gr 685 172',
+			category: 'steam-locomotives',
+			powerMethod: "dc",
+			era: "III",
+			railway: new DBRef(null, 'railways', DB._id),
+			tags: ['museum'],
+			scale: new DBRef(null, 'scales', H0._id))
+		db.rollingStocks.insert(
+			brand: new DBRef(null, 'brands', acme._id),
+			slug: 'acme-69502',
+			itemNumber: '69502',
+			description: 'Gr 685 196',
+			category: 'steam-locomotives',
+			powerMethod: "dc",
+			era: "III",
+			railway: new DBRef(null, 'railways', DB._id),
+			tags: ['museum'],
+			scale: new DBRef(null, 'scales', H0._id))
 		
-		def DB = new Railway(name: "DB", country: 'DEU')
-		mongo.save DB
-		
-		
-		def rs1 = new RollingStock(brand: acme, itemNumber: "69501",
-				description: "Gr 685 172",
-				category: "STEAM_LOCOMOTIVES",
-				powerMethod: "DC_DCC_SOUND",
-				era: "III",
-				railway: DB,
-				tags: ['museum'],
-				scale: H0)
-		def rs2 = new RollingStock(brand: acme, itemNumber: "43858",
-				description: "Electric loco 101 0004-0",
-				category: "ELECTRIC_LOCOMOTIVES",
-				powerMethod: "AC",
-				era: "V",
-				railway: DB,
-				scale: H0)
-		def collection = [rs1, rs2]
-		mongo.insert collection, RollingStock.class
-		
-		def bob = new Account(emailAddress: "bob@mail.com", password: "secret", displayName: 'Bob')
-		def alice = new Account(emailAddress: "alice@mail.com", password: "secret", displayName: 'Alice')
-		def authors = [bob, alice]
-		mongo.insert authors, Account.class
+		db.accounts << [
+			[emailAddress: 'bob@mail.com', slug: 'bob', password: 'secret', displayName: 'Bob'],
+			[emailAddress: 'alice@mail.com', slug: 'alice', password: 'secret', displayName: 'Alice']]
 
-		def reviews = [
-			new Review(author: bob, rollingStock: rs1, content: "Review1"),
-			new Review(author: bob, rollingStock: rs2, content: "Review2"),
-			new Review(author: alice, rollingStock: rs2, content: "Review3"),
-			]
-		mongo.insert reviews, Review.class
-		
+		db.reviews << [ 
+			[authorName: 'bob', rsSlug: 'acme-69501', title: 'title1', content: 'Review1'],
+			[authorName: 'bob', rsSlug: 'acme-69502', title: 'title2', content: 'Review2'],
+			[authorName: 'alice', rsSlug: 'acme-69501', title: 'title3', content: 'Review3']]
 	}
 	
 	def cleanup() {
-		def all = new Query()
-		
-		mongo.remove all, Review.class
-		mongo.remove all, RollingStock.class
-		mongo.remove all, Scale.class
-		mongo.remove all, Brand.class
-		mongo.remove all, Railway.class
+		db.reviews.remove([:])
+		db.rollingStocks.remove([:])
+		db.scales.remove([:])
+		db.brands.remove([:])
+		db.railways.remove([:])
 	}
 	
 	def "should find reviews by id"() {
 		given:
-		def rev = mongo.findOne query(where("content").is("Review1")), Review.class
-		assert rev != null
-		def id = rev.id
+		def c = db.reviews.findOne(content: 'Review1')
+		def id = c._id
+		assert id != null
 		
 		when:
 		def review = service.findById id
 		
 		then:
 		review != null
-		review.content == "Review1"
 	}
 
 	def "should find reviews by author"() {
 		given:
-		def author = mongo.findOne query(where("emailAddress").is("bob@mail.com")), Account.class
+		def doc = db.accounts.findOne(emailAddress: 'bob@mail.com')
+		def author = new Account([id: doc._id, slug: doc.slug])
 		assert author != null
 		
 		when:
@@ -131,7 +119,7 @@ class ReviewsServiceSpecification extends Specification {
 	
 	def "should find reviews by author name"() {
 		given:
-		def authorName = "alice"
+		def authorName = 'alice'
 		
 		when:
 		def results = service.findByAuthor authorName
@@ -143,7 +131,8 @@ class ReviewsServiceSpecification extends Specification {
 	
 	def "should find reviews by rolling stock"() {
 		given:
-		def rs = mongo.findOne query(where("slug").is("acme-69501")), RollingStock.class
+		def doc = db.rollingStocks.findOne(slug: 'acme-69501')
+		def rs = new RollingStock(id: doc._id, slug: doc.slug)
 		assert rs != null
 		
 		when:
@@ -151,31 +140,33 @@ class ReviewsServiceSpecification extends Specification {
 		
 		then:
 		results != null
-		results.size == 1
-		results.collect{ it.content } == ["Review1"]
+		results.size == 2
+		results.collect{ it.content } == ['Review1', 'Review3']
 	}
 	
 	def "should find reviews by rolling stock slug"() {
 		when:
-		def results = service.findByRollingStock "acme-69501"
+		def results = service.findByRollingStock "acme-69502"
 		
 		then:
 		results != null
 		results.size == 1
-		results.collect{ it.content } == ["Review1"]
+		results.collect{ it.content } == ['Review2']
 	}
 	
 	def "should save reviews"() {
 		given:
-		def rs = mongo.findOne query(where("slug").is("acme-69501")), RollingStock.class
+		def doc = db.rollingStocks.findOne(slug: 'acme-69501')
+		def rs = new RollingStock(id: doc._id, slug: doc.slug)
 		assert rs != null
 
 		and:
-		def author = mongo.findOne query(where("emailAddress").is("bob@mail.com")), Account.class
+		def docAuthor = db.accounts.findOne(emailAddress: 'bob@mail.com')
+		def author = new Account(id: docAuthor._id, slug: docAuthor.slug)
 		assert author != null
 		
 		and:
-		def newReview = new Review(author: author, rollingStock: rs, content: "My Review")
+		def newReview = new Review(author: author, rollingStock: rs, title: 'Title4', content: 'Review4')
 		
 		when:
 		service.save newReview
@@ -184,24 +175,25 @@ class ReviewsServiceSpecification extends Specification {
 		newReview.id != null
 		
 		and:
-		def c = mongo.findById newReview.id, Review.class
+		def c = db.reviews.findOne(_id: newReview.id)
 		
 		c != null
 		c.authorName == "bob"
 		c.rsSlug == "acme-69501"
-		c.postedAt != null
+		c.postedAt != null 
 	}
 	
 	def "should remove reviews"() {
 		given:
-		def review = mongo.findOne query(where("content").is("Review1")), Review.class
+		def doc = db.reviews.findOne(content: 'Review1')
+		def review = new Review(id: doc._id)
 		assert review != null
 		
 		when:
 		service.remove review
 		
 		then:
-		def r = mongo.findById review.id, Review.class
-		r == null
+		def c = db.reviews.findOne(_id: review.id)
+		c == null
 	}
 }

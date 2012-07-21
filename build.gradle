@@ -38,6 +38,7 @@ allprojects {
 		maven {url "http://repo.springsource.org/release"}
 		maven {url "http://repo.springsource.org/libs-snapshot"}
 		maven {url "http://repository.jboss.org/nexus/content/repositories/releases/"}
+		maven {url "http://oss.sonatype.org/content/repositories/snapshots/"}
 	}
 
 	configurations {
@@ -147,6 +148,8 @@ project("trenako-services") {
 		compile("org.springframework.security:spring-security-config:${securityVersion}") {
 			exclude group: "commons-logging", module: "commons-logging"
 		}
+
+		integrationTestCompile "com.gmongo:gmongo:0.9.5"
 	}
 }
 
