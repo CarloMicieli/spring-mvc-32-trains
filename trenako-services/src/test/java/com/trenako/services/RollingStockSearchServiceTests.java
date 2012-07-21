@@ -25,19 +25,19 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trenako.criteria.SearchCriteria;
-import com.trenako.repositories.RsRepository;
+import com.trenako.repositories.RollingStocksSearchRepository;
 import com.trenako.results.RangeRequestImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStockSearchServiceTests {
 
-	@Mock RsRepository repo;
-	RollingStockSearchService service;
+	@Mock RollingStocksSearchRepository repo;
+	RollingStocksSearchService service;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		service = new RollingStockSearchServiceImpl(repo);
+		service = new RollingStocksSearchServiceImpl(repo);
 	}
 
 	@Test

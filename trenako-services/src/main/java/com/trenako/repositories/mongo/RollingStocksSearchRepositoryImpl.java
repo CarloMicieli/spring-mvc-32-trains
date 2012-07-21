@@ -28,7 +28,7 @@ import org.springframework.stereotype.Repository;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.RollingStock;
-import com.trenako.repositories.RsRepository;
+import com.trenako.repositories.RollingStocksSearchRepository;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
 import com.trenako.results.mongo.RollingStockResults;
@@ -38,70 +38,20 @@ import com.trenako.results.mongo.RollingStockResults;
  * @author Carlo Micieli
  *
  */
-@Repository("rsRepository")
-public class RsRepositoryImpl implements RsRepository {
-	
+@Repository("rollingStocksSearchRepository")
+public class RollingStocksSearchRepositoryImpl implements RollingStocksSearchRepository {
+
 	private final MongoTemplate mongo;
-	
+
 	/**
-	 * Creates a new {@code RsRepositoryImpl}.
+	 * Creates a new {@code RollingStocksSearchRepositoryImpl}.
 	 * @param mongo the mongo template
 	 */
 	@Autowired
-	public RsRepositoryImpl(MongoTemplate mongo) {
+	public RollingStocksSearchRepositoryImpl(MongoTemplate mongo) {
 		this.mongo = mongo;
 	}
 	
-	@Override
-	public PaginatedResults<RollingStock> findByBrand(String brand, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByEra(String era, RangeRequest range) {
-		return runRangeQuery(where("era").is(era), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByScale(String scale, RangeRequest range) {
-		return runRangeQuery(where("scaleName").is(scale), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByCategory(String category, RangeRequest range) {
-		return runRangeQuery(where("category").is(category), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByPowerMethod(String powerMethod, RangeRequest range) {
-		return runRangeQuery(where("powerMethod").is(powerMethod), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByRailway(String railway, RangeRequest range) {
-		return runRangeQuery(where("railwayName").is(railway), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByBrandAndEra(String brand, String era, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand).and("era").is(era), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByBrandAndScale(String brand, String scale, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand).and("scaleName").is(scale), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByBrandAndCategory(String brand, String category, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand).and("category").is(category), range);
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByBrandAndRailway(String brand, String railway, RangeRequest range) {
-		return runRangeQuery(where("brandName").is(brand).and("railwayName").is(railway), range);
-	}
-
 	@Override
 	public PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range) {
 		return runRangeQuery(MongoSearchCriteria.buildCriteria(sc), range);

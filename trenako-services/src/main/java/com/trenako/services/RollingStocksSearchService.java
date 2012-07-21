@@ -15,12 +15,8 @@
  */
 package com.trenako.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.RollingStock;
-import com.trenako.repositories.RsRepository;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
 
@@ -29,23 +25,14 @@ import com.trenako.results.RangeRequest;
  * @author Carlo Micieli
  *
  */
-@Service("rollingStockSearchService")
-public class RollingStockSearchServiceImpl implements RollingStockSearchService {
+public interface RollingStocksSearchService {
 
-	private final RsRepository repo;
-	
 	/**
-	 * Creates a new {@code RollingStockSearchServiceImpl}.
-	 * @param repo
+	 * Returns the {@code RollingStock} list according the provided search criteria.
+	 * @param sc the search criteria
+	 * @param range the {@code RangeRequest} information
+	 * @return a {@code RollingStock} list
 	 */
-	@Autowired
-	public RollingStockSearchServiceImpl(RsRepository repo) {
-		this.repo = repo;
-	}
-	
-	@Override
-	public PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range) {
-		return repo.findByCriteria(sc, range);
-	}
+	PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range);
 
 }

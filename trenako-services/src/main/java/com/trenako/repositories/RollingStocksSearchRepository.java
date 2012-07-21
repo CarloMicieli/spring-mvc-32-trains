@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.services;
+package com.trenako.repositories;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.RollingStock;
@@ -25,8 +25,7 @@ import com.trenako.results.RangeRequest;
  * @author Carlo Micieli
  *
  */
-public interface RollingStockSearchService {
-
+public interface RollingStocksSearchRepository {
 	/**
 	 * Returns the {@code RollingStock} list according the provided search criteria.
 	 * @param sc the search criteria
@@ -34,5 +33,12 @@ public interface RollingStockSearchService {
 	 * @return a {@code RollingStock} list
 	 */
 	PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range);
-
+	
+	/**
+	 * Returns the {@code RollingStock} list with the provided tag.
+	 * @param tag the tag value
+	 * @param range the {@code RangeRequest} information
+	 * @return a {@code RollingStock} list
+	 */
+	PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range);
 }
