@@ -386,7 +386,7 @@ public class Scale {
 
 	/**
 	 * Returns a string with the standards list.
-	 * @return
+	 * @return the the standards list
 	 */
 	public String getStandardsList() {
 		if (standards==null || standards.size()==0 ) return "";
@@ -404,10 +404,18 @@ public class Scale {
 			.toString();
 	}
 	
+	/**
+	 * Returns the last modification timestamp.
+	 * @return the timestamp
+	 */
 	public Date getLastModified() {
 		return lastModified;
 	}
 
+	/**
+	 * Sets the last modification timestamp.
+	 * @param lastModified the timestamp
+	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
@@ -418,7 +426,7 @@ public class Scale {
 	 * The application will show this value as string representation
 	 * for the current {@code Scale} instead of the usual {@code Scale#toString()}.
 	 * </p>
-	 * @return
+	 * @return the label string
 	 */
 	public String label() {
 		return new StringBuffer()

@@ -299,7 +299,7 @@ public class Railway {
 	 * The application will show this value as string representation
 	 * for the current {@code Railway} instead of the usual {@code Railway#toString()}.
 	 * </p>
-	 * @return
+	 * @return the label string
 	 */
 	public String label() {
 		StringBuilder sb = new StringBuilder();

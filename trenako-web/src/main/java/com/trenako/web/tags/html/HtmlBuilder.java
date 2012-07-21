@@ -26,6 +26,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class HtmlBuilder {
 	
+	/**
+	 * Converts a {@code List} of tags to an array.
+	 * @param list the tags list
+	 * @return a tags array
+	 */
 	public static HtmlTag[] tags(List<HtmlTag> list) {
 		return list.toArray(new HtmlTag[list.size()]);
 	}
@@ -104,13 +109,18 @@ public class HtmlBuilder {
 
 	/**
 	 * A list item ({@code <li>}).
-	 * @param body the item inner text
+	 * @param innerTags the list of inner tags
 	 * @return a tag
 	 */
 	public static li li(HtmlTag... innerTags) {
 		return (HtmlBuilder.li) new li(innerTags);
 	}
 	
+	/**
+	 * A HTML snippet; not included in any tag.
+	 * @param innerTags the list of inner tags
+	 * @return a tag
+	 */
 	public static snippet snippet(HtmlTag... innerTags) {
 		return (HtmlBuilder.snippet) new snippet(innerTags);
 	}

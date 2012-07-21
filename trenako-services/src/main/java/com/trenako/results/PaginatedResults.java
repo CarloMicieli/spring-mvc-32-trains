@@ -30,7 +30,7 @@ import org.bson.types.ObjectId;
  * limit for RESTful api, but it can be a limitation for common web applications.
  * </p>
  * <p>
- * The {@link PaginateResults#getTotalSize()} implementation could require another trip 
+ * The {@link PaginatedResults#getTotalSize()} implementation could require another trip 
  * to the database in order to count the result set total size. 
  * </p>
  *

@@ -23,7 +23,6 @@ import org.springframework.beans.PropertyValues;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -32,8 +31,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.utility.Cat;
 /**
- * Resolves {@link SearchCriteria} method arguments for controller actions
- * annotated with @{@code {@link ModelAttribute}.
+ * Resolves {@link SearchCriteria} method arguments for controller actions.
  * 
  * @author Carlo Micieli
  *

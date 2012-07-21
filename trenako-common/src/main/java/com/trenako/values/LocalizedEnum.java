@@ -30,7 +30,7 @@ public class LocalizedEnum<T extends Enum<T>> {
 	/**
 	 * Creates a new {@code LocalizedEnum}.
 	 * @param val the {@code enum} value
-	 * @param label the localized label string
+	 * @param message the localized label string
 	 */
 	public LocalizedEnum(T val, String message) {
 		this.val = val;
@@ -38,8 +38,8 @@ public class LocalizedEnum<T extends Enum<T>> {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * The label string for the current value.
+	 * @return the label string
 	 */
 	public String label() {
 		return val.name().toLowerCase().replace('_', '-');

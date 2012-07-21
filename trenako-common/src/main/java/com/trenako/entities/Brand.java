@@ -423,7 +423,7 @@ public class Brand {
 	 * The application will show this value as string representation
 	 * for the current {@code Brand} instead of the usual {@code Brand#toString()}.
 	 * </p>
-	 * @return
+	 * @return the label string
 	 */
 	public String label() {
 		return name;

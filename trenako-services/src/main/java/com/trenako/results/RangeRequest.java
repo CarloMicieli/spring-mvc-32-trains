@@ -68,8 +68,8 @@ public interface RangeRequest {
 	int getCount();
 
 	/**
-	 * 
-	 * @return
+	 * Returns an immutable version of the current {@code RangeRequest}.
+	 * @return an immutable object
 	 */
 	RangeRequest immutableRange();
 

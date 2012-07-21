@@ -91,8 +91,8 @@ public class SearchCriteria {
 	 * {@code SearchCriteria} will result in an {@code UnsupportedOperationException}.
 	 * </p>
 	 * 
-	 * @param sc
-	 * @return
+	 * @param sc the original {@code SearchCriteria}
+	 * @return an immutable object
 	 */
 	public static SearchCriteria immutableSearchCriteria(SearchCriteria sc) {
 		return new SearchCriteria(
@@ -469,7 +469,6 @@ public class SearchCriteria {
 	 * </p>
 	 * 
 	 * @return the criteria value
-	 * @see com.trenako.Cat
 	 */
 	public Cat getCat() {
 		String c = getValue(CAT_KEY);
