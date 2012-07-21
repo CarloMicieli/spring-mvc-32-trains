@@ -33,6 +33,16 @@ import com.trenako.entities.Scale;
 public class SearchCriteriaTests {
 
 	@Test
+	public void shouldProduceSingletonValueForEmptySearchCriteria() {
+		SearchCriteria x = SearchCriteria.EMPTY;
+		assertNotNull(x);
+		assertTrue(x.isEmpty());
+		
+		SearchCriteria y = SearchCriteria.EMPTY;
+		assertTrue(x == y);
+	}
+	
+	@Test
 	public void shouldAcceptNullForTheObjectVersionOfBuilderMethods() {
 		SearchCriteria x = new SearchCriteria.Builder()
 			.brand((Brand) null)
@@ -71,15 +81,15 @@ public class SearchCriteriaTests {
 			.scale(scale)
 			.build();
 		
-		assertEquals("(acme,ACME)", x.get(SearchCriteria.BRAND_KEY).toString());
-		assertEquals("(fs,FS (Ferrovie dello stato))", x.get(SearchCriteria.RAILWAY_KEY).toString());
-		assertEquals("(h0,H0 (1:87))", x.get(SearchCriteria.SCALE_KEY).toString());
+		assertEquals("(acme,ACME)", x.get(Brand.class).toString());
+		assertEquals("(fs,FS (Ferrovie dello stato))", x.get(Railway.class).toString());
+		assertEquals("(h0,H0 (1:87))", x.get(Scale.class).toString());
 	}
 	
 	@Test
 	public void shouldReturnNullWhenCriterionNotFound() {
 		SearchCriteria x = new SearchCriteria();
-		Pair<String, String> notFound = x.get("railway");
+		Pair<String, String> notFound = x.get(Railway.class);
 		assertNull(notFound);	
 	}
 	
@@ -233,12 +243,12 @@ public class SearchCriteriaTests {
 		
 		String expected = 
 				"{brand=ACME, " +
-				"category=electric-locomotives, "+
+				"scale=H0, " +
 				"cat=ac-electric-locomotives, "+
-				"era=IV, "+
-				"powerMethod=AC, "+
 				"railway=DB, "+
-				"scale=H0}";
+				"era=IV, "+
+				"powermethod=AC, "+
+				"category=electric-locomotives}";
 		assertEquals(expected, sc.toString());
 	}
 	

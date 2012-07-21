@@ -41,4 +41,12 @@ public interface RollingStocksSearchRepository {
 	 * @return a {@code RollingStock} list
 	 */
 	PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range);
+	
+	/**
+	 * 
+	 * @param slug
+	 * @param providedType
+	 * @return
+	 */
+	<T> T findBySlug(String slug, Class<T> providedType);
 }

@@ -29,11 +29,11 @@ import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
-import com.trenako.repositories.BrandsRepository;
-import com.trenako.repositories.RailwaysRepository;
 import com.trenako.repositories.RollingStocksSearchRepository;
-import com.trenako.repositories.ScalesRepository;
 import com.trenako.results.RangeRequestImpl;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.PowerMethod;
 
 /**
  * 
@@ -43,16 +43,13 @@ import com.trenako.results.RangeRequestImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStockSearchServiceTests {
 
-	@Mock BrandsRepository brands;
-	@Mock RailwaysRepository railways;
-	@Mock ScalesRepository scales;
 	@Mock RollingStocksSearchRepository repo;
 	RollingStocksSearchService service;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		service = new RollingStocksSearchServiceImpl(repo, brands, railways, scales);
+		service = new RollingStocksSearchServiceImpl(repo);
 	}
 
 	@Test
@@ -76,9 +73,9 @@ public class RollingStockSearchServiceTests {
 		SearchCriteria dbSc = service.loadSearchCriteria(sc);
 		
 		assertTrue(dbSc.isEmpty());
-		verify(brands, times(0)).findBySlug(isA(String.class));
-		verify(railways, times(0)).findBySlug(isA(String.class));
-		verify(scales, times(0)).findBySlug(isA(String.class));
+		verify(repo, times(0)).findBySlug(isA(String.class), eq(Brand.class));
+		verify(repo, times(0)).findBySlug(isA(String.class), eq(Railway.class));
+		verify(repo, times(0)).findBySlug(isA(String.class), eq(Scale.class));
 	}
 	
 	@Test
@@ -88,20 +85,26 @@ public class RollingStockSearchServiceTests {
 		Railway railway = new Railway.Builder("FS").companyName("Ferrovie dello stato").build();
 		Scale scale = new Scale.Builder("H0").ratio(870).build();
 		
-		when(brands.findBySlug(eq(brand.getSlug()))).thenReturn(brand);
-		when(railways.findBySlug(eq(railway.getSlug()))).thenReturn(railway);
-		when(scales.findBySlug(eq(scale.getSlug()))).thenReturn(scale);
+		when(repo.findBySlug(eq(brand.getSlug()), eq(Brand.class))).thenReturn(brand);
+		when(repo.findBySlug(eq(railway.getSlug()), eq(Railway.class))).thenReturn(railway);
+		when(repo.findBySlug(eq(scale.getSlug()), eq(Scale.class))).thenReturn(scale);
 		
 		SearchCriteria sc = new SearchCriteria.Builder()
 			.brand(brand.getSlug())
 			.railway(railway.getSlug())
 			.scale(scale.getSlug())
+			.powerMethod("ac")
+			.era("iii")
+			.category("electric-locomotives")
 			.build();
 		SearchCriteria dbSc = service.loadSearchCriteria(sc);
 		
 		assertNotNull(dbSc);
-		assertEquals("(acme,ACME)", dbSc.get(SearchCriteria.BRAND_KEY).toString());
-		assertEquals("(fs,FS (Ferrovie dello stato))", dbSc.get(SearchCriteria.RAILWAY_KEY).toString());
-		assertEquals("(h0,H0 (1:87))", dbSc.get(SearchCriteria.SCALE_KEY).toString());
+		assertEquals("(acme,ACME)", dbSc.get(Brand.class).toString());
+		assertEquals("(fs,FS (Ferrovie dello stato))", dbSc.get(Railway.class).toString());
+		assertEquals("(h0,H0 (1:87))", dbSc.get(Scale.class).toString());
+		assertEquals("(ac,ac)", dbSc.get(PowerMethod.class).toString());
+		assertEquals("(iii,iii)", dbSc.get(Era.class).toString());
+		assertEquals("(electric-locomotives,electric-locomotives)", dbSc.get(Category.class).toString());
 	}
 }

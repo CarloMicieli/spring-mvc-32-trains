@@ -55,13 +55,15 @@ public class SearchCriteria {
 	
 	private Map<String, Pair<String, String>> values = new HashMap<String, Pair<String, String>>();
 	
+	private final static Map<Class<?>, String> criteriaTypes = initTypesMap();
+	
 	/**
 	 * The name for the {@code PowerMethod} criterion.
 	 * <p>
 	 * The default value is <em>"powermethod"</em>.
 	 * </p>
 	 */
-	public final static String POWER_METHOD_KEY = "powermethod";
+	private final static String POWER_METHOD_KEY = "powermethod";
 	
 	/**
 	 * The name for the {@code Brand} criterion.
@@ -69,7 +71,7 @@ public class SearchCriteria {
 	 * The default value is <em>"brand"</em>.
 	 * </p>
 	 */	
-	public final static String BRAND_KEY = "brand";
+	private final static String BRAND_KEY = "brand";
 	
 	/**
 	 * The name for the {@code Scale} criterion.
@@ -77,7 +79,7 @@ public class SearchCriteria {
 	 * The default value is <em>"scale"</em>.
 	 * </p>
 	 */	
-	public final static String SCALE_KEY = "scale";
+	private final static String SCALE_KEY = "scale";
 	
 	/**
 	 * The name for the {@code Category} criterion.
@@ -85,7 +87,7 @@ public class SearchCriteria {
 	 * The default value is <em>"category"</em>.
 	 * </p>
 	 */
-	public final static String CATEGORY_KEY = "category";
+	private final static String CATEGORY_KEY = "category";
 	
 	/**
 	 * The name for the {@code Cat} criterion.
@@ -93,7 +95,7 @@ public class SearchCriteria {
 	 * The default value is <em>"cat"</em>.
 	 * </p>
 	 */
-	public final static String CAT_KEY = "cat";
+	private final static String CAT_KEY = "cat";
 	
 	/**
 	 * The name for the {@code Era} criterion.
@@ -101,7 +103,7 @@ public class SearchCriteria {
 	 * The default value is <em>"era"</em>.
 	 * </p>
 	 */
-	public final static String ERA_KEY = "era";
+	private final static String ERA_KEY = "era";
 	
 	/**
 	 * The name for the {@code Railway} criterion.
@@ -109,7 +111,7 @@ public class SearchCriteria {
 	 * The default value is <em>"railway"</em>.
 	 * </p>
 	 */
-	public final static String RAILWAY_KEY = "railway";
+	private final static String RAILWAY_KEY = "railway";
 	
 	/**
 	 * The allowed search criteria names.
@@ -122,11 +124,27 @@ public class SearchCriteria {
 	public final static List<String> KEYS = 
 			Collections.unmodifiableList(
 					Arrays.asList(BRAND_KEY, SCALE_KEY, CAT_KEY, RAILWAY_KEY, ERA_KEY, POWER_METHOD_KEY, CATEGORY_KEY));
+
+	public static final SearchCriteria EMPTY = new SearchCriteria(
+			Collections.<String, Pair<String, String>> emptyMap()
+			);
 	
 	private SearchCriteria(Map<String, Pair<String, String>> values) {
 		this.values = values;
 	}
 	
+	private static Map<Class<?>, String> initTypesMap() {
+		Map<Class<?> , String> types = new HashMap<Class<?>, String>();
+		types.put(Brand.class, BRAND_KEY);
+		types.put(Era.class, ERA_KEY);
+		types.put(Category.class, CATEGORY_KEY);
+		types.put(Cat.class, CAT_KEY);
+		types.put(PowerMethod.class, POWER_METHOD_KEY);
+		types.put(Scale.class, SCALE_KEY);
+		types.put(Railway.class, RAILWAY_KEY);
+		return Collections.unmodifiableMap(types);
+	}
+
 	/**
 	 * Creates an empty {@code SearchCriteria}.
 	 */
@@ -604,23 +622,20 @@ public class SearchCriteria {
      */
 	@Override
 	public String toString() {
-		return new StringBuilder()
-			.append("{brand=")
-			.append(getBrand())
-			.append(", category=")
-			.append(getCategory())
-			.append(", cat=")
-			.append(getCat())
-			.append(", era=")
-			.append(getEra())
-			.append(", powerMethod=")
-			.append(getPowerMethod())
-			.append(", railway=")
-			.append(getRailway())
-			.append(", scale=")
-			.append(getScale())
-			.append("}")
-			.toString();			
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		
+		for (String key : KEYS) {
+			if (!has(key)) continue;
+			
+			sb.append(key).append("=").append(get(key).getKey());
+			if (key != KEYS.get(KEYS.size() - 1)) {
+				sb.append(", ");
+			}
+		}
+		
+		sb.append("}");
+		return sb.toString();		
 	}
 	
 	/**
@@ -636,15 +651,12 @@ public class SearchCriteria {
 		if( !(obj instanceof SearchCriteria) ) return false;
 		
 		SearchCriteria other = (SearchCriteria) obj;
-		return new EqualsBuilder()
-			.append(getEra(), other.getEra())
-			.append(getScale(), other.getScale())
-			.append(getRailway(), other.getRailway())
-			.append(getBrand(), other.getBrand())
-			.append(getCategory(), other.getCategory())
-			.append(getCat(), other.getCat())
-			.append(getPowerMethod(), other.getPowerMethod())
-			.isEquals();
+		EqualsBuilder eb = new EqualsBuilder();
+		for (String key : criteria()) {
+			eb.append(this.get(key), other.get(key));			
+		}
+		
+		return eb.isEquals();
 	}
 	
 	/**
@@ -655,6 +667,11 @@ public class SearchCriteria {
 	 */
 	public boolean has(String key) {
 		validateKey(key);
+		return values.containsKey(key);
+	}
+
+	public boolean has(Class<?> criterionType) {
+		String key = criteriaTypes.get(criterionType);
 		return values.containsKey(key);
 	}
 	
@@ -670,8 +687,19 @@ public class SearchCriteria {
 		if (values.containsKey(key)) {
 			return values.get(key);
 		}
-		
+
 		return null;
+	}
+	
+	/**
+	 * Returns the {@code key} and {@code label} for the search criteria
+	 * for the provided value (if any).
+	 * @param key the criteria key name
+	 * @return a pair if found; {@code null} otherwise
+	 */
+	public Pair<String, String> get(Class<?> criterionType) {
+		String key = criteriaTypes.get(criterionType);
+		return get(key);
 	}
 	
 	/**

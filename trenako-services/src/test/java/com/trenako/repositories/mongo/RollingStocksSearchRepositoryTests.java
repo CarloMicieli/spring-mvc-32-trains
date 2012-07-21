@@ -181,6 +181,7 @@ public class RollingStocksSearchRepositoryTests {
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"tag\" : \"tagval\"}", "{ \"lastModified\" : -1}");
 	}
+	
 	@Test
 	public void shouldFindRollingStocksByCat() {
 		mockFindResults();
@@ -194,5 +195,35 @@ public class RollingStocksSearchRepositoryTests {
 		assertNotNull("Results is empty", results);
 		verifyMongoQuery("{ \"category\" : \"electric-locomotives\" , \"powerMethod\" : \"ac\"}", 
 				"{ \"lastModified\" : -1}");
+	}
+	
+	@Test
+	public void shouldLoadBrandsBySlug() {
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		
+		repo.findBySlug("acme", Brand.class);
+		
+		verify(mongo, times(1)).findOne(arg.capture(), eq(Brand.class));
+		assertEquals("{ \"slug\" : \"acme\"}", arg.getValue().getQueryObject().toString());
+	}
+	
+	@Test
+	public void shouldLoadRailwaysBySlug() {
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		
+		repo.findBySlug("db", Railway.class);
+		
+		verify(mongo, times(1)).findOne(arg.capture(), eq(Railway.class));
+		assertEquals("{ \"slug\" : \"db\"}", arg.getValue().getQueryObject().toString());
+	}
+	
+	@Test
+	public void shouldLoadScalesBySlug() {
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		
+		repo.findBySlug("h0", Scale.class);
+		
+		verify(mongo, times(1)).findOne(arg.capture(), eq(Scale.class));
+		assertEquals("{ \"slug\" : \"h0\"}", arg.getValue().getQueryObject().toString());
 	}
 }

@@ -15,20 +15,23 @@
  */
 package com.trenako.services;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
-import com.trenako.repositories.BrandsRepository;
-import com.trenako.repositories.RailwaysRepository;
 import com.trenako.repositories.RollingStocksSearchRepository;
-import com.trenako.repositories.ScalesRepository;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
+import com.trenako.values.PowerMethod;
 
 /**
  * 
@@ -39,26 +42,14 @@ import com.trenako.results.RangeRequest;
 public class RollingStocksSearchServiceImpl implements RollingStocksSearchService {
 
 	private final RollingStocksSearchRepository repo;
-	private final BrandsRepository brands;
-	private final RailwaysRepository railways;
-	private final ScalesRepository scales;
 	
 	/**
 	 * Creates a new {@code RollingStockSearchServiceImpl}.
 	 * @param repo
-	 * @param scales 
-	 * @param railways 
-	 * @param brands 
 	 */
 	@Autowired
-	public RollingStocksSearchServiceImpl(RollingStocksSearchRepository repo, 
-			BrandsRepository brands, 
-			RailwaysRepository railways, 
-			ScalesRepository scales) {
+	public RollingStocksSearchServiceImpl(RollingStocksSearchRepository repo) {
 		this.repo = repo;
-		this.brands = brands;
-		this.railways = railways;
-		this.scales = scales;
 	}
 	
 	@Override
@@ -68,27 +59,48 @@ public class RollingStocksSearchServiceImpl implements RollingStocksSearchServic
 
 	@Override
 	public SearchCriteria loadSearchCriteria(SearchCriteria sc) {
-		if (sc.isEmpty()) return SearchCriteria.immutableSearchCriteria(sc);
+		if (sc.isEmpty()) return SearchCriteria.EMPTY;
 				
 		return new SearchCriteria.Builder()
-			.brand(loadBrand(sc))
-			.railway(loadRailway(sc))
-			.scale(loadScale(sc))
+			.brand(resolveClass(sc, Brand.class))
+			.railway(resolveClass(sc, Railway.class))
+			.scale(resolveClass(sc, Scale.class))
+			.era(resolveEnum(sc, Era.class))
+			.category(resolveEnum(sc, Category.class))
+			.powerMethod(resolveEnum(sc, PowerMethod.class))
 			.buildImmutable();
 	}
-	
-	private Brand loadBrand(SearchCriteria sc) {
-		if (!sc.hasBrand()) return null;
-		return brands.findBySlug(sc.getBrand());
+
+	private <T> T resolveClass(SearchCriteria sc, Class<T> criterionType) {
+		Pair<String, String> criterionPair = criterionValue(sc, criterionType);
+		if (criterionPair == null) {
+			return null;
+		}
+		
+		return repo.findBySlug(criterionPair.getKey(), criterionType);
 	}
 	
-	private Railway loadRailway(SearchCriteria sc) {
-		if (!sc.hasRailway()) return null;
-		return railways.findBySlug(sc.getRailway());
+	private <T extends Enum<T>> LocalizedEnum<T> resolveEnum(SearchCriteria sc, Class<T> criterionType) {
+		Pair<String, String> criterionPair = criterionValue(sc, criterionType);
+		if (criterionPair == null) {
+			return null;
+		}
+		
+		// enum values are resolved without accessing the db 
+		T enumVal = LocalizedEnum.parseString(criterionPair.getKey(), criterionType);
+		return new LocalizedEnum<T>(enumVal);
 	}
-	
-	private Scale loadScale(SearchCriteria sc) {
-		if (!sc.hasScale()) return null;
-		return scales.findBySlug(sc.getScale());
+
+	private <T> Pair<String, String> criterionValue(SearchCriteria sc, Class<T> criterionType) {
+		if (!sc.has(criterionType)) {
+			return null;	
+		}
+
+		Pair<String, String> criterionPair = sc.get(criterionType);
+		if (criterionPair == null || !StringUtils.hasText(criterionPair.getKey())) {
+			return null;
+		}
+		
+		return criterionPair;
 	}
 }

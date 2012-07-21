@@ -17,6 +17,7 @@ package com.trenako.repositories.mongo;
 
 import static com.trenako.repositories.mongo.RollingStockQueryBuilder.buildQuery;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.*;
 
 import java.util.List;
 
@@ -62,6 +63,11 @@ public class RollingStocksSearchRepositoryImpl implements RollingStocksSearchRep
 		return runRangeQuery(where("tag").is(tag), range);
 	}
 
+	@Override
+	public <T> T findBySlug(String slug, Class<T> entityClass) {
+		return mongo.findOne(query(where("slug").is(slug)), entityClass);
+	}
+	
 	private RollingStockResults runRangeQuery(Criteria criteria, RangeRequest range) {
 		final Query query = buildQuery(criteria, range);
 		final List<RollingStock> results = mongo.find(query, RollingStock.class);
