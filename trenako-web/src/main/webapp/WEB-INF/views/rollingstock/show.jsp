@@ -2,10 +2,12 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
-	<title>
-		<s:message code="rollingStock.page.new.title" />
+	<head>
+		<title>
+			<s:message code="rollingStock.page.new.title" />
+		</title>
 		<meta name="browse" content="active"/>
-	</title>
+	</head>
 	<body>
 		<div class="row-fluid">
        		<ul class="breadcrumb">
