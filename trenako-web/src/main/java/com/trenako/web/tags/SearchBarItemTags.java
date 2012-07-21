@@ -29,7 +29,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
 import com.trenako.services.BrowseService;
 import com.trenako.web.tags.html.HtmlTag;

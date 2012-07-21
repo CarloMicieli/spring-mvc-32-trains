@@ -23,6 +23,9 @@ import spock.lang.*
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.PowerMethod;
 
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
@@ -30,9 +33,6 @@ import org.springframework.data.mongodb.core.query.Query
 import static org.springframework.data.mongodb.core.query.Query.*
 import static org.springframework.data.mongodb.core.query.Criteria.*
 
-import com.trenako.Category;
-import com.trenako.Era;
-import com.trenako.PowerMethod;
 import com.trenako.entities.Brand;
 import com.trenako.entities.DeliveryDate;
 import com.trenako.entities.Railway;

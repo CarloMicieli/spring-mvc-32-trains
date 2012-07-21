@@ -20,8 +20,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.trenako.CatFormatException;
-import com.trenako.Category;
-import com.trenako.PowerMethod;
+import com.trenako.values.Category;
+import com.trenako.values.PowerMethod;
 
 /**
  * 

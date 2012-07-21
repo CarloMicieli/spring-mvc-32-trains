@@ -13,41 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako;
+package com.trenako.values;
 
-import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.*;
 import java.util.List;
 
 import org.junit.Test;
 
-import com.trenako.PowerMethod;
+import com.trenako.values.Era;
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-public class PowerMethodTests {
-
+public class EraTests {
 	@Test
-	public void shouldProduceDescription() {
-		PowerMethod ac = PowerMethod.AC;
-		assertEquals("ac", ac.label());
-		
-		PowerMethod ads = PowerMethod.DC;
-		assertEquals("dc", ads.label());
-	}
-	
-	@Test
-	public void shouldParseAStringValue() {
-		PowerMethod ads = PowerMethod.parse("ac");
-		assertEquals(PowerMethod.AC, ads);
-	}
-	
-	@Test
-	public void shouldListAllPowerMethods() {
-		List<String> l = PowerMethod.list();
-		assertEquals("[ac, dc]", l.toString());
+	public void shouldListAllEras() {
+		List<String> eras = Era.list();
+		assertEquals("[I, II, III, IV, V, VI]", eras.toString());
 	}
 }

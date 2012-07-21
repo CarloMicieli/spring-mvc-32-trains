@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
 import com.trenako.services.RollingStockSearchService;
 import com.trenako.web.test.AbstractSpringControllerTests;

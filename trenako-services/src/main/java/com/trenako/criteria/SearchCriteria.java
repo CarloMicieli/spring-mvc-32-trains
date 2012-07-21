@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako;
+package com.trenako.criteria;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,11 +25,19 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
+import com.trenako.entities.Scale;
 import com.trenako.utility.Cat;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
+import com.trenako.values.PowerMethod;
 
 /**
- * It represents an mutable rolling stock search criteria.
+ * It represents rolling stock search criteria.
  * <p>
  * The best way to create a {@code SearchCriteria} is using the
  * {@link SearchCriteria.Builder} class.
@@ -45,7 +53,7 @@ import com.trenako.utility.Cat;
  */
 public class SearchCriteria {
 	
-	private Map<String, String> values = new HashMap<String, String>();
+	private Map<String, Pair<String, String>> values = new HashMap<String, Pair<String, String>>();
 	
 	private final static String POWER_METHOD_KEY = "powermethod";
 	private final static String BRAND_KEY = "brand";
@@ -66,18 +74,8 @@ public class SearchCriteria {
 			Collections.unmodifiableList(
 					Arrays.asList(BRAND_KEY, SCALE_KEY, CAT_KEY, RAILWAY_KEY, ERA_KEY, POWER_METHOD_KEY, CATEGORY_KEY));
 	
-	private SearchCriteria(Map<String, String> values) {
+	private SearchCriteria(Map<String, Pair<String, String>> values) {
 		this.values = values;
-	}
-	
-	private SearchCriteria(Builder b) {
-		setPowerMethod(b.powerMethod);
-		setBrand(b.brand);
-		setScale(b.scale);
-		setCategory(b.category);
-		setCat(b.cat);
-		setEra(b.era);
-		setRailway(b.railway);
 	}
 	
 	/**
@@ -107,13 +105,7 @@ public class SearchCriteria {
 	 *
 	 */
 	public static class Builder	{
-		private String powerMethod = null;
-		private String brand = null;
-		private String scale = null;
-		private String category = null;
-		private Cat cat = null;
-		private String era = null;
-		private String railway = null;
+		private Map<String, Pair<String, String>> values = null;
 		
 		/**
 		 * Creates a new {@code SearchCriteria}.
@@ -124,15 +116,26 @@ public class SearchCriteria {
 		 * </p>
 		 */
 		public Builder() {
+			values = new HashMap<String, Pair<String, String>>();
 		}
 		
 		/**
-		 * Sets the [@code power method} criteria.
+		 * Sets the {@code power method} criteria.
 		 * @param pm the power method
 		 * @return a builder
 		 */
 		public Builder powerMethod(String pm) {
-			powerMethod = pm;
+			add(POWER_METHOD_KEY, pm, pm);
+			return this;
+		}
+		
+		/**
+		 * Sets the {@code power method} criteria.
+		 * @param pm the power method
+		 * @return a builder
+		 */
+		public Builder powerMethod(LocalizedEnum<PowerMethod> pm) {
+			add(POWER_METHOD_KEY, pm.label(), pm.getMessage());
 			return this;
 		}
 		
@@ -142,7 +145,17 @@ public class SearchCriteria {
 		 * @return a builder
 		 */
 		public Builder brand(String brand) {
-			this.brand = brand;
+			add(BRAND_KEY, brand, brand);
+			return this;
+		}
+		
+		/**
+		 * Sets the {@code brand} criteria.
+		 * @param brand the brand
+		 * @return a builder
+		 */
+		public Builder brand(Brand brand) {
+			add(BRAND_KEY, brand.getSlug(), brand.label());
 			return this;
 		}
 		
@@ -152,7 +165,17 @@ public class SearchCriteria {
 		 * @return a builder
 		 */
 		public Builder railway(String railway) {
-			this.railway = railway;
+			add(RAILWAY_KEY, railway, railway);
+			return this;
+		}
+		
+		/**
+		 * Sets the {@code railway} criteria.
+		 * @param railway the railway
+		 * @return a builder
+		 */
+		public Builder railway(Railway railway) {
+			add(RAILWAY_KEY, railway.getSlug(), railway.label());
 			return this;
 		}
 		
@@ -162,7 +185,17 @@ public class SearchCriteria {
 		 * @return a builder
 		 */
 		public Builder scale(String scale) {
-			this.scale = scale;
+			add(SCALE_KEY, scale, scale);
+			return this;
+		}
+		
+		/**
+		 * Sets the {@code scale} criteria.
+		 * @param scale the scale
+		 * @return a builder
+		 */
+		public Builder scale(Scale scale) {
+			add(SCALE_KEY, scale.getSlug(), scale.label());
 			return this;
 		}
 		
@@ -173,9 +206,7 @@ public class SearchCriteria {
 		 * @return a builder
 		 */
 		public Builder cat(String cat) {
-			if (cat!=null && !cat.isEmpty()) {
-				this.cat = Cat.parseString(cat);
-			}
+			add(CAT_KEY, cat, cat);
 			return this;
 		}
 		
@@ -185,7 +216,17 @@ public class SearchCriteria {
 		 * @return a builder
 		 */
 		public Builder category(String category) {
-			this.category = category;
+			add(CATEGORY_KEY, category, category);
+			return this;
+		}
+		
+		/**
+		 * Sets the {@code category} criteria.
+		 * @param category the category name
+		 * @return a builder
+		 */
+		public Builder category(LocalizedEnum<Category> category) {
+			add(CATEGORY_KEY, category.label(), category.getMessage());
 			return this;
 		}
 		
@@ -195,7 +236,16 @@ public class SearchCriteria {
 		 * @return a builder
 		 */
 		public Builder era(String era) {
-			this.era = era;
+			add(ERA_KEY, era, era);
+			return this;
+		}
+		/**
+		 * Sets the {@code era} criteria.
+		 * @param era the era
+		 * @return a builder
+		 */
+		public Builder era(LocalizedEnum<Era> era) {
+			add(ERA_KEY, era.label(), era.getMessage());
 			return this;
 		}
 		
@@ -204,7 +254,21 @@ public class SearchCriteria {
 		 * @return a {@code SearchCriteria}
 		 */
 		public SearchCriteria build() {
-			return new SearchCriteria(this);
+			return new SearchCriteria(this.values);
+		}
+		
+		/**
+		 * Builds a new immutable {@code SearchCriteria} objects.
+		 * @return a {@code SearchCriteria}
+		 */
+		public SearchCriteria buildImmutable() {
+			return immutableSearchCriteria(new SearchCriteria(this.values));
+		}
+		
+		private void add(String criterionName, String value, String label) {
+			if (StringUtils.hasText(value)) {
+				values.put(criterionName, new ImmutablePair<String, String>(value, label));
+			}
 		}
 	}
 	
@@ -224,7 +288,7 @@ public class SearchCriteria {
 	 * </p>
 	 * 
 	 * @return the criteria value
-	 * @see com.trenako.PowerMethod
+	 * @see com.trenako.values.PowerMethod
 	 */
 	public String getPowerMethod() {
 		return getValue(POWER_METHOD_KEY);
@@ -314,7 +378,7 @@ public class SearchCriteria {
 	 * </p>
 	 * 
 	 * @return the criteria value
-	 * @see com.trenako.Category
+	 * @see com.trenako.values.Category
 	 */
 	public String getCategory() {
 		return getValue(CATEGORY_KEY);
@@ -378,7 +442,7 @@ public class SearchCriteria {
 	 * </p>
 	 * 
 	 * @return the criteria value
-	 * @see com.trenako.Era
+	 * @see com.trenako.values.Era
 	 */
 	public String getEra() {
 		return getValue(ERA_KEY);
@@ -511,6 +575,14 @@ public class SearchCriteria {
 		return values.isEmpty();
 	}
 	
+	/**
+	 * Returns the list of keys with a criterion set.
+	 * @return the list of keys
+	 */
+	public Iterable<String> criteria() {
+		return this.values.keySet();
+	}
+	
 	private void addValue(String key, String value) {
 		validateKey(key);
 		
@@ -518,13 +590,17 @@ public class SearchCriteria {
 			values.remove(key);
 		}
 		else {
-			values.put(key, value);	
+			values.put(key, new ImmutablePair<String, String>(value, value));	
 		}
 	}
 	
 	private String getValue(String key) {
 		validateKey(key);
-		return values.get(key);
+		
+		if (values.get(key) == null) {
+			return null;
+		}
+		return values.get(key).getKey();
 	}
 	
 	private void validateKey(String key) {

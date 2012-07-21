@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako;
+package com.trenako.values;
 
 import java.util.List;
 
 import org.junit.Test;
 
-import com.trenako.Category;
+import com.trenako.values.Category;
 
 import static org.junit.Assert.*;
 

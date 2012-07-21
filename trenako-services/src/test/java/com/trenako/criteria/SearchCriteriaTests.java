@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako;
+package com.trenako.criteria;
 
 import static org.junit.Assert.*;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
+
+import com.trenako.criteria.SearchCriteria;
 
 /**
  * 
@@ -27,6 +29,14 @@ import org.junit.Test;
  */
 public class SearchCriteriaTests {
 
+	@Test
+	public void shouldReturnNullIfCriterionNotSet() {
+		SearchCriteria y = new SearchCriteria.Builder()
+			.brand("ACME")
+			.build();
+		assertNull(y.getPowerMethod());
+	}
+	
 	@Test
 	public void shouldCheckIfSearchCriteriaIsEmpty() {
 		SearchCriteria x = new SearchCriteria();
@@ -75,7 +85,7 @@ public class SearchCriteriaTests {
 		assertEquals(false, y.hasBrand());
 		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.brand(null)
+			.brand((String)null)
 			.build();
 		assertEquals(false, z.hasBrand());
 	}
@@ -93,7 +103,7 @@ public class SearchCriteriaTests {
 		assertEquals(false, y.hasCategory());
 		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.category(null)
+			.category((String) null)
 			.build();
 		assertEquals(false, z.hasCategory());
 	}
@@ -129,7 +139,7 @@ public class SearchCriteriaTests {
 		assertEquals(false, y.hasEra());
 		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.era(null)
+			.era((String) null)
 			.build();
 		assertEquals(false, z.hasEra());
 	}
@@ -147,7 +157,7 @@ public class SearchCriteriaTests {
 		assertEquals(false, y.hasRailway());
 		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.railway(null)
+			.railway((String) null)
 			.build();
 		assertEquals(false, z.hasRailway());
 	}
@@ -165,7 +175,7 @@ public class SearchCriteriaTests {
 		assertEquals(false, y.hasScale());
 		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.scale(null)
+			.scale((String) null)
 			.build();
 		assertEquals(false, z.hasScale());
 	}
@@ -183,7 +193,7 @@ public class SearchCriteriaTests {
 		assertEquals(false, y.hasPowerMethod());
 		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.powerMethod(null)
+			.powerMethod((String) null)
 			.build();
 		assertEquals(false, z.hasPowerMethod());
 	}

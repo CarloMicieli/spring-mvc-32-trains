@@ -17,7 +17,7 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;

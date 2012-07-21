@@ -31,7 +31,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
 
 /**

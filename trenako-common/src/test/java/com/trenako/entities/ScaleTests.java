@@ -20,7 +20,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-import com.trenako.Standard;
+import com.trenako.values.Standard;
 
 import static java.math.BigDecimal.*;
 import static org.junit.Assert.*;

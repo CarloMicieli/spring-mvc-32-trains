@@ -18,7 +18,7 @@ package com.trenako.web.infrastructure;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 
 /**
  * It represents a Url builder for {@code SearchCriteria}.

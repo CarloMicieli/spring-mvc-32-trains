@@ -34,7 +34,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RsRepository;
 import com.trenako.results.PaginatedResults;

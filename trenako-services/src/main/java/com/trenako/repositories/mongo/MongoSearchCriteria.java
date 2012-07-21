@@ -17,7 +17,7 @@ package com.trenako.repositories.mongo;
 
 import org.springframework.data.mongodb.core.query.Criteria;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 
 /**
  * It converts a {@link SearchCriteria} object to mongodb criteria.

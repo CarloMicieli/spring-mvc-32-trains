@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 
 /**
  * 

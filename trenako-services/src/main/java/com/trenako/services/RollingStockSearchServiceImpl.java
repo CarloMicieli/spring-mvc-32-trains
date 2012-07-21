@@ -18,7 +18,7 @@ package com.trenako.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.RsRepository;
 import com.trenako.results.PaginatedResults;

@@ -15,7 +15,7 @@
  */
 package com.trenako.repositories;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;

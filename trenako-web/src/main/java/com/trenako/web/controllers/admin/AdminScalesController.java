@@ -33,9 +33,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.trenako.Standard;
 import com.trenako.entities.Scale;
 import com.trenako.services.ScalesService;
+import com.trenako.values.Standard;
 import com.trenako.web.errors.NotFoundException;
 
 /**

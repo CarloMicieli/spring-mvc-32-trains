@@ -26,7 +26,8 @@ import javax.servlet.jsp.tagext.Tag;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import com.trenako.SearchCriteria;
+
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.web.tags.html.HtmlTag;
 
 import static com.trenako.web.tags.html.HtmlBuilder.*;

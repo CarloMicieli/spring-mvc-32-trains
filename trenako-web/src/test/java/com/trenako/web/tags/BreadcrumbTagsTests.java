@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.springframework.context.MessageSource;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.web.test.AbstractSpringTagsTest;
 
 /**

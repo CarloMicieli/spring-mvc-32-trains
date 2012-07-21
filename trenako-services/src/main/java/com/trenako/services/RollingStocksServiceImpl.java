@@ -21,9 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.trenako.Category;
-import com.trenako.Era;
-import com.trenako.PowerMethod;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
@@ -32,6 +29,9 @@ import com.trenako.repositories.BrandsRepository;
 import com.trenako.repositories.RailwaysRepository;
 import com.trenako.repositories.RollingStocksRepository;
 import com.trenako.repositories.ScalesRepository;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.PowerMethod;
 
 /**
  * A concrete implementation for the {@code RollingStocks} service.

@@ -30,15 +30,15 @@ import org.springframework.data.mongodb.core.query.Query
 import static org.springframework.data.mongodb.core.query.Query.*
 import static org.springframework.data.mongodb.core.query.Criteria.*
 
-import com.trenako.Category;
-import com.trenako.Era;
-import com.trenako.PowerMethod;
 import com.trenako.entities.Brand;
 import com.trenako.entities.DeliveryDate;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
 import com.trenako.services.RollingStocksServiceImpl;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.PowerMethod;
 
 /**
  * 

@@ -22,7 +22,7 @@ import java.util.SortedMap;
 
 import org.junit.Test;
 
-import com.trenako.Condition;
+import com.trenako.values.Condition;
 
 /**
  * 

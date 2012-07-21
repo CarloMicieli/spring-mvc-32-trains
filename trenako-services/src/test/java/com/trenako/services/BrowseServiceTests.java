@@ -27,9 +27,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.trenako.Category;
-import com.trenako.Era;
 import com.trenako.repositories.BrowseRepository;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
 
 /**
  * 

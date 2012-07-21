@@ -31,7 +31,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.trenako.Category;
+import com.trenako.values.Category;
 
 /**
  * It represents a user collection of rolling stocks.

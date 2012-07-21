@@ -28,7 +28,7 @@ import java.util.Stack;
 
 import org.springframework.util.Assert;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 
 /**
  * It represents a parser for a servlet path based representation 

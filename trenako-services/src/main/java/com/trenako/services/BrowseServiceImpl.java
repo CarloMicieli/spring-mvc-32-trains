@@ -18,12 +18,12 @@ package com.trenako.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.trenako.Category;
-import com.trenako.Era;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
 import com.trenako.repositories.BrowseRepository;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
 
 /**
  * 

@@ -14,7 +14,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.junit.Test;
 import org.springframework.context.MessageSource;
 
-import com.trenako.SearchCriteria;
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.web.tags.html.HtmlTag;
 import com.trenako.web.test.AbstractSpringTagsTest;
 

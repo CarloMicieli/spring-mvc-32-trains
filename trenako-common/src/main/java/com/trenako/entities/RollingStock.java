@@ -37,9 +37,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 
 import com.trenako.AppGlobals;
-import com.trenako.Era;
-import com.trenako.PowerMethod;
 import com.trenako.utility.Slug;
+import com.trenako.values.Era;
+import com.trenako.values.PowerMethod;
 
 /**
  * It represents a rolling stock.

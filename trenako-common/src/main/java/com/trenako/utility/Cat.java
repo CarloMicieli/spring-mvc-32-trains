@@ -16,8 +16,8 @@
 package com.trenako.utility;
 
 import com.trenako.CatFormatException;
-import com.trenako.Category;
-import com.trenako.PowerMethod;
+import com.trenako.values.Category;
+import com.trenako.values.PowerMethod;
 
 /**
  * It represent a value that includes both the power method and
