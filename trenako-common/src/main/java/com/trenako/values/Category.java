@@ -75,7 +75,7 @@ public enum Category {
 	 * @return the label
 	 */
 	public String label() {
-		return name().toLowerCase().replace('_', '-');
+		return LocalizedEnum.buildLabel(this);
 	}
 
 	/**
@@ -84,8 +84,7 @@ public enum Category {
 	 * @return a {@code Category} value
 	 */
 	public static Category parse(String s) {
-		String c = s.toUpperCase().replace('-', '_');
-		return Category.valueOf(c);
+		return LocalizedEnum.parseString(s, Category.class);
 	}
 
 	/**

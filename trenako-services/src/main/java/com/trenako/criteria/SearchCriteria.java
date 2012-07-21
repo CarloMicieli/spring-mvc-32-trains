@@ -55,19 +55,68 @@ public class SearchCriteria {
 	
 	private Map<String, Pair<String, String>> values = new HashMap<String, Pair<String, String>>();
 	
+	/**
+	 * The name for the {@code PowerMethod} criterion.
+	 * <p>
+	 * The default value is <em>"powermethod"</em>.
+	 * </p>
+	 */
 	public final static String POWER_METHOD_KEY = "powermethod";
+	
+	/**
+	 * The name for the {@code Brand} criterion.
+	 * <p>
+	 * The default value is <em>"brand"</em>.
+	 * </p>
+	 */	
 	public final static String BRAND_KEY = "brand";
+	
+	/**
+	 * The name for the {@code Scale} criterion.
+	 * <p>
+	 * The default value is <em>"scale"</em>.
+	 * </p>
+	 */	
 	public final static String SCALE_KEY = "scale";
+	
+	/**
+	 * The name for the {@code Category} criterion.
+	 * <p>
+	 * The default value is <em>"category"</em>.
+	 * </p>
+	 */
 	public final static String CATEGORY_KEY = "category";
+	
+	/**
+	 * The name for the {@code Cat} criterion.
+	 * <p>
+	 * The default value is <em>"cat"</em>.
+	 * </p>
+	 */
 	public final static String CAT_KEY = "cat";
+	
+	/**
+	 * The name for the {@code Era} criterion.
+	 * <p>
+	 * The default value is <em>"era"</em>.
+	 * </p>
+	 */
 	public final static String ERA_KEY = "era";
+	
+	/**
+	 * The name for the {@code Railway} criterion.
+	 * <p>
+	 * The default value is <em>"railway"</em>.
+	 * </p>
+	 */
 	public final static String RAILWAY_KEY = "railway";
 	
 	/**
 	 * The allowed search criteria names.
 	 * <p>
-	 * The keys are listed in importance order. Other application components
-	 * depend on this particular order; any change can break something.
+	 * The criteria names are listed by order of <em>"importance"</em>. 
+	 * Other application components depend on this particular order; any change 
+	 * can break something.
 	 * </p>
 	 */
 	public final static List<String> KEYS = 

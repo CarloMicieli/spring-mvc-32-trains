@@ -39,7 +39,7 @@ public enum PowerMethod {
 	 * @return the label
 	 */
 	public String label() {
-		return name().toLowerCase().replace('_', '-');
+		return LocalizedEnum.buildLabel(this);
 	}
 
 	/**
@@ -48,8 +48,7 @@ public enum PowerMethod {
 	 * @return a {@code PowerMethod} value
 	 */
 	public static PowerMethod parse(String s) {
-		String c = s.toUpperCase().replace('-', '_');
-		return PowerMethod.valueOf(c);
+		return LocalizedEnum.parseString(s, PowerMethod.class);
 	}
 	
 	/**

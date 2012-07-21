@@ -15,8 +15,13 @@
  */
 package com.trenako.values;
 
+import java.util.Locale;
+
 import org.junit.Test;
+import org.springframework.context.MessageSource;
+
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * 
@@ -24,27 +29,76 @@ import static org.junit.Assert.*;
  *
  */
 public class LocalizedEnumTests {
+	
+	MessageSource messageSource(String code, String defaultMessage, String message) {
+		MessageSource ms = mock(MessageSource.class);
+		when(ms.getMessage(eq(code), (Object[])eq(null), eq(defaultMessage), (Locale)eq(null)))
+			.thenReturn(message);
+		return ms;
+	}
+	
+	void verifyMessageSource(MessageSource messageSource, String code, String defaultMessage) {
+		verify(messageSource, times(1))
+			.getMessage(eq(code), (Object[])eq(null), eq(defaultMessage), (Locale)eq(null));
+	}
+	
 	@Test
 	public void shouldLocalizeCategories() {
+		final String code = "category.electric.locomotives.label";
+		final String defaultMessage = "electric-locomotives";
+		final String message = "Electric Locomotives";
+		
+		MessageSource ms = messageSource(code, defaultMessage, message);
+		
 		Category c = Category.ELECTRIC_LOCOMOTIVES;
-		LocalizedEnum<Category> le = new LocalizedEnum<Category>(c, "Electric locomotives");
+		LocalizedEnum<Category> le = new LocalizedEnum<Category>(c);
+		le.setMessageSource(ms);
+		
+		// this method will actually translate the label text
+		String msg = le.getMessage();
+		
+		verifyMessageSource(ms, code, defaultMessage);
 		assertEquals(c, le.getValue());
-		assertEquals("Electric locomotives", le.getMessage());
+		assertEquals(message, msg);
 	}
 	
 	@Test
 	public void shouldLocalizePowerMethods() {
+		final String code = "powermethod.ac.label";
+		final String defaultMessage = "ac";
+		final String message = "AC";
+		
+		MessageSource ms = messageSource(code, defaultMessage, message);
+		
 		PowerMethod pm = PowerMethod.AC;
-		LocalizedEnum<PowerMethod> le = new LocalizedEnum<PowerMethod>(pm, "CC");
+		LocalizedEnum<PowerMethod> le = new LocalizedEnum<PowerMethod>(pm);
+		le.setMessageSource(ms);
+		
+		// this method will actually translate the label text
+		String msg = le.getMessage();
+		
+		verifyMessageSource(ms, code, defaultMessage);
 		assertEquals(pm, le.getValue());
-		assertEquals("CC", le.getMessage());
+		assertEquals(message, msg);
 	}	
 	
 	@Test
 	public void shouldLocalizeEras() {
+		final String code = "era.iii.label";
+		final String defaultMessage = "iii";
+		final String message = "III";
+		
+		MessageSource ms = messageSource(code, defaultMessage, message);
+		
 		Era e = Era.III;
-		LocalizedEnum<Era> le = new LocalizedEnum<Era>(e, "III");
+		LocalizedEnum<Era> le = new LocalizedEnum<Era>(e);
+		le.setMessageSource(ms);
+		
+		// this method will actually translate the label text
+		String msg = le.getMessage();
+		
+		verifyMessageSource(ms, code, defaultMessage);
 		assertEquals(e, le.getValue());
-		assertEquals("III", le.getMessage());
+		assertEquals(message, msg);
 	}
 }

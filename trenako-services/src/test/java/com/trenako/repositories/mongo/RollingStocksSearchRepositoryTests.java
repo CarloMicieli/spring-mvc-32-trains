@@ -101,7 +101,7 @@ public class RollingStocksSearchRepositoryTests {
 	public void shouldFindRollingStocksByEra() {
 		mockFindResults();
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.era(new LocalizedEnum<Era>(Era.III, "III"))
+			.era(new LocalizedEnum<Era>(Era.III))
 			.buildImmutable();
 		RangeRequest range = buildRange(10);
 		
@@ -130,7 +130,7 @@ public class RollingStocksSearchRepositoryTests {
 		mockFindResults();
 		
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.category(new LocalizedEnum<Category>(Category.ELECTRIC_LOCOMOTIVES, "Electric locomotives"))
+			.category(new LocalizedEnum<Category>(Category.ELECTRIC_LOCOMOTIVES))
 			.buildImmutable();
 		RangeRequest range = buildRange(10);
 		
@@ -160,7 +160,7 @@ public class RollingStocksSearchRepositoryTests {
 		mockFindResults();
 		
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.powerMethod(new LocalizedEnum<PowerMethod>(PowerMethod.AC, "CA"))
+			.powerMethod(new LocalizedEnum<PowerMethod>(PowerMethod.AC))
 			.buildImmutable();
 		RangeRequest range = buildRange(10);
 		

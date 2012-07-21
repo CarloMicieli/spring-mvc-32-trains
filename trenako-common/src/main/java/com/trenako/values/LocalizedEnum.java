@@ -15,6 +15,9 @@
  */
 package com.trenako.values;
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceAware;
+
 /**
  * It represents a wrapper for the enumerations localizations.
  * 
@@ -22,19 +25,40 @@ package com.trenako.values;
  *
  * @param <T> the inner {@code enum} to be localized
  */
-public class LocalizedEnum<T extends Enum<T>> {
+public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
+
+	private MessageSource messageSource;
 
 	private final T val;
-	private final String message;
-	
+	private final String key;
+	private final String code;
+
 	/**
 	 * Creates a new {@code LocalizedEnum}.
 	 * @param val the {@code enum} value
-	 * @param message the localized label string
 	 */
-	public LocalizedEnum(T val, String message) {
+	public LocalizedEnum(T val) {
 		this.val = val;
-		this.message = message;
+		this.key = buildLabel(val);
+		this.code = buildCodeForValue(val);
+	}
+	
+	/**
+	 * Returns the label for the provided {@code enum} value.
+	 * @return the label
+	 */
+	public static <T extends Enum<T>> String buildLabel(T val) {
+		return val.name().toLowerCase().replace('_', '-');
+	}
+	
+	/**
+	 * Returns the label for the provided {@code enum} value.
+	 * @param str the string to be parsed
+	 * @param enumType the {@code enum} type
+	 * @return a value if {@code str} is valid constant name
+	 */
+	public static <T extends Enum<T>> T parseString(String str, Class<T> enumType) {
+		return T.valueOf(enumType, str.toUpperCase().replace('-', '_'));
 	}
 	
 	/**
@@ -42,7 +66,7 @@ public class LocalizedEnum<T extends Enum<T>> {
 	 * @return the label string
 	 */
 	public String label() {
-		return val.name().toLowerCase().replace('_', '-');
+		return key;
 	}
 	
 	/**
@@ -58,6 +82,23 @@ public class LocalizedEnum<T extends Enum<T>> {
 	 * @return the message
 	 */
 	public String getMessage() {
-		return message;
+		if (messageSource == null) {
+			return key;
+		}
+		return messageSource.getMessage(code, null, key, null);
+	}
+
+	@Override
+	public void setMessageSource(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+	
+	private static <T extends Enum<T>> String buildCodeForValue(T val) {
+		return new StringBuilder()
+			.append(val.getClass().getSimpleName().toLowerCase())
+			.append(".")
+			.append(val.name().toLowerCase().replace('_', '.'))
+			.append(".label")
+			.toString();
 	}
 }
