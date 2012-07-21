@@ -17,6 +17,8 @@ package com.trenako.entities;
 
 import static org.junit.Assert.*;
 
+import java.util.Date;
+
 import org.junit.Test;
 
 /**
@@ -29,7 +31,24 @@ public class RailwayTests {
 	@Test
 	public void shouldReturnRailwayLabels() {
 		Railway x = new Railway.Builder("DB").companyName("Die bahn").build();
-		assertEquals("DB (Die bahn)", x.label());		
+		assertEquals("DB (Die bahn)", x.label());
+		
+		Railway y = new Railway.Builder("Scnf").build();
+		assertEquals("Scnf", y.label());
+	}
+	
+	@Test
+	public void shouldBuildNewRailways() {
+		Date now = new Date();
+		Railway r = new Railway.Builder("Scnf")
+			.companyName("Société nationale des chemins de fer français")
+			.country("fr")
+			.operatingSince(now)
+			.operatingUntil(now)
+			.build();
+		assertNotNull(r);
+		assertEquals("scnf", r.getSlug());
+		assertEquals("Scnf (Société nationale des chemins de fer français)", r.label());
 	}
 	
 	@Test

@@ -28,6 +28,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.util.StringUtils;
 
 import com.trenako.utility.Slug;
 
@@ -101,9 +102,9 @@ public class Railway {
 		private final String name;
 		
 		// optional fields
-		private String companyName = "";
-		private String country = "";
-		private String slug = "";
+		private String companyName = null;
+		private String country = null;
+		private String slug = null;
 		
 		private Date operatingSince = null;
 		private Date operatingUntil = null;
@@ -301,11 +302,16 @@ public class Railway {
 	 * @return
 	 */
 	public String label() {
-		return new StringBuilder()
-			.append(getName())
-			.append(" (")
-			.append(getCompanyName())
-			.append(")").toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(getName());
+		
+		if (StringUtils.hasText(getCompanyName())) {
+			sb.append(" (")
+				.append(getCompanyName())
+				.append(")");
+		}
+		
+		return sb.toString();
 	}
 	
 	/**

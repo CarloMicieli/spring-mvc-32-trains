@@ -21,7 +21,7 @@ import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
 
 /**
- * 
+ * The interface for the rolling stock search service.
  * @author Carlo Micieli
  *
  */
@@ -35,4 +35,10 @@ public interface RollingStocksSearchService {
 	 */
 	PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range);
 
+	/**
+	 * Loading the search criteria information from the database.
+	 * @param sc the original {@code SearchCriteria} request
+	 * @return an immutable {@code SearchCriteria}
+	 */
+	SearchCriteria loadSearchCriteria(SearchCriteria sc);
 }

@@ -19,8 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trenako.criteria.SearchCriteria;
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.Scale;
+import com.trenako.repositories.BrandsRepository;
+import com.trenako.repositories.RailwaysRepository;
 import com.trenako.repositories.RollingStocksSearchRepository;
+import com.trenako.repositories.ScalesRepository;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
 
@@ -33,14 +39,26 @@ import com.trenako.results.RangeRequest;
 public class RollingStocksSearchServiceImpl implements RollingStocksSearchService {
 
 	private final RollingStocksSearchRepository repo;
+	private final BrandsRepository brands;
+	private final RailwaysRepository railways;
+	private final ScalesRepository scales;
 	
 	/**
 	 * Creates a new {@code RollingStockSearchServiceImpl}.
 	 * @param repo
+	 * @param scales 
+	 * @param railways 
+	 * @param brands 
 	 */
 	@Autowired
-	public RollingStocksSearchServiceImpl(RollingStocksSearchRepository repo) {
+	public RollingStocksSearchServiceImpl(RollingStocksSearchRepository repo, 
+			BrandsRepository brands, 
+			RailwaysRepository railways, 
+			ScalesRepository scales) {
 		this.repo = repo;
+		this.brands = brands;
+		this.railways = railways;
+		this.scales = scales;
 	}
 	
 	@Override
@@ -48,4 +66,29 @@ public class RollingStocksSearchServiceImpl implements RollingStocksSearchServic
 		return repo.findByCriteria(sc, range);
 	}
 
+	@Override
+	public SearchCriteria loadSearchCriteria(SearchCriteria sc) {
+		if (sc.isEmpty()) return SearchCriteria.immutableSearchCriteria(sc);
+				
+		return new SearchCriteria.Builder()
+			.brand(loadBrand(sc))
+			.railway(loadRailway(sc))
+			.scale(loadScale(sc))
+			.buildImmutable();
+	}
+	
+	private Brand loadBrand(SearchCriteria sc) {
+		if (!sc.hasBrand()) return null;
+		return brands.findBySlug(sc.getBrand());
+	}
+	
+	private Railway loadRailway(SearchCriteria sc) {
+		if (!sc.hasRailway()) return null;
+		return railways.findBySlug(sc.getRailway());
+	}
+	
+	private Scale loadScale(SearchCriteria sc) {
+		if (!sc.hasScale()) return null;
+		return scales.findBySlug(sc.getScale());
+	}
 }

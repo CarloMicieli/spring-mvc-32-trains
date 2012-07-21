@@ -55,13 +55,13 @@ public class SearchCriteria {
 	
 	private Map<String, Pair<String, String>> values = new HashMap<String, Pair<String, String>>();
 	
-	private final static String POWER_METHOD_KEY = "powermethod";
-	private final static String BRAND_KEY = "brand";
-	private final static String SCALE_KEY = "scale";
-	private final static String CATEGORY_KEY = "category";
-	private final static String CAT_KEY = "cat";
-	private final static String ERA_KEY = "era";
-	private final static String RAILWAY_KEY = "railway";
+	public final static String POWER_METHOD_KEY = "powermethod";
+	public final static String BRAND_KEY = "brand";
+	public final static String SCALE_KEY = "scale";
+	public final static String CATEGORY_KEY = "category";
+	public final static String CAT_KEY = "cat";
+	public final static String ERA_KEY = "era";
+	public final static String RAILWAY_KEY = "railway";
 	
 	/**
 	 * The allowed search criteria names.
@@ -131,11 +131,18 @@ public class SearchCriteria {
 		
 		/**
 		 * Sets the {@code power method} criteria.
+		 * <p>
+		 * If the provided parameter is {@code null} then the value
+		 * is safely ignored by the builder.
+		 * </p>
+		 * 
 		 * @param pm the power method
 		 * @return a builder
 		 */
 		public Builder powerMethod(LocalizedEnum<PowerMethod> pm) {
-			add(POWER_METHOD_KEY, pm.label(), pm.getMessage());
+			if (pm != null) {
+				add(POWER_METHOD_KEY, pm.label(), pm.getMessage());
+			}
 			return this;
 		}
 		
@@ -151,11 +158,18 @@ public class SearchCriteria {
 		
 		/**
 		 * Sets the {@code brand} criteria.
+		 * <p>
+		 * If the provided parameter is {@code null} then the value
+		 * is safely ignored by the builder.
+		 * </p>
+		 * 
 		 * @param brand the brand
 		 * @return a builder
 		 */
 		public Builder brand(Brand brand) {
-			add(BRAND_KEY, brand.getSlug(), brand.label());
+			if (brand != null) {
+				add(BRAND_KEY, brand.getSlug(), brand.label());
+			}
 			return this;
 		}
 		
@@ -171,11 +185,18 @@ public class SearchCriteria {
 		
 		/**
 		 * Sets the {@code railway} criteria.
+		 * <p>
+		 * If the provided parameter is {@code null} then the value
+		 * is safely ignored by the builder.
+		 * </p>
+		 * 
 		 * @param railway the railway
 		 * @return a builder
 		 */
 		public Builder railway(Railway railway) {
-			add(RAILWAY_KEY, railway.getSlug(), railway.label());
+			if (railway != null) {
+				add(RAILWAY_KEY, railway.getSlug(), railway.label());
+			}
 			return this;
 		}
 		
@@ -191,11 +212,18 @@ public class SearchCriteria {
 		
 		/**
 		 * Sets the {@code scale} criteria.
+		 * <p>
+		 * If the provided parameter is {@code null} then the value
+		 * is safely ignored by the builder.
+		 * </p>
+		 * 
 		 * @param scale the scale
 		 * @return a builder
 		 */
 		public Builder scale(Scale scale) {
-			add(SCALE_KEY, scale.getSlug(), scale.label());
+			if (scale != null) {
+				add(SCALE_KEY, scale.getSlug(), scale.label());
+			}
 			return this;
 		}
 		
@@ -211,6 +239,23 @@ public class SearchCriteria {
 		}
 		
 		/**
+		 * Sets the {@code powerMethod} and {@code category} criteria.
+		 * <p>
+		 * If the provided parameter is {@code null} then the value
+		 * is safely ignored by the builder.
+		 * </p>
+		 * 
+		 * @param cat the category
+		 * @return a builder
+		 */
+		public Builder cat(Cat cat) {
+			if (cat != null) { 
+				add(CAT_KEY, cat.toString(), cat.toString());
+			}
+			return this;
+		}
+		
+		/**
 		 * Sets the {@code category} criteria.
 		 * @param category the category name
 		 * @return a builder
@@ -222,11 +267,18 @@ public class SearchCriteria {
 		
 		/**
 		 * Sets the {@code category} criteria.
+		 * <p>
+		 * If the provided parameter is {@code null} then the value
+		 * is safely ignored by the builder.
+		 * </p>
+		 * 
 		 * @param category the category name
 		 * @return a builder
 		 */
 		public Builder category(LocalizedEnum<Category> category) {
-			add(CATEGORY_KEY, category.label(), category.getMessage());
+			if (category != null) {
+				add(CATEGORY_KEY, category.label(), category.getMessage());
+			}
 			return this;
 		}
 		
@@ -241,11 +293,18 @@ public class SearchCriteria {
 		}
 		/**
 		 * Sets the {@code era} criteria.
+		 * <p>
+		 * If the provided parameter is {@code null} then the value
+		 * is safely ignored by the builder.
+		 * </p>
+		 * 
 		 * @param era the era
 		 * @return a builder
 		 */
 		public Builder era(LocalizedEnum<Era> era) {
-			add(ERA_KEY, era.label(), era.getMessage());
+			if (era != null) {
+				add(ERA_KEY, era.label(), era.getMessage());
+			}
 			return this;
 		}
 		
@@ -561,7 +620,7 @@ public class SearchCriteria {
 		validateKey(key);
 
 		if (values.containsKey(key)) {
-			return new ImmutablePair<String, String>(getValue(key), getValue(key));
+			return values.get(key);
 		}
 		
 		return null;

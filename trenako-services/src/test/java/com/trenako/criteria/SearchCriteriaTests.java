@@ -21,6 +21,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import com.trenako.criteria.SearchCriteria;
+import com.trenako.entities.Brand;
+import com.trenako.entities.Railway;
+import com.trenako.entities.Scale;
 
 /**
  * 
@@ -29,6 +32,14 @@ import com.trenako.criteria.SearchCriteria;
  */
 public class SearchCriteriaTests {
 
+	@Test
+	public void shouldAcceptNullForTheObjectVersionOfBuilderMethods() {
+		SearchCriteria x = new SearchCriteria.Builder()
+			.brand((Brand) null)
+			.build();
+		assertTrue(x.isEmpty());
+	}
+	
 	@Test
 	public void shouldReturnNullIfCriterionNotSet() {
 		SearchCriteria y = new SearchCriteria.Builder()
@@ -50,16 +61,26 @@ public class SearchCriteriaTests {
 	
 	@Test
 	public void shouldGetPairsFromSearchCriteria() {
+		Brand brand = new Brand.Builder("ACME").slug("acme").build();
+		Railway railway = new Railway.Builder("FS").companyName("Ferrovie dello stato").build();
+		Scale scale = new Scale.Builder("H0").ratio(870).build();
+		
 		SearchCriteria x = new SearchCriteria.Builder()
-			.brand("ACME")
+			.brand(brand)
+			.railway(railway)
+			.scale(scale)
 			.build();
 		
-		Pair<String, String> criteria = x.get("brand");
-		assertEquals("ACME", criteria.getKey());
-		assertEquals("ACME", criteria.getValue());
-		
+		assertEquals("(acme,ACME)", x.get(SearchCriteria.BRAND_KEY).toString());
+		assertEquals("(fs,FS (Ferrovie dello stato))", x.get(SearchCriteria.RAILWAY_KEY).toString());
+		assertEquals("(h0,H0 (1:87))", x.get(SearchCriteria.SCALE_KEY).toString());
+	}
+	
+	@Test
+	public void shouldReturnNullWhenCriterionNotFound() {
+		SearchCriteria x = new SearchCriteria();
 		Pair<String, String> notFound = x.get("railway");
-		assertNull(notFound);
+		assertNull(notFound);	
 	}
 	
 	@Test(expected = UnsupportedOperationException.class)
@@ -121,7 +142,7 @@ public class SearchCriteriaTests {
 		assertEquals(false, y.hasCat());
 		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.cat(null)
+			.cat((String) null)
 			.build();
 		assertEquals(false, z.hasCat());
 	}
