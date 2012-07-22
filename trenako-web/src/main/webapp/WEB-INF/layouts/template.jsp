@@ -39,7 +39,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="brand" href="#">Trenako</a>
+					<a class="brand" href="<c:url value="/" />">Trenako</a>
 					<div class="btn-group pull-right">
 					<sec:authorize access="authenticated" var="authenticated" />
 						<c:choose>
@@ -102,10 +102,17 @@
 
 		<div class="container">
 			<decorator:body/>
-			<footer>
-        		<p>&copy; Trenako.com 2012</p>
-      		</footer>
     	</div>
+
+		<footer class="footer">
+			<div class="container">
+				<p></p>
+				<p class="pull-right"><a href="#top">Back to top</a></p>
+				<p>Designed and built by <a href="https://twitter.com/#!/chuckmiskyes" target="_blank">@chuckmiskyes</a>.</p>
+				<p>Theme based upon <strong>Twitter Bootstrap</strong> and <strong>Bootswatch.com's Amelia</strong>.</p>
+				<p>Copyright &copy; 2012 Zihuatanejo Inc. Source code available <a href="https://github.com/CarloMicieli/trenako">here</a>.</p>
+			</div>
+		</footer>
 	  	
 	  	<!-- Placed at the end of the document so the pages load faster -->
 	  	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
