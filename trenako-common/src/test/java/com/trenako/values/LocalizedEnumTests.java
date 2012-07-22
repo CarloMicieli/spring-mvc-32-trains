@@ -25,6 +25,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 
+import com.trenako.values.LocalizedEnum.MessageFailback;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -176,8 +178,21 @@ public class LocalizedEnumTests {
 	
 	@Test
 	public void shouldProduceFailbackMessagesForEras() {
-		LocalizedEnum<Era> le = new LocalizedEnum<Era>(Era.IV);
-		assertEquals("iv", le.getLabel());
-		assertEquals("iv", le.getDescription());
+		MessageFailback<Era> failback = new LocalizedEnum.EraMessageFailback();
+
+		LocalizedEnum<Era> le = new LocalizedEnum<Era>(Era.IV, null, failback);
+		
+		assertEquals("IV", le.getLabel());
+		assertEquals("IV", le.getDescription());
+	}
+	
+	@Test
+	public void shouldProduceFailbackMessagesForCategories() {
+		MessageFailback<Category> failback = new LocalizedEnum.CategoryMessageFailback();
+
+		LocalizedEnum<Category> le = new LocalizedEnum<Category>(Category.ELECTRIC_LOCOMOTIVES, null, failback);
+		
+		assertEquals("Electric locomotives", le.getLabel());
+		assertEquals("Electric locomotives", le.getDescription());
 	}
 }

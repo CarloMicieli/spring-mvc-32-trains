@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.context.MessageSource;
+import org.springframework.util.StringUtils;
 
 /**
  * It represents a wrapper for the {@code enum} values.
@@ -38,9 +39,6 @@ import org.springframework.context.MessageSource;
  */
 public class LocalizedEnum<T extends Enum<T>> {
 
-	private final static MessageFailback<Era> eraMessageFailback = new EraMessageFailback();
-	private final static MessageFailback<Category> categoryMessageFailback = new CategoryMessageFailback();
-	
 	private final T val;
 	private final String key;
 	private final String label;
@@ -101,9 +99,10 @@ public class LocalizedEnum<T extends Enum<T>> {
 	 * @param failback the failback interface to produce default messages
 	 * @return the values list
 	 */
-	public static <T extends Enum<T>> Iterable<LocalizedEnum<T>> list(Class<T> enumType, 
+	public static <T extends Enum<T>, F extends MessageFailback<T>> Iterable<LocalizedEnum<T>> list(
+			Class<T> enumType, 
 			MessageSource messageSource, 
-			MessageFailback<T> failback) {
+			F failback) {
 		
 		if (!enumType.isEnum()) {
 			throw new IllegalArgumentException("The provided type is not an enum");
@@ -149,22 +148,6 @@ public class LocalizedEnum<T extends Enum<T>> {
 	 */
 	public String getDescription() {
 		return description;
-	}
-	
-	/**
-	 * Returns the default {@code MessageFailback} to produce default message.
-	 * @param enumType the {@code enum} type name
-	 * @return a {@code MessageFailback}
-	 */
-	public static <T extends Enum<T>> MessageFailback<?> messageFailbackFor(Class<?> enumType) {
-		if (enumType.equals(Era.class)) {
-			return eraMessageFailback;
-		}
-		else if (enumType.equals(Category.class)) {
-			return categoryMessageFailback;
-		}
-		
-		return null;
 	}
 	
 	@Override
@@ -221,17 +204,17 @@ public class LocalizedEnum<T extends Enum<T>> {
 		String failbackMessage(T val);
 	}
 
-	private static class EraMessageFailback implements MessageFailback<Era> {
+	public static class EraMessageFailback implements MessageFailback<Era> {
 		@Override
 		public String failbackMessage(Era val) {
 			return val.name();
 		}
 	}
 	
-	private static class CategoryMessageFailback implements MessageFailback<Category> {
+	public static class CategoryMessageFailback implements MessageFailback<Category> {
 		@Override
 		public String failbackMessage(Category val) {
-			return val.name();
+			return StringUtils.capitalize(val.name().replace("_", " ").toLowerCase());
 		}
 	}
 }
