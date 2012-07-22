@@ -15,16 +15,28 @@
  */
 package com.trenako.repositories.mongo;
 
+import static com.trenako.repositories.mongo.RollingStockQueryBuilder.buildQuery;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
+import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
 import com.trenako.repositories.BrowseRepository;
+import com.trenako.results.PaginatedResults;
+import com.trenako.results.RangeRequest;
+import com.trenako.results.mongo.RollingStockResults;
 
 /**
  * The concrete implementation for the browse repository.
@@ -60,6 +72,27 @@ public class BrowseRepositoryImpl implements BrowseRepository {
 		return findAll(Railway.class);
 	}
 
+	@Override
+	public PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range) {
+		return runRangeQuery(MongoSearchCriteria.buildCriteria(sc), range);
+	}
+
+	@Override
+	public PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range) {
+		return runRangeQuery(where("tag").is(tag), range);
+	}
+
+	@Override
+	public <T> T findBySlug(String slug, Class<T> entityClass) {
+		return mongo.findOne(query(where("slug").is(slug)), entityClass);
+	}
+	
+	private RollingStockResults runRangeQuery(Criteria criteria, RangeRequest range) {
+		final Query query = buildQuery(criteria, range);
+		final List<RollingStock> results = mongo.find(query, RollingStock.class);
+		return new RollingStockResults(results, range);
+	}
+	
 	private <T> Iterable<T> findAll(Class<T> clazz) {
 		Query query = new Query();
 		query.sort().on("name", Order.ASCENDING);

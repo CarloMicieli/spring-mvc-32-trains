@@ -15,9 +15,13 @@
  */
 package com.trenako.repositories;
 
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
+import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
+import com.trenako.results.PaginatedResults;
+import com.trenako.results.RangeRequest;
 
 /**
  * It represents the repository for the rolling stocks browsing.
@@ -44,4 +48,27 @@ public interface BrowseRepository {
 	 */
 	Iterable<Railway> getRailways();
 	
+	/**
+	 * Returns the {@code RollingStock} list according the provided search criteria.
+	 * @param sc the search criteria
+	 * @param range the {@code RangeRequest} information
+	 * @return a {@code RollingStock} list
+	 */
+	PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range);
+	
+	/**
+	 * Returns the {@code RollingStock} list with the provided tag.
+	 * @param tag the tag value
+	 * @param range the {@code RangeRequest} information
+	 * @return a {@code RollingStock} list
+	 */
+	PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range);
+	
+	/**
+	 * Returns the entity with the provided {@code slug}.
+	 * @param slug the entity slug
+	 * @param providedType the entity type
+	 * @return the entity if found; {@code null} otherwise
+	 */
+	<T> T findBySlug(String slug, Class<T> providedType);
 }

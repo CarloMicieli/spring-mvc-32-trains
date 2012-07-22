@@ -30,7 +30,7 @@ import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
 import com.trenako.results.RangeRequestImpl;
 import com.trenako.results.mongo.RollingStockResults;
-import com.trenako.services.RollingStocksSearchService;
+import com.trenako.services.BrowseService;
 
 /**
  * 
@@ -40,7 +40,7 @@ import com.trenako.services.RollingStocksSearchService;
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStockSearchControllerTests {
 
-	@Mock RollingStocksSearchService mockService;
+	@Mock BrowseService mockService;
 	RollingStocksSearchController controller;
 	
 	@Before

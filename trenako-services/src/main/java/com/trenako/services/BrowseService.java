@@ -15,9 +15,13 @@
  */
 package com.trenako.services;
 
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
+import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
+import com.trenako.results.PaginatedResults;
+import com.trenako.results.RangeRequest;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
@@ -57,4 +61,54 @@ public interface BrowseService {
 	 * @return the brands list
 	 */
 	Iterable<Brand> brands();
+	
+	/**
+	 * Returns the {@code RollingStock} list according the provided search criteria.
+	 * @param sc the search criteria
+	 * @param range the {@code RangeRequest} information
+	 * @return a {@code RollingStock} list
+	 */
+	PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range);
+
+	/**
+	 * Loading the search criteria information from the database.
+	 * @param sc the original {@code SearchCriteria} request
+	 * @return an immutable {@code SearchCriteria}
+	 */
+	SearchCriteria loadSearchCriteria(SearchCriteria sc);
+
+	/**
+	 * Returns the {@code Brand} with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code Brand} if found; {@code null} otherwise
+	 */
+	Brand findBrand(String slug);
+	
+	/**
+	 * Returns the {@code Railway} with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code Railway} if found; {@code null} otherwise
+	 */
+	Railway findRailway(String slug);
+	
+	/**
+	 * Returns the {@code Scale} with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code Scale} if found; {@code null} otherwise
+	 */
+	Scale findScale(String slug);
+	
+	/**
+	 * Returns the {@code Category} with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code Category} if found; {@code null} otherwise
+	 */
+	LocalizedEnum<Category> findCategory(String slug);
+	
+	/**
+	 * Returns the {@code Era} with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code Era} if found; {@code null} otherwise
+	 */
+	LocalizedEnum<Era> findEra(String slug);
 }

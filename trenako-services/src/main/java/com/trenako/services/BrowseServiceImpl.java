@@ -15,17 +15,24 @@
  */
 package com.trenako.services;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
+import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
 import com.trenako.repositories.BrowseRepository;
+import com.trenako.results.PaginatedResults;
+import com.trenako.results.RangeRequest;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
+import com.trenako.values.PowerMethod;
 
 /**
  * 
@@ -71,5 +78,100 @@ public class BrowseServiceImpl implements BrowseService {
 	@Override
 	public Iterable<Brand> brands() {
 		return repo.getBrands();
+	}
+	
+	@Override
+	public Brand findBrand(String slug) {
+		return repo.findBySlug(slug, Brand.class);
+	}
+
+	@Override
+	public Railway findRailway(String slug) {
+		return repo.findBySlug(slug, Railway.class);
+	}
+
+	@Override
+	public Scale findScale(String slug) {
+		return repo.findBySlug(slug, Scale.class);
+	}
+
+	@Override
+	public LocalizedEnum<Category> findCategory(String slug) {
+		try {
+			return parseSlugAsEnum(slug, Category.class);
+		}
+		catch (IllegalArgumentException ex) {
+			// suppress the exception to have the same
+			// behavior as the other service methods
+			return null;
+		}
+	}
+
+	@Override
+	public LocalizedEnum<Era> findEra(String slug) {
+		try {
+			return parseSlugAsEnum(slug, Era.class);
+		}
+		catch (IllegalArgumentException ex) {
+			// suppress the exception to have the same
+			// behavior as the other service methods
+			return null;
+		}
+	}
+	
+	@Override
+	public PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range) {
+		return repo.findByCriteria(sc, range);
+	}
+
+	@Override
+	public SearchCriteria loadSearchCriteria(SearchCriteria sc) {
+		if (sc.isEmpty()) return SearchCriteria.EMPTY;
+				
+		return new SearchCriteria.Builder()
+			.brand(resolveClass(sc, Brand.class))
+			.railway(resolveClass(sc, Railway.class))
+			.scale(resolveClass(sc, Scale.class))
+			.era(resolveEnum(sc, Era.class))
+			.category(resolveEnum(sc, Category.class))
+			.powerMethod(resolveEnum(sc, PowerMethod.class))
+			.buildImmutable();
+	}
+
+	private <T> T resolveClass(SearchCriteria sc, Class<T> criterionType) {
+		Pair<String, String> criterionPair = criterionValue(sc, criterionType);
+		if (criterionPair == null) {
+			return null;
+		}
+		
+		return repo.findBySlug(criterionPair.getKey(), criterionType);
+	}
+	
+	private <T extends Enum<T>> LocalizedEnum<T> resolveEnum(SearchCriteria sc, Class<T> criterionType) {
+		Pair<String, String> criterionPair = criterionValue(sc, criterionType);
+		if (criterionPair == null) {
+			return null;
+		}
+		
+		// enum values are resolved without accessing the db 
+		return parseSlugAsEnum(criterionPair.getKey(), criterionType);
+	}
+	
+	private <T extends Enum<T>> LocalizedEnum<T> parseSlugAsEnum(String slug, Class<T> criterionType) {
+		T enumVal = LocalizedEnum.parseString(slug, criterionType);
+		return new LocalizedEnum<T>(enumVal);
+	}
+
+	private <T> Pair<String, String> criterionValue(SearchCriteria sc, Class<T> criterionType) {
+		if (!sc.has(criterionType)) {
+			return null;	
+		}
+
+		Pair<String, String> criterionPair = sc.get(criterionType);
+		if (criterionPair == null || !StringUtils.hasText(criterionPair.getKey())) {
+			return null;
+		}
+		
+		return criterionPair;
 	}
 }

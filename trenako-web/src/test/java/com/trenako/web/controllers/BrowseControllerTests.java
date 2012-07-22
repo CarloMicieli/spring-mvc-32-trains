@@ -99,12 +99,36 @@ public class BrowseControllerTests {
 	}
 	
 	@Test
+	public void shouldRenderTheBrandHomepage() {
+		String slug = "acme";
+		Brand value = new Brand();
+		when(mockService.findBrand(eq(slug))).thenReturn(value);
+		
+		ModelAndView mav = controller.brand(slug);
+		
+		assertViewName(mav, "browse/brand");
+		assertModelAttributeValue(mav, "brand", value);
+	}
+	
+	@Test
 	public void shouldRenderTheErasPage() {
 		
 		ModelAndView mav = controller.eras();
 		
 		assertViewName(mav, "browse/eras");
 		assertModelAttributeValue(mav, "eras", ERAS);
+	}
+	
+	@Test
+	public void shouldRenderTheEraHomepage() {
+		String slug = "iii";
+		LocalizedEnum<Era> value = new LocalizedEnum<Era>(Era.III);
+		when(mockService.findEra(eq(slug))).thenReturn(value);
+		
+		ModelAndView mav = controller.era(slug);
+		
+		assertViewName(mav, "browse/era");
+		assertModelAttributeValue(mav, "era", value);
 	}
 	
 	@Test
@@ -117,6 +141,18 @@ public class BrowseControllerTests {
 	}
 
 	@Test
+	public void shouldRenderTheRailwayHomepage() {
+		String slug = "fs";
+		Railway value = new Railway();
+		when(mockService.findRailway(eq(slug))).thenReturn(value);
+		
+		ModelAndView mav = controller.railway(slug);
+		
+		assertViewName(mav, "browse/railway");
+		assertModelAttributeValue(mav, "railway", value);
+	}
+	
+	@Test
 	public void shouldRenderTheScalesPage() {
 		
 		ModelAndView mav = controller.scales();
@@ -126,11 +162,35 @@ public class BrowseControllerTests {
 	}
 	
 	@Test
+	public void shouldRenderTheScaleHomepage() {
+		String slug = "fs";
+		Scale value = new Scale();
+		when(mockService.findScale(eq(slug))).thenReturn(value);
+		
+		ModelAndView mav = controller.scale(slug);
+		
+		assertViewName(mav, "browse/scale");
+		assertModelAttributeValue(mav, "scale", value);
+	}
+	
+	@Test
 	public void shouldRenderTheCategoriesPage() {
 		
 		ModelAndView mav = controller.categories();
 		
 		assertViewName(mav, "browse/categories");
 		assertModelAttributeValue(mav, "categories", CATEGORIES);
+	}
+	
+	@Test
+	public void shouldRenderTheCategoryHomepage() {
+		String slug = "electric-locomotives";
+		LocalizedEnum<Category> value = new LocalizedEnum<Category>(Category.ELECTRIC_LOCOMOTIVES);
+		when(mockService.findCategory(eq(slug))).thenReturn(value);
+		
+		ModelAndView mav = controller.category(slug);
+		
+		assertViewName(mav, "browse/category");
+		assertModelAttributeValue(mav, "category", value);
 	}
 }

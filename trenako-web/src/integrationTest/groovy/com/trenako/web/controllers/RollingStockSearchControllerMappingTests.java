@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
-import com.trenako.services.RollingStocksSearchService;
+import com.trenako.services.BrowseService;
 import com.trenako.web.test.AbstractSpringControllerTests;
 
 /**
@@ -37,7 +37,7 @@ import com.trenako.web.test.AbstractSpringControllerTests;
  */
 public class RollingStockSearchControllerMappingTests extends AbstractSpringControllerTests {
 	
-	private @Autowired RollingStocksSearchService mockService;
+	private @Autowired BrowseService mockService;
 	
 	@After
 	public void cleanUp() {

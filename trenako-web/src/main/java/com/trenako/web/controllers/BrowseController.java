@@ -17,6 +17,7 @@ package com.trenako.web.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,15 +33,15 @@ import com.trenako.services.BrowseService;
 @RequestMapping("/browse")
 public class BrowseController {
 
-	private final BrowseService browseService;
+	private final BrowseService service;
 	
 	/**
 	 * Creates a new {@code BrowseController}.
-	 * @param browseService the service
+	 * @param service the service
 	 */
 	@Autowired
-	public BrowseController(BrowseService browseService) {
-		this.browseService = browseService;
+	public BrowseController(BrowseService service) {
+		this.service = service;
 	}
 
 	/**
@@ -51,11 +52,11 @@ public class BrowseController {
 	public ModelAndView index() {
 		ModelAndView mav = new ModelAndView("browse/index");
 
-		mav.addObject("brands", browseService.brands());
-		mav.addObject("scales", browseService.scales());
-		mav.addObject("railways", browseService.railways());
-		mav.addObject("eras", browseService.eras());
-		mav.addObject("categories", browseService.categories());
+		mav.addObject("brands", service.brands());
+		mav.addObject("scales", service.scales());
+		mav.addObject("railways", service.railways());
+		mav.addObject("eras", service.eras());
+		mav.addObject("categories", service.categories());
 		
 		return mav;
 	}
@@ -67,7 +68,7 @@ public class BrowseController {
 	@RequestMapping(value = "/brands", method = RequestMethod.GET)
 	public ModelAndView brands() {
 		ModelAndView mav = new ModelAndView("browse/brands");
-		mav.addObject("brands", browseService.brands());
+		mav.addObject("brands", service.brands());
 		return mav;
 	}
 
@@ -78,7 +79,7 @@ public class BrowseController {
 	@RequestMapping(value = "/eras", method = RequestMethod.GET)
 	public ModelAndView eras() {
 		ModelAndView mav = new ModelAndView("browse/eras");
-		mav.addObject("eras", browseService.eras());
+		mav.addObject("eras", service.eras());
 		return mav;
 	}
 
@@ -89,7 +90,7 @@ public class BrowseController {
 	@RequestMapping(value = "/railways", method = RequestMethod.GET)
 	public ModelAndView railways() {
 		ModelAndView mav = new ModelAndView("browse/railways");
-		mav.addObject("railways", browseService.railways());
+		mav.addObject("railways", service.railways());
 		return mav;
 	}
 
@@ -100,7 +101,7 @@ public class BrowseController {
 	@RequestMapping(value = "/scales", method = RequestMethod.GET)
 	public ModelAndView scales() {
 		ModelAndView mav = new ModelAndView("browse/scales");
-		mav.addObject("scales", browseService.scales());
+		mav.addObject("scales", service.scales());
 		return mav;
 	}
 
@@ -111,7 +112,32 @@ public class BrowseController {
 	@RequestMapping(value = "/categories", method = RequestMethod.GET)
 	public ModelAndView categories() {
 		ModelAndView mav = new ModelAndView("browse/categories");
-		mav.addObject("categories", browseService.categories());
+		mav.addObject("categories", service.categories());
 		return mav;
+	}
+
+	@RequestMapping(value = "/brands/{slug}", method = RequestMethod.GET)
+	public ModelAndView brand(@PathVariable("slug") String slug) {
+		return new ModelAndView("browse/brand", "brand", service.findBrand(slug));
+	}
+
+	@RequestMapping(value = "/eras/{slug}", method = RequestMethod.GET)
+	public ModelAndView era(@PathVariable("slug") String slug) {
+		return new ModelAndView("browse/era", "era", service.findEra(slug));
+	}
+
+	@RequestMapping(value = "/railways/{slug}", method = RequestMethod.GET)
+	public ModelAndView railway(@PathVariable("slug") String slug) {
+		return new ModelAndView("browse/railway", "railway", service.findRailway(slug));
+	}
+
+	@RequestMapping(value = "/scales/{slug}", method = RequestMethod.GET)
+	public ModelAndView scale(@PathVariable("slug") String slug) {
+		return new ModelAndView("browse/scale", "scale", service.findScale(slug));
+	}
+
+	@RequestMapping(value = "/categories/{slug}", method = RequestMethod.GET)
+	public ModelAndView category(@PathVariable("slug") String slug) {
+		return new ModelAndView("browse/category", "category", service.findCategory(slug));
 	}
 }

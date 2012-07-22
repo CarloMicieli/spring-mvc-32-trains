@@ -23,7 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
-import com.trenako.services.RollingStocksSearchService;
+import com.trenako.services.BrowseService;
 
 /**
  * It represents the controller to manage the requests to search
@@ -37,22 +37,22 @@ import com.trenako.services.RollingStocksSearchService;
 @RequestMapping("/rs")
 public class RollingStocksSearchController {
 	
-	private final RollingStocksSearchService rsService;
+	private final BrowseService service;
 	
 	/**
 	 * Creates a new {@code RollingStockSearchController}.
 	 * @param rsService
 	 */
 	@Autowired
-	public RollingStocksSearchController(RollingStocksSearchService rsService) {
-		this.rsService = rsService;
+	public RollingStocksSearchController(BrowseService service) {
+		this.service = service;
 	}
 
 	@RequestMapping(value = "/**", method = RequestMethod.GET)
 	public ModelAndView search(SearchCriteria sc, RangeRequest range) {
 		ModelAndView mav = new ModelAndView("browse/results");
 		
-		mav.addObject("results", rsService.findByCriteria(sc, range));
+		mav.addObject("results", service.findByCriteria(sc, range));
 		mav.addObject("criteria", sc);
 		mav.addObject("range", range);
 		
