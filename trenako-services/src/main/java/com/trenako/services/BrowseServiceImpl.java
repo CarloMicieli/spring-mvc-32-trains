@@ -16,6 +16,7 @@
 package com.trenako.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Brand;
@@ -34,6 +35,8 @@ import com.trenako.values.LocalizedEnum;
 @Service("browseService")
 public class BrowseServiceImpl implements BrowseService {
 
+	private @Autowired MessageSource messageSource;
+	
 	private final BrowseRepository repo;
 	
 	/**
@@ -47,12 +50,12 @@ public class BrowseServiceImpl implements BrowseService {
 
 	@Override
 	public Iterable<LocalizedEnum<Era>> eras() {
-		return LocalizedEnum.list(Era.class);
+		return LocalizedEnum.list(Era.class, messageSource, null);
 	}
 
 	@Override
 	public Iterable<LocalizedEnum<Category>> categories() {
-		return LocalizedEnum.list(Category.class);
+		return LocalizedEnum.list(Category.class, messageSource, null);
 	}
 	
 	@Override

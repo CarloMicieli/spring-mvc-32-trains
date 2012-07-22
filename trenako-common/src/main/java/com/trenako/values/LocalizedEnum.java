@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceAware;
 
 /**
  * It represents a wrapper for the {@code enum} values.
@@ -37,27 +36,35 @@ import org.springframework.context.MessageSourceAware;
  *
  * @param <T> the inner {@code enum} to be localized
  */
-public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
-
-	private MessageSource messageSource;
+public class LocalizedEnum<T extends Enum<T>> {
 
 	private final static MessageFailback<Era> eraMessageFailback = new EraMessageFailback();
 	private final static MessageFailback<Category> categoryMessageFailback = new CategoryMessageFailback();
 	
 	private final T val;
 	private final String key;
-	private final String labelCode;
-	private final String descCode;
+	private final String label;
+	private final String description;
 
 	/**
 	 * Creates a new {@code LocalizedEnum}.
 	 * @param val the {@code enum} value
 	 */
 	public LocalizedEnum(T val) {
+		this(val, null, null);
+	}
+	
+	/**
+	 * Creates a new {@code LocalizedEnum}.
+	 * @param val the {@code enum} value
+	 * @param messageSource the {@code MessageSource} to localize the text strings
+	 * @param failback the failback interface to produce default messages
+	 */
+	public LocalizedEnum(T val, MessageSource messageSource, MessageFailback<T> failback) {		
 		this.val = val;
 		this.key = buildKey(val);
-		this.labelCode = buildCodeForValue(val);
-		this.descCode = buildCodeForDesc(val);
+		this.label = getMessage(buildCodeForLabel(val), messageSource, failback);
+		this.description = getMessage(buildCodeForDesc(val), messageSource, failback);
 	}
 	
 	/**
@@ -84,6 +91,20 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 	 * @return the values list
 	 */
 	public static <T extends Enum<T>> Iterable<LocalizedEnum<T>> list(Class<T> enumType) {
+		return list(enumType, null, null);
+	}
+	
+	/**
+	 * Builds the list with the provided {@code enum} values.
+	 * @param enumType the {@code enum} type
+	 * @param messageSource the {@code MessageSource} to localize the text strings
+	 * @param failback the failback interface to produce default messages
+	 * @return the values list
+	 */
+	public static <T extends Enum<T>> Iterable<LocalizedEnum<T>> list(Class<T> enumType, 
+			MessageSource messageSource, 
+			MessageFailback<T> failback) {
+		
 		if (!enumType.isEnum()) {
 			throw new IllegalArgumentException("The provided type is not an enum");
 		}
@@ -92,7 +113,7 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 		List<LocalizedEnum<T>> items = new ArrayList<LocalizedEnum<T>>(consts.length);
 		
 		for (T val : consts) {
-			items.add(new LocalizedEnum<T>(val));
+			items.add(new LocalizedEnum<T>(val, messageSource, failback));
 		}
 		
 		return Collections.unmodifiableList(items);
@@ -119,16 +140,7 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 	 * @return the message
 	 */
 	public String getLabel() {
-		return getMessage(labelCode, null);
-	}
-	
-	/**
-	 * Returns the localized label for this {@code enum} value.
-	 * @param failback the failback interface to produce default messages
-	 * @return the message
-	 */
-	public Object getLabel(MessageFailback<T> failback) {
-		return getMessage(labelCode, failback);
+		return label;
 	}
 	
 	/**
@@ -136,16 +148,7 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 	 * @return the message
 	 */
 	public String getDescription() {
-		return getMessage(descCode, null);
-	}
-
-	/**
-	 * Returns the localized description for this {@code enum} value.
-	 * @param failback the failback interface to produce default messages
-	 * @return the message
-	 */
-	public String getDescription(MessageFailback<T> failback) {
-		return getMessage(descCode, failback);
+		return description;
 	}
 	
 	/**
@@ -165,11 +168,6 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 	}
 	
 	@Override
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
-	
-	@Override
 	public String toString() {
 		return new StringBuilder()
 			.append("(").append(key.toString()).append(")")
@@ -185,18 +183,17 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 		return this.getValue().equals(other.getValue());
 	}
 	
-	private String getMessage(String code, MessageFailback<T> failback) {
+	private String getMessage(String code, MessageSource messageSource, MessageFailback<T> failback) {
 		if (messageSource == null) {
 			if (failback != null) {
 				return failback.failbackMessage(val);
 			}
-			
 			return key;
 		}
 		return messageSource.getMessage(code, null, key, null);
 	}
 	
-	private static <T extends Enum<T>> String buildCodeForValue(T val) {
+	private static <T extends Enum<T>> String buildCodeForLabel(T val) {
 		return new StringBuilder()
 			.append(val.getClass().getSimpleName().toLowerCase())
 			.append(".")

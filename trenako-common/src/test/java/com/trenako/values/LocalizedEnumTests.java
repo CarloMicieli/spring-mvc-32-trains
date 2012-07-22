@@ -65,10 +65,8 @@ public class LocalizedEnumTests {
 		mockMessage(descCode, defaultMessage, description);
 		
 		Category c = Category.ELECTRIC_LOCOMOTIVES;
-		LocalizedEnum<Category> le = new LocalizedEnum<Category>(c);
-		le.setMessageSource(ms);
+		LocalizedEnum<Category> le = new LocalizedEnum<Category>(c, ms, null);
 		
-		// this method will actually translate the label text
 		String msgLabel = le.getLabel();
 		String msgDesc = le.getDescription();
 		
@@ -91,10 +89,8 @@ public class LocalizedEnumTests {
 		mockMessage(descCode, defaultMessage, description);
 		
 		PowerMethod pm = PowerMethod.AC;
-		LocalizedEnum<PowerMethod> le = new LocalizedEnum<PowerMethod>(pm);
-		le.setMessageSource(ms);
+		LocalizedEnum<PowerMethod> le = new LocalizedEnum<PowerMethod>(pm, ms, null);
 		
-		// this method will actually translate the label text
 		String msgLabel = le.getLabel();
 		String msgDesc = le.getDescription();
 		
@@ -117,8 +113,7 @@ public class LocalizedEnumTests {
 		mockMessage(descCode, defaultMessage, description);
 		
 		Era e = Era.III;
-		LocalizedEnum<Era> le = new LocalizedEnum<Era>(e);
-		le.setMessageSource(ms);
+		LocalizedEnum<Era> le = new LocalizedEnum<Era>(e, ms, null);
 		
 		// this method will actually translate the label text
 		String msgLabel = le.getLabel();
