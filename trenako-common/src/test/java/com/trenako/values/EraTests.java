@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.values;
-
-import static org.junit.Assert.*;
-import java.util.List;
-
-import org.junit.Test;
-
-import com.trenako.values.Era;
-
-/**
- * 
- * @author Carlo Micieli
- *
- */
-public class EraTests {
-	@Test
-	public void shouldListAllEras() {
-		List<String> eras = Era.list();
-		assertEquals("[I, II, III, IV, V, VI]", eras.toString());
-	}
-}
+//package com.trenako.values;
+//
+//import static org.junit.Assert.*;
+//import java.util.List;
+//
+//import org.junit.Test;
+//
+//import com.trenako.values.Era;
+//
+///**
+// * 
+// * @author Carlo Micieli
+// *
+// */
+//public class EraTests {
+//	@Test
+//	public void shouldListAllEras() {
+//		List<String> eras = Era.list();
+//		assertEquals("[I, II, III, IV, V, VI]", eras.toString());
+//	}
+//}

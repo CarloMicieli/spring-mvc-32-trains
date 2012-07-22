@@ -31,6 +31,7 @@ import com.trenako.repositories.RollingStocksRepository;
 import com.trenako.repositories.ScalesRepository;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
 
 /**
@@ -105,8 +106,8 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	}
 
 	@Override
-	public Iterable<String> eras() {
-		return Era.list();
+	public Iterable<LocalizedEnum<Era>> eras() {
+		return LocalizedEnum.list(Era.class);
 	}
 
 	@Override

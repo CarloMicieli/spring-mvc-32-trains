@@ -102,7 +102,7 @@ public class RollingStocksControllerTests {
 		
 		List<String> value = Arrays.asList("aaa", "bbb");
 		when(service.categories()).thenReturn(value);
-		when(service.eras()).thenReturn(value);
+		//when(service.eras()).thenReturn(value);
 		when(service.powerMethods()).thenReturn(value);
 		
 		ModelAndView mav = controller.createNew();
@@ -176,7 +176,7 @@ public class RollingStocksControllerTests {
 		
 		List<String> list = Arrays.asList("aaa", "bbb");
 		when(service.categories()).thenReturn(list);
-		when(service.eras()).thenReturn(list);
+		//when(service.eras()).thenReturn(list);
 		when(service.powerMethods()).thenReturn(list);
 		
 		ModelAndView mav = controller.editForm(slug);

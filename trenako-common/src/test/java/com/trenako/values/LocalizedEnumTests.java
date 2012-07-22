@@ -17,7 +17,12 @@ package com.trenako.values;
 
 import java.util.Locale;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 
 import static org.junit.Assert.*;
@@ -28,13 +33,19 @@ import static org.mockito.Mockito.*;
  * @author Carlo Micieli
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class LocalizedEnumTests {
 	
-	MessageSource messageSource(String code, String defaultMessage, String message) {
-		MessageSource ms = mock(MessageSource.class);
+	@Mock MessageSource ms;
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+	}
+
+	void mockMessage(String code, String defaultMessage, String message) {
 		when(ms.getMessage(eq(code), (Object[])eq(null), eq(defaultMessage), (Locale)eq(null)))
 			.thenReturn(message);
-		return ms;
 	}
 	
 	void verifyMessageSource(MessageSource messageSource, String code, String defaultMessage) {
@@ -44,61 +55,134 @@ public class LocalizedEnumTests {
 	
 	@Test
 	public void shouldLocalizeCategories() {
-		final String code = "category.electric.locomotives.label";
+		final String labelCode = "category.electric.locomotives.label";
+		final String descCode = "category.electric.locomotives.description";
 		final String defaultMessage = "electric-locomotives";
-		final String message = "Electric Locomotives";
+		final String label = "Electric Locomotives";
+		final String description = "Electric Locomotives description";
 		
-		MessageSource ms = messageSource(code, defaultMessage, message);
+		mockMessage(labelCode, defaultMessage, label);
+		mockMessage(descCode, defaultMessage, description);
 		
 		Category c = Category.ELECTRIC_LOCOMOTIVES;
 		LocalizedEnum<Category> le = new LocalizedEnum<Category>(c);
 		le.setMessageSource(ms);
 		
 		// this method will actually translate the label text
-		String msg = le.getMessage();
+		String msgLabel = le.getLabel();
+		String msgDesc = le.getDescription();
 		
-		verifyMessageSource(ms, code, defaultMessage);
+		verifyMessageSource(ms, labelCode, defaultMessage);
+		verifyMessageSource(ms, descCode, defaultMessage);
 		assertEquals(c, le.getValue());
-		assertEquals(message, msg);
+		assertEquals(label, msgLabel);
+		assertEquals(description, msgDesc);
 	}
 	
 	@Test
 	public void shouldLocalizePowerMethods() {
-		final String code = "powermethod.ac.label";
+		final String labelCode = "powermethod.ac.label";
+		final String descCode = "powermethod.ac.description";
 		final String defaultMessage = "ac";
-		final String message = "AC";
+		final String label = "AC";
+		final String description = "Alternate Current";
 		
-		MessageSource ms = messageSource(code, defaultMessage, message);
+		mockMessage(labelCode, defaultMessage, label);
+		mockMessage(descCode, defaultMessage, description);
 		
 		PowerMethod pm = PowerMethod.AC;
 		LocalizedEnum<PowerMethod> le = new LocalizedEnum<PowerMethod>(pm);
 		le.setMessageSource(ms);
 		
 		// this method will actually translate the label text
-		String msg = le.getMessage();
+		String msgLabel = le.getLabel();
+		String msgDesc = le.getDescription();
 		
-		verifyMessageSource(ms, code, defaultMessage);
+		verifyMessageSource(ms, labelCode, defaultMessage);
+		verifyMessageSource(ms, descCode, defaultMessage);
 		assertEquals(pm, le.getValue());
-		assertEquals(message, msg);
+		assertEquals(label, msgLabel);
+		assertEquals(description, msgDesc);
 	}	
 	
 	@Test
 	public void shouldLocalizeEras() {
-		final String code = "era.iii.label";
+		final String labelCode = "era.iii.label";
+		final String descCode = "era.iii.description";
 		final String defaultMessage = "iii";
-		final String message = "III";
+		final String label = "III";
+		final String description = "III";
 		
-		MessageSource ms = messageSource(code, defaultMessage, message);
+		mockMessage(labelCode, defaultMessage, label);
+		mockMessage(descCode, defaultMessage, description);
 		
 		Era e = Era.III;
 		LocalizedEnum<Era> le = new LocalizedEnum<Era>(e);
 		le.setMessageSource(ms);
 		
 		// this method will actually translate the label text
-		String msg = le.getMessage();
+		String msgLabel = le.getLabel();
+		String msgDesc = le.getDescription();
 		
-		verifyMessageSource(ms, code, defaultMessage);
+		verifyMessageSource(ms, labelCode, defaultMessage);
+		verifyMessageSource(ms, descCode, defaultMessage);
 		assertEquals(e, le.getValue());
-		assertEquals(message, msg);
+		assertEquals(label, msgLabel);
+		assertEquals(description, msgDesc);
+	}
+		
+	@Test
+	public void shouldReturnStringRepresentations() {
+		LocalizedEnum<Era> x = new LocalizedEnum<Era>(Era.III);
+		assertEquals("(iii)", x.toString());
+	}
+	
+	@Test
+	public void shouldTrueForTwoEqualsValues() {
+		Era e = Era.III;
+		LocalizedEnum<Era> x = new LocalizedEnum<Era>(e);
+		LocalizedEnum<Era> y = new LocalizedEnum<Era>(e);
+		assertTrue("Values are different", x.equals(y));
+	}
+	
+	@Test
+	public void shouldFalseForTwoDifferentValues() {
+		LocalizedEnum<Era> x = new LocalizedEnum<Era>(Era.III);
+		LocalizedEnum<Era> y = new LocalizedEnum<Era>(Era.IV);
+		assertFalse("Values are equals", x.equals(y));
+	}
+	
+	@Test
+	public void shouldFalseForTwoDifferentEnums() {
+		LocalizedEnum<Era> x = new LocalizedEnum<Era>(Era.III);
+		LocalizedEnum<Category> y = new LocalizedEnum<Category>(Category.ELECTRIC_LOCOMOTIVES);
+		assertFalse("Values are equals", x.equals(y));
+	}
+	
+	@Test
+	public void shouldCreateErasList() {
+		Iterable<LocalizedEnum<Era>> eras = LocalizedEnum.list(Era.class);
+		assertNotNull(eras);
+		assertEquals("[(i), (ii), (iii), (iv), (v), (vi)]", eras.toString());
+	}
+	
+	@Test
+	public void shouldCreateCategoriesList() {
+		Iterable<LocalizedEnum<Category>> categories = LocalizedEnum.list(Category.class);
+		
+		assertNotNull(categories);
+		String expected = "[(steam-locomotives), (diesel-locomotives), " +
+				"(electric-locomotives), (railcars), " +
+				"(electric-multiple-unit), (freight-cars), " +
+				"(passenger-cars), (train-sets), (starter-sets)]";
+		
+		assertEquals(expected, categories.toString());
+	}
+	
+	@Test
+	public void shouldProduceFailbackMessagesForEras() {
+		LocalizedEnum<Era> le = new LocalizedEnum<Era>(Era.IV);
+		assertEquals("iv", le.getLabel());
+		assertEquals("iv", le.getDescription());
 	}
 }

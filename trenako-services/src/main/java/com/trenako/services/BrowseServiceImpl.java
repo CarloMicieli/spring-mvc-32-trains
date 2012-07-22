@@ -24,6 +24,7 @@ import com.trenako.entities.Scale;
 import com.trenako.repositories.BrowseRepository;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
 
 /**
  * 
@@ -45,10 +46,15 @@ public class BrowseServiceImpl implements BrowseService {
 	}
 
 	@Override
-	public Iterable<String> eras() {
-		return Era.list();
+	public Iterable<LocalizedEnum<Era>> eras() {
+		return LocalizedEnum.list(Era.class);
 	}
 
+	@Override
+	public Iterable<LocalizedEnum<Category>> categories() {
+		return LocalizedEnum.list(Category.class);
+	}
+	
 	@Override
 	public Iterable<Scale> scales() {
 		return repo.getScales();
@@ -63,10 +69,4 @@ public class BrowseServiceImpl implements BrowseService {
 	public Iterable<Brand> brands() {
 		return repo.getBrands();
 	}
-
-	@Override
-	public Iterable<String> categories() {
-		return Category.list();
-	}
-
 }

@@ -21,6 +21,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
 
 /**
  * 
@@ -34,9 +35,9 @@ public class ErasSearchTags extends SearchBarItemTags {
 	protected int writeTagContent(JspWriter jspWriter, String contextPath)
 			throws JspException {
 		try {
-			Iterable<String> eras = null;
+			Iterable<LocalizedEnum<Era>> eras = null;
 			if (!getCriteria().has("era")) {
-				eras = Era.list();
+				eras = getService().eras();
 			}
 			
 			jspWriter.append(render(eras, "era", contextPath).toString());

@@ -13,36 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.values;
+package com.trenako.web.controllers;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 /**
- * The model railways eras enumeration.
+ * 
  * @author Carlo Micieli
  *
  */
-public enum Era {
-	/**
-	 * Era I: country & private railways.
-	 */
-	I,
-	/**
-	 * Era II: the period after the formation of large state railways. 
-	 */
-	II,
-	/**
-	 * Era III: the new organization of European railroads.
-	 */
-	III,
-	/**
-	 * Era IV: standardized computer lettering on all rolling stock.
-	 */
-	IV,
-	/**
-	 * Era V: the modern era of railroading.
-	 */
-	V,
-	/**
-	 * Era VI
-	 */
-	VI;
+public class HomeControllerTests {
+
+	HomeController controller = new HomeController();
+	
+	@Test
+	public void shouldRenderHomepage() {
+		String viewName = controller.home();
+		assertEquals("home/index", viewName);
+	}
+
+	@Test
+	public void shouldRenderDefaultHomepage() {
+		String viewName = controller.defaultAction();
+		assertEquals("home/index", viewName);
+	}
+
+	@Test
+	public void shouldRenderExplorePage() {
+		String viewName = controller.explore();
+		assertEquals("home/explore", viewName);
+	}
 }

@@ -208,7 +208,7 @@ public class SearchCriteria {
 		 */
 		public Builder powerMethod(LocalizedEnum<PowerMethod> pm) {
 			if (pm != null) {
-				add(POWER_METHOD_KEY, pm.label(), pm.getMessage());
+				add(POWER_METHOD_KEY, pm.getKey(), pm.getLabel());
 			}
 			return this;
 		}
@@ -344,7 +344,7 @@ public class SearchCriteria {
 		 */
 		public Builder category(LocalizedEnum<Category> category) {
 			if (category != null) {
-				add(CATEGORY_KEY, category.label(), category.getMessage());
+				add(CATEGORY_KEY, category.getKey(), category.getLabel());
 			}
 			return this;
 		}
@@ -370,7 +370,7 @@ public class SearchCriteria {
 		 */
 		public Builder era(LocalizedEnum<Era> era) {
 			if (era != null) {
-				add(ERA_KEY, era.label(), era.getMessage());
+				add(ERA_KEY, era.getKey(), era.getLabel());
 			}
 			return this;
 		}
@@ -391,9 +391,9 @@ public class SearchCriteria {
 			return immutableSearchCriteria(new SearchCriteria(this.values));
 		}
 		
-		private void add(String criterionName, String value, String label) {
-			if (StringUtils.hasText(value)) {
-				values.put(criterionName, new ImmutablePair<String, String>(value, label));
+		private void add(String criterionName, String key, String label) {
+			if (StringUtils.hasText(key)) {
+				values.put(criterionName, new ImmutablePair<String, String>(key, label));
 			}
 		}
 	}

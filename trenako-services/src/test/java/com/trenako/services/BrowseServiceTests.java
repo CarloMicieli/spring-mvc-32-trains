@@ -30,6 +30,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.trenako.repositories.BrowseRepository;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
 
 /**
  * 
@@ -50,10 +51,10 @@ public class BrowseServiceTests {
 
 	@Test
 	public void shouldGetAllEras() {
-		List<String> eras = (List<String>) service.eras();
-		assertEquals(Era.list(), eras);
+		Iterable<LocalizedEnum<Era>> eras = service.eras();
+		assertNotNull(eras);
 	}
-
+	
 	@Test
 	public void shouldGetAllScales() {
 		service.scales();
@@ -74,7 +75,8 @@ public class BrowseServiceTests {
 
 	@Test
 	public void shouldGetAllCategories() {
-		List<String> categories = (List<String>) service.categories();
-		assertEquals(Category.list(), categories);
+		List<LocalizedEnum<Category>> categories = (List<LocalizedEnum<Category>>) service.categories();
+		assertNotNull(categories);
+		assertEquals(Category.values().length, categories.size());
 	}
 }

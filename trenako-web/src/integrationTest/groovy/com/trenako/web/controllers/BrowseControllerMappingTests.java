@@ -30,6 +30,9 @@ import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
 import com.trenako.services.BrowseService;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
 import com.trenako.web.test.AbstractSpringControllerTests;
 
 /**
@@ -46,8 +49,8 @@ public class BrowseControllerMappingTests extends AbstractSpringControllerTests 
 		when(mockService.brands()).thenReturn(Arrays.asList(new Brand()));
 		when(mockService.railways()).thenReturn(Arrays.asList(new Railway()));
 		when(mockService.scales()).thenReturn(Arrays.asList(new Scale()));
-		when(mockService.eras()).thenReturn(Arrays.asList("I", "II"));
-		when(mockService.categories()).thenReturn(Arrays.asList("cat1", "cat2"));
+		when(mockService.eras()).thenReturn(LocalizedEnum.list(Era.class));
+		when(mockService.categories()).thenReturn(LocalizedEnum.list(Category.class));
 	}
 	
 	@After

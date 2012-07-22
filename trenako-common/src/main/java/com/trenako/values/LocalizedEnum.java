@@ -15,11 +15,23 @@
  */
 package com.trenako.values;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 
 /**
- * It represents a wrapper for the enumerations localizations.
+ * It represents a wrapper for the {@code enum} values.
+ * <p>
+ * This class provided additional functionalities to {@code enum} values. 
+ * <ul>
+ * <li>{@code key}: the value stored in database;</li>
+ * <li>{@code label}: the value label, localized by {@code MessageSource};</li>
+ * <li>{@code description}: the value details, localized by {@code MessageSource}.</li>
+ * </ul>
+ * </p>
  * 
  * @author Carlo Micieli
  *
@@ -29,9 +41,13 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 
 	private MessageSource messageSource;
 
+	private final static MessageFailback<Era> eraMessageFailback = new EraMessageFailback();
+	private final static MessageFailback<Category> categoryMessageFailback = new CategoryMessageFailback();
+	
 	private final T val;
 	private final String key;
-	private final String code;
+	private final String labelCode;
+	private final String descCode;
 
 	/**
 	 * Creates a new {@code LocalizedEnum}.
@@ -39,15 +55,16 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 	 */
 	public LocalizedEnum(T val) {
 		this.val = val;
-		this.key = buildLabel(val);
-		this.code = buildCodeForValue(val);
+		this.key = buildKey(val);
+		this.labelCode = buildCodeForValue(val);
+		this.descCode = buildCodeForDesc(val);
 	}
 	
 	/**
 	 * Returns the label for the provided {@code enum} value.
 	 * @return the label
 	 */
-	public static <T extends Enum<T>> String buildLabel(T val) {
+	public static <T extends Enum<T>> String buildKey(T val) {
 		return val.name().toLowerCase().replace('_', '-');
 	}
 	
@@ -62,11 +79,23 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 	}
 	
 	/**
-	 * The label string for the current value.
-	 * @return the label string
+	 * Builds the list with the provided {@code enum} values.
+	 * @param enumType the {@code enum} type
+	 * @return the values list
 	 */
-	public String label() {
-		return key;
+	public static <T extends Enum<T>> Iterable<LocalizedEnum<T>> list(Class<T> enumType) {
+		if (!enumType.isEnum()) {
+			throw new IllegalArgumentException("The provided type is not an enum");
+		}
+		
+		T[] consts = enumType.getEnumConstants();
+		List<LocalizedEnum<T>> items = new ArrayList<LocalizedEnum<T>>(consts.length);
+		
+		for (T val : consts) {
+			items.add(new LocalizedEnum<T>(val));
+		}
+		
+		return Collections.unmodifiableList(items);
 	}
 	
 	/**
@@ -78,19 +107,93 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 	}
 
 	/**
-	 * Returns the localized message for this {@code enum} value.
+	 * Returns the key for this {@code enum} value.
+	 * @return the label string
+	 */
+	public String getKey() {
+		return key;
+	}
+	
+	/**
+	 * Returns the localized label for this {@code enum} value.
 	 * @return the message
 	 */
-	public String getMessage() {
-		if (messageSource == null) {
-			return key;
-		}
-		return messageSource.getMessage(code, null, key, null);
+	public String getLabel() {
+		return getMessage(labelCode, null);
+	}
+	
+	/**
+	 * Returns the localized label for this {@code enum} value.
+	 * @param failback the failback interface to produce default messages
+	 * @return the message
+	 */
+	public Object getLabel(MessageFailback<T> failback) {
+		return getMessage(labelCode, failback);
+	}
+	
+	/**
+	 * Returns the localized description for this {@code enum} value.
+	 * @return the message
+	 */
+	public String getDescription() {
+		return getMessage(descCode, null);
 	}
 
+	/**
+	 * Returns the localized description for this {@code enum} value.
+	 * @param failback the failback interface to produce default messages
+	 * @return the message
+	 */
+	public String getDescription(MessageFailback<T> failback) {
+		return getMessage(descCode, failback);
+	}
+	
+	/**
+	 * Returns the default {@code MessageFailback} to produce default message.
+	 * @param enumType the {@code enum} type name
+	 * @return a {@code MessageFailback}
+	 */
+	public static <T extends Enum<T>> MessageFailback<?> messageFailbackFor(Class<?> enumType) {
+		if (enumType.equals(Era.class)) {
+			return eraMessageFailback;
+		}
+		else if (enumType.equals(Category.class)) {
+			return categoryMessageFailback;
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder()
+			.append("(").append(key.toString()).append(")")
+			.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof LocalizedEnum<?>)) return false;
+		
+		LocalizedEnum<?> other = (LocalizedEnum<?>) obj;
+		return this.getValue().equals(other.getValue());
+	}
+	
+	private String getMessage(String code, MessageFailback<T> failback) {
+		if (messageSource == null) {
+			if (failback != null) {
+				return failback.failbackMessage(val);
+			}
+			
+			return key;
+		}
+		return messageSource.getMessage(code, null, key, null);
 	}
 	
 	private static <T extends Enum<T>> String buildCodeForValue(T val) {
@@ -100,5 +203,38 @@ public class LocalizedEnum<T extends Enum<T>> implements MessageSourceAware {
 			.append(val.name().toLowerCase().replace('_', '.'))
 			.append(".label")
 			.toString();
+	}
+	
+	private static <T extends Enum<T>> String buildCodeForDesc(T val) {
+		return new StringBuilder()
+			.append(val.getClass().getSimpleName().toLowerCase())
+			.append(".")
+			.append(val.name().toLowerCase().replace('_', '.'))
+			.append(".description")
+			.toString();
+	}
+	
+	/**
+	 * Clients can implement this interface to provide failback messages.
+	 * @author Carlo Micieli
+	 *
+	 * @param <T>
+	 */
+	public static interface MessageFailback<T extends Enum<T>> {
+		String failbackMessage(T val);
+	}
+
+	private static class EraMessageFailback implements MessageFailback<Era> {
+		@Override
+		public String failbackMessage(Era val) {
+			return val.name();
+		}
+	}
+	
+	private static class CategoryMessageFailback implements MessageFailback<Category> {
+		@Override
+		public String failbackMessage(Category val) {
+			return val.name();
+		}
 	}
 }

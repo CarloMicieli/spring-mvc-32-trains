@@ -18,19 +18,28 @@ package com.trenako.services;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
 /**
  * It represents a service for the rolling stocks browsing.
  * @author Carlo Micieli
  *
  */
 public interface BrowseService {
-	
+
 	/**
 	 * Returns the list of model railway {@code Era}.
 	 * @return the eras list
 	 */
-	Iterable<String> eras();
-
+	Iterable<LocalizedEnum<Era>> eras();
+	
+	/**
+	 * Returns the list of model railway {@code Category}.
+	 * @return the brands list
+	 */
+	Iterable<LocalizedEnum<Category>> categories();
+	
 	/**
 	 * Returns the list of model railway {@code Scale}.
 	 * @return the scales list
@@ -48,10 +57,4 @@ public interface BrowseService {
 	 * @return the brands list
 	 */
 	Iterable<Brand> brands();
-
-	/**
-	 * Returns the list of model railway {@code Category}.
-	 * @return the brands list
-	 */
-	Iterable<String> categories();
 }

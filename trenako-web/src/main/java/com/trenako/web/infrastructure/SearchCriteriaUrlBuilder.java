@@ -19,6 +19,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.trenako.criteria.SearchCriteria;
+import com.trenako.values.LocalizedEnum;
 
 /**
  * It represents a Url builder for {@code SearchCriteria}.
@@ -57,6 +58,10 @@ public class SearchCriteriaUrlBuilder {
 		}
 		else if (obj.getClass().isEnum()) {
 			val = safeGetProperty(obj, "label");
+		}
+		else if(obj.getClass().equals(LocalizedEnum.class)) {
+			LocalizedEnum<?> le = (LocalizedEnum<?>) obj;
+			val = le.getKey();
 		}
 		else {
 			val = safeGetProperty(obj, "slug");

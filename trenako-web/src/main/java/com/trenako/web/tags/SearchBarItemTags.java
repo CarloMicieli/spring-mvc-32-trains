@@ -32,6 +32,7 @@ import org.springframework.context.MessageSource;
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
 import com.trenako.services.BrowseService;
+import com.trenako.values.LocalizedEnum;
 import com.trenako.web.tags.html.HtmlTag;
 
 /**
@@ -94,7 +95,13 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 	}
 	
 	public String labelFor(Object obj) {
-		if (label!=null && !label.isEmpty()) {
+		if (obj.getClass().equals(LocalizedEnum.class)) {
+			LocalizedEnum<?> en = (LocalizedEnum<?>) obj;
+			if (en != null) {
+				return en.getLabel();
+			}
+		}
+		else if (label != null && !label.isEmpty()) {
 			try {
 				return getProperty(obj, label);
 			} catch (Exception e) {

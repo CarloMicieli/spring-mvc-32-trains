@@ -34,6 +34,9 @@ import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
 import com.trenako.services.BrowseService;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
 
 /**
  * 
@@ -43,10 +46,10 @@ import com.trenako.services.BrowseService;
 @RunWith(MockitoJUnitRunner.class)
 public class BrowseControllerTests {
 
-	static final List<String> ERAS = Collections.unmodifiableList(
-			Arrays.asList("I", "II", "III", "IV", "V"));
-	static final List<String> CATEGORIES = Collections.unmodifiableList(
-			Arrays.asList("cat1", "cat2", "cat3"));
+	static final List<LocalizedEnum<Era>> ERAS = 
+			(List<LocalizedEnum<Era>>) LocalizedEnum.list(Era.class);
+	static final List<LocalizedEnum<Category>> CATEGORIES =
+			(List<LocalizedEnum<Category>>) LocalizedEnum.list(Category.class);
 	static final List<Scale> SCALES = Collections.unmodifiableList(
 			Arrays.asList(new Scale("H0"), new Scale("N"), new Scale("0")));
 	static final List<Railway> RAILWAYS = Collections.unmodifiableList(

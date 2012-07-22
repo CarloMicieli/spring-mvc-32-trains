@@ -21,6 +21,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import com.trenako.values.Category;
+import com.trenako.values.LocalizedEnum;
 
 /**
  * 
@@ -34,9 +35,9 @@ public class CategoriesSearchTags extends SearchBarItemTags {
 	protected int writeTagContent(JspWriter jspWriter, String contextPath)
 			throws JspException {
 		try {
-			Iterable<String> categories = null;
+			Iterable<LocalizedEnum<Category>> categories = null;
 			if (!getCriteria().has("category")) {
-				categories = Category.list();
+				categories = getService().categories();
 			}
 			
 			jspWriter.append(render(categories, "category", contextPath).toString());
@@ -47,5 +48,4 @@ public class CategoriesSearchTags extends SearchBarItemTags {
 		
 		return SKIP_BODY;
 	}
-
 }

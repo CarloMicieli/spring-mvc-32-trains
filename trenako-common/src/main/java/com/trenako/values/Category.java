@@ -75,7 +75,7 @@ public enum Category {
 	 * @return the label
 	 */
 	public String label() {
-		return LocalizedEnum.buildLabel(this);
+		return LocalizedEnum.buildKey(this);
 	}
 
 	/**
