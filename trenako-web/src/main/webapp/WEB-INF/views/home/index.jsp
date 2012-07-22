@@ -30,9 +30,7 @@
 							
 						</div>
 					</div>
-					
-				    
-				    
+
 				    <div class="control-group">
 						<label for="displayName" class="control-label">
 							Display name:
@@ -42,19 +40,15 @@
 							
 						</div>
 					</div>
-					
 
-				    
 				    <div class="control-group">
 						<label for="password" class="control-label">
 							Password:
 						</label>
 						<div class="controls">
 							<input id="password" name="password" class="input-xlarge focused" required="required" type="password" value=""/>
-							
 						</div>
 					</div>
-									
 
 					<div class="form-actions">
 						<button id="_action_save" name="_action_save" class="btn btn-primary" type="submit" type="submit" value="Submit">
@@ -67,28 +61,31 @@
 							Reset
 						</button>
 					</div>					
-					
 				</form>
       		</div>
 		</div>
 
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="span4">
-          <h2>Heading</h2>
-           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-          <h2>Heading</h2>
-           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-      </div>
+      	<div class="row">
+        	<div class="span4">
+          		<h2>The passion of trains</h2>
+           		<p>
+           		Donec id elit non mi porta gravida at eget metus. Fusce dapibus, 
+           		tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum
+           		massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. 
+           		Donec sed odio dui.
+           		</p>
+          		<p><a class="btn" href="#">View details &raquo;</a></p>
+        	</div>
+        	<div class="span4">
+          		<h2>New rolling stocks</h2>
+           		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          		<p><a class="btn" href="#">View details &raquo;</a></p>
+       		</div>
+        	<div class="span4">
+          		<h2>Last activity</h2>
+          		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          		<p><a class="btn" href="#">View details &raquo;</a></p>
+        	</div>
+      	</div>
 	</body>
 </html>
