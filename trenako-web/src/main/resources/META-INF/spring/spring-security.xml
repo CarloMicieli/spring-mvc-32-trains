@@ -37,7 +37,7 @@
 		<intercept-url pattern="/rollingstocks/**" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/**" method="DELETE" access="isAuthenticated()" />
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
-		<intercept-url pattern="/home*" access="permitAll" />
+		<intercept-url pattern="/home/**" access="permitAll" />
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/**" access="denyAll" />
 		<form-login login-page="/auth/login"

@@ -1,3 +1,6 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
+
 <html>
 	<head>
 		<title>Trenako.com</title>
@@ -10,12 +13,11 @@
 				<div class="hero-unit">
         			<h1>Welcome aboard!</h1>
         			<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        			<p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+        			<p><a class="btn btn-primary btn-large" href="<s:url value="/home/explore"/>">Learn more &raquo;</a></p>
       			</div>
       		</div>
       		<div class="span3">
-      			
-				<form id="form" class="form-vertical" action="/trenako-web/auth/signup" method="POST">
+				<form id="form" class="form-vertical" action="<s:url value="/auth/signup"/>" method="POST">
 				<fieldset>
       				<legend>Create new account</legend>
       			</fieldset>

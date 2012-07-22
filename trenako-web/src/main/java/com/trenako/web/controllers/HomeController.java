@@ -32,6 +32,11 @@ public class HomeController {
 		return "home/index";
 	}
 	
+	@RequestMapping(value = "/home/explore", method = RequestMethod.GET)
+	public String explore() {
+		return "home/explore";
+	}
+	
 	@RequestMapping(value = "/default", method = RequestMethod.GET)
 	public String defaultAction() {
 		return "home/index";
