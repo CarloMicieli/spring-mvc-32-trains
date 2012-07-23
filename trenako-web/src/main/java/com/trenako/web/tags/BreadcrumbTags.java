@@ -29,6 +29,7 @@ import org.springframework.context.MessageSource;
 
 import com.trenako.criteria.Criteria;
 import com.trenako.criteria.SearchCriteria;
+import com.trenako.results.RollingStockResults;
 import com.trenako.web.tags.html.HtmlTag;
 
 import static com.trenako.web.tags.html.HtmlBuilder.*;
@@ -55,7 +56,11 @@ public class BreadcrumbTags extends SpringTagSupport {
 	
 	private SearchCriteria criteria;
 	
-	public void setCriteria(SearchCriteria criteria) {
+	public void setResults(RollingStockResults results) {
+		setCriteria(results.getCriteria());
+	}
+	
+	void setCriteria(SearchCriteria criteria) {
 		this.criteria = criteria;
 	}
 	
@@ -64,7 +69,7 @@ public class BreadcrumbTags extends SpringTagSupport {
 		this.messageSource = messageSource;
 	}
 	
-	public SearchCriteria getCriteria() {
+	SearchCriteria getCriteria() {
 		return criteria;
 	}
 

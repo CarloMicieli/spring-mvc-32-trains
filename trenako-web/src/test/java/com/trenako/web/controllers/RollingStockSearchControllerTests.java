@@ -28,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trenako.criteria.SearchRequest;
 import com.trenako.results.RangeRequest;
-import com.trenako.results.mongo.RollingStockResults;
+import com.trenako.results.RollingStockResults;
 import com.trenako.services.BrowseService;
 
 /**

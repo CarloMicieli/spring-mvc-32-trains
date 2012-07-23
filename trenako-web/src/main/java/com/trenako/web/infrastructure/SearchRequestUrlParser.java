@@ -15,12 +15,6 @@
  */
 package com.trenako.web.infrastructure;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,36 +22,18 @@ import java.util.Stack;
 
 import org.springframework.util.Assert;
 
-import com.trenako.criteria.SearchCriteria;
+import com.trenako.criteria.Criteria;
 
 /**
  * It represents a parser for a servlet path based representation 
- * of {@code SearchCriteria} objects.
+ * of {@code SearchRequest} objects.
  * 
  * @author Carlo Micieli
  *
  */
-public class SearchCriteriaUrlParser {
+public class SearchRequestUrlParser {
 
-	private static final List<String> SEARCH_CRITERIA_KEYS = initKeys();
-	
-	static List<String> initKeys() {
-		try {
-			BeanInfo info = Introspector.getBeanInfo(SearchCriteria.class);
-			PropertyDescriptor[] pds = info.getPropertyDescriptors();
-			
-			List<String> keys = new ArrayList<String>();
-			for (PropertyDescriptor prop : pds) {
-				keys.add(prop.getName());
-			}
-			
-			return Collections.unmodifiableList(keys);
-			
-		} catch (IntrospectionException ex) {
-		}
-		
-		return Collections.emptyList();
-	}
+	private static final List<String> SEARCH_CRITERIA_KEYS = (List<String>) Criteria.keys();
 	
 	/**
 	 * Parses the {@code path} string, matching the {@code SearchCriteria} property names.

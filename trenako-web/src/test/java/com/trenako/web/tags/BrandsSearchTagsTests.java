@@ -34,6 +34,7 @@ import org.springframework.context.MessageSource;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
+import com.trenako.results.RollingStockResults;
 import com.trenako.services.BrowseService;
 import com.trenako.web.tags.html.HtmlTag;
 import com.trenako.web.test.AbstractSpringTagsTest;
@@ -62,9 +63,9 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 		tag.setService(service);
 	}
 	
-	private void setCriteria(SearchCriteria sc) {
+	private void setResults(RollingStockResults rs) {
 		SearchBarTags parent = new SearchBarTags();
-		parent.setCriteria(sc);
+		parent.setResults(rs);
 		tag.setParent(parent);
 	}
 	
@@ -74,7 +75,8 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 			.railway(db())
 			.build();
 		
-		setCriteria(sc);
+		RollingStockResults results = mockResults(3, sc, mockRange());
+		setResults(results);
 		
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);
@@ -96,7 +98,8 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 			.railway(db())
 			.build();
 		
-		setCriteria(sc);
+		RollingStockResults results = mockResults(3, sc, mockRange());
+		setResults(results);
 		
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);

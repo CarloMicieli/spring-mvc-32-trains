@@ -150,7 +150,7 @@ project("trenako-services") {
 		}
 
 		// export common test classes
-		testCompile project(":trenako-common").sourceSets.test.output
+		// testCompile project(":trenako-common").sourceSets.test.output
 		integrationTestCompile "com.gmongo:gmongo:0.9.5"
 	}
 }
@@ -204,7 +204,7 @@ project("trenako-web") {
 			"javax.servlet.jsp:javax.servlet.jsp-api:2.2.1"
 
 		// export common test classes
-		testCompile project(":trenako-common").sourceSets.test.output		
+		//testCompile project(":trenako-common").sourceSets.test.output		
 
 		// Spring test mvc
 		testCompile "org.springframework:spring-test-mvc:1.0.0.BUILD-SNAPSHOT",

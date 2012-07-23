@@ -16,7 +16,6 @@
 package com.trenako.criteria;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.trenako.entities.Brand;
@@ -97,6 +96,6 @@ public enum Criteria {
 		for (Criteria crit : Criteria.values()) {
 			keys.add(crit.name().replace("_", "").toLowerCase());
 		}
-		return Collections.unmodifiableCollection(keys);
+		return keys;
 	}
 }

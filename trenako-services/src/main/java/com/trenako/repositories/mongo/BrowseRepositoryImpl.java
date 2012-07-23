@@ -36,7 +36,7 @@ import com.trenako.entities.Scale;
 import com.trenako.repositories.BrowseRepository;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
-import com.trenako.results.mongo.RollingStockResults;
+import com.trenako.results.RollingStockResults;
 
 /**
  * The concrete implementation for the browse repository.

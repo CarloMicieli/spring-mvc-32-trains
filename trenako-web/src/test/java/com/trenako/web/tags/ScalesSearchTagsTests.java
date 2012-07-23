@@ -34,6 +34,7 @@ import org.springframework.context.MessageSource;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Scale;
+import com.trenako.results.RollingStockResults;
 import com.trenako.services.BrowseService;
 import com.trenako.web.tags.html.HtmlTag;
 import com.trenako.web.test.AbstractSpringTagsTest;
@@ -50,6 +51,17 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 	
 	List<Scale> scales = Collections.unmodifiableList(Arrays.asList(scaleH0(), scaleN()));
 	
+	private static final HtmlTag SCALE_LIST_HTML = snippet(
+			li("scale").cssClass("nav-header"),
+			snippet(li(a("H0 (1:87)").href("/trenako-web", "/rs/scale/h0/railway/db"))),
+			snippet(li(a("N (1:160)").href("/trenako-web", "/rs/scale/n/railway/db"))));
+	private static final HtmlTag SCALE_SELECTED_HTML = snippet(
+			li("scale").cssClass("nav-header"),
+			li(a("H0 (1:87)").href("#")).cssClass("active"),
+			li("").cssClass("divider"),
+			li(a("remove").href("/trenako-web/rs/railway/db")));
+	
+	
 	@Override
 	protected void setupTag(PageContext pageContext, MessageSource messageSource) {
 		// mocking service
@@ -62,9 +74,9 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 		tag.setService(service);
 	}
 	
-	private void setCriteria(SearchCriteria sc) {
+	private void setResults(RollingStockResults results) {
 		SearchBarTags parent = new SearchBarTags();
-		parent.setCriteria(sc);
+		parent.setResults(results);
 		tag.setParent(parent);
 	}
 	
@@ -74,19 +86,14 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 			.railway(db())
 			.build();
 		
-		setCriteria(sc);
+		RollingStockResults results = mockResults(3, sc, mockRange());
+		setResults(results);
 		
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);
 		
-		HtmlTag html = snippet(
-			li("scale").cssClass("nav-header"),
-			snippet(li(a("H0 (1:87)").href("/trenako-web", "/rs/scale/h0/railway/db"))),
-			snippet(li(a("N (1:160)").href("/trenako-web", "/rs/scale/n/railway/db")))
-				);
-		
 		String output = renderTag();
-		assertEquals(html.toString(), output);
+		assertEquals(SCALE_LIST_HTML.toString(), output);
 	}
 	
 	@Test
@@ -96,19 +103,13 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 			.railway(db())
 			.build();
 		
-		setCriteria(sc);
+		RollingStockResults results = mockResults(3, sc, mockRange());
+		setResults(results);
 		
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);
-		
-		HtmlTag html = snippet(
-				li("scale").cssClass("nav-header"),
-				li(a("H0 (1:87)").href("#")).cssClass("active"),
-				li("").cssClass("divider"),
-				li(a("remove").href("/trenako-web/rs/railway/db"))
-			);
-		
+
 		String output = renderTag();
-		assertEquals(html.toString(), output);
+		assertEquals(SCALE_SELECTED_HTML.toString(), output);
 	}
 }

@@ -19,6 +19,8 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -35,6 +37,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.trenako.entities.RollingStock;
+import com.trenako.criteria.SearchCriteria;
+import com.trenako.results.RangeRequest;
+import com.trenako.results.RangeRequestImpl;
+import com.trenako.results.RollingStockResults;
 
 /**
  * Helper class to initialize all the infrastructure needed
@@ -107,5 +115,17 @@ public abstract class AbstractSpringTagsTest {
 	
 	public MessageSource messageSource() {
 		return mockMessageSource;
+	}
+	
+	protected RangeRequest mockRange() {
+		return new RangeRequestImpl();
+	}
+	
+	protected RollingStockResults mockResults(int numberOfItems, SearchCriteria sc, RangeRequest range) {
+		List<RollingStock> results = new ArrayList<RollingStock>();
+		for (int i=0; i<numberOfItems; i++) {
+			results.add(new RollingStock());
+		}
+		return new RollingStockResults(results, sc, range);
 	}
 }

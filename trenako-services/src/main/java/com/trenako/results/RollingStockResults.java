@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.results.mongo;
+package com.trenako.results;
 
 import java.util.List;
 
@@ -21,8 +21,6 @@ import org.bson.types.ObjectId;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.RollingStock;
-import com.trenako.results.PaginatedResults;
-import com.trenako.results.RangeRequest;
 
 /**
  * The concrete implementation for mongodb of the {@code PaginatedResults}.
@@ -128,5 +126,10 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 	@Override
 	public SearchCriteria getCriteria() {
 		return criteria;
+	}
+	
+	@Override
+	public RangeRequest getRange() {
+		return range;
 	}
 }

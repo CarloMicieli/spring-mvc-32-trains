@@ -60,5 +60,6 @@ public class RangeRequestTests {
 		RangeRequest immutable = range.immutableRange();
 		assertNotNull(immutable);
 		assertTrue(immutable instanceof ImmutableRangeRequest);
+		assertEquals(10, immutable.getCount());
 	}
 }

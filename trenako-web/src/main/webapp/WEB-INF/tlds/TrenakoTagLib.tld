@@ -14,10 +14,10 @@
 			Display breadcrumb for rolling stock search.
 		</description>
 		<attribute>
-			<name>criteria</name>
+			<name>results</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>com.trenako.SearchCriteria</type>
+			<type>com.trenako.results.RollingStockResults</type>
 		</attribute>
 	</tag>
 
@@ -29,16 +29,10 @@
 			Display the search bar rolling stock search.
 		</description>
 		<attribute>
-			<name>criteria</name>
+			<name>results</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>com.trenako.SearchCriteria</type>
-		</attribute>
-		<attribute>
-			<name>range</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>com.trenako.results.RangeRequest</type>
+			<type>com.trenako.results.RollingStockResults</type>
 		</attribute>
 	</tag>
 

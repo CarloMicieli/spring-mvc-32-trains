@@ -126,7 +126,7 @@ public class RangeRequestImpl implements RangeRequest {
 
 	@Override
 	public RangeRequest immutableRange() {
-		return new ImmutableRangeRequest(count, sinceId, maxId, sort);
+		return new ImmutableRangeRequest(getCount(), getSinceId(), getMaxId(), getSort());
 	}
 	
 	@Override

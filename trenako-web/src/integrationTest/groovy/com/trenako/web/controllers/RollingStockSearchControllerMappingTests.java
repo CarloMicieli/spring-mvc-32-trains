@@ -32,7 +32,7 @@ import com.trenako.criteria.SearchRequest;
 import com.trenako.entities.RollingStock;
 import com.trenako.results.RangeRequest;
 import com.trenako.results.RangeRequestImpl;
-import com.trenako.results.mongo.RollingStockResults;
+import com.trenako.results.RollingStockResults;
 import com.trenako.services.BrowseService;
 import com.trenako.web.test.AbstractSpringControllerTests;
 

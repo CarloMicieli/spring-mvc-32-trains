@@ -12,7 +12,7 @@
 
 	<div class="row-fluid">
 		<div class="span2">
-			<tk:searchBar range="${range}" criteria="${criteria}">
+			<tk:searchBar results="${results}">
 				<tk:brands label="name" />
 				<tk:railways  label="name" />
 				<tk:scales />
@@ -21,7 +21,7 @@
 			</tk:searchBar>
 		</div>
 		<div class="span10">
-			<tk:breadcrumb criteria="${criteria}" />
+			<tk:breadcrumb results="${results}"/>
 
         	<c:forEach var="rs" items="${results.items}">
 				<div class="row-fluid" style="border-bottom: 1pt solid silver;">

@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.springframework.context.MessageSource;
 
 import com.trenako.criteria.SearchCriteria;
+import com.trenako.results.RollingStockResults;
 import com.trenako.services.BrowseService;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
@@ -65,9 +66,9 @@ public class ErasSearchTagsTests extends AbstractSpringTagsTest {
 		tag.setService(service);
 	}
 
-	private void setCriteria(SearchCriteria sc) {
+	private void setResults(RollingStockResults results) {
 		SearchBarTags parent = new SearchBarTags();
-		parent.setCriteria(sc);
+		parent.setResults(results);
 		tag.setParent(parent);
 	}
 	
@@ -77,7 +78,8 @@ public class ErasSearchTagsTests extends AbstractSpringTagsTest {
 			.railway(db())
 			.build();
 		
-		setCriteria(sc);
+		RollingStockResults results = mockResults(3, sc, mockRange());
+		setResults(results);
 		tag.setLabel("label");
 		
 		int rv = tag.doStartTag();
@@ -104,7 +106,8 @@ public class ErasSearchTagsTests extends AbstractSpringTagsTest {
 			.railway(db())
 			.build();
 		
-		setCriteria(sc);
+		RollingStockResults results = mockResults(3, sc, mockRange());
+		setResults(results);
 		
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);

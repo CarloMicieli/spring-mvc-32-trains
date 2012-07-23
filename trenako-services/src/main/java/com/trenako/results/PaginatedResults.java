@@ -89,4 +89,10 @@ public interface PaginatedResults<T> {
 	 * @return the items
 	 */
 	Iterable<T> getItems();
+
+	/**
+	 * 
+	 * @return
+	 */
+	RangeRequest getRange();
 }

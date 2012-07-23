@@ -49,11 +49,11 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 	
 	private String label;
 
-	public void setService(BrowseService service) {
+	void setService(BrowseService service) {
 		this.service = service;
 	}
 
-	public BrowseService getService() {
+	BrowseService getService() {
 		return service;
 	}
 	
@@ -61,7 +61,7 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 		this.messageSource = messageSource;
 	}
 
-	public MessageSource getMessageSource() {
+	MessageSource getMessageSource() {
 		return messageSource;
 	}
 
@@ -122,17 +122,18 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 		
 		tagsList.add(li(label).cssClass("nav-header"));
 		
+		SearchCriteria searchCriteria = getCriteria();
 		// check if a criteria for this class has been already selected
-		if (getCriteria().has(criteria)) {
-			String url = buildUrlRemoving(getCriteria(), criteriaName);
+		if (searchCriteria.has(criteria)) {
+			String url = buildUrlRemoving(searchCriteria, criteriaName);
 			
-			tagsList.add(li(a(getCriteria().get(criteria).getValue()).href("#")).cssClass("active"));
+			tagsList.add(li(a(searchCriteria.get(criteria).getValue()).href("#")).cssClass("active"));
 			tagsList.add(li("").cssClass("divider"));
 			tagsList.add(li(a("remove").href(contextPath, url)));
 		}
 		else {
 			for (E it : items) {
-				String url = buildUrlAdding(getCriteria(), criteriaName, it);
+				String url = buildUrlAdding(searchCriteria, criteriaName, it);
 				
 				tagsList.add(snippet(li(a(labelFor(it)).href(contextPath, url))));
 			}

@@ -15,7 +15,7 @@
  */
 package com.trenako.web.infrastructure;
 
-import static com.trenako.web.infrastructure.SearchCriteriaUrlParser.*;
+import static com.trenako.web.infrastructure.SearchRequestUrlParser.*;
 import static org.junit.Assert.*;
 
 import java.util.Map;
@@ -27,7 +27,7 @@ import org.junit.Test;
  * @author Carlo Micieli
  *
  */
-public class SearchCriteriaUrlParserTests {
+public class SearchRequestUrlParserTests {
 	
 	@Test
 	public void shouldParsePathsWithoutValues() {
@@ -43,10 +43,12 @@ public class SearchCriteriaUrlParserTests {
 	
 	@Test
 	public void shouldParsePathsWithMoreValues() {
-		Map<String, String> values = parseUrl("/rs/brand/ACME/railway/DB/scale/H0");
+		Map<String, String> values = parseUrl("/rs/brand/ACME/railway/DB/scale/H0/powermethod/AC/category/electric-locomotives");
 		assertValue(values, "brand", "ACME");
 		assertValue(values, "railway", "DB");
 		assertValue(values, "scale", "H0");
+		assertValue(values, "powermethod", "AC");
+		assertValue(values, "category", "electric-locomotives");
 	}
 
 	@Test
