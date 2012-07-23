@@ -149,6 +149,8 @@ project("trenako-services") {
 			exclude group: "commons-logging", module: "commons-logging"
 		}
 
+		// export common test classes
+		testCompile project(":trenako-common").sourceSets.test.output
 		integrationTestCompile "com.gmongo:gmongo:0.9.5"
 	}
 }
@@ -200,6 +202,9 @@ project("trenako-web") {
 		providedCompile "javax.servlet:javax.servlet-api:3.0.1"
 		compile "javax.servlet:jstl:1.2",
 			"javax.servlet.jsp:javax.servlet.jsp-api:2.2.1"
+
+		// export common test classes
+		testCompile project(":trenako-common").sourceSets.test.output		
 
 		// Spring test mvc
 		testCompile "org.springframework:spring-test-mvc:1.0.0.BUILD-SNAPSHOT",
