@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.RollingStock;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
@@ -50,6 +51,7 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 
 	private final List<RollingStock> results;
 	private final RangeRequest range;
+	private final SearchCriteria criteria;
 	private final ObjectId maxId;
 	private final ObjectId sinceId;
 	
@@ -61,14 +63,15 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 	 * @param results the result items
 	 * @param range the result range
 	 */
-	public RollingStockResults(List<RollingStock> results, RangeRequest range) {
+	public RollingStockResults(List<RollingStock> results, SearchCriteria criteria, RangeRequest range) {
 		
 		int size = results.size() > range.getCount()
 				? range.getCount() : results.size();
 		
 		this.results = results.subList(0, size);
 		this.range = range;
-
+		this.criteria = criteria;
+		
 		if (results.size() > 0) {
 			RollingStock min = results.get(0);
 			RollingStock max = results.get(size - 1);
@@ -120,5 +123,10 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 	@Override
 	public Iterable<RollingStock> getItems() {
 		return results;
+	}
+
+	@Override
+	public SearchCriteria getCriteria() {
+		return criteria;
 	}
 }

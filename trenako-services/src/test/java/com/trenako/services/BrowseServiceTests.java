@@ -17,10 +17,9 @@ package com.trenako.services;
 
 import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -31,6 +30,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trenako.criteria.SearchCriteria;
+import com.trenako.criteria.SearchRequest;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
@@ -39,7 +39,6 @@ import com.trenako.results.RangeRequestImpl;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
-import com.trenako.values.PowerMethod;
 
 /**
  * 
@@ -52,76 +51,84 @@ public class BrowseServiceTests {
 	@Mock BrowseRepository repo;
 	BrowseService service;
 	
+	static final Iterable<Brand> BRANDS = Arrays.asList(acme(), marklin(), roco());
+	static final Iterable<Railway> RAILWAYS = Arrays.asList(db(), fs());
+	static final Iterable<Scale> SCALES = Arrays.asList(scaleH0(), scaleN());
+	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+		
+		// mocking repository methods
+		when(repo.findBySlug(eq(acme().getSlug()), eq(Brand.class))).thenReturn(acme());
+		when(repo.getBrands()).thenReturn(BRANDS);
+		
+		when(repo.findBySlug(eq(fs().getSlug()), eq(Railway.class))).thenReturn(fs());
+		when(repo.getRailways()).thenReturn(RAILWAYS);
+		
+		when(repo.findBySlug(eq(scaleH0().getSlug()), eq(Scale.class))).thenReturn(scaleH0());
+		when(repo.getScales()).thenReturn(SCALES);
+		
 		service = new BrowseServiceImpl(repo);
 	}
 
 	@Test
 	public void shouldGetAllEras() {
-		Iterable<LocalizedEnum<Era>> eras = service.eras();
+		List<LocalizedEnum<Era>> eras = (List<LocalizedEnum<Era>>) service.eras();
 		assertNotNull(eras);
+		assertEquals(Era.values().length, eras.size());
+		assertEquals("[(i), (ii), (iii), (iv), (v), (vi)]", eras.toString());
 	}
 	
-	@Test
-	public void shouldGetAllScales() {
-		service.scales();
-		verify(repo, times(1)).getScales();
-	}
-
-	@Test
-	public void shouldGetAllRailways() {
-		service.railways();
-		verify(repo, times(1)).getRailways();
-	}
-
-	@Test
-	public void shouldGetAllBrands() {
-		service.brands();
-		verify(repo, times(1)).getBrands();
-	}
-
 	@Test
 	public void shouldGetAllCategories() {
 		List<LocalizedEnum<Category>> categories = (List<LocalizedEnum<Category>>) service.categories();
 		assertNotNull(categories);
 		assertEquals(Category.values().length, categories.size());
+		
+		String expected = "[(steam-locomotives), (diesel-locomotives), "+
+				"(electric-locomotives), (railcars), (electric-multiple-unit), " +
+				"(freight-cars), (passenger-cars), (train-sets), (starter-sets)]";
+		assertEquals(expected, categories.toString());
 	}
 	
 	@Test
-	public void shouldFindRollingStocks() {
-		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand(acme())
-			.railway(fs())
-			.build();
-		RangeRequestImpl range = new RangeRequestImpl();
-		range.setCount(10);
-		
-		service.findByCriteria(sc, range);
-		
-		verify(repo, times(1)).findByCriteria(eq(sc), eq(range));		
+	public void shouldGetAllScales() {
+		Iterable<Scale> scales = service.scales();
+		verify(repo, times(1)).getScales();
+		assertEquals(SCALES, scales);
 	}
 
 	@Test
-	public void shouldReturnEmptySearchCriteriaIfOriginalIfEmptyToo() {
-		SearchCriteria sc = new SearchCriteria();
-		
-		SearchCriteria dbSc = service.loadSearchCriteria(sc);
-		
-		assertTrue(dbSc.isEmpty());
-		verify(repo, times(0)).findBySlug(isA(String.class), eq(Brand.class));
-		verify(repo, times(0)).findBySlug(isA(String.class), eq(Railway.class));
-		verify(repo, times(0)).findBySlug(isA(String.class), eq(Scale.class));
+	public void shouldGetAllRailways() {
+		Iterable<Railway> railways = service.railways();
+		verify(repo, times(1)).getRailways();
+		assertEquals(RAILWAYS, railways);
+	}
+
+	@Test
+	public void shouldGetAllBrands() {
+		Iterable<Brand> brands = service.brands();
+		verify(repo, times(1)).getBrands();
+		assertEquals(BRANDS, brands);
 	}
 	
 	@Test
-	public void shouldLoadSearchCriteriaInformationFromDB() {
-		when(repo.findBySlug(eq(acme().getSlug()), eq(Brand.class))).thenReturn(acme());
-		when(repo.findBySlug(eq(fs().getSlug()), eq(Railway.class))).thenReturn(fs());
-		when(repo.findBySlug(eq(scaleH0().getSlug()), eq(Scale.class))).thenReturn(scaleH0());
+	public void shouldFindAllRollingStocks() {
+		SearchCriteria searchCriteria = new SearchCriteria.Builder()
+			.build();
+		RangeRequestImpl range = new RangeRequestImpl();
+		range.setCount(10);
+		SearchRequest searchReq = new SearchRequest();
+
+		service.findByCriteria(searchReq, range);
 		
-		SearchCriteria sc = new SearchCriteria.Builder()
+		verify(repo, times(1)).findByCriteria(eq(searchCriteria), eq(range));		
+	}
+	
+	@Test
+	public void shouldFindRollingStocksWithSearchCriteria() {
+		SearchCriteria searchCriteria = new SearchCriteria.Builder()
 			.brand(acme())
 			.railway(fs())
 			.scale(scaleH0())
@@ -129,15 +136,22 @@ public class BrowseServiceTests {
 			.era(eraIII())
 			.category(electricLocomotives())
 			.build();
-		SearchCriteria dbSc = service.loadSearchCriteria(sc);
 		
-		assertNotNull(dbSc);
-		assertEquals("(acme,ACME)", dbSc.get(Brand.class).toString());
-		assertEquals("(fs,FS (Ferrovie dello stato))", dbSc.get(Railway.class).toString());
-		assertEquals("(h0,H0 (1:87))", dbSc.get(Scale.class).toString());
-		assertEquals("(ac,ac)", dbSc.get(PowerMethod.class).toString());
-		assertEquals("(iii,iii)", dbSc.get(Era.class).toString());
-		assertEquals("(electric-locomotives,electric-locomotives)", dbSc.get(Category.class).toString());
+		RangeRequestImpl range = new RangeRequestImpl();
+		range.setCount(10);
+		
+		SearchRequest sr = new SearchRequest(
+			acme().getSlug(),
+			scaleH0().getSlug(),
+			fs().getSlug(),
+			eraIII().getKey(),
+			null,
+			ac().getKey(),
+			electricLocomotives().getKey());
+		
+		service.findByCriteria(sr, range);
+		
+		verify(repo, times(1)).findByCriteria(eq(searchCriteria), eq(range));		
 	}
 	
 	@Test

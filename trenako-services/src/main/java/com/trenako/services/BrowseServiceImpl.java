@@ -15,12 +15,12 @@
  */
 package com.trenako.services;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.trenako.criteria.Criteria;
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.criteria.SearchRequest;
 import com.trenako.entities.Brand;
@@ -121,12 +121,12 @@ public class BrowseServiceImpl implements BrowseService {
 	}
 	
 	@Override
-	public PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range) {
-		return repo.findByCriteria(sc, range);
+	public PaginatedResults<RollingStock> findByCriteria(SearchRequest sc, RangeRequest range) {
+		SearchCriteria searchCriteria = loadSearchCriteria(sc); 
+		return repo.findByCriteria(searchCriteria, range);
 	}
 
-	@Override
-	public SearchCriteria loadSearchCriteria(SearchCriteria sc) {
+	private SearchCriteria loadSearchCriteria(SearchRequest sc) {
 		if (sc.isEmpty()) return SearchCriteria.EMPTY;
 				
 		return new SearchCriteria.Builder()
@@ -139,47 +139,42 @@ public class BrowseServiceImpl implements BrowseService {
 			.buildImmutable();
 	}
 
-	private <T> T resolveClass(SearchCriteria sc, Class<T> criterionType) {
-		Pair<String, String> criterionPair = criterionValue(sc, criterionType);
-		if (criterionPair == null) {
+	private <T> T resolveClass(SearchRequest sc, Class<T> criterionType) {
+		String key = criterionValue(sc, criterionType);
+		if (key == null) {
 			return null;
 		}
 		
-		return repo.findBySlug(criterionPair.getKey(), criterionType);
+		return repo.findBySlug(key, criterionType);
 	}
 	
-	private <T extends Enum<T>> LocalizedEnum<T> resolveEnum(SearchCriteria sc, Class<T> criterionType) {
-		Pair<String, String> criterionPair = criterionValue(sc, criterionType);
-		if (criterionPair == null) {
+	private <T extends Enum<T>> LocalizedEnum<T> resolveEnum(SearchRequest sc, Class<T> criterionType) {
+		String key = criterionValue(sc, criterionType);
+		if (key == null) {
 			return null;
 		}
 		
-		// enum values are resolved without accessing the db 
-		return parseSlugAsEnum(criterionPair.getKey(), criterionType);
+		// enum values are resolved without hitting the database 
+		return parseSlugAsEnum(key, criterionType);
 	}
 	
 	private <T extends Enum<T>> LocalizedEnum<T> parseSlugAsEnum(String slug, Class<T> criterionType) {
 		T enumVal = LocalizedEnum.parseString(slug, criterionType);
-		return new LocalizedEnum<T>(enumVal);
+		return new LocalizedEnum<T>(enumVal, messageSource, null);
 	}
 
-	private <T> Pair<String, String> criterionValue(SearchCriteria sc, Class<T> criterionType) {
-		if (!sc.has(criterionType)) {
+	private <T> String criterionValue(SearchRequest sc, Class<T> criterionType) {
+		
+		Criteria crit = Criteria.criterionForType(criterionType);
+		if (!sc.has(crit)) {
 			return null;	
 		}
 
-		Pair<String, String> criterionPair = sc.get(criterionType);
-		if (criterionPair == null || !StringUtils.hasText(criterionPair.getKey())) {
+		String key = sc.get(crit);
+		if (!StringUtils.hasText(key)) {
 			return null;
 		}
 		
-		return criterionPair;
-	}
-
-	@Override
-	public PaginatedResults<RollingStock> findByCriteria(SearchRequest sc,
-			RangeRequest range) {
-		// TODO Auto-generated method stub
-		return null;
+		return key;
 	}
 }

@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.criteria.SearchRequest;
 import com.trenako.entities.RollingStock;
 import com.trenako.results.RangeRequest;
@@ -48,6 +49,7 @@ public class RollingStockSearchControllerMappingTests extends AbstractSpringCont
 	protected void init() {
 		RollingStockResults value = new RollingStockResults(
 				Arrays.asList(new RollingStock(), new RollingStock()),
+				new SearchCriteria(),
 				new RangeRequestImpl());
 		
 		when(mockService.findByCriteria(isA(SearchRequest.class), isA(RangeRequest.class)))

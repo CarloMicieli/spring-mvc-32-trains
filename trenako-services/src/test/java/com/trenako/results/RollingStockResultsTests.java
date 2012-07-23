@@ -71,7 +71,7 @@ public class RollingStockResultsTests {
 		RangeRequest range = buildRange(10);
 		
 		PaginatedResults<RollingStock> pagResults =
-				new RollingStockResults(new ArrayList<RollingStock>(), range);
+				new RollingStockResults(new ArrayList<RollingStock>(), null, range);
 		
 		assertEquals(0, ((List<RollingStock>)pagResults.getItems()).size());
 		assertEquals(null, pagResults.getSinceId());
@@ -86,7 +86,7 @@ public class RollingStockResultsTests {
 		RangeRequest range = buildRange(10);
 		
 		PaginatedResults<RollingStock> pagResults =
-				new RollingStockResults(results, range);
+				new RollingStockResults(results, null, range);
 		
 		assertEquals(10, ((List<RollingStock>)pagResults.getItems()).size());
 		assertEquals(SINCE_ID, pagResults.getSinceId());
@@ -99,7 +99,7 @@ public class RollingStockResultsTests {
 		RangeRequest range = buildRange(10);
 		
 		PaginatedResults<RollingStock> pagResults =
-				new RollingStockResults(results, range);
+				new RollingStockResults(results, null, range);
 		
 		assertEquals(6, ((List<RollingStock>)pagResults.getItems()).size());
 		assertEquals(SINCE_ID, pagResults.getSinceId());
@@ -112,7 +112,7 @@ public class RollingStockResultsTests {
 		RangeRequest range = buildRange(10, null, null);
 		
 		PaginatedResults<RollingStock> pagResults =
-				new RollingStockResults(results, range);
+				new RollingStockResults(results, null, range);
 		
 		assertEquals(false, pagResults.hasPreviousPage());
 		assertEquals(true, pagResults.hasNextPage());
@@ -124,7 +124,7 @@ public class RollingStockResultsTests {
 		RangeRequest range = buildRange(10, new ObjectId(), new ObjectId());
 		
 		PaginatedResults<RollingStock> pagResults =
-				new RollingStockResults(results, range);
+				new RollingStockResults(results, null, range);
 		
 		assertEquals(true, pagResults.hasPreviousPage());
 		assertEquals(true, pagResults.hasNextPage());
@@ -136,7 +136,7 @@ public class RollingStockResultsTests {
 		RangeRequest range = buildRange(10, new ObjectId(), new ObjectId());
 		
 		PaginatedResults<RollingStock> pagResults =
-				new RollingStockResults(results, range);
+				new RollingStockResults(results, null, range);
 		
 		assertEquals(true, pagResults.hasPreviousPage());
 		assertEquals(false, pagResults.hasNextPage());
@@ -148,7 +148,7 @@ public class RollingStockResultsTests {
 		RangeRequest range = buildRange(10, new ObjectId(), new ObjectId());
 		
 		PaginatedResults<RollingStock> pagResults =
-				new RollingStockResults(results, range);
+				new RollingStockResults(results, null, range);
 		
 		assertEquals(true, pagResults.hasPreviousPage());
 		assertEquals(false, pagResults.hasNextPage());

@@ -74,12 +74,12 @@ public class BrowseRepositoryImpl implements BrowseRepository {
 
 	@Override
 	public PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range) {
-		return runRangeQuery(MongoSearchCriteria.buildCriteria(sc), range);
+		return runRangeQuery(MongoSearchCriteria.buildCriteria(sc), sc, range);
 	}
 
 	@Override
 	public PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range) {
-		return runRangeQuery(where("tag").is(tag), range);
+		return runRangeQuery(where("tag").is(tag), new SearchCriteria(), range);
 	}
 
 	@Override
@@ -87,10 +87,10 @@ public class BrowseRepositoryImpl implements BrowseRepository {
 		return mongo.findOne(query(where("slug").is(slug)), entityClass);
 	}
 	
-	private RollingStockResults runRangeQuery(Criteria criteria, RangeRequest range) {
+	private RollingStockResults runRangeQuery(Criteria criteria, SearchCriteria sc, RangeRequest range) {
 		final Query query = buildQuery(criteria, range);
 		final List<RollingStock> results = mongo.find(query, RollingStock.class);
-		return new RollingStockResults(results, range);
+		return new RollingStockResults(results, sc, range);
 	}
 	
 	private <T> Iterable<T> findAll(Class<T> clazz) {

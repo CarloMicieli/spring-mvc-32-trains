@@ -15,7 +15,6 @@
  */
 package com.trenako.services;
 
-import com.trenako.criteria.SearchCriteria;
 import com.trenako.criteria.SearchRequest;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
@@ -26,6 +25,7 @@ import com.trenako.results.RangeRequest;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
+
 /**
  * It represents a service for the rolling stocks browsing.
  * @author Carlo Micieli
@@ -69,22 +69,7 @@ public interface BrowseService {
 	 * @param range the {@code RangeRequest} information
 	 * @return a {@code RollingStock} list
 	 */
-	PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range);
-
-	/**
-	 * Returns the {@code RollingStock} list according the provided search criteria.
-	 * @param sc the search criteria
-	 * @param range the {@code RangeRequest} information
-	 * @return a {@code RollingStock} list
-	 */
 	PaginatedResults<RollingStock> findByCriteria(SearchRequest sc, RangeRequest range);
-	
-	/**
-	 * Loading the search criteria information from the database.
-	 * @param sc the original {@code SearchCriteria} request
-	 * @return an immutable {@code SearchCriteria}
-	 */
-	SearchCriteria loadSearchCriteria(SearchCriteria sc);
 
 	/**
 	 * Returns the {@code Brand} with the provided slug.

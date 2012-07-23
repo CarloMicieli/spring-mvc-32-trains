@@ -17,6 +17,8 @@ package com.trenako.results;
 
 import org.bson.types.ObjectId;
 
+import com.trenako.criteria.SearchCriteria;
+
 /**
  * It represents the public interface for paginated result sets.
  * <p>
@@ -39,6 +41,12 @@ import org.bson.types.ObjectId;
  * @author Carlo Micieli
  */
 public interface PaginatedResults<T> {
+	
+	/**
+	 * Returns the search criteria that produced this result set.
+	 * @return the search criteria
+	 */
+	SearchCriteria getCriteria();
 
 	/**
 	 * Returns the minimum {@code id} in the result page.

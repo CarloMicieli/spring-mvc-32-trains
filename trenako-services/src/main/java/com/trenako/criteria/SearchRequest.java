@@ -18,6 +18,8 @@ package com.trenako.criteria;
 import java.util.EnumMap;
 import java.util.Map;
 
+import org.springframework.util.StringUtils;
+
 /**
  * This class represent a container for rolling stocks
  * search criteria.
@@ -43,11 +45,33 @@ public class SearchRequest {
 	}
 	
 	/**
+	 * Creates a new {@code SearchRequest}.
+	 * @param brand
+	 * @param scale
+	 * @param railway
+	 * @param era
+	 * @param cat
+	 * @param powerMethod
+	 * @param category
+	 */
+	public SearchRequest(String brand, String scale, String railway, String era, String cat, String powerMethod, String category) {
+		this();
+		
+		this.setBrand(brand);
+		this.setCat(cat);
+		this.setCategory(category);
+		this.setEra(era);
+		this.setPowerMethod(powerMethod);
+		this.setRailway(railway);
+		this.setScale(scale);
+	}
+	
+	/**
 	 * Sets the {@code power method} search criteria.
 	 * @param powerMethod the {@code power method} 
 	 */
 	public void setPowerMethod(String powerMethod) {
-		values.put(Criteria.POWER_METHOD, powerMethod);
+		put(Criteria.POWER_METHOD, powerMethod);
 	}
 	
 	/**
@@ -55,7 +79,7 @@ public class SearchRequest {
 	 * @param brand the {@code Brand} 
 	 */
 	public void setBrand(String brand) {
-		values.put(Criteria.BRAND, brand);
+		put(Criteria.BRAND, brand);
 	}
 	
 	/**
@@ -63,7 +87,7 @@ public class SearchRequest {
 	 * @param scale the {@code Scale} 
 	 */
 	public void setScale(String scale) {
-		values.put(Criteria.SCALE, scale);
+		put(Criteria.SCALE, scale);
 	}
 	
 	/**
@@ -71,7 +95,7 @@ public class SearchRequest {
 	 * @param category the {@code Category} 
 	 */
 	public void setCategory(String category) {
-		values.put(Criteria.CATEGORY, category);
+		put(Criteria.CATEGORY, category);
 	}
 
 	/**
@@ -79,7 +103,7 @@ public class SearchRequest {
 	 * @param cat the {@code Cat} 
 	 */
 	public void setCat(String cat) {
-		values.put(Criteria.CAT, cat.toString());
+		put(Criteria.CAT, cat);
 	}
 	
 	/**
@@ -87,7 +111,7 @@ public class SearchRequest {
 	 * @param era the {@code Era} 
 	 */
 	public void setEra(String era) {
-		values.put(Criteria.ERA, era);
+		put(Criteria.ERA, era);
 	}
 	
 	/**
@@ -95,7 +119,27 @@ public class SearchRequest {
 	 * @param railway the {@code Railway} 
 	 */
 	public void setRailway(String railway) {
-		values.put(Criteria.RAILWAY, railway);
+		put(Criteria.RAILWAY, railway);
+	}
+	
+	/**
+	 * Checks whether the current {@code SearchRequest} contains 
+	 * the provided search criterion.
+	 * 
+	 * @param criteria the search criterion to be checked
+	 * @return {@code true} if the criterion exists; {@code false} otherwise
+	 */
+	public boolean has(Criteria criteria) {
+		return values.containsKey(criteria);
+	}
+	
+	/**
+	 * Returns the value for the provided search criterion.
+	 * @param criteria the search criterion
+	 * @return the criterion key if exists; {@code null} otherwise
+	 */
+	public String get(Criteria criteria) {
+		return values.get(criteria);
 	}
 	
 	/**
@@ -123,5 +167,11 @@ public class SearchRequest {
 	@Override
 	public String toString() {
 		return values.toString();
+	}
+	
+	private void put(Criteria criteria, String value) {
+		if (StringUtils.hasText(value)) {
+			values.put(criteria, value);
+		}
 	}
 }
