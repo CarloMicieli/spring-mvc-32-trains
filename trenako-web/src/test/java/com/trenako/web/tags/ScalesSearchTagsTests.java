@@ -15,6 +15,7 @@
  */
 package com.trenako.web.tags;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static com.trenako.web.tags.html.HtmlBuilder.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -47,9 +48,7 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 	ScalesSearchTags tag;
 	BrowseService service;
 	
-	List<Scale> scales = Collections.unmodifiableList(Arrays.asList(
-			new Scale.Builder("H0").slug("H0").ratio(870).build(),
-			new Scale.Builder("N").slug("N").ratio(1600).build()));
+	List<Scale> scales = Collections.unmodifiableList(Arrays.asList(scaleH0(), scaleN()));
 	
 	@Override
 	protected void setupTag(PageContext pageContext, MessageSource messageSource) {
@@ -72,7 +71,7 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 	@Test
 	public void shouldRenderScalesNavigationList() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.railway("DB")
+			.railway(db())
 			.build();
 		
 		setCriteria(sc);
@@ -82,8 +81,8 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 		
 		HtmlTag html = snippet(
 			li("scale").cssClass("nav-header"),
-			snippet(li(a("H0 (1:87)").href("/trenako-web", "/rs/scale/H0/railway/DB"))),
-			snippet(li(a("N (1:160)").href("/trenako-web", "/rs/scale/N/railway/DB")))
+			snippet(li(a("H0 (1:87)").href("/trenako-web", "/rs/scale/h0/railway/db"))),
+			snippet(li(a("N (1:160)").href("/trenako-web", "/rs/scale/n/railway/db")))
 				);
 		
 		String output = renderTag();
@@ -93,8 +92,8 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 	@Test
 	public void shouldRenderNavigationListWhenScaleAlreadySelected() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.scale("H0")
-			.railway("DB")
+			.scale(scaleH0())
+			.railway(db())
 			.build();
 		
 		setCriteria(sc);
@@ -104,9 +103,9 @@ public class ScalesSearchTagsTests extends AbstractSpringTagsTest {
 		
 		HtmlTag html = snippet(
 				li("scale").cssClass("nav-header"),
-				li(a("H0").href("#")).cssClass("active"),
+				li(a("H0 (1:87)").href("#")).cssClass("active"),
 				li("").cssClass("divider"),
-				li(a("remove").href("/trenako-web/rs/railway/DB"))
+				li(a("remove").href("/trenako-web/rs/railway/db"))
 			);
 		
 		String output = renderTag();

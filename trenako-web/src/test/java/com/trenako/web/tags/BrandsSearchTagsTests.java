@@ -15,6 +15,7 @@
  */
 package com.trenako.web.tags;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static com.trenako.web.tags.html.HtmlBuilder.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -47,9 +48,7 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 	BrandsSearchTags tag;
 	BrowseService service;
 	
-	List<Brand> brands = Collections.unmodifiableList(Arrays.asList(
-			new Brand.Builder("ACME").slug("acme").build(),
-			new Brand.Builder("Roco").slug("roco").build()));
+	List<Brand> brands = Collections.unmodifiableList(Arrays.asList(acme(), roco()));
 	
 	@Override
 	protected void setupTag(PageContext pageContext, MessageSource messageSource) {
@@ -72,7 +71,7 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 	@Test
 	public void shouldRenderBrandsNavigationList() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.railway("DB")
+			.railway(db())
 			.build();
 		
 		setCriteria(sc);
@@ -82,8 +81,8 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 		
 		HtmlTag html = snippet(
 			li("brand").cssClass("nav-header"),
-			snippet(li(a("ACME").href("/trenako-web", "/rs/brand/acme/railway/DB"))),
-			snippet(li(a("Roco").href("/trenako-web", "/rs/brand/roco/railway/DB")))
+			snippet(li(a("ACME").href("/trenako-web", "/rs/brand/acme/railway/db"))),
+			snippet(li(a("Roco").href("/trenako-web", "/rs/brand/roco/railway/db")))
 				);
 		
 		String output = renderTag();
@@ -93,8 +92,8 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 	@Test
 	public void shouldRenderNavigationListWhenBrandAlreadySelected() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.railway("DB")
+			.brand(acme())
+			.railway(db())
 			.build();
 		
 		setCriteria(sc);
@@ -106,7 +105,7 @@ public class BrandsSearchTagsTests extends AbstractSpringTagsTest {
 				li("brand").cssClass("nav-header"),
 				li(a("ACME").href("#")).cssClass("active"),
 				li("").cssClass("divider"),
-				li(a("remove").href("/trenako-web/rs/railway/DB"))
+				li(a("remove").href("/trenako-web/rs/railway/db"))
 			);
 		
 		String output = renderTag();

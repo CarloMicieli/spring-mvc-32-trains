@@ -20,13 +20,18 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
+import java.util.Arrays;
+
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.trenako.criteria.SearchCriteria;
+import com.trenako.criteria.SearchRequest;
+import com.trenako.entities.RollingStock;
 import com.trenako.results.RangeRequest;
+import com.trenako.results.RangeRequestImpl;
+import com.trenako.results.mongo.RollingStockResults;
 import com.trenako.services.BrowseService;
 import com.trenako.web.test.AbstractSpringControllerTests;
 
@@ -39,6 +44,16 @@ public class RollingStockSearchControllerMappingTests extends AbstractSpringCont
 	
 	private @Autowired BrowseService mockService;
 	
+	@Override
+	protected void init() {
+		RollingStockResults value = new RollingStockResults(
+				Arrays.asList(new RollingStock(), new RollingStock()),
+				new RangeRequestImpl());
+		
+		when(mockService.findByCriteria(isA(SearchRequest.class), isA(RangeRequest.class)))
+			.thenReturn(value);
+	}
+		
 	@After
 	public void cleanUp() {
 		reset(mockService);
@@ -47,31 +62,33 @@ public class RollingStockSearchControllerMappingTests extends AbstractSpringCont
 	@Test
 	public void shouldPerformSearchByBrands() throws Exception {
 		
-		mockMvc().perform(get("/rs/brand/{brand}", "ACME"))
-			.andExpect(status().isOk());
+		mockMvc().perform(get("/rs/brand/{brand}", "acme"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("results"));
 		
-		ArgumentCaptor<SearchCriteria> arg = ArgumentCaptor.forClass(SearchCriteria.class);
+		ArgumentCaptor<SearchRequest> arg = ArgumentCaptor.forClass(SearchRequest.class);
 		verify(mockService, times(1)).findByCriteria(arg.capture(), isA(RangeRequest.class));
 		
-		SearchCriteria expected = new SearchCriteria.Builder()
-			.brand("ACME").build();
+		SearchRequest expected = new SearchRequest();
+		expected.setBrand("acme");
 		assertEquals(expected, arg.getValue());
 	}
 	
 	@Test
 	public void shouldPerformSearchWithMoreCriteria() throws Exception {
+		mockMvc().perform(get("/rs/brand/{brand}/scale/{scale}/era/{era}", "acme", "h0", "iii"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("results"));
 		
-		mockMvc().perform(get("/rs/brand/{brand}/scale/{scale}/era/{era}", "ACME", "H0", "III"))
-			.andExpect(status().isOk());
-		
-		ArgumentCaptor<SearchCriteria> arg = ArgumentCaptor.forClass(SearchCriteria.class);
+		ArgumentCaptor<SearchRequest> arg = ArgumentCaptor.forClass(SearchRequest.class);
 		verify(mockService, times(1)).findByCriteria(arg.capture(), isA(RangeRequest.class));
 		
-		SearchCriteria expected = new SearchCriteria.Builder()
-			.brand("ACME")
-			.scale("H0")
-			.era("III")
-			.build();
+		SearchRequest expected = new SearchRequest();
+		expected.setBrand("acme");
+		expected.setScale("h0");
+		expected.setEra("iii");
 		assertEquals(expected, arg.getValue());
 	}
 }

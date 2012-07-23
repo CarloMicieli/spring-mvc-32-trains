@@ -27,6 +27,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
+import com.trenako.criteria.Criteria;
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.web.tags.html.HtmlTag;
 
@@ -76,8 +77,8 @@ public class BreadcrumbTags extends SpringTagSupport {
 		
 		try {
 			List<HtmlTag> items = new ArrayList<HtmlTag>();
-			for (String criteriaName : SearchCriteria.KEYS) {
-				addElement(items, contextPath, criteriaName);
+			for (Criteria crit : getCriteria().criteria()) {
+				addElement(items, contextPath, crit);
 			}
 			
 			HtmlTag list = ul(tags(items)).cssClass("breadcrumb");
@@ -90,9 +91,11 @@ public class BreadcrumbTags extends SpringTagSupport {
 		return Tag.SKIP_BODY;
 	}
 	
-	private void addElement(List<HtmlTag> items, String contextPath, String criteriaName) {
-		Pair<String, String> crit = getCriteria().get(criteriaName);
+	private void addElement(List<HtmlTag> items, String contextPath, Criteria criterion) {
+		Pair<String, String> crit = getCriteria().get(criterion);
 		if (crit == null) return;
+		
+		String criteriaName = criterion.criterionName();
 		
 		String path = new StringBuilder()
 			.append("/rs/")

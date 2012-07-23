@@ -15,6 +15,7 @@
  */
 package com.trenako.web.tags;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static com.trenako.web.tags.html.HtmlBuilder.a;
 import static com.trenako.web.tags.html.HtmlBuilder.li;
 import static com.trenako.web.tags.html.HtmlBuilder.snippet;
@@ -73,7 +74,7 @@ public class ErasSearchTagsTests extends AbstractSpringTagsTest {
 	@Test
 	public void shouldRenderErasNavigationList() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.railway("DB")
+			.railway(db())
 			.build();
 		
 		setCriteria(sc);
@@ -84,12 +85,12 @@ public class ErasSearchTagsTests extends AbstractSpringTagsTest {
 		
 		HtmlTag html = snippet(
 			li("era").cssClass("nav-header"),
-			snippet(li(a("i").href("/trenako-web", "/rs/railway/DB/era/i"))),
-			snippet(li(a("ii").href("/trenako-web", "/rs/railway/DB/era/ii"))),
-			snippet(li(a("iii").href("/trenako-web", "/rs/railway/DB/era/iii"))),
-			snippet(li(a("iv").href("/trenako-web", "/rs/railway/DB/era/iv"))),
-			snippet(li(a("v").href("/trenako-web", "/rs/railway/DB/era/v"))),
-			snippet(li(a("vi").href("/trenako-web", "/rs/railway/DB/era/vi")))
+			snippet(li(a("i").href("/trenako-web", "/rs/railway/db/era/i"))),
+			snippet(li(a("ii").href("/trenako-web", "/rs/railway/db/era/ii"))),
+			snippet(li(a("iii").href("/trenako-web", "/rs/railway/db/era/iii"))),
+			snippet(li(a("iv").href("/trenako-web", "/rs/railway/db/era/iv"))),
+			snippet(li(a("v").href("/trenako-web", "/rs/railway/db/era/v"))),
+			snippet(li(a("vi").href("/trenako-web", "/rs/railway/db/era/vi")))
 				);
 		
 		String output = renderTag();
@@ -99,8 +100,8 @@ public class ErasSearchTagsTests extends AbstractSpringTagsTest {
 	@Test
 	public void shouldRenderNavigationListWhenEraAlreadySelected() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.era("III")
-			.railway("DB")
+			.era(eraIII())
+			.railway(db())
 			.build();
 		
 		setCriteria(sc);
@@ -110,9 +111,9 @@ public class ErasSearchTagsTests extends AbstractSpringTagsTest {
 		
 		HtmlTag html = snippet(
 				li("era").cssClass("nav-header"),
-				li(a("III").href("#")).cssClass("active"),
+				li(a("iii").href("#")).cssClass("active"),
 				li("").cssClass("divider"),
-				li(a("remove").href("/trenako-web/rs/railway/DB"))
+				li(a("remove").href("/trenako-web/rs/railway/db"))
 			);
 		
 		String output = renderTag();

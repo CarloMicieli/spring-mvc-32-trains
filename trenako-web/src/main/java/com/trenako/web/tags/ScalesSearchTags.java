@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import com.trenako.criteria.Criteria;
 import com.trenako.entities.Scale;
 
 /**
@@ -36,11 +37,11 @@ public class ScalesSearchTags extends SearchBarItemTags {
 
 		try {
 			Iterable<Scale> scales = null;
-			if (!getCriteria().has("scale")) {
+			if (!getCriteria().has(Criteria.SCALE)) {
 				scales = getService().scales();
 			}
 			
-			jspWriter.append(render(scales, "scale", contextPath).toString());
+			jspWriter.append(render(scales, Criteria.SCALE, contextPath).toString());
 			
 		} catch (IOException e) {
 			throw new JspException(e);

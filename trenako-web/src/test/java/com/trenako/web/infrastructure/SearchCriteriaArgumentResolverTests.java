@@ -26,12 +26,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder;
 
-import com.trenako.criteria.SearchCriteria;
+import com.trenako.criteria.SearchRequest;
 import com.trenako.results.RangeRequest;
 
 /**
@@ -40,15 +39,15 @@ import com.trenako.results.RangeRequest;
  *
  */
 public class SearchCriteriaArgumentResolverTests {
-	SearchCriteria searchCriteria = new SearchCriteria();
-	SearchCriteriaArgumentResolver resolver = new SearchCriteriaArgumentResolver(searchCriteria);
+	SearchRequest searchRequest = new SearchRequest();
+	SearchRequestArgumentResolver resolver = new SearchRequestArgumentResolver(searchRequest);
 	
 	MethodParameter parSearchCriteria;
 	MethodParameter parRangeRequest;
 	
 	@Before
 	public void setup() throws Exception {
-		Method method = getClass().getMethod("testmethod", SearchCriteria.class, RangeRequest.class);
+		Method method = getClass().getMethod("testmethod", SearchRequest.class, RangeRequest.class);
 		parSearchCriteria = new MethodParameter(method, 0);
 		parRangeRequest = new MethodParameter(method, 1);
 	}
@@ -67,8 +66,8 @@ public class SearchCriteriaArgumentResolverTests {
 		when(webRequest.getNativeRequest()).thenReturn(request);
 		
 		WebDataBinderFactory binderFactory = mock(WebDataBinderFactory.class);
-		when(binderFactory.createBinder(eq(webRequest), isA(SearchCriteria.class), eq("")))
-			.thenReturn(new ExtendedServletRequestDataBinder(searchCriteria, ""));
+		when(binderFactory.createBinder(eq(webRequest), isA(SearchRequest.class), eq("")))
+			.thenReturn(new ExtendedServletRequestDataBinder(searchRequest, ""));
 		
 		Object obj = resolver.resolveArgument(parSearchCriteria,
 				null, 
@@ -76,17 +75,16 @@ public class SearchCriteriaArgumentResolverTests {
 				binderFactory);
 		
 		assertNotNull(obj);
-		assertTrue(obj instanceof SearchCriteria);
+		assertTrue(obj instanceof SearchRequest);
 		
-		SearchCriteria expected = new SearchCriteria.Builder()
-			.brand("acme")
-			.railway("fs")
-			.build();
+		SearchRequest expected = new SearchRequest();
+		expected.setBrand("acme");
+		expected.setRailway("fs");
 		
-		assertEquals(expected, (SearchCriteria) obj);
+		assertEquals(expected, (SearchRequest) obj);
 	}
 	
 	// helper method for testing
-	public void testmethod(@ModelAttribute SearchCriteria sc, @ModelAttribute RangeRequest range) {
+	public void testmethod(SearchRequest sc, RangeRequest range) {
 	}
 }

@@ -15,6 +15,7 @@
  */
 package com.trenako.criteria;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -53,7 +54,7 @@ public class SearchCriteriaTests {
 	@Test
 	public void shouldReturnNullIfCriterionNotSet() {
 		SearchCriteria y = new SearchCriteria.Builder()
-			.brand("ACME")
+			.brand(acme())
 			.build();
 		assertNull(y.getPowerMethod());
 	}
@@ -64,21 +65,17 @@ public class SearchCriteriaTests {
 		assertTrue(x.isEmpty());
 		
 		SearchCriteria y = new SearchCriteria.Builder()
-			.brand("ACME")
+			.brand(acme())
 			.build();
 		assertFalse(y.isEmpty());
 	}
 	
 	@Test
 	public void shouldGetPairsFromSearchCriteria() {
-		Brand brand = new Brand.Builder("ACME").slug("acme").build();
-		Railway railway = new Railway.Builder("FS").companyName("Ferrovie dello stato").build();
-		Scale scale = new Scale.Builder("H0").ratio(870).build();
-		
 		SearchCriteria x = new SearchCriteria.Builder()
-			.brand(brand)
-			.railway(railway)
-			.scale(scale)
+			.brand(acme())
+			.railway(fs())
+			.scale(scaleH0())
 			.build();
 		
 		assertEquals("(acme,ACME)", x.get(Brand.class).toString());
@@ -93,30 +90,15 @@ public class SearchCriteriaTests {
 		assertNull(notFound);	
 	}
 	
-	@Test(expected = UnsupportedOperationException.class)
-	public void shouldCreateReadonlySearchCriteria() {
-		SearchCriteria x = new SearchCriteria.Builder()
-			.brand("ACME")
-			.build();
-		
-		SearchCriteria y = SearchCriteria.immutableSearchCriteria(x);
-		y.setCategory("category");
-	}
-	
 	@Test
 	public void shouldCheckIfBrandCriteriaIsSet() {
 		SearchCriteria x = new SearchCriteria.Builder()
-			.brand("ACME")
+			.brand(acme())
 			.build();
 		assertEquals(true, x.hasBrand());
 		
-		SearchCriteria y = new SearchCriteria.Builder()
-			.brand("")
-			.build();
-		assertEquals(false, y.hasBrand());
-		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.brand((String)null)
+			.brand(null)
 			.build();
 		assertEquals(false, z.hasBrand());
 	}
@@ -124,17 +106,13 @@ public class SearchCriteriaTests {
 	@Test
 	public void shouldCheckIfCategoryCriteriaIsSet() {
 		SearchCriteria x = new SearchCriteria.Builder()
-			.category("electric-locomotives")
+			.category(steamLocomotives())
 			.build();
 		assertEquals(true, x.hasCategory());
 		
-		SearchCriteria y = new SearchCriteria.Builder()
-			.category("")
-			.build();
-		assertEquals(false, y.hasCategory());
 		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.category((String) null)
+			.category(null)
 			.build();
 		assertEquals(false, z.hasCategory());
 	}
@@ -142,17 +120,12 @@ public class SearchCriteriaTests {
 	@Test
 	public void shouldCheckIfCatCriteriaIsSet() {
 		SearchCriteria x = new SearchCriteria.Builder()
-			.cat("ac-electric-locomotives")
+			.cat(dcElectricLocomotives())
 			.build();
 		assertEquals(true, x.hasCat());
 		
-		SearchCriteria y = new SearchCriteria.Builder()
-			.cat("")
-			.build();
-		assertEquals(false, y.hasCat());
-		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.cat((String) null)
+			.cat(null)
 			.build();
 		assertEquals(false, z.hasCat());
 	}
@@ -160,17 +133,12 @@ public class SearchCriteriaTests {
 	@Test
 	public void shouldCheckIfEraCriteriaIsSet() {
 		SearchCriteria x = new SearchCriteria.Builder()
-			.era("IV")
+			.era(eraIII())
 			.build();
 		assertEquals(true, x.hasEra());
 		
-		SearchCriteria y = new SearchCriteria.Builder()
-			.era("")
-			.build();
-		assertEquals(false, y.hasEra());
-		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.era((String) null)
+			.era(null)
 			.build();
 		assertEquals(false, z.hasEra());
 	}
@@ -178,17 +146,12 @@ public class SearchCriteriaTests {
 	@Test
 	public void shouldCheckIfRailwayCriteriaIsSet() {
 		SearchCriteria x = new SearchCriteria.Builder()
-			.railway("DB")
+			.railway(fs())
 			.build();
 		assertEquals(true, x.hasRailway());
 		
-		SearchCriteria y = new SearchCriteria.Builder()
-			.railway("")
-			.build();
-		assertEquals(false, y.hasRailway());
-		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.railway((String) null)
+			.railway(null)
 			.build();
 		assertEquals(false, z.hasRailway());
 	}
@@ -196,17 +159,12 @@ public class SearchCriteriaTests {
 	@Test
 	public void shouldCheckIfScaleCriteriaIsSet() {
 		SearchCriteria x = new SearchCriteria.Builder()
-			.scale("H0")
+			.scale(scaleH0())
 			.build();
 		assertEquals(true, x.hasScale());
 		
-		SearchCriteria y = new SearchCriteria.Builder()
-			.scale("")
-			.build();
-		assertEquals(false, y.hasScale());
-		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.scale((String) null)
+			.scale(null)
 			.build();
 		assertEquals(false, z.hasScale());
 	}
@@ -214,17 +172,12 @@ public class SearchCriteriaTests {
 	@Test
 	public void shouldCheckIfPowerMethodCriteriaIsSet() {
 		SearchCriteria x = new SearchCriteria.Builder()
-			.powerMethod("DC")
+			.powerMethod(dc())
 			.build();
 		assertEquals(true, x.hasPowerMethod());
 		
-		SearchCriteria y = new SearchCriteria.Builder()
-			.powerMethod("")
-			.build();
-		assertEquals(false, y.hasPowerMethod());
-		
 		SearchCriteria z = new SearchCriteria.Builder()
-			.powerMethod((String) null)
+			.powerMethod(null)
 			.build();
 		assertEquals(false, z.hasPowerMethod());
 	}
@@ -232,65 +185,62 @@ public class SearchCriteriaTests {
 	@Test
 	public void shouldReturnStringRepresentation() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.category("electric-locomotives")
-			.cat("ac-electric-locomotives")
-			.era("IV")
-			.powerMethod("AC")
-			.railway("DB")
-			.scale("H0")
+			.brand(acme())
+			.category(steamLocomotives())
+			.cat(dcElectricLocomotives())
+			.era(eraIII())
+			.powerMethod(dc())
+			.railway(fs())
+			.scale(scaleH0())
 			.build();
 		
 		String expected = 
-				"{brand=ACME, " +
-				"scale=H0, " +
-				"cat=ac-electric-locomotives, "+
-				"railway=DB, "+
-				"era=IV, "+
-				"powermethod=AC, "+
-				"category=electric-locomotives}";
+				"{BRAND=(acme,ACME), SCALE=(h0,H0 (1:87)), " +
+				"CAT=(dc-electric-locomotives,dc-electric-locomotives), " +
+				"RAILWAY=(fs,FS (Ferrovie dello stato)), ERA=(iii,iii), " +
+				"POWER_METHOD=(dc,dc), CATEGORY=(steam-locomotives,steam-locomotives)}";
 		assertEquals(expected, sc.toString());
 	}
 	
 	@Test
 	public void shouldFillTheSearchCriteria() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("brand")
-			.category("category")
-			.cat("ac-electric-locomotives")
-			.era("era")
-			.powerMethod("powerMethod")
-			.railway("railway")
-			.scale("scale")
+			.brand(acme())
+			.category(steamLocomotives())
+			.cat(acElectricLocomotives())
+			.era(eraIII())
+			.powerMethod(dc())
+			.railway(fs())
+			.scale(scaleH0())
 			.build();
-		assertEquals("brand", sc.getBrand());
-		assertEquals("category", sc.getCategory());
-		assertEquals("ac-electric-locomotives", sc.getCat().toString());
-		assertEquals("era", sc.getEra());
-		assertEquals("powerMethod", sc.getPowerMethod());
-		assertEquals("scale", sc.getScale());
-		assertEquals("railway", sc.getRailway());
+		assertEquals("acme", sc.getBrand());
+		assertEquals("steam-locomotives", sc.getCategory());
+		assertEquals("ac-electric-locomotives", sc.getCat());
+		assertEquals("iii", sc.getEra());
+		assertEquals("dc", sc.getPowerMethod());
+		assertEquals("h0", sc.getScale());
+		assertEquals("fs", sc.getRailway());
 	}
 
 	@Test
 	public void shouldReturnTrueIfTwoCriteriaAreEquals() {
 		SearchCriteria x = new SearchCriteria.Builder()
-			.brand("brand")
-			.category("category")
-			.cat("ac-electric-locomotives")
-			.era("era")
-			.powerMethod("powerMethod")
-			.railway("railway")
-			.scale("scale")
+			.brand(acme())
+			.category(steamLocomotives())
+			.cat(dcElectricLocomotives())
+			.era(eraIII())
+			.powerMethod(dc())
+			.railway(fs())
+			.scale(scaleH0())
 			.build();
 		SearchCriteria y = new SearchCriteria.Builder()
-			.brand("brand")
-			.category("category")
-			.cat("ac-electric-locomotives")
-			.era("era")
-			.powerMethod("powerMethod")
-			.railway("railway")
-			.scale("scale")
+			.brand(acme())
+			.category(steamLocomotives())
+			.cat(dcElectricLocomotives())
+			.era(eraIII())
+			.powerMethod(dc())
+			.railway(fs())
+			.scale(scaleH0())
 			.build();
 		assertEquals(true, x.equals(y));
 	}
@@ -298,23 +248,23 @@ public class SearchCriteriaTests {
 	@Test
 	public void shouldReturnsFalseIfTwoCriteriaAreDifferent() {
 		SearchCriteria x = new SearchCriteria.Builder()
-			.brand("brand")
-			.category("category")
-			.cat("ac-electric-locomotives")
-			.era("era")
-			.powerMethod("DC")
-			.railway("railway")
-			.scale("scale")
+			.brand(acme())
+			.category(steamLocomotives())
+			.cat(dcElectricLocomotives())
+			.era(eraIII())
+			.powerMethod(dc())
+			.railway(db())
+			.scale(scaleH0())
 			.build();
 		SearchCriteria y = new SearchCriteria.Builder()
-			.brand("brand")
-			.category("category")
-			.cat("ac-electric-locomotives")
-			.era("era")
-			.powerMethod("AC")
-			.railway("railway")
-			.scale("scale")
+			.brand(acme())
+			.category(steamLocomotives())
+			.cat(dcElectricLocomotives())
+			.era(eraIII())
+			.powerMethod(dc())
+			.railway(fs())
+			.scale(scaleN())
 			.build();
 		assertEquals(false, x.equals(y));
-	}
+	}	
 }

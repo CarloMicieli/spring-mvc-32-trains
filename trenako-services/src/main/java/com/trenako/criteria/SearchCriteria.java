@@ -17,14 +17,11 @@ package com.trenako.criteria;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.EnumMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.trenako.entities.Brand;
@@ -37,7 +34,8 @@ import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
 
 /**
- * It represents rolling stock search criteria.
+ * It represents immutable rolling stock search criteria as used
+ * to perform queries against the database.
  * <p>
  * The best way to create a {@code SearchCriteria} is using the
  * {@link SearchCriteria.Builder} class.
@@ -53,102 +51,27 @@ import com.trenako.values.PowerMethod;
  */
 public class SearchCriteria {
 	
-	private Map<String, Pair<String, String>> values = new HashMap<String, Pair<String, String>>();
+	private final Map<Criteria, Pair<String, String>> values;// = new HashMap<String, Pair<String, String>>();
 	
-	private final static Map<Class<?>, String> criteriaTypes = initTypesMap();
-	
-	/**
-	 * The name for the {@code PowerMethod} criterion.
-	 * <p>
-	 * The default value is <em>"powermethod"</em>.
-	 * </p>
-	 */
-	private final static String POWER_METHOD_KEY = "powermethod";
-	
-	/**
-	 * The name for the {@code Brand} criterion.
-	 * <p>
-	 * The default value is <em>"brand"</em>.
-	 * </p>
-	 */	
-	private final static String BRAND_KEY = "brand";
-	
-	/**
-	 * The name for the {@code Scale} criterion.
-	 * <p>
-	 * The default value is <em>"scale"</em>.
-	 * </p>
-	 */	
-	private final static String SCALE_KEY = "scale";
-	
-	/**
-	 * The name for the {@code Category} criterion.
-	 * <p>
-	 * The default value is <em>"category"</em>.
-	 * </p>
-	 */
-	private final static String CATEGORY_KEY = "category";
-	
-	/**
-	 * The name for the {@code Cat} criterion.
-	 * <p>
-	 * The default value is <em>"cat"</em>.
-	 * </p>
-	 */
-	private final static String CAT_KEY = "cat";
-	
-	/**
-	 * The name for the {@code Era} criterion.
-	 * <p>
-	 * The default value is <em>"era"</em>.
-	 * </p>
-	 */
-	private final static String ERA_KEY = "era";
-	
-	/**
-	 * The name for the {@code Railway} criterion.
-	 * <p>
-	 * The default value is <em>"railway"</em>.
-	 * </p>
-	 */
-	private final static String RAILWAY_KEY = "railway";
-	
-	/**
-	 * The allowed search criteria names.
-	 * <p>
-	 * The criteria names are listed by order of <em>"importance"</em>. 
-	 * Other application components depend on this particular order; any change 
-	 * can break something.
-	 * </p>
-	 */
-	public final static List<String> KEYS = 
-			Collections.unmodifiableList(
-					Arrays.asList(BRAND_KEY, SCALE_KEY, CAT_KEY, RAILWAY_KEY, ERA_KEY, POWER_METHOD_KEY, CATEGORY_KEY));
-
-	public static final SearchCriteria EMPTY = new SearchCriteria(
-			Collections.<String, Pair<String, String>> emptyMap()
-			);
-	
-	private SearchCriteria(Map<String, Pair<String, String>> values) {
+	// Init search criteria with the builder values
+	private SearchCriteria(Map<Criteria, Pair<String, String>> values) {
 		this.values = values;
 	}
 	
-	private static Map<Class<?>, String> initTypesMap() {
-		Map<Class<?> , String> types = new HashMap<Class<?>, String>();
-		types.put(Brand.class, BRAND_KEY);
-		types.put(Era.class, ERA_KEY);
-		types.put(Category.class, CATEGORY_KEY);
-		types.put(Cat.class, CAT_KEY);
-		types.put(PowerMethod.class, POWER_METHOD_KEY);
-		types.put(Scale.class, SCALE_KEY);
-		types.put(Railway.class, RAILWAY_KEY);
-		return Collections.unmodifiableMap(types);
-	}
-
+	public static final Iterable<Criteria> KEYS = Arrays.asList(Criteria.values());
+	
+	/**
+	 * Returns an empty immutable {@code SearchCriteria}.
+	 * @return an empty {@code SearchCriteria}
+	 */
+	public static final SearchCriteria EMPTY = new SearchCriteria(
+			Collections.<Criteria, Pair<String, String>> emptyMap());
+	
 	/**
 	 * Creates an empty {@code SearchCriteria}.
 	 */
 	public SearchCriteria() {
+		values = new EnumMap<Criteria, Pair<String, String>>(Criteria.class);
 	}
 	
 	/**
@@ -172,7 +95,7 @@ public class SearchCriteria {
 	 *
 	 */
 	public static class Builder	{
-		private Map<String, Pair<String, String>> values = null;
+		private Map<Criteria, Pair<String, String>> values = null;
 		
 		/**
 		 * Creates a new {@code SearchCriteria}.
@@ -183,17 +106,7 @@ public class SearchCriteria {
 		 * </p>
 		 */
 		public Builder() {
-			values = new HashMap<String, Pair<String, String>>();
-		}
-		
-		/**
-		 * Sets the {@code power method} criteria.
-		 * @param pm the power method
-		 * @return a builder
-		 */
-		public Builder powerMethod(String pm) {
-			add(POWER_METHOD_KEY, pm, pm);
-			return this;
+			values = new EnumMap<Criteria, Pair<String, String>>(Criteria.class);
 		}
 		
 		/**
@@ -208,18 +121,8 @@ public class SearchCriteria {
 		 */
 		public Builder powerMethod(LocalizedEnum<PowerMethod> pm) {
 			if (pm != null) {
-				add(POWER_METHOD_KEY, pm.getKey(), pm.getLabel());
+				add(Criteria.POWER_METHOD, pm.getKey(), pm.getLabel());
 			}
-			return this;
-		}
-		
-		/**
-		 * Sets the {@code brand} criteria.
-		 * @param brand the brand
-		 * @return a builder
-		 */
-		public Builder brand(String brand) {
-			add(BRAND_KEY, brand, brand);
 			return this;
 		}
 		
@@ -235,18 +138,8 @@ public class SearchCriteria {
 		 */
 		public Builder brand(Brand brand) {
 			if (brand != null) {
-				add(BRAND_KEY, brand.getSlug(), brand.label());
+				add(Criteria.BRAND, brand.getSlug(), brand.label());
 			}
-			return this;
-		}
-		
-		/**
-		 * Sets the {@code railway} criteria.
-		 * @param railway the railway
-		 * @return a builder
-		 */
-		public Builder railway(String railway) {
-			add(RAILWAY_KEY, railway, railway);
 			return this;
 		}
 		
@@ -262,18 +155,8 @@ public class SearchCriteria {
 		 */
 		public Builder railway(Railway railway) {
 			if (railway != null) {
-				add(RAILWAY_KEY, railway.getSlug(), railway.label());
+				add(Criteria.RAILWAY, railway.getSlug(), railway.label());
 			}
-			return this;
-		}
-		
-		/**
-		 * Sets the {@code scale} criteria.
-		 * @param scale the scale
-		 * @return a builder
-		 */
-		public Builder scale(String scale) {
-			add(SCALE_KEY, scale, scale);
 			return this;
 		}
 		
@@ -289,19 +172,8 @@ public class SearchCriteria {
 		 */
 		public Builder scale(Scale scale) {
 			if (scale != null) {
-				add(SCALE_KEY, scale.getSlug(), scale.label());
+				add(Criteria.SCALE, scale.getSlug(), scale.label());
 			}
-			return this;
-		}
-		
-		/**
-		 * Sets the {@code powerMethod} and {@code category} criteria.
-		 * 
-		 * @param cat the category
-		 * @return a builder
-		 */
-		public Builder cat(String cat) {
-			add(CAT_KEY, cat, cat);
 			return this;
 		}
 		
@@ -317,18 +189,8 @@ public class SearchCriteria {
 		 */
 		public Builder cat(Cat cat) {
 			if (cat != null) { 
-				add(CAT_KEY, cat.toString(), cat.toString());
+				add(Criteria.CAT, cat.toString(), cat.toString());
 			}
-			return this;
-		}
-		
-		/**
-		 * Sets the {@code category} criteria.
-		 * @param category the category name
-		 * @return a builder
-		 */
-		public Builder category(String category) {
-			add(CATEGORY_KEY, category, category);
 			return this;
 		}
 		
@@ -344,20 +206,11 @@ public class SearchCriteria {
 		 */
 		public Builder category(LocalizedEnum<Category> category) {
 			if (category != null) {
-				add(CATEGORY_KEY, category.getKey(), category.getLabel());
+				add(Criteria.CATEGORY, category.getKey(), category.getLabel());
 			}
 			return this;
 		}
 		
-		/**
-		 * Sets the {@code era} criteria.
-		 * @param era the era
-		 * @return a builder
-		 */
-		public Builder era(String era) {
-			add(ERA_KEY, era, era);
-			return this;
-		}
 		/**
 		 * Sets the {@code era} criteria.
 		 * <p>
@@ -370,7 +223,7 @@ public class SearchCriteria {
 		 */
 		public Builder era(LocalizedEnum<Era> era) {
 			if (era != null) {
-				add(ERA_KEY, era.getKey(), era.getLabel());
+				add(Criteria.ERA, era.getKey(), era.getLabel());
 			}
 			return this;
 		}
@@ -391,19 +244,11 @@ public class SearchCriteria {
 			return immutableSearchCriteria(new SearchCriteria(this.values));
 		}
 		
-		private void add(String criterionName, String key, String label) {
+		private void add(Criteria criteria, String key, String label) {
 			if (StringUtils.hasText(key)) {
-				values.put(criterionName, new ImmutablePair<String, String>(key, label));
+				values.put(criteria, new ImmutablePair<String, String>(key, label));
 			}
 		}
-	}
-	
-	/**
-	 * Sets the {@code power method} search criteria.
-	 * @param powerMethod the {@code power method} 
-	 */
-	public void setPowerMethod(String powerMethod) {
-		addValue(POWER_METHOD_KEY, powerMethod);
 	}
 	
 	/**
@@ -417,7 +262,7 @@ public class SearchCriteria {
 	 * @see com.trenako.values.PowerMethod
 	 */
 	public String getPowerMethod() {
-		return getValue(POWER_METHOD_KEY);
+		return getValue(Criteria.POWER_METHOD);
 	}
 
 	/**
@@ -425,17 +270,9 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasPowerMethod() {
-		return values.containsKey(POWER_METHOD_KEY);
+		return values.containsKey(Criteria.POWER_METHOD);
 	}
 
-	/**
-	 * Sets the {@code Brand} search criteria.
-	 * @param brand the {@code Brand} 
-	 */
-	public void setBrand(String brand) {
-		addValue(BRAND_KEY, brand);
-	}
-	
 	/**
 	 * Returns the {@code brand} search criteria.
 	 * <p>
@@ -447,7 +284,7 @@ public class SearchCriteria {
 	 * @see com.trenako.entities.Brand
 	 */
 	public String getBrand() {
-		return getValue(BRAND_KEY);
+		return getValue(Criteria.BRAND);
 	}
 	
 	/**
@@ -455,17 +292,9 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasBrand() {
-		return values.containsKey(BRAND_KEY);
+		return values.containsKey(Criteria.BRAND);
 	}
 
-	/**
-	 * Sets the {@code Scale} search criteria.
-	 * @param scale the {@code Scale} 
-	 */
-	public void setScale(String scale) {
-		addValue(SCALE_KEY, scale);
-	}
-	
 	/**
 	 * Returns the {@code scale} search criteria.
 	 * <p>
@@ -477,7 +306,7 @@ public class SearchCriteria {
 	 * @see com.trenako.entities.Scale
 	 */
 	public String getScale() {
-		return getValue(SCALE_KEY);
+		return getValue(Criteria.SCALE);
 	}
 
 	/**
@@ -485,17 +314,9 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasScale() {
-		return values.containsKey(SCALE_KEY);
+		return values.containsKey(Criteria.SCALE);
 	}
 
-	/**
-	 * Sets the {@code Category} search criteria.
-	 * @param category the {@code Category} 
-	 */
-	public void setCategory(String category) {
-		addValue(CATEGORY_KEY, category);
-	}
-	
 	/**
 	 * Returns the {@code category} search criteria.
 	 * <p>
@@ -507,7 +328,7 @@ public class SearchCriteria {
 	 * @see com.trenako.values.Category
 	 */
 	public String getCategory() {
-		return getValue(CATEGORY_KEY);
+		return getValue(Criteria.CATEGORY);
 	}
 
 	/**
@@ -515,17 +336,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasCategory() {
-		return values.containsKey(CATEGORY_KEY);
-	}
-	
-	/**
-	 * Sets the {@code Cat} search criteria.
-	 * @param cat the {@code Cat} 
-	 */
-	public void setCat(Cat cat) {
-		if (cat!=null) {
-			addValue(CAT_KEY, cat.toString());
-		}
+		return values.containsKey(Criteria.CATEGORY);
 	}
 	
 	/**
@@ -537,10 +348,8 @@ public class SearchCriteria {
 	 * 
 	 * @return the criteria value
 	 */
-	public Cat getCat() {
-		String c = getValue(CAT_KEY);
-		if (c!=null) return Cat.parseString(c);
-		return null;
+	public String getCat() {
+		return getValue(Criteria.CAT);
 	}
 
 	/**
@@ -548,17 +357,9 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasCat() {
-		return values.containsKey(CAT_KEY);
+		return values.containsKey(Criteria.CAT);
 	}
-	
-	/**
-	 * Sets the {@code Era} search criteria.
-	 * @param era the {@code Era} 
-	 */
-	public void setEra(String era) {
-		addValue(ERA_KEY, era);
-	}
-	
+		
 	/**
 	 * Returns the {@code era} search criteria.
 	 * <p>
@@ -570,7 +371,7 @@ public class SearchCriteria {
 	 * @see com.trenako.values.Era
 	 */
 	public String getEra() {
-		return getValue(ERA_KEY);
+		return getValue(Criteria.ERA);
 	}
 
 	/**
@@ -578,20 +379,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasEra() {
-		return values.containsKey(ERA_KEY);
-	}
-	
-	/**
-	 * Sets the {@code Railway} search criteria.
-	 * <p>
-	 * This method will use {@link Railway#getSlug()} as {@code key} and
-	 * {@link Railway#getSlug()} as value for the railway criteria.
-	 * </p>
-	 * 
-	 * @param railway the {@code Railway} 
-	 */
-	public void setRailway(String railway) {
-		addValue(RAILWAY_KEY, railway);
+		return values.containsKey(Criteria.ERA);
 	}
 	
 	/**
@@ -605,7 +393,7 @@ public class SearchCriteria {
 	 * @see com.trenako.entities.Railway
 	 */
 	public String getRailway() {
-		return getValue(RAILWAY_KEY);
+		return getValue(Criteria.RAILWAY);
 	}
 
 	/**
@@ -613,7 +401,7 @@ public class SearchCriteria {
 	 * @return {@code true} if a criteria exists; {@code false} otherwise
 	 */
 	public boolean hasRailway() {
-		return values.containsKey(RAILWAY_KEY);
+		return values.containsKey(Criteria.RAILWAY);
 	}
 
 	/**
@@ -622,20 +410,7 @@ public class SearchCriteria {
      */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		
-		for (String key : KEYS) {
-			if (!has(key)) continue;
-			
-			sb.append(key).append("=").append(get(key).getKey());
-			if (key != KEYS.get(KEYS.size() - 1)) {
-				sb.append(", ");
-			}
-		}
-		
-		sb.append("}");
-		return sb.toString();		
+		return this.values.toString();		
 	}
 	
 	/**
@@ -651,27 +426,28 @@ public class SearchCriteria {
 		if( !(obj instanceof SearchCriteria) ) return false;
 		
 		SearchCriteria other = (SearchCriteria) obj;
-		EqualsBuilder eb = new EqualsBuilder();
-		for (String key : criteria()) {
-			eb.append(this.get(key), other.get(key));			
-		}
-		
-		return eb.isEquals();
+		return this.values.equals(other.values);
 	}
 	
 	/**
 	 * Indicates whether the current object has a criteria
 	 * for the provided key.
 	 * @param key the criteria name
-	 * @return {@code true} if the criteria exists; {@code false} otherwise
+	 * @return {@code true} if the criterion exists; {@code false} otherwise
 	 */
-	public boolean has(String key) {
-		validateKey(key);
+	public boolean has(Criteria key) {
 		return values.containsKey(key);
 	}
 
+	/**
+	 * Indicates whether the current object has a criteria
+	 * for the provided type.
+	 * 
+	 * @param criterionType the criterion type
+	 * @return {@code true} if the criterion exists; {@code false} otherwise
+	 */
 	public boolean has(Class<?> criterionType) {
-		String key = criteriaTypes.get(criterionType);
+		Criteria key = Criteria.criterionForType(criterionType);
 		return values.containsKey(key);
 	}
 	
@@ -681,14 +457,8 @@ public class SearchCriteria {
 	 * @param key the criteria key name
 	 * @return a pair if found; {@code null} otherwise
 	 */
-	public Pair<String, String> get(String key) {
-		validateKey(key);
-
-		if (values.containsKey(key)) {
-			return values.get(key);
-		}
-
-		return null;
+	public Pair<String, String> get(Criteria key) {
+		return values.get(key);
 	}
 	
 	/**
@@ -698,7 +468,7 @@ public class SearchCriteria {
 	 * @return a pair if found; {@code null} otherwise
 	 */
 	public Pair<String, String> get(Class<?> criterionType) {
-		String key = criteriaTypes.get(criterionType);
+		Criteria key = Criteria.criterionForType(criterionType);
 		return get(key);
 	}
 	
@@ -714,34 +484,14 @@ public class SearchCriteria {
 	 * Returns the list of keys with a criterion set.
 	 * @return the list of keys
 	 */
-	public Iterable<String> criteria() {
+	public Iterable<Criteria> criteria() {
 		return this.values.keySet();
 	}
 	
-	private void addValue(String key, String value) {
-		validateKey(key);
-		
-		if (value == null || value.isEmpty()) {
-			values.remove(key);
-		}
-		else {
-			values.put(key, new ImmutablePair<String, String>(value, value));	
-		}
-	}
-	
-	private String getValue(String key) {
-		validateKey(key);
-		
+	private String getValue(Criteria key) {
 		if (values.get(key) == null) {
 			return null;
 		}
 		return values.get(key).getKey();
-	}
-	
-	private void validateKey(String key) {
-		Assert.notNull("Key must be not null", key);
-		if (!KEYS.contains(key)) {
-			throw new IllegalArgumentException(key + " is not a valid key name");
-		}
 	}
 }

@@ -15,6 +15,7 @@
  */
 package com.trenako.web.tags;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static com.trenako.web.tags.html.HtmlBuilder.a;
 import static com.trenako.web.tags.html.HtmlBuilder.li;
 import static com.trenako.web.tags.html.HtmlBuilder.snippet;
@@ -71,9 +72,9 @@ public class CategoriesSearchTagsTests extends AbstractSpringTagsTest {
 	}
 	
 	@Test
-	public void shouldRenderErasNavigationList() throws JspException, UnsupportedEncodingException {
+	public void shouldRenderCategoriesNavigationList() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.railway("DB")
+			.railway(db())
 			.build();
 		
 		setCriteria(sc);
@@ -83,15 +84,15 @@ public class CategoriesSearchTagsTests extends AbstractSpringTagsTest {
 		
 		HtmlTag html = snippet(
 			li("category").cssClass("nav-header"),
-			snippet(li(a("steam-locomotives").href("/trenako-web", "/rs/railway/DB/category/steam-locomotives"))),
-			snippet(li(a("diesel-locomotives").href("/trenako-web", "/rs/railway/DB/category/diesel-locomotives"))),
-			snippet(li(a("electric-locomotives").href("/trenako-web", "/rs/railway/DB/category/electric-locomotives"))),
-			snippet(li(a("railcars").href("/trenako-web", "/rs/railway/DB/category/railcars"))),
-			snippet(li(a("electric-multiple-unit").href("/trenako-web", "/rs/railway/DB/category/electric-multiple-unit"))),
-			snippet(li(a("freight-cars").href("/trenako-web", "/rs/railway/DB/category/freight-cars"))),
-			snippet(li(a("passenger-cars").href("/trenako-web", "/rs/railway/DB/category/passenger-cars"))),
-			snippet(li(a("train-sets").href("/trenako-web", "/rs/railway/DB/category/train-sets"))),
-			snippet(li(a("starter-sets").href("/trenako-web", "/rs/railway/DB/category/starter-sets")))
+			snippet(li(a("steam-locomotives").href("/trenako-web", "/rs/railway/db/category/steam-locomotives"))),
+			snippet(li(a("diesel-locomotives").href("/trenako-web", "/rs/railway/db/category/diesel-locomotives"))),
+			snippet(li(a("electric-locomotives").href("/trenako-web", "/rs/railway/db/category/electric-locomotives"))),
+			snippet(li(a("railcars").href("/trenako-web", "/rs/railway/db/category/railcars"))),
+			snippet(li(a("electric-multiple-unit").href("/trenako-web", "/rs/railway/db/category/electric-multiple-unit"))),
+			snippet(li(a("freight-cars").href("/trenako-web", "/rs/railway/db/category/freight-cars"))),
+			snippet(li(a("passenger-cars").href("/trenako-web", "/rs/railway/db/category/passenger-cars"))),
+			snippet(li(a("train-sets").href("/trenako-web", "/rs/railway/db/category/train-sets"))),
+			snippet(li(a("starter-sets").href("/trenako-web", "/rs/railway/db/category/starter-sets")))
 				);
 		
 		String output = renderTag();
@@ -99,10 +100,10 @@ public class CategoriesSearchTagsTests extends AbstractSpringTagsTest {
 	}
 	
 	@Test
-	public void shouldRenderNavigationListWhenEraAlreadySelected() throws JspException, UnsupportedEncodingException {
+	public void shouldRenderNavigationListWhenCategoryAlreadySelected() throws JspException, UnsupportedEncodingException {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.category("electric-locomotives")
-			.railway("DB")
+			.category(electricLocomotives())
+			.railway(db())
 			.build();
 		
 		setCriteria(sc);
@@ -114,7 +115,7 @@ public class CategoriesSearchTagsTests extends AbstractSpringTagsTest {
 				li("category").cssClass("nav-header"),
 				li(a("electric-locomotives").href("#")).cssClass("active"),
 				li("").cssClass("divider"),
-				li(a("remove").href("/trenako-web/rs/railway/DB"))
+				li(a("remove").href("/trenako-web/rs/railway/db"))
 			);
 		
 		String output = renderTag();

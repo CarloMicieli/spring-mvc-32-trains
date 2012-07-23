@@ -15,6 +15,7 @@
  */
 package com.trenako.repositories.mongo;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -43,10 +44,6 @@ import com.trenako.repositories.BrowseRepository;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
 import com.trenako.results.RangeRequestImpl;
-import com.trenako.values.Category;
-import com.trenako.values.Era;
-import com.trenako.values.LocalizedEnum;
-import com.trenako.values.PowerMethod;
 
 /**
  * 
@@ -67,7 +64,7 @@ public class BrowseRepositoryTests {
 	
 	@Test
 	public void shouldGetBrands() {
-		List<Brand> value = Arrays.asList(new Brand(), new Brand());
+		List<Brand> value = Arrays.asList(acme(), roco());
 
 		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
 		when(mongo.find(isA(Query.class), eq(Brand.class))).thenReturn(value);
@@ -82,7 +79,7 @@ public class BrowseRepositoryTests {
 
 	@Test
 	public void shouldGetScales() {
-		List<Scale> value = Arrays.asList(new Scale(), new Scale());
+		List<Scale> value = Arrays.asList(scaleH0(), scaleN());
 
 		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
 		when(mongo.find(isA(Query.class), eq(Scale.class))).thenReturn(value);
@@ -97,7 +94,7 @@ public class BrowseRepositoryTests {
 
 	@Test
 	public void shouldGetRailways() {
-		List<Railway> value = Arrays.asList(new Railway(), new Railway());
+		List<Railway> value = Arrays.asList(fs(), db());
 
 		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
 		when(mongo.find(isA(Query.class), eq(Railway.class))).thenReturn(value);
@@ -135,7 +132,7 @@ public class BrowseRepositoryTests {
 		mockFindResults();
 		
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand(new Brand.Builder("ACME").slug("acme").build())
+			.brand(acme())
 			.buildImmutable();
 		RangeRequest range = buildRange(10);
 		
@@ -149,7 +146,7 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByEra() {
 		mockFindResults();
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.era(new LocalizedEnum<Era>(Era.III))
+			.era(eraIII())
 			.buildImmutable();
 		RangeRequest range = buildRange(10);
 		
@@ -163,7 +160,7 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByScale() {
 		mockFindResults();
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.scale(new Scale.Builder("H0").slug("h0").ratio(870).build())
+			.scale(scaleH0())
 			.buildImmutable();
 		RangeRequest range = buildRange(10);
 		
@@ -178,7 +175,7 @@ public class BrowseRepositoryTests {
 		mockFindResults();
 		
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.category(new LocalizedEnum<Category>(Category.ELECTRIC_LOCOMOTIVES))
+			.category(electricLocomotives())
 			.buildImmutable();
 		RangeRequest range = buildRange(10);
 		
@@ -193,7 +190,7 @@ public class BrowseRepositoryTests {
 		mockFindResults();
 
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.railway(new Railway.Builder("DB").slug("db").build())
+			.railway(db())
 			.buildImmutable();
 		RangeRequest range = buildRange(10);
 		
@@ -208,7 +205,7 @@ public class BrowseRepositoryTests {
 		mockFindResults();
 		
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.powerMethod(new LocalizedEnum<PowerMethod>(PowerMethod.AC))
+			.powerMethod(ac())
 			.buildImmutable();
 		RangeRequest range = buildRange(10);
 		
@@ -234,7 +231,7 @@ public class BrowseRepositoryTests {
 	public void shouldFindRollingStocksByCat() {
 		mockFindResults();
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.cat("ac-electric-locomotives")
+			.cat(acElectricLocomotives())
 			.build();
 		RangeRequest range = buildRange(10);
 		

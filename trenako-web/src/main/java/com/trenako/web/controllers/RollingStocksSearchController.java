@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trenako.criteria.SearchCriteria;
+import com.trenako.criteria.SearchRequest;
 import com.trenako.results.RangeRequest;
 import com.trenako.services.BrowseService;
 
@@ -49,13 +49,10 @@ public class RollingStocksSearchController {
 	}
 
 	@RequestMapping(value = "/**", method = RequestMethod.GET)
-	public ModelAndView search(SearchCriteria sc, RangeRequest range) {
+	public ModelAndView search(SearchRequest search, RangeRequest range) {
 		ModelAndView mav = new ModelAndView("browse/results");
 		
-		mav.addObject("results", service.findByCriteria(sc, range));
-		mav.addObject("criteria", sc);
-		mav.addObject("range", range);
-		
+		mav.addObject("results", service.findByCriteria(search, range));
 		return mav;
 	}
 	

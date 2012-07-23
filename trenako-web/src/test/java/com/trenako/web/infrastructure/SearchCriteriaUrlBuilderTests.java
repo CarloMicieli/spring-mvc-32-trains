@@ -15,13 +15,13 @@
  */
 package com.trenako.web.infrastructure;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import com.trenako.criteria.SearchCriteria;
-import com.trenako.entities.Scale;
 
 /**
  * 
@@ -33,38 +33,34 @@ public class SearchCriteriaUrlBuilderTests {
 	@Test
 	public void shouldExtractPropertyValueFromObjects() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME").build();
+			.brand(acme()).build();
 		
-		Scale scale = new Scale.Builder("AA")
-			.slug("H0")
-			.build();
+		String url = buildUrlAdding(sc, "scale", scaleH0());
 		
-		String url = buildUrlAdding(sc, "scale", scale);
-		
-		assertEquals("/rs/brand/ACME/scale/H0", url);
+		assertEquals("/rs/brand/acme/scale/h0", url);
 	}
 	
 	@Test
 	public void shouldBuildUrlsReplacingValues() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME").build();
+			.brand(acme()).build();
 		
-		String url = buildUrlAdding(sc, "brand", "rivarossi");
+		String url = buildUrlAdding(sc, "brand", roco());
 		
-		assertEquals("/rs/brand/rivarossi", url);
+		assertEquals("/rs/brand/roco", url);
 	}
 	
 	@Test
 	public void shouldBuildUrlsRemovingValues() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.railway("DB")
+			.brand(acme())
+			.railway(db())
 			.build();
-		assertEquals("/rs/brand/ACME/railway/DB", buildUrl(sc));
+		assertEquals("/rs/brand/acme/railway/db", buildUrl(sc));
 		
 		String url = buildUrlRemoving(sc, "brand");
 		
-		assertEquals("/rs/railway/DB", url);
+		assertEquals("/rs/railway/db", url);
 	}
 	
 	@Test
@@ -79,72 +75,72 @@ public class SearchCriteriaUrlBuilderTests {
 	@Test
 	public void shouldBuildBrandUrls() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME").build();
+			.brand(acme()).build();
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/rs/brand/ACME", url);
+		assertEquals("/rs/brand/acme", url);
 	}
 
 	@Test
 	public void shouldBuildBrandAndScaleUrls() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.scale("H0")
+			.brand(acme())
+			.scale(scaleH0())
 			.build();
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/rs/brand/ACME/scale/H0", url);
+		assertEquals("/rs/brand/acme/scale/h0", url);
 	}
 	
 	@Test
 	public void shouldBuildBrandAndScaleAndCatUrls() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.scale("H0")
-			.cat("ac-electric-locomotives")
+			.brand(acme())
+			.scale(scaleH0())
+			.cat(dcElectricLocomotives())
 			.build();
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/rs/brand/ACME/scale/H0/cat/ac-electric-locomotives", url);
+		assertEquals("/rs/brand/acme/scale/h0/cat/dc-electric-locomotives", url);
 	}
 	
 	@Test
 	public void shouldBuildBrandAndScaleAndCatAndRailwayUrls() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.scale("H0")
-			.cat("ac-electric-locomotives")
-			.railway("DB")
+			.brand(acme())
+			.scale(scaleH0())
+			.cat(dcElectricLocomotives())
+			.railway(db())
 			.build();
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/rs/brand/ACME/scale/H0/cat/ac-electric-locomotives/railway/DB", url);
+		assertEquals("/rs/brand/acme/scale/h0/cat/dc-electric-locomotives/railway/db", url);
 	}
 	
 	@Test
 	public void shouldBuildBrandAndScaleAndCatAndRailwayAndEraUrls() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.scale("H0")
-			.cat("ac-electric-locomotives")
-			.railway("DB")
-			.era("IV")
+			.brand(acme())
+			.scale(scaleH0())
+			.cat(dcElectricLocomotives())
+			.railway(db())
+			.era(eraIII())
 			.build();
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);
 		
-		assertEquals("/rs/brand/ACME/scale/H0/cat/ac-electric-locomotives/railway/DB/era/IV", url);
+		assertEquals("/rs/brand/acme/scale/h0/cat/dc-electric-locomotives/railway/db/era/iii", url);
 	}
 	
 	@Test
 	public void shouldBuildPowerMethodAndCategoryUrls() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.powerMethod("ac")
-			.category("electric-locomotives")
+			.powerMethod(ac())
+			.category(electricLocomotives())
 			.build();
 		
 		String url = SearchCriteriaUrlBuilder.buildUrl(sc);

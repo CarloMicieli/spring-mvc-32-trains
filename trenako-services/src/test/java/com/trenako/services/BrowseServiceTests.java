@@ -15,6 +15,7 @@
  */
 package com.trenako.services;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -91,8 +92,8 @@ public class BrowseServiceTests {
 	@Test
 	public void shouldFindRollingStocks() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
-			.railway("FS")
+			.brand(acme())
+			.railway(fs())
 			.build();
 		RangeRequestImpl range = new RangeRequestImpl();
 		range.setCount(10);
@@ -116,22 +117,17 @@ public class BrowseServiceTests {
 	
 	@Test
 	public void shouldLoadSearchCriteriaInformationFromDB() {
-		
-		Brand brand = new Brand.Builder("ACME").slug("acme").build();
-		Railway railway = new Railway.Builder("FS").companyName("Ferrovie dello stato").build();
-		Scale scale = new Scale.Builder("H0").ratio(870).build();
-		
-		when(repo.findBySlug(eq(brand.getSlug()), eq(Brand.class))).thenReturn(brand);
-		when(repo.findBySlug(eq(railway.getSlug()), eq(Railway.class))).thenReturn(railway);
-		when(repo.findBySlug(eq(scale.getSlug()), eq(Scale.class))).thenReturn(scale);
+		when(repo.findBySlug(eq(acme().getSlug()), eq(Brand.class))).thenReturn(acme());
+		when(repo.findBySlug(eq(fs().getSlug()), eq(Railway.class))).thenReturn(fs());
+		when(repo.findBySlug(eq(scaleH0().getSlug()), eq(Scale.class))).thenReturn(scaleH0());
 		
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand(brand.getSlug())
-			.railway(railway.getSlug())
-			.scale(scale.getSlug())
-			.powerMethod("ac")
-			.era("iii")
-			.category("electric-locomotives")
+			.brand(acme())
+			.railway(fs())
+			.scale(scaleH0())
+			.powerMethod(ac())
+			.era(eraIII())
+			.category(electricLocomotives())
 			.build();
 		SearchCriteria dbSc = service.loadSearchCriteria(sc);
 		
@@ -146,14 +142,13 @@ public class BrowseServiceTests {
 	
 	@Test
 	public void shouldFindBrandsBySlug() {
-		Brand value = new Brand.Builder("ACME").slug("acme").build();
-		when(repo.findBySlug(eq(value.getSlug()), eq(Brand.class))).thenReturn(value);
+		when(repo.findBySlug(eq(acme().getSlug()), eq(Brand.class))).thenReturn(acme());
 		
 		Brand brand = service.findBrand("acme");
 		
-		verify(repo, times(1)).findBySlug(eq(value.getSlug()), eq(Brand.class));
+		verify(repo, times(1)).findBySlug(eq(acme().getSlug()), eq(Brand.class));
 		assertNotNull(brand);
-		assertEquals(value.getSlug(), brand.getSlug());
+		assertEquals(acme().getSlug(), brand.getSlug());
 	}
 	
 	@Test
@@ -170,14 +165,13 @@ public class BrowseServiceTests {
 	
 	@Test
 	public void shouldFindScalesBySlug() {
-		Scale value = new Scale.Builder("H0").ratio(870).build();
-		when(repo.findBySlug(eq(value.getSlug()), eq(Scale.class))).thenReturn(value);
+		when(repo.findBySlug(eq(scaleH0().getSlug()), eq(Scale.class))).thenReturn(scaleH0());
 		
 		Scale scale = service.findScale("h0");
 		
-		verify(repo, times(1)).findBySlug(eq(value.getSlug()), eq(Scale.class));
+		verify(repo, times(1)).findBySlug(eq(scaleH0().getSlug()), eq(Scale.class));
 		assertNotNull(scale);
-		assertEquals(value.getSlug(), scale.getSlug());
+		assertEquals(scaleH0().getSlug(), scale.getSlug());
 	}
 	
 	@Test

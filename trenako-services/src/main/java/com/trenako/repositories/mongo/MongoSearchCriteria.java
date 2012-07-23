@@ -18,6 +18,7 @@ package com.trenako.repositories.mongo;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import com.trenako.criteria.SearchCriteria;
+import com.trenako.utility.Cat;
 
 /**
  * It converts a {@link SearchCriteria} object to mongodb criteria.
@@ -54,8 +55,9 @@ public final class MongoSearchCriteria {
 		}
 		
 		if (sc.hasCat()) {
-			c.and("category").is(sc.getCat().category())
-				.and("powerMethod").is(sc.getCat().powerMethod());
+			Cat cat = Cat.parseString(sc.getCat());
+			c.and("category").is(cat.category())
+				.and("powerMethod").is(cat.powerMethod());
 		}
 		
 		if (!sc.hasCat() && sc.hasPowerMethod()) {

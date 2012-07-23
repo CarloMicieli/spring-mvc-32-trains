@@ -18,6 +18,7 @@ package com.trenako.web.infrastructure;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.trenako.criteria.Criteria;
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.values.LocalizedEnum;
 
@@ -50,6 +51,36 @@ public class SearchCriteriaUrlBuilder {
 		return buildInternal(sc, null, null, criteriaName);
 	}
 	
+	private static String buildInternal(SearchCriteria sc,
+			String addedCriteriaName,
+			Object addedObj,
+			String removedCriteriaName) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("/rs");
+		
+		String newValue = "";
+		for (Criteria criteria : SearchCriteria.KEYS) {
+			// added/replace a criteria with the provided value
+			if (addedCriteriaName != null && 
+					addedCriteriaName.equals(criteria.criterionName())) {
+				newValue = extractValue(addedObj);
+				append(sb, addedCriteriaName, newValue);
+			}
+			// remove the criteria
+			else if (removedCriteriaName != null && 
+					removedCriteriaName.equals(criteria.criterionName())) {
+				continue;
+			}
+			else {
+				append(sc, sb, criteria);
+			}
+		}
+			
+		return sb.toString();
+	}
+	
 	private static String extractValue(Object obj) {
 		String val = "";
 		if (obj.getClass().equals(String.class)) {
@@ -80,43 +111,16 @@ public class SearchCriteriaUrlBuilder {
 		
 		return val;
 	}
-		
-	private static String buildInternal(SearchCriteria sc,
-			String addedCriteriaName,
-			Object addedObj,
-			String removedCriteriaName) {
-		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("/rs");
-		
-		String newValue = "";
-		for (String criteria : SearchCriteria.KEYS) {
-			// added/replace a criteria with the provided value
-			if (addedCriteriaName != null && addedCriteriaName.equals(criteria)) {
-				newValue = extractValue(addedObj);
-				append(sb, addedCriteriaName, newValue);
-			}
-			// remove the criteria
-			else if (removedCriteriaName != null && removedCriteriaName.equals(criteria)) {
-				continue;
-			}
-			else {
-				append(sc, sb, criteria);
-			}
-		}
-			
-		return sb.toString();
-	}
 	
-	private static void append(SearchCriteria sc, StringBuilder sb, String criteriaName) {
-		Pair<String, String> criteria = sc.get(criteriaName);
-		if (criteria == null) return;
+	private static void append(SearchCriteria sc, StringBuilder sb, Criteria criteria) {
+		String criteriaName = criteria.criterionName();
+		Pair<String, String> crit = sc.get(criteria);
+		if (crit == null) return;
 		
 		sb.append("/")
 			.append(criteriaName)
 			.append("/")
-			.append(criteria.getKey());
+			.append(crit.getKey());
 	}
 	
 	private static void append(StringBuilder sb, String criteriaName, String criteriaValue) {

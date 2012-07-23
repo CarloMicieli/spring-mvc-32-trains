@@ -15,6 +15,7 @@
  */
 package com.trenako.repositories.mongo;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -32,18 +33,18 @@ public class MongoSearchCriteriaTests {
 	@Test
 	public void shouldBuildBrandCriteriaCommand() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.brand("ACME")
+			.brand(acme())
 			.build();
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"brandName\" : \"ACME\"}", criteria.getCriteriaObject().toString());
+		assertEquals("{ \"brandName\" : \"acme\"}", criteria.getCriteriaObject().toString());
 	}
 
 	@Test
 	public void shouldBuildCategoryCriteriaCommand() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.category("electric-locomotives")
+			.category(electricLocomotives())
 			.build();
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
@@ -55,74 +56,74 @@ public class MongoSearchCriteriaTests {
 	@Test
 	public void shouldBuildCatCriteriaCommand() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.cat("ac-electric-locomotives")
+			.cat(dcElectricLocomotives())
 			.build();
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"category\" : \"electric-locomotives\" , \"powerMethod\" : \"ac\"}", 
+		assertEquals("{ \"category\" : \"electric-locomotives\" , \"powerMethod\" : \"dc\"}", 
 				criteria.getCriteriaObject().toString());
 	}
 	
 	@Test
 	public void shouldBuildEraCriteriaCommand() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.era("IV")
+			.era(eraIII())
 			.build();
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"era\" : \"IV\"}", 
+		assertEquals("{ \"era\" : \"iii\"}", 
 				criteria.getCriteriaObject().toString());
 	}
 	
 	@Test
 	public void shouldBuildPowerMethodCriteriaCommand() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.powerMethod("ac-dcc")
+			.powerMethod(ac())
 			.build();
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"powerMethod\" : \"ac-dcc\"}", 
+		assertEquals("{ \"powerMethod\" : \"ac\"}", 
 				criteria.getCriteriaObject().toString());
 	}
 	
 	@Test
 	public void shouldBuildRailwayCriteriaCommand() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.railway("DB")
+			.railway(db())
 			.build();
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"railwayName\" : \"DB\"}", 
+		assertEquals("{ \"railwayName\" : \"db\"}", 
 				criteria.getCriteriaObject().toString());
 	}
 	
 	@Test
 	public void shouldBuildCriteriaWithOnlyOneCategoryAndPowerMethod() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.cat("ac-electric-locomotives")
-			.category("diesel-locomotives")
-			.powerMethod("dc")
+			.cat(dcElectricLocomotives())
+			.category(steamLocomotives())
+			.powerMethod(ac())
 			.build();
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"category\" : \"electric-locomotives\" , \"powerMethod\" : \"ac\"}", 
+		assertEquals("{ \"category\" : \"electric-locomotives\" , \"powerMethod\" : \"dc\"}", 
 				criteria.getCriteriaObject().toString());
 	}
 	
 	@Test
 	public void shouldBuildScaleCriteriaCommand() {
 		SearchCriteria sc = new SearchCriteria.Builder()
-			.scale("H0")
+			.scale(scaleH0())
 			.build();
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"scaleName\" : \"H0\"}", 
+		assertEquals("{ \"scaleName\" : \"h0\"}", 
 				criteria.getCriteriaObject().toString());
 	}
 }

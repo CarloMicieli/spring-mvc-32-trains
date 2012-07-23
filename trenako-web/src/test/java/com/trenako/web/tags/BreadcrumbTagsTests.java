@@ -18,6 +18,7 @@ package com.trenako.web.tags;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static com.trenako.web.tags.html.HtmlBuilder.*;
 import static org.junit.Assert.*;
 
@@ -60,7 +61,7 @@ public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 	@Test
 	public void shouldRenderBreadcrumbTagsWithOneCriteria() throws Exception {
 
-		SearchCriteria sc = new SearchCriteria.Builder().brand("ACME").build();
+		SearchCriteria sc = new SearchCriteria.Builder().brand(acme()).build();
 		tag.setCriteria(sc);
 		
 		int rv = tag.doStartTag();
@@ -74,7 +75,7 @@ public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 						).cssClass("active"),
 				
 				li(
-					a("ACME").href(servletRequest(), "/rs/brand/ACME").title("brand"),
+					a("ACME").href(servletRequest(), "/rs/brand/acme").title("brand"),
 					plain(" "),
 					span("/").cssClass("divider")
 						))
@@ -87,7 +88,7 @@ public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 	@Test
 	public void shouldRenderBreadcrumbTagsWithMoreCriterias() throws Exception {
 
-		SearchCriteria sc = new SearchCriteria.Builder().brand("ACME").railway("DB").build();
+		SearchCriteria sc = new SearchCriteria.Builder().brand(acme()).railway(db()).build();
 		tag.setCriteria(sc);
 		
 		int rv = tag.doStartTag();
@@ -101,7 +102,7 @@ public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 						).cssClass("active"),
 				
 				li(
-					a("ACME").href(servletRequest(), "/rs/brand/ACME").title("brand"),
+					a("ACME").href(servletRequest(), "/rs/brand/acme").title("brand"),
 					plain(" "),
 					span("/").cssClass("divider")
 						)),
@@ -112,7 +113,7 @@ public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 							).cssClass("active"),
 					
 					li(
-						a("DB").href(servletRequest(), "/rs/railway/DB").title("railway"),
+						a("DB (Die bahn)").href(servletRequest(), "/rs/railway/db").title("railway"),
 						plain(" "),
 						span("/").cssClass("divider")
 							))

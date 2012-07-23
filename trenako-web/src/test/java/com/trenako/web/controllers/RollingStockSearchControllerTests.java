@@ -26,9 +26,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trenako.criteria.SearchCriteria;
+import com.trenako.criteria.SearchRequest;
 import com.trenako.results.RangeRequest;
-import com.trenako.results.RangeRequestImpl;
 import com.trenako.results.mongo.RollingStockResults;
 import com.trenako.services.BrowseService;
 
@@ -51,17 +50,16 @@ public class RollingStockSearchControllerTests {
 
 	@Test
 	public void shouldSearchRollingStocks() {
-		SearchCriteria sc = new SearchCriteria();
-		RangeRequest range = new RangeRequestImpl();
+		SearchRequest search = mock(SearchRequest.class);
+		RangeRequest range = mock(RangeRequest.class);
 		
 		RollingStockResults value = mock(RollingStockResults.class);
-		when(mockService.findByCriteria(eq(sc), eq(range))).thenReturn(value);
+		when(mockService.findByCriteria(eq(search), eq(range))).thenReturn(value);
 		
-		ModelAndView mav = controller.search(sc, range);
+		ModelAndView mav = controller.search(search, range);
 		
-		verify(mockService, times(1)).findByCriteria(eq(sc), eq(range));
+		verify(mockService, times(1)).findByCriteria(eq(search), eq(range));
 		assertViewName(mav, "browse/results");
-		assertModelAttributeValue(mav, "criteria", sc);
 		assertModelAttributeValue(mav, "results", value);
 	}
 }

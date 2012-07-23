@@ -29,6 +29,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
+import com.trenako.criteria.Criteria;
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
 import com.trenako.services.BrowseService;
@@ -111,7 +112,8 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 		return obj.toString();
 	}
 	
-	protected <E> HtmlTag render(Iterable<E> items, String criteriaName, String contextPath) {
+	protected <E> HtmlTag render(Iterable<E> items, Criteria criteria, String contextPath) {
+		String criteriaName = criteria.criterionName();
 		List<HtmlTag> tagsList = new ArrayList<HtmlTag>();
 		String label = getMessageSource().getMessage("searchBar." + criteriaName + ".title.label", 
 				null, 
@@ -121,10 +123,10 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 		tagsList.add(li(label).cssClass("nav-header"));
 		
 		// check if a criteria for this class has been already selected
-		if (getCriteria().has(criteriaName)) {
+		if (getCriteria().has(criteria)) {
 			String url = buildUrlRemoving(getCriteria(), criteriaName);
 			
-			tagsList.add(li(a(getCriteria().get(criteriaName).getValue()).href("#")).cssClass("active"));
+			tagsList.add(li(a(getCriteria().get(criteria).getValue()).href("#")).cssClass("active"));
 			tagsList.add(li("").cssClass("divider"));
 			tagsList.add(li(a("remove").href(contextPath, url)));
 		}

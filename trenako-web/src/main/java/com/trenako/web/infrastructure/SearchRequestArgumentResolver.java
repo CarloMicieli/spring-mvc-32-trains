@@ -15,37 +15,35 @@
  */
 package com.trenako.web.infrastructure;
 
-import java.beans.PropertyEditorSupport;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.PropertyValues;
 import org.springframework.core.MethodParameter;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.trenako.criteria.SearchCriteria;
-import com.trenako.utility.Cat;
+import com.trenako.criteria.SearchRequest;
+
 /**
- * Resolves {@link SearchCriteria} method arguments for controller actions.
+ * Resolves {@code SearchRequest} method arguments for controller actions.
  * 
  * @author Carlo Micieli
+ * @see com.trenako.criteria.SearchRequest
  *
  */
-public class SearchCriteriaArgumentResolver implements HandlerMethodArgumentResolver {
+public class SearchRequestArgumentResolver implements HandlerMethodArgumentResolver {
 	
-	private final SearchCriteria searchCriteria;
+	private final SearchRequest searchRequest;
 	
-	public SearchCriteriaArgumentResolver() {
-		this(new SearchCriteria());
+	public SearchRequestArgumentResolver() {
+		this(new SearchRequest());
 	}
 	
-	public SearchCriteriaArgumentResolver(SearchCriteria failbackCriteria) {
-		this.searchCriteria = failbackCriteria;
+	public SearchRequestArgumentResolver(SearchRequest failbackCriteria) {
+		this.searchRequest = failbackCriteria;
 	}
 	
 	@Override
@@ -54,29 +52,18 @@ public class SearchCriteriaArgumentResolver implements HandlerMethodArgumentReso
 			NativeWebRequest webRequest,
 			WebDataBinderFactory binderFactory) throws Exception {
 
-		WebDataBinder webBinder = binderFactory.createBinder(webRequest, searchCriteria, "");
+		WebDataBinder webBinder = binderFactory.createBinder(webRequest, searchRequest, "");
 		
 		HttpServletRequest request = 
 				(HttpServletRequest) webRequest.getNativeRequest();
 		PropertyValues pvs = new ServletRequestPathVariablesPropertyValues(request);
-		webBinder.registerCustomEditor(Cat.class, new CatPropertyEditor());
 		webBinder.bind(pvs);
-		return searchCriteria;
+		return searchRequest;
 	}
 
 	@Override
 	public boolean supportsParameter(MethodParameter par) {
 		Class<?> paramType = par.getParameterType();
-		return SearchCriteria.class.isAssignableFrom(paramType);
-	}
-	
-	private static class CatPropertyEditor extends PropertyEditorSupport {
-		@Override
-		public void setAsText(String text) throws IllegalArgumentException {
-			if (!StringUtils.hasText(text))
-				setValue(null);
-			
-			setValue(Cat.parseString(text));
-		}
+		return SearchRequest.class.isAssignableFrom(paramType);
 	}
 }

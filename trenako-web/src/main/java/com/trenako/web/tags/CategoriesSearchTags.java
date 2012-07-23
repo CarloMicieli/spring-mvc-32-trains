@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import com.trenako.criteria.Criteria;
 import com.trenako.values.Category;
 import com.trenako.values.LocalizedEnum;
 
@@ -36,11 +37,11 @@ public class CategoriesSearchTags extends SearchBarItemTags {
 			throws JspException {
 		try {
 			Iterable<LocalizedEnum<Category>> categories = null;
-			if (!getCriteria().has("category")) {
+			if (!getCriteria().has(Criteria.CATEGORY)) {
 				categories = getService().categories();
 			}
 			
-			jspWriter.append(render(categories, "category", contextPath).toString());
+			jspWriter.append(render(categories, Criteria.CATEGORY, contextPath).toString());
 			
 		} catch (IOException e) {
 			throw new JspException(e);

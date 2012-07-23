@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import com.trenako.criteria.Criteria;
 import com.trenako.entities.Brand;
 
 /**
@@ -36,11 +37,11 @@ public class BrandsSearchTags extends SearchBarItemTags {
 
 		try {
 			Iterable<Brand> brands = null;
-			if (!getCriteria().has("brand")) {
+			if (!getCriteria().has(Criteria.BRAND)) {
 				brands = getService().brands();
 			}
 			
-			jspWriter.append(render(brands, "brand", contextPath).toString());
+			jspWriter.append(render(brands, Criteria.BRAND, contextPath).toString());
 			
 		} catch (IOException e) {
 			throw new JspException(e);

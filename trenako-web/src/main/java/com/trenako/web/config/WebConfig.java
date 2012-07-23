@@ -39,7 +39,7 @@ import com.trenako.AppGlobals;
 import com.trenako.format.IntegerAnnotationFormatterFactory;
 import com.trenako.web.converters.ObjectIdConverter;
 import com.trenako.web.infrastructure.RangeRequestArgumentResolver;
-import com.trenako.web.infrastructure.SearchCriteriaArgumentResolver;
+import com.trenako.web.infrastructure.SearchRequestArgumentResolver;
 
 /**
  * The configuration class for the Spring MVC application.
@@ -76,7 +76,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		
 		argumentResolvers.add(new ServletWebArgumentResolverAdapter(resolver));
 		argumentResolvers.add(new RangeRequestArgumentResolver());
-		argumentResolvers.add(new SearchCriteriaArgumentResolver());
+		argumentResolvers.add(new SearchRequestArgumentResolver());
 	}
 	
 	public @Bean InternalResourceViewResolver viewResolver() {

@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import com.trenako.criteria.Criteria;
 import com.trenako.entities.Railway;
 
 /**
@@ -36,11 +37,11 @@ public class RailwaysSearchTags extends SearchBarItemTags {
 
 		try {
 			Iterable<Railway> railways = null;
-			if (!getCriteria().has("railway")) {
+			if (!getCriteria().has(Criteria.RAILWAY)) {
 				railways = getService().railways();
 			}
 			
-			jspWriter.append(render(railways, "railway", contextPath).toString());
+			jspWriter.append(render(railways, Criteria.RAILWAY, contextPath).toString());
 			
 		} catch (IOException e) {
 			throw new JspException(e);

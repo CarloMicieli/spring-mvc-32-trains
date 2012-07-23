@@ -13,41 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.web.tags;
+package com.trenako.criteria;
 
-import java.io.IOException;
+import static org.junit.Assert.*;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
+import org.junit.Test;
 
-import com.trenako.criteria.Criteria;
+import com.trenako.entities.Brand;
 import com.trenako.values.Era;
-import com.trenako.values.LocalizedEnum;
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-@SuppressWarnings("serial")
-public class ErasSearchTags extends SearchBarItemTags {
+public class CriteriaTests {
 
-	@Override
-	protected int writeTagContent(JspWriter jspWriter, String contextPath)
-			throws JspException {
-		try {
-			Iterable<LocalizedEnum<Era>> eras = null;
-			if (!getCriteria().has(Criteria.ERA)) {
-				eras = getService().eras();
-			}
-			
-			jspWriter.append(render(eras, Criteria.ERA, contextPath).toString());
-			
-		} catch (IOException e) {
-			throw new JspException(e);
-		}
+	@Test
+	public void shouldFillListWithCriteriaNames() {
 		
-		return SKIP_BODY;
+		Iterable<String> keys = Criteria.keys();
+		
+		String expected = "[brand, scale, cat, railway, era, powermethod, category]";
+		assertEquals(expected, keys.toString());
 	}
 
+	@Test
+	public void shouldGetTheTypeNameForCriterion() {
+		Criteria c1 = Criteria.criterionForType(Brand.class);
+		assertEquals(Criteria.BRAND, c1);
+		
+		Criteria c2 = Criteria.criterionForType(Era.class);
+		assertEquals(Criteria.ERA, c2);
+	}
 }

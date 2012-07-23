@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.trenako.criteria.SearchCriteria;
+import com.trenako.criteria.SearchRequest;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
@@ -173,5 +174,12 @@ public class BrowseServiceImpl implements BrowseService {
 		}
 		
 		return criterionPair;
+	}
+
+	@Override
+	public PaginatedResults<RollingStock> findByCriteria(SearchRequest sc,
+			RangeRequest range) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
