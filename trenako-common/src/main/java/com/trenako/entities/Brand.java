@@ -60,7 +60,7 @@ import com.trenako.validation.constraints.ValidAddress;
 public class Brand {
 
 	@Id
-	private ObjectId _id;
+	private ObjectId id;
 
 	@NotBlank(message = "brand.name.required")
 	@Size(max = 25, message = "brand.name.size.notmet")
@@ -102,7 +102,7 @@ public class Brand {
 	 * @param id the unique id
 	 */
 	public Brand(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 	
 	/**
@@ -265,7 +265,7 @@ public class Brand {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return _id;
+		return id;
 	}
 	
 	/**
@@ -273,7 +273,7 @@ public class Brand {
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 	
 	/**

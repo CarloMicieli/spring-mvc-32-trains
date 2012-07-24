@@ -107,7 +107,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 
 		then:
 		thrown(DuplicateKeyException)
-		newBrand._id == null
+		newBrand.id == null
 	}
 		
 	def "should throw exception if the brand slug is already used"() {
@@ -125,7 +125,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 
 		then:
 		thrown(DuplicateKeyException)
-		newBrand._id == null
+		newBrand.id == null
 	}
 	
 	def "should create new brands"() {
@@ -141,9 +141,9 @@ class BrandsServiceSpecification extends MongoSpecification {
 		service.save newBrand
 		
 		then:
-		newBrand._id != null
+		newBrand.id != null
 		
-		def brand = db.brands.findOne(_id: newBrand._id)
+		def brand = db.brands.findOne(_id: newBrand.id)
 		brand.name == "Brawa"
 		brand.description == "Brand description"
 		brand.emailAddress == "mail@brawa.de"
@@ -165,14 +165,14 @@ class BrandsServiceSpecification extends MongoSpecification {
 		
 		then:
 		brand != null
-		brand._id == id
+		brand.id == id
 		brand.name == "ACME"
 	}
 	
 	def "should remove brand"() {
 		given:
 		def doc = db.brands.findOne(slug: 'acme')
-		def brand = new Brand(doc)
+		def brand = new Brand(id: doc._id)
 		
 		when:
 		service.remove brand

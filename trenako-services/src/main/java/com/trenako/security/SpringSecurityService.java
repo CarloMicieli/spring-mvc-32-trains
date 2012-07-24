@@ -28,7 +28,7 @@ import com.trenako.entities.Account;
  * @author Carlo Micieli
  *
  */
-@Service("securityServive")
+@Service("securityService")
 public class SpringSecurityService implements SecurityService {
 
 	private SecurityContext getSecContext() {

@@ -26,7 +26,7 @@ import com.trenako.entities.Brand;
  * @author Carlo Micieli
  *
  */
-public interface BrandsRepository extends MongoRepository<Brand, ObjectId> {
+public interface BrandsRepository extends MongoRepository<Brand, ObjectId>, BrandsCustomRepository {
 	/**
 	 * Returns the {@code Brand} with the provided id.
 	 * @param id the {@code Brand} id.
