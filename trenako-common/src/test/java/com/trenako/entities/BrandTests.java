@@ -77,17 +77,21 @@ public class BrandTests {
 	@Test
 	public void shouldBuildNewBrands() {
 		Brand b = new Brand.Builder("ACME")
+			.companyName("Anonima Costruttori Modelli Esatti")
 			.website("http://localhost")
 			.emailAddress("mail@mail.com")
 			.description("Description")
 			.industrial(true)
+			.scales("H0", "N")
 			.build();
 			
 		assertEquals("ACME", b.getName());
+		assertEquals("Anonima Costruttori Modelli Esatti", b.getCompanyName());
 		assertEquals("http://localhost", b.getWebsite());
 		assertEquals("mail@mail.com", b.getEmailAddress());
 		assertEquals("Description", b.getDescription());
 		assertEquals(true, b.isIndustrial());
+		assertEquals("[H0, N]", b.getScales().toString());
 	}
 	
 	@Test

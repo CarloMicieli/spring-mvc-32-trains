@@ -15,8 +15,10 @@
  */
 package com.trenako.entities;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -58,12 +60,14 @@ import com.trenako.validation.constraints.ValidAddress;
 public class Brand {
 
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 
 	@NotBlank(message = "brand.name.required")
 	@Size(max = 25, message = "brand.name.size.notmet")
 	@Indexed(unique = true)
 	private String name;
+	
+	private String companyName;
 
 	@Indexed(unique = true)
 	private String slug;
@@ -85,6 +89,8 @@ public class Brand {
 	
 	private boolean industrial;
 	
+	private List<String> scales;
+	
 	private Date lastModified;
 	
 	// required by spring data
@@ -96,7 +102,7 @@ public class Brand {
 	 * @param id the unique id
 	 */
 	public Brand(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 	
 	/**
@@ -109,6 +115,7 @@ public class Brand {
 
 	private Brand(Builder b) {
 		this.name = b.name;
+		this.companyName = b.companyName;
 		this.address = b.address;
 		this.website = b.website;
 		this.emailAddress = b.emailAddress;
@@ -116,6 +123,7 @@ public class Brand {
 		this.industrial = b.industrial;
 		this.slug = b.slug;
 		this.branches = b.branches;
+		this.scales = b.scales;
 	}
 	
 	/**
@@ -128,12 +136,14 @@ public class Brand {
 		private final String name;
 		
 		// optional fields
+		private String companyName = null;
 		private String website = null;
 		private String emailAddress = null;
 		private String description = null;
 		private boolean industrial = false;
 		private Address address = null;
 		private String slug = null;
+		private List<String> scales = null;
 		private HashMap<String, Address> branches = null;
 		
 		/**
@@ -142,6 +152,16 @@ public class Brand {
 		 */
 		public Builder(String name) {
 			this.name = name;
+		}
+		
+		/**
+		 * The company name.
+		 * @param companyName the company name
+		 * @return a {@code Brand} builder
+		 */
+		public Builder companyName(String companyName) {
+			this.companyName = companyName;
+			return this;
 		}
 		
 		/**
@@ -222,6 +242,16 @@ public class Brand {
 		}
 		
 		/**
+		 * The list of scales.
+		 * @param scales the scales
+		 * @return a {@code Brand} builder
+		 */
+		public Builder scales(String... scales) {
+			this.scales = Arrays.asList(scales);
+			return this;
+		}
+		
+		/**
 		 * Builds a {@code Brand} object using the values for this builder.
 		 * @return a {@code Brand} builder
 		 */
@@ -235,7 +265,7 @@ public class Brand {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
 	
 	/**
@@ -243,23 +273,39 @@ public class Brand {
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 	
 	/**
-	 * Returns the {@code Brand} company name.
-	 * @return the company name
+	 * Returns the {@code Brand} name.
+	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
 	
 	/**
-	 * Sets the {@code Brand} company name.
-	 * @param name the company name
+	 * Sets the {@code Brand} name.
+	 * @param name the name
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * Returns the {@code Brand} company name.
+	 * @return the company name
+	 */
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	/**
+	 * Sets the {@code Brand} company name.
+	 * @param companyName the company name
+	 */
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 	
 	/**
@@ -415,6 +461,22 @@ public class Brand {
 	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
+	}
+
+	/**
+	 * Returns the scales list.
+	 * @return the scales list
+	 */
+	public List<String> getScales() {
+		return scales;
+	}
+
+	/**
+	 * Sets the scales list.
+	 * @param scales the scales list
+	 */
+	public void setScales(List<String> scales) {
+		this.scales = scales;
 	}
 
 	/**
