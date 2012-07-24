@@ -36,14 +36,7 @@ import com.trenako.criteria.SearchRequest;
  */
 public class SearchRequestArgumentResolver implements HandlerMethodArgumentResolver {
 	
-	private final SearchRequest searchRequest;
-	
 	public SearchRequestArgumentResolver() {
-		this(new SearchRequest());
-	}
-	
-	public SearchRequestArgumentResolver(SearchRequest failbackCriteria) {
-		this.searchRequest = failbackCriteria;
 	}
 	
 	@Override
@@ -52,6 +45,7 @@ public class SearchRequestArgumentResolver implements HandlerMethodArgumentResol
 			NativeWebRequest webRequest,
 			WebDataBinderFactory binderFactory) throws Exception {
 
+		SearchRequest searchRequest = new SearchRequest();
 		WebDataBinder webBinder = binderFactory.createBinder(webRequest, searchRequest, "");
 		
 		HttpServletRequest request = 
