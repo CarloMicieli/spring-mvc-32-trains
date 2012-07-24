@@ -39,13 +39,27 @@ public class SearchRequestArgumentResolver implements HandlerMethodArgumentResol
 	public SearchRequestArgumentResolver() {
 	}
 	
+	// for testing
+	SearchRequest defaultRequest;
+	SearchRequestArgumentResolver(SearchRequest defaultRequest) {
+		this.defaultRequest = defaultRequest;
+	}
+	
 	@Override
 	public Object resolveArgument(MethodParameter parameter,
 			ModelAndViewContainer mavContainer, 
 			NativeWebRequest webRequest,
 			WebDataBinderFactory binderFactory) throws Exception {
 
-		SearchRequest searchRequest = new SearchRequest();
+		SearchRequest searchRequest;
+		if (defaultRequest != null) {
+			searchRequest = defaultRequest;
+			searchRequest.clear();
+		}
+		else {
+			searchRequest = new SearchRequest(); 
+		}
+		
 		WebDataBinder webBinder = binderFactory.createBinder(webRequest, searchRequest, "");
 		
 		HttpServletRequest request = 

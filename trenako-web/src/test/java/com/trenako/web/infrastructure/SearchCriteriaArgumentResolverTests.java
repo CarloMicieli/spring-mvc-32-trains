@@ -42,24 +42,24 @@ public class SearchCriteriaArgumentResolverTests {
 	SearchRequest searchRequest = new SearchRequest();
 	SearchRequestArgumentResolver resolver = new SearchRequestArgumentResolver(searchRequest);
 	
-	MethodParameter parSearchCriteria;
+	MethodParameter parSearchRequest;
 	MethodParameter parRangeRequest;
 	
 	@Before
 	public void setup() throws Exception {
 		Method method = getClass().getMethod("testmethod", SearchRequest.class, RangeRequest.class);
-		parSearchCriteria = new MethodParameter(method, 0);
+		parSearchRequest = new MethodParameter(method, 0);
 		parRangeRequest = new MethodParameter(method, 1);
 	}
 	
 	@Test
 	public void shouldSupportsSearchCriteriaParameters() {
-		assertTrue(resolver.supportsParameter(parSearchCriteria));
+		assertTrue(resolver.supportsParameter(parSearchRequest));
 		assertFalse(resolver.supportsParameter(parRangeRequest));
 	}
 	
 	@Test
-	public void shouldResolveRequestAsSearchCriteria() throws Exception {
+	public void shouldResolveRequestAsSearchRequest() throws Exception {
 		HttpServletRequest request = new MockHttpServletRequest();
 		((MockHttpServletRequest)request).setRequestURI("/trenako-web/rs/brand/acme/railway/fs");
 		NativeWebRequest webRequest = mock(NativeWebRequest.class);
@@ -69,7 +69,7 @@ public class SearchCriteriaArgumentResolverTests {
 		when(binderFactory.createBinder(eq(webRequest), isA(SearchRequest.class), eq("")))
 			.thenReturn(new ExtendedServletRequestDataBinder(searchRequest, ""));
 		
-		Object obj = resolver.resolveArgument(parSearchCriteria,
+		Object obj = resolver.resolveArgument(parSearchRequest,
 				null, 
 				webRequest,
 				binderFactory);

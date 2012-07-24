@@ -150,6 +150,14 @@ public class SearchRequest {
 		return values.isEmpty();
 	}
 	
+	/**
+	 * Removes all criteria from this {@code SearchRequest}.
+	 */
+	public void clear() {
+		if (isEmpty()) return;
+		values.clear();
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
