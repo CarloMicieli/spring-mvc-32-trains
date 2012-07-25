@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 <head>
@@ -23,7 +24,7 @@
 
 	<div class="page-header">
 		<h1>${brand.name}</h1>
-		<small>Company name</small>
+		<small>${brand.companyName}</small>
 	</div>
 	
 	<div class="row-fluid">
@@ -41,7 +42,14 @@
 		</div>
 		<div class="span1"></div>
 	</div>
-	
+
+	<div class="row-fluid">
+		<div class="span1"></div>
+			<tk:categoriesList brand="${brand}"/>
+		<div class="span1"></div>
+	</div>
+		
+		
 	<div class="row-fluid">
 		<div class="span1"></div>
 		<div class="span10">

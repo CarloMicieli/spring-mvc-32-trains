@@ -117,6 +117,33 @@ public class HtmlBuilder {
 	}
 	
 	/**
+	 * A header ({@code <h1>}).
+	 * @param body the item inner text
+	 * @return a tag
+	 */
+	public static h1 h1(String body) {
+		return (HtmlBuilder.h1) new h1(body);
+	}
+	
+	/**
+	 * A header ({@code <h2>}).
+	 * @param body the item inner text
+	 * @return a tag
+	 */
+	public static h2 h2(String body) {
+		return (HtmlBuilder.h2) new h2(body);
+	}
+	
+	/**
+	 * A header ({@code <h3>}).
+	 * @param body the item inner text
+	 * @return a tag
+	 */
+	public static h3 h3(String body) {
+		return (HtmlBuilder.h3) new h3(body);
+	}
+	
+	/**
 	 * A HTML snippet; not included in any tag.
 	 * @param innerTags the list of inner tags
 	 * @return a tag
@@ -158,6 +185,27 @@ public class HtmlBuilder {
 		public div cssClass(String value) {
 			addAttribute("class", value);
 			return this;
+		}
+	}
+	
+	public static class h1 extends HtmlTag {
+		public h1(String body) {
+			super("h1", TagType.TEXT_BODY);
+			setBody(body);
+		}
+	}
+	
+	public static class h2 extends HtmlTag {
+		public h2(String body) {
+			super("h2", TagType.TEXT_BODY);
+			setBody(body);
+		}
+	}
+	
+	public static class h3 extends HtmlTag {
+		public h3(String body) {
+			super("h3", TagType.TEXT_BODY);
+			setBody(body);
 		}
 	}
 

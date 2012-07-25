@@ -7,6 +7,26 @@
 	<info>The custom tags library</info>
 
 	<tag>
+		<name>categoriesList</name>
+		<tagclass>com.trenako.web.tags.CategoriesListTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display categories list for a brand.
+		</description>
+		<attribute>
+			<name>brand</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.trenako.entities.Brand</type>
+		</attribute>
+		<attribute>
+			<name>columns</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+
+	<tag>
 		<name>breadcrumb</name>
 		<tagclass>com.trenako.web.tags.BreadcrumbTags</tagclass>
 		<bodycontent>empty</bodycontent>
