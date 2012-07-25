@@ -31,10 +31,22 @@ public class RailwayTests {
 	@Test
 	public void shouldReturnRailwayLabels() {
 		Railway x = new Railway.Builder("DB").companyName("Die bahn").build();
-		assertEquals("DB (Die bahn)", x.label());
+		assertEquals("DB (Die bahn)", x.getLabel());
 		
 		Railway y = new Railway.Builder("Scnf").build();
-		assertEquals("Scnf", y.label());
+		assertEquals("Scnf", y.getLabel());
+	}
+	
+	@Test
+	public void shouldReturnStringRepresentations() {
+		Date now = new Date();
+		Railway r = new Railway.Builder("Scnf")
+			.companyName("Société nationale des chemins de fer français")
+			.country("fr")
+			.operatingSince(now)
+			.operatingUntil(now)
+			.build();
+		assertEquals("Scnf", r.toString());
 	}
 	
 	@Test
@@ -43,12 +55,14 @@ public class RailwayTests {
 		Railway r = new Railway.Builder("Scnf")
 			.companyName("Société nationale des chemins de fer français")
 			.country("fr")
+			.description("Scnf description")
 			.operatingSince(now)
 			.operatingUntil(now)
 			.build();
 		assertNotNull(r);
 		assertEquals("scnf", r.getSlug());
-		assertEquals("Scnf (Société nationale des chemins de fer français)", r.label());
+		assertEquals("Scnf (Société nationale des chemins de fer français)", r.getLabel());
+		assertEquals("Scnf description", r.getDescription());
 	}
 	
 	@Test

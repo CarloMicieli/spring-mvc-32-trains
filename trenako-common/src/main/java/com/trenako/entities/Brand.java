@@ -488,7 +488,7 @@ public class Brand {
 	 * </p>
 	 * @return the label string
 	 */
-	public String label() {
+	public String getLabel() {
 		return name;
 	}
 	

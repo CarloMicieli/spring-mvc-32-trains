@@ -29,7 +29,7 @@ public class BrandTests {
 	@Test
 	public void shouldReturnBrandLabels() {
 		Brand b = new Brand("Ls Models");
-		assertEquals("Ls Models", b.label());
+		assertEquals("Ls Models", b.getLabel());
 	}
 	
 	@Test

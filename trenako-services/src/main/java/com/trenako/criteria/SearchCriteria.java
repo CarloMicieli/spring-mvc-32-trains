@@ -138,7 +138,7 @@ public class SearchCriteria {
 		 */
 		public Builder brand(Brand brand) {
 			if (brand != null) {
-				add(Criteria.BRAND, brand.getSlug(), brand.label());
+				add(Criteria.BRAND, brand.getSlug(), brand.getLabel());
 			}
 			return this;
 		}
@@ -155,7 +155,7 @@ public class SearchCriteria {
 		 */
 		public Builder railway(Railway railway) {
 			if (railway != null) {
-				add(Criteria.RAILWAY, railway.getSlug(), railway.label());
+				add(Criteria.RAILWAY, railway.getSlug(), railway.getLabel());
 			}
 			return this;
 		}
@@ -172,7 +172,7 @@ public class SearchCriteria {
 		 */
 		public Builder scale(Scale scale) {
 			if (scale != null) {
-				add(Criteria.SCALE, scale.getSlug(), scale.label());
+				add(Criteria.SCALE, scale.getSlug(), scale.getLabel());
 			}
 			return this;
 		}

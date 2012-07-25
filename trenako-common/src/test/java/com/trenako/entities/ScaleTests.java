@@ -37,7 +37,7 @@ public class ScaleTests {
 		Scale s = new Scale.Builder("H0")
 		.ratio(870) // stored as integer
 		.build();
-	assertEquals("H0 (1:87)", s.label());	
+	assertEquals("H0 (1:87)", s.getLabel());	
 	}
 	
 	@Test

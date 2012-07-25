@@ -128,7 +128,11 @@ public class BrowseController {
 
 	@RequestMapping(value = "/railways/{slug}", method = RequestMethod.GET)
 	public ModelAndView railway(@PathVariable("slug") String slug) {
-		return new ModelAndView("browse/railway", "railway", service.findRailway(slug));
+		ModelAndView mav = new ModelAndView("browse/railway");
+		mav.addObject("railway", service.findRailway(slug));
+		mav.addObject("categories", service.categories());
+		mav.addObject("eras", service.eras());
+		return mav;
 	}
 
 	@RequestMapping(value = "/scales/{slug}", method = RequestMethod.GET)

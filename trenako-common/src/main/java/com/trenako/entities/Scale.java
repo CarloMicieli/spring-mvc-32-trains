@@ -490,7 +490,7 @@ public class Scale {
 	 * </p>
 	 * @return the label string
 	 */
-	public String label() {
+	public String getLabel() {
 		return new StringBuffer()
 			.append(getName())
 			.append(" (")

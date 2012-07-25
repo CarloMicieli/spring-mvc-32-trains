@@ -3,7 +3,7 @@
 
 <html>
 <head>
-	<title><s:message code="browse.scales.title" text="scales"/></title>
+	<title><s:message code="browse.scales.title"/></title>
 	<meta name="browse" content="active"/>
 </head>
 
@@ -12,14 +12,14 @@
 	<ul class="breadcrumb">
 		<li>
 			<s:url value="/browse" var="browseUrl"/>
-	    	<a href="${browseUrl}"><s:message code="browse.title" text="Browse"/></a> <span class="divider">/</span>
+	    	<a href="${browseUrl}"><s:message code="browse.breadcrumb.browse.label"/></a> <span class="divider">/</span>
 		</li>
-	  	<li class="active"><s:message code="browse.scales.title" text="scales"/></li>
+	  	<li class="active"><s:message code="browse.breadcrumb.scales.label"/></li>
 	</ul>
 
 	<div class="page-header">
-		<h1><s:message code="browse.scales.header.title" text="scales" /></h1>
-		<small><s:message code="browse.scales.header.subtitle" text="Select a model railway scale" /></small>
+		<h1><s:message code="browse.scales.header.title" /></h1>
+		<small><s:message code="browse.scales.header.subtitle" /></small>
 	</div>
 
 	<c:forEach var="scale" items="${scales}">

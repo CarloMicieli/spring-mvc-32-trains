@@ -71,26 +71,26 @@
 					<div class="nav-collapse">
   						<ul class="nav">
   							<li class="<decorator:getProperty property="meta.home"/>">
-								<a href="<c:url value="/home" />"><s:message code="home" text="Home"/></a>
+								<a href="<c:url value="/home" />"><s:message code="menu.home.label"/></a>
 							</li>
 							<li class="<decorator:getProperty property="meta.you"/>">
-								<a href="<c:url value="/you" />"><s:message code="you" text="You"/></a>
+								<a href="<c:url value="/you" />"><s:message code="menu.you.label"/></a>
 							</li>
 							<li class="<decorator:getProperty property="meta.browse"/>">
-								<a href="<c:url value="/browse" />"><s:message code="browse" text="Browse"/></a>
+								<a href="<c:url value="/browse" />"><s:message code="menu.browse.label"/></a>
 							</li>
 							<sec:authorize url="/admin">        
 							<li class="dropdown" id="menu1">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-									<s:message code="menu.admin.label" text="Administration" />
+									<s:message code="menu.administration.label"/>
 									<b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
-									<li><a href="<c:url value="/admin/brands" />"><s:message code="menu.brands.label" text="Brands" /></a></li>
-	     							<li><a href="<c:url value="/admin/railways" />"><s:message code="menu.railways.label" text="Railways" /></a></li>
-	     							<li><a href="<c:url value="/admin/scales" />"><s:message code="menu.scales.label" text="Scales" /></a></li>
+									<li><a href="<c:url value="/admin/brands" />"><s:message code="menu.brands.label"/></a></li>
+	     							<li><a href="<c:url value="/admin/railways" />"><s:message code="menu.railways.label"/></a></li>
+	     							<li><a href="<c:url value="/admin/scales" />"><s:message code="menu.scales.label"/></a></li>
 	     							<li class="divider"></li>
-	     							<li><a href="#">Users</a></li>
+	     							<li><a href="#"><s:message code="menu.users.label"/></a></li>
 	  		 					</ul>
 	  		 				</li>
 	  		 				</sec:authorize>
@@ -107,10 +107,12 @@
 		<footer class="footer">
 			<div class="container">
 				<p></p>
-				<p class="pull-right"><a href="#top">Back to top</a></p>
-				<p>Designed and built by <a href="https://twitter.com/#!/chuckmiskyes" target="_blank">@chuckmiskyes</a>.</p>
+				<p class="pull-right"><a href="#top"><s:message code="footer.back.top.label"/></a></p>
+				<p>
+					<s:message code="footer.designed.built.label"/> <a href="https://twitter.com/#!/chuckmiskyes" target="_blank">@chuckmiskyes</a>.
+					<s:message code="footer.source.code.label"/> <a href="https://github.com/CarloMicieli/trenako" target="_blank">GitHub</a>.
+				</p>
 				<p>Theme based upon <strong>Twitter Bootstrap</strong> and <strong>Bootswatch.com's Amelia</strong>.</p>
-				<p>Copyright &copy; 2012 Zihuatanejo Inc. Source code available <a href="https://github.com/CarloMicieli/trenako">here</a>.</p>
 			</div>
 		</footer>
 	  	

@@ -3,7 +3,7 @@
 
 <html>
 <head>
-	<title><s:message code="browse.eras.title" text="eras"/></title>
+	<title><s:message code="browse.eras.title" /></title>
 	<meta name="browse" content="active"/>
 </head>
 
@@ -12,30 +12,32 @@
 	<ul class="breadcrumb">
 		<li>
 			<s:url value="/browse" var="browseUrl"/>
-	    	<a href="${browseUrl}"><s:message code="browse.title" text="Browse"/></a> <span class="divider">/</span>
+	    	<a href="${browseUrl}"><s:message code="browse.breadcrumb.browse.label"/></a> <span class="divider">/</span>
 		</li>
-	  	<li class="active"><s:message code="browse.eras.title" text="eras"/></li>
+	  	<li class="active"><s:message code="browse.breadcrumb.eras.label"/></li>
 	</ul>
 
 	<div class="page-header">
-		<h1><s:message code="browse.eras.header.title" text="eras" /></h1>
-		<small><s:message code="browse.eras.header.subtitle" text="Select a model railway era" /></small>
+		<h1><s:message code="browse.eras.header.title" /></h1>
+		<small><s:message code="browse.eras.header.subtitle" /></small>
 	</div>
 
 	<c:forEach var="era" items="${eras}">
 	<div class="row-fluid">
 		<div class="span2"></div>
 		<div class="span2">
-			<span style="font-family: verdana; font-size: 36px">${era}</span>
+			<span style="font-family: verdana; font-size: 36px">${era.label}</span>
 		</div>
 		<div class="span4">
 			<h3></h3>
 			<dl class="dl-horizontal">
+				<dt></dt>
+				<dd>${era.description}</dd>
 			</dl>
 		</div>
 		<div class="span4">
-			<s:url var="eraUrl" value="/browse/era/{slug}">
-				<s:param name="slug" value="${era}"/>
+			<s:url var="eraUrl" value="/browse/eras/{slug}">
+				<s:param name="slug" value="${era.key}"/>
 			</s:url>
 			<a class="btn btn-info" href="${eraUrl}">
 				<s:message code="button.view.details.label" text="View details"/>

@@ -108,8 +108,10 @@ public class BrowseControllerMappingTests extends AbstractSpringControllerTests 
 	public void shouldRenderBrowseRailwayHomepage() throws Exception {
 		mockMvc().perform(get("/browse/railways/{slug}", "fs"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(3))
 			.andExpect(model().attributeExists("railway"))
+			.andExpect(model().attributeExists("eras"))
+			.andExpect(model().attributeExists("categories"))
 			.andExpect(forwardedUrl(view("browse", "railway")));
 	}
 	

@@ -151,7 +151,7 @@ public class CategoriesListTagsTests  extends AbstractSpringTagsTest {
 	
 	private HtmlTag categories(Brand brand, Scale scale) {
 		List<HtmlTag> list = new ArrayList<HtmlTag>();
-		list.add(h2(scale.label()));
+		list.add(h2(scale.getLabel()));
 		for (PowerMethod pm : PowerMethod.values()) {
 			if (scale.getPowerMethods().contains(pm.label())) {
 				buildList(list, brand, scale, pm);

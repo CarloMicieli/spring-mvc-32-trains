@@ -54,6 +54,9 @@ public class Railway {
 	@Size(max = 100, message = "railway.companyName.size.notmet")
 	private String companyName;
 	
+	@Size(max = 250, message = "railway.description.size.notmet")
+	private String description;
+	
 	@NotBlank(message = "railway.country.required")
 	@Size(max = 2, message = "railway.country.size.notmet")
 	private String country;
@@ -85,6 +88,7 @@ public class Railway {
 	
 	private Railway(Builder b) {
 		this.name = b.name;
+		this.description = b.description;
 		this.companyName = b.companyName;
 		this.country = b.country;
 		this.operatingSince = b.operatingSince;
@@ -102,6 +106,7 @@ public class Railway {
 		private final String name;
 		
 		// optional fields
+		private String description = null;
 		private String companyName = null;
 		private String country = null;
 		private String slug = null;
@@ -135,6 +140,11 @@ public class Railway {
 		
 		public Builder operatingUntil(Date end) {
 			this.operatingUntil = end;
+			return this;
+		}
+		
+		public Builder description(String description) {
+			this.description = description;
 			return this;
 		}
 		
@@ -199,6 +209,14 @@ public class Railway {
 		this.companyName = companyName;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	/**
 	 * Returns the country code.
 	 * <p>
@@ -301,7 +319,7 @@ public class Railway {
 	 * </p>
 	 * @return the label string
 	 */
-	public String label() {
+	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getName());
 		
@@ -321,7 +339,6 @@ public class Railway {
 	@Override
 	public String toString() {
 		return new StringBuilder()
-			.append(getId() + ": ")
 			.append(getName())
 			.toString();
 	}

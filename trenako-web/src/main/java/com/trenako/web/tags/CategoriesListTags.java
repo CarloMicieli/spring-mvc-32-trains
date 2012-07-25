@@ -139,7 +139,7 @@ public class CategoriesListTags extends SpringTagSupport {
 			.scale(scale)
 			.build();
 		
-		list.add(h2(scale.label()));
+		list.add(h2(scale.getLabel()));
 		
 		if (scale.getPowerMethods() == null || scale.getPowerMethods().size() == 0) {
 			appendCategoryList(list, sc, PowerMethod.DC);

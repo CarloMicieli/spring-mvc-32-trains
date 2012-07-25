@@ -3,7 +3,7 @@
 
 <html>
 	<head>
-		<title><s:message code="browse.index.title" text="Browse" /></title>
+		<title><s:message code="browse.index.title"/></title>
 		<meta name="browse" content="active"/>
 		<style type="text/css">
 			a.browse {
@@ -15,23 +15,21 @@
 	<body>
 		<ul class="breadcrumb">
 			<li class="active">
-		    	<s:message code="browse.title" text="Browse"/>
+		    	<s:message code="browse.breadcrumb.browse.label"/>
 			</li>
 		</ul>
 	
 		<div class="page-header">
-			<h1><s:message code="browse.index.title" text="Browse" /></h1>
-			<small>Pick one of these criteria to start browsing</small>
+			<h1><s:message code="browse.index.header.title"/></h1>
+			<small><s:message code="browse.index.header.subtitle"/></small>
 		</div>
 		<div class="row-fluid">
 			<div class="span1"></div>
 			<div class="span10">
 				<div class="row-fluid">
 					<div class="span4">
-						<h2>Brands</h2>
-						<p>
-							These are the model railway producer. 
-						</p>
+						<h2><s:message code="browse.index.brands.label"/></h2>
+						<p><s:message code="browse.index.brands.description"/></p>
 						<a class="btn btn-info" href="<s:url value="/browse/brands"/>">
 							<s:message code="button.view.details.label"/>
 						</a>
@@ -42,7 +40,7 @@
 							<s:url var="brandUrl" value="/browse/brands/{slug}">
 								<s:param name="slug" value="${brand.slug}"/>
 							</s:url>
-							<li><a class="browse" href="${brandUrl}" title="${brand.name}">${brand.name}</a></li>
+							<li><a class="browse" href="${brandUrl}" title="${brand.label}">${brand.name}</a></li>
 						</c:forEach>
 						</ul>
 					</div>
@@ -50,10 +48,8 @@
 				<hr />
 				<div class="row-fluid">
 					<div class="span4">
-						<h2>Railways</h2>
-						<p>
-							These are the railway companies. 
-						</p>
+						<h2><s:message code="browse.index.railways.label"/></h2>
+						<p><s:message code="browse.index.railways.description"/></p>
 						<p>
 							<a class="btn btn-info" href="<s:url value="/browse/railways"/>">
 								<s:message code="button.view.details.label"/>
@@ -66,7 +62,7 @@
 							<s:url var="railwayUrl" value="/browse/railways/{slug}">
 								<s:param name="slug" value="${r.slug}"/>
 							</s:url>
-							<li><a class="browse" href="${railwayUrl}" title="${r.name}">${r.name}</a></li>
+							<li><a class="browse" href="${railwayUrl}" title="${r.label}">${r.name}</a></li>
 						</c:forEach>
 						</ul>
 					</div>
@@ -74,10 +70,8 @@
 				<hr />
 				<div class="row-fluid">
 					<div class="span4">
-						<h2>Scales</h2>
-						<p>
-							These are the model railway scales. 
-						</p>
+						<h2><s:message code="browse.index.scales.label"/></h2>
+						<p><s:message code="browse.index.scales.description"/></p>
 						<p>
 							<a class="btn btn-info" href="<s:url value="/browse/scales"/>">
 								<s:message code="button.view.details.label"/>
@@ -90,7 +84,7 @@
 							<s:url var="scaleUrl" value="/browse/scales/{slug}">
 								<s:param name="slug" value="${s.slug}"/>
 							</s:url>
-							<li><a class="browse" href="${scaleUrl}" title="${s}">${s.name}</a></li>
+							<li><a class="browse" href="${scaleUrl}" title="${s.label}">${s.name}</a></li>
 						</c:forEach>
 						</ul>
 					</div>
@@ -98,10 +92,8 @@
 				<hr />
 				<div class="row-fluid">
 					<div class="span4">
-						<h2>Eras</h2>
-						<p>
-							These are the model railway eras. 
-						</p>
+						<h2><s:message code="browse.index.eras.label"/></h2>
+						<p><s:message code="browse.index.eras.description"/></p>
 						<p>
 							<a class="btn btn-info" href="<s:url value="/browse/eras"/>">
 								<s:message code="button.view.details.label"/>
@@ -122,10 +114,8 @@
 				<hr />
 				<div class="row-fluid">
 					<div class="span4">
-						<h2>Categories</h2>
-						<p>
-							These are the model railway categories. 
-						</p>
+						<h2><s:message code="browse.index.categories.label"/></h2>
+						<p><s:message code="browse.index.categories.description"/></p>
 						<p>
 							<a class="btn btn-info" href="<s:url value="/browse/categories"/>">
 								<s:message code="button.view.details.label"/>
