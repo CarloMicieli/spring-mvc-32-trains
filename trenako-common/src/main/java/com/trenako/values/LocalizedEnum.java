@@ -84,6 +84,17 @@ public class LocalizedEnum<T extends Enum<T>> {
 	}
 	
 	/**
+	 * Returns the label for the provided {@code enum} value.
+	 * @param str the string to be parsed
+	 * @param enumType the {@code enum} type
+	 * @return a value if {@code str} is valid constant name
+	 */
+	public static <T extends Enum<T>> LocalizedEnum<T> parseString(String str, MessageSource ms, Class<T> enumType) {
+		T val = T.valueOf(enumType, str.toUpperCase().replace('-', '_'));
+		return new LocalizedEnum<T>(val, ms, null);
+	}
+	
+	/**
 	 * Builds the list with the provided {@code enum} values.
 	 * @param enumType the {@code enum} type
 	 * @return the values list

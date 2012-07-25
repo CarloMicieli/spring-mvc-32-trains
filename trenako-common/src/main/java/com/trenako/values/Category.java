@@ -88,24 +88,6 @@ public enum Category {
 	}
 
 	/**
-	 * Returns the list of category labels by power method.
-	 * @param isDc the power method
-	 * @return the list of categories
-	 */
-	public static Iterable<String> list(boolean isDc) {
-		String pm = isDc ? "dc" : "ac";
-		
-		int i = 0;
-		String[] labels = new String[Category.values().length];
-		for (Category cat : Category.values()) {
-			labels[i++] = String.format("%s-%s", pm, cat.label());
-		}
-
-		return Collections.unmodifiableList(
-				Arrays.asList(labels));
-	}
-
-	/**
 	 * Returns the list of {@code Category} labels
 	 * @return the {@code Category} list
 	 */

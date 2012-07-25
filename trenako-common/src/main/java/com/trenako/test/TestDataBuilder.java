@@ -39,8 +39,8 @@ public class TestDataBuilder {
 	private final static LocalizedEnum<PowerMethod> ac = new LocalizedEnum<PowerMethod>(PowerMethod.AC);
 	private final static LocalizedEnum<PowerMethod> dc = new LocalizedEnum<PowerMethod>(PowerMethod.DC);
 	
-	private final static Cat dcElectricLocomotives = new Cat(PowerMethod.DC, Category.ELECTRIC_LOCOMOTIVES);
-	private final static Cat acElectricLocomotives = new Cat(PowerMethod.AC, Category.ELECTRIC_LOCOMOTIVES);
+	private final static Cat dcElectricLocomotives = Cat.buildCat(PowerMethod.DC, Category.ELECTRIC_LOCOMOTIVES);
+	private final static Cat acElectricLocomotives = Cat.buildCat(PowerMethod.AC, Category.ELECTRIC_LOCOMOTIVES);
 	
 	private final static Brand acme = new Brand.Builder("ACME").slug("acme").build();
 	private final static Brand roco = new Brand.Builder("Roco").slug("roco").build();
@@ -48,8 +48,9 @@ public class TestDataBuilder {
 	
 	private final static Railway fs = new Railway.Builder("FS").companyName("Ferrovie dello stato").country("it").build();
 	private final static Railway db = new Railway.Builder("DB").companyName("Die bahn").country("de").build();
-	private final static Scale scaleH0 = new Scale.Builder("H0").ratio(870).build();
-	private final static Scale scaleN = new Scale.Builder("N").ratio(1600).build();
+	private final static Scale scaleH0 = new Scale.Builder("H0").ratio(870).powerMethods("ac", "dc").build();
+	private final static Scale scaleN = new Scale.Builder("N").ratio(1600).powerMethods("dc").build();
+	private final static Scale scaleTT = new Scale.Builder("TT").ratio(1200).powerMethods("dc").build();
 	
 	public static LocalizedEnum<Era> eraIII() { return eraIII; }
 	public static LocalizedEnum<Category> steamLocomotives() { return steamLocomotives; }
@@ -67,4 +68,5 @@ public class TestDataBuilder {
 	public static Railway db() { return db; }
 	public static Scale scaleH0() { return scaleH0; }
 	public static Scale scaleN() { return scaleN; }
+	public static Scale scaleTT() { return scaleTT; }
 }

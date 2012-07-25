@@ -56,6 +56,11 @@ public class ScalesServiceImpl implements ScalesService {
 	}
 	
 	@Override
+	public Scale findBySlug(String slug) {
+		return repo.findBySlug(slug);
+	}
+	
+	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save(Scale brand) {
 		repo.save(brand);
@@ -66,4 +71,5 @@ public class ScalesServiceImpl implements ScalesService {
 	public void remove(Scale brand) {
 		repo.delete(brand);
 	}
+
 }

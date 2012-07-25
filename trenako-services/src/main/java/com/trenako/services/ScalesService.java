@@ -60,6 +60,18 @@ public interface ScalesService {
 	Scale findByName(String name);
 	
 	/**
+	 * Finds the {@link Scale} with the provided slug.
+	 * <p>
+	 * Due to possible data store implementation the clients for this method must 
+	 * think this search as case sensitive.
+	 * </p>
+	 *  
+	 * @param slug the {@code Scale} slug
+	 * @return a {@code Scale} if found; {@code null} otherwise
+	 */
+	Scale findBySlug(String slug);
+	
+	/**
 	 * Returns all {@link Scale} object with the provided {@link Scale#isNarrow()} value.
 	 * @param isNarrow {@code true} will returns all the scales with narrow gauges; 
 	 * {@code false} will return the scales with standard gauges

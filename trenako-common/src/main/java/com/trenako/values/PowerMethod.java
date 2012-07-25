@@ -26,13 +26,14 @@ import java.util.List;
  */
 public enum PowerMethod {
 	/**
-	 * Alternating current (Maerklin).
-	 */
-	AC,
-	/**
 	 * Direct current.
 	 */
-	DC;
+	DC,
+	
+	/**
+	 * Alternating current (Maerklin).
+	 */
+	AC;
 	
 	/**
 	 * Gets the {@code PowerMethod} label.

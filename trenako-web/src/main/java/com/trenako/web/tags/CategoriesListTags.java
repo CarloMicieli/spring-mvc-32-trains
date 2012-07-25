@@ -22,10 +22,19 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.util.Assert;
 
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
+import com.trenako.entities.Scale;
+import com.trenako.services.ScalesService;
+import com.trenako.utility.Cat;
+import com.trenako.values.PowerMethod;
 import com.trenako.web.tags.html.HtmlTag;
+
+import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.*;
 import static com.trenako.web.tags.html.HtmlBuilder.*;
 
 /**
@@ -36,6 +45,10 @@ import static com.trenako.web.tags.html.HtmlBuilder.*;
 public class CategoriesListTags extends SpringTagSupport {
 	private static final long serialVersionUID = 1L;
 
+	private @Autowired MessageSource messageSource;
+	private @Autowired ScalesService service;
+	
+	private String contextPath;
 	private Brand brand;
 	private int columns;
 	
@@ -56,9 +69,12 @@ public class CategoriesListTags extends SpringTagSupport {
 		return columns;
 	}
 	
-	private String spanClass() {
-		int i = 12 / getColumns();
-		return "span" + i;
+	void setService(ScalesService service) {
+		this.service = service;
+	}
+	
+	void setMessageSource(MessageSource messageSource) {
+		this.messageSource = messageSource;
 	}
 	
 	@Override
@@ -67,6 +83,7 @@ public class CategoriesListTags extends SpringTagSupport {
 		
 		Assert.notNull(getBrand(), "Brand is required");
 		
+		this.contextPath = contextPath;
 		try {
 
 			if (getBrand().getScales() == null || getBrand().getScales().size() == 0) {
@@ -87,8 +104,14 @@ public class CategoriesListTags extends SpringTagSupport {
 				for (int col = 0; col < getColumns(); col++) {
 					int n = col + (getColumns() * row);
 					if (scales.length > n) {
-						String scale = scales[n];
-						cols[col] = div(h2(scale)).cssClass(spanClass());
+						String slug = scales[n];
+						
+						Scale scale = service.findBySlug(slug);
+						if (scale == null) {
+							continue;
+						}
+						
+						cols[col] = div(buildScale(scale)).cssClass(spanClass());
 					}
 					// pad the rows with empty columns
 					else {
@@ -107,5 +130,43 @@ public class CategoriesListTags extends SpringTagSupport {
 		
 		return SKIP_BODY;
 	}
-
+	
+	private HtmlTag buildScale(Scale scale) {
+		List<HtmlTag> list = new ArrayList<HtmlTag>();
+		
+		SearchCriteria sc = new SearchCriteria.Builder()
+			.brand(getBrand())
+			.scale(scale)
+			.build();
+		
+		list.add(h2(scale.label()));
+		
+		if (scale.getPowerMethods() == null || scale.getPowerMethods().size() == 0) {
+			appendCategoryList(list, sc, PowerMethod.DC);
+		}
+		else {
+			for (PowerMethod pm : PowerMethod.values()) {
+				if (scale.getPowerMethods().contains(pm.label())) {
+					appendCategoryList(list, sc, pm);
+				}
+			}
+		}
+		
+		return snippet(tags(list));		
+	}
+	
+	private void appendCategoryList(List<HtmlTag> list, SearchCriteria sc, PowerMethod pm) {
+		List<HtmlTag> items = new ArrayList<HtmlTag>();
+		Iterable<Cat> categories = Cat.list(pm, messageSource);
+		for (Cat cat : categories) {
+			items.add(li(a(cat.label()).href(contextPath, buildUrlAdding(sc, "cat", cat))));
+		}
+		
+		list.add(ul(tags(items)).cssClass("unstyled"));
+	}
+	
+	private String spanClass() {
+		int i = 12 / getColumns();
+		return "span" + i;
+	}
 }

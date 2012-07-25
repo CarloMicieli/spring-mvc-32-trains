@@ -22,14 +22,14 @@
 	  	<li class="active">${brand.name}</li>
 	</ul>
 
-	<div class="page-header">
-		<h1>${brand.name}</h1>
-		<small>${brand.companyName}</small>
-	</div>
-	
 	<div class="row-fluid">
-		<div class="span1"></div>
-		<div class="span10">
+		<div class="span2">
+			<div class="page-header">
+				<h1>${brand.name}</h1>
+				<small>${brand.companyName}</small>
+			</div>
+		</div>
+		<div class="span9">
 			<div class="row-fluid">
 				<div class="span3">
 					<img src="http://placehold.it/250x120" alt="">
@@ -44,44 +44,9 @@
 	</div>
 
 	<div class="row-fluid">
-		<div class="span1"></div>
+		<div class="span2"></div>
+		<div class="span9">
 			<tk:categoriesList brand="${brand}"/>
-		<div class="span1"></div>
-	</div>
-		
-		
-	<div class="row-fluid">
-		<div class="span1"></div>
-		<div class="span10">
-			<div class="span4">
-	        	<h2>H0</h2>
-				<ul class="unstyled">
-					<li>AC Steam locomotives</li>
-					<li>AC Diesel locomotives</li>
-					<li>AC Electric locomotives</li>
-					<li>AC Electric locomotives</li>
-				</ul>
-			</div>
-			
-			<div class="span4">
-	        	<h2>N</h2>
-				<ul class="unstyled">
-					<li>AC Steam locomotives</li>
-					<li>AC Diesel locomotives</li>
-					<li>AC Electric locomotives</li>
-					<li>AC Electric locomotives</li>
-				</ul>
-			</div>
-			
-			<div class="span4">
-	        	<h2>Z</h2>
-				<ul class="unstyled">
-					<li>AC Steam locomotives</li>
-					<li>AC Diesel locomotives</li>
-					<li>AC Electric locomotives</li>
-					<li>AC Electric locomotives</li>
-				</ul>
-			</div>
 		</div>
 		<div class="span1"></div>
 	</div>

@@ -56,29 +56,4 @@ public class CategoryTests {
 		assertEquals("freight-cars", l.get(5));
 		assertEquals("passenger-cars", l.get(6));
 	}
-	
-	@Test
-	public void shouldListAllTheCategoryLabelsByCategory() {
-		Iterable<String> categories = Category.list(false);
-		List<String> l = (List<String>) categories;
-		
-		assertEquals("ac-steam-locomotives", l.get(0));
-		assertEquals("ac-diesel-locomotives", l.get(1));
-		assertEquals("ac-electric-locomotives", l.get(2));
-		assertEquals("ac-railcars", l.get(3));
-		assertEquals("ac-electric-multiple-unit", l.get(4));
-		assertEquals("ac-freight-cars", l.get(5));
-		assertEquals("ac-passenger-cars", l.get(6));
-	}
-	
-	@Test
-	public void shouldListAllTheCategoriesByPowerMethod() {
-		Iterable<String> acCategories = Category.list(false);
-		List<String> lAc = (List<String>) acCategories;
-		assertEquals("ac-steam-locomotives", lAc.get(0));
-
-		Iterable<String> dcCategories = Category.list(true);
-		List<String> lDc = (List<String>) dcCategories;
-		assertEquals("dc-steam-locomotives", lDc.get(0));
-	}
 }

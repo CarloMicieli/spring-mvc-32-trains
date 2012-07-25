@@ -63,6 +63,13 @@ public class ScalesServiceTests {
 	}
 
 	@Test
+	public void shouldFindScalesBySlug() {
+		String slug = "h0";
+		service.findBySlug(slug);
+		verify(repo, times(1)).findBySlug(eq(slug));
+	}
+	
+	@Test
 	public void shouldFindAllScales() {
 		service.findAll(paging);
 		verify(repo, times(1)).findAll(eq(paging));

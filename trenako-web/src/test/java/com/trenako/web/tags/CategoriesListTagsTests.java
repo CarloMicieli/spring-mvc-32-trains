@@ -15,19 +15,35 @@
  */
 package com.trenako.web.tags;
 
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
+import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.*;
 import static com.trenako.web.tags.html.HtmlBuilder.*;
+import static com.trenako.test.TestDataBuilder.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 
+import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.Brand;
+import com.trenako.entities.Scale;
+import com.trenako.services.ScalesService;
+import com.trenako.utility.Cat;
+import com.trenako.values.Category;
+import com.trenako.values.PowerMethod;
+import com.trenako.web.tags.html.HtmlTag;
 import com.trenako.web.test.AbstractSpringTagsTest;
 
 /**
@@ -35,14 +51,24 @@ import com.trenako.web.test.AbstractSpringTagsTest;
  * @author Carlo Micieli
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class CategoriesListTagsTests  extends AbstractSpringTagsTest {
 
+	@Mock ScalesService service;
 	CategoriesListTags tag;
 	
 	@Override
 	protected void setupTag(PageContext pageContext, MessageSource messageSource) {
+		MockitoAnnotations.initMocks(this);
+		
+		when(service.findBySlug(eq("h0"))).thenReturn(scaleH0());
+		when(service.findBySlug(eq("n"))).thenReturn(scaleN());
+		when(service.findBySlug(eq("tt"))).thenReturn(scaleTT());
+		
 		tag = new CategoriesListTags();
 		tag.setPageContext(pageContext);
+		tag.setService(service);
+		tag.setMessageSource(messageSource);
 	}
 
 	@Test
@@ -70,9 +96,9 @@ public class CategoriesListTagsTests  extends AbstractSpringTagsTest {
 		
 		String expected = snippet(
 				div(
-						div(h2("tt")).cssClass("span4"),
-						div(h2("n")).cssClass("span4"),
-						div(h2("h0")).cssClass("span4")
+						div(categories(roco, scaleTT())).cssClass("span4"),
+						div(categories(roco, scaleN())).cssClass("span4"),
+						div(categories(roco, scaleH0())).cssClass("span4")
 						).cssClass("row-fluid")).toString();
 		
 		String output = renderTag();
@@ -90,8 +116,8 @@ public class CategoriesListTagsTests  extends AbstractSpringTagsTest {
 		
 		String expected = snippet(
 				div(
-						div(h2("tt")).cssClass("span4"),
-						div(h2("n")).cssClass("span4"),
+						div(categories(roco, scaleTT())).cssClass("span4"),
+						div(categories(roco, scaleN())).cssClass("span4"),
 						div().cssClass("span4")
 						).cssClass("row-fluid")).toString();
 		
@@ -111,15 +137,42 @@ public class CategoriesListTagsTests  extends AbstractSpringTagsTest {
 		
 		String expected = snippet(
 				div(
-						div(h2("tt")).cssClass("span6"),
-						div(h2("n")).cssClass("span6")
+						div(categories(roco, scaleTT())).cssClass("span6"),
+						div(categories(roco, scaleN())).cssClass("span6")
 						).cssClass("row-fluid"),
 				div(
-						div(h2("h0")).cssClass("span6"),
+						div(categories(roco, scaleH0())).cssClass("span6"),
 						div().cssClass("span6")
 						).cssClass("row-fluid")).toString();
 		
 		String output = renderTag();
 		assertEquals(expected, output);
+	}
+	
+	private HtmlTag categories(Brand brand, Scale scale) {
+		List<HtmlTag> list = new ArrayList<HtmlTag>();
+		list.add(h2(scale.label()));
+		for (PowerMethod pm : PowerMethod.values()) {
+			if (scale.getPowerMethods().contains(pm.label())) {
+				buildList(list, brand, scale, pm);
+			}
+		}
+		return snippet(tags(list));
+	}
+	
+	private void buildList(List<HtmlTag> list, Brand brand, Scale scale, PowerMethod pm) {
+		List<HtmlTag> items = new ArrayList<HtmlTag>();
+		for (Category c : Category.values()) {
+			items.add(item(pm.label() + " " + c.label(), brand, scale, Cat.buildCat(pm, c)));
+		}
+		list.add(ul(tags(items)).cssClass("unstyled"));
+	}
+	
+	private HtmlTag item(String label, Brand brand, Scale scale, Cat cat) {
+		SearchCriteria sc = new SearchCriteria.Builder()
+			.brand(brand)
+			.scale(scale)
+			.build();
+		return li(a(label).href("/trenako-web", buildUrlAdding(sc, "cat", cat)));
 	}
 }

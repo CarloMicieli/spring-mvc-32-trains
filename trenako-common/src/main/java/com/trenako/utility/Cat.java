@@ -15,8 +15,15 @@
  */
 package com.trenako.utility;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.context.MessageSource;
+
 import com.trenako.CatFormatException;
 import com.trenako.values.Category;
+import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
 
 /**
@@ -28,17 +35,16 @@ import com.trenako.values.PowerMethod;
  */
 public class Cat {
 	
-	private final PowerMethod powerMethod;
-	private final Category category;
+	private final LocalizedEnum<PowerMethod> powerMethod;
+	private final LocalizedEnum<Category> category;
 	
-	/**
-	 * Creates a new {@code Cat}.
-	 * @param powerMethod the {@code PowerMethod} name
-	 * @param category the {@code Category} name
-	 */
-	public Cat(PowerMethod powerMethod, Category category) {
+	private Cat(LocalizedEnum<PowerMethod> powerMethod, LocalizedEnum<Category> category) {
 		this.powerMethod = powerMethod;
 		this.category = category;
+	}
+	
+	private Cat(PowerMethod powerMethod, Category category) {
+		this(new LocalizedEnum<PowerMethod>(powerMethod), new LocalizedEnum<Category>(category));
 	}
 	
 	/**
@@ -51,11 +57,11 @@ public class Cat {
 	 * @return a {@code Cat}
 	 */
 	public static Cat parseString(String s) {
-		if (s==null) {
+		if (s == null) {
 			throw new IllegalArgumentException("Input string is null");
 		}
 		
-		if (s.length()<4) {
+		if (s.length() < 4) {
 			throw new CatFormatException("'" + s + "' is too short");
 		}
 		
@@ -70,11 +76,56 @@ public class Cat {
 	}
 	
 	/**
+	 * Builds a new localized {@code Cat}.
+	 * @param pm the power method value
+	 * @param category the category value
+	 * @return a {@code Cat}
+	 */
+	public static Cat buildCat(PowerMethod powerMethod, Category category) {
+		return buildCat(powerMethod, category, null);
+	}
+	
+	
+	public static Cat buildCat(PowerMethod powerMethod, Category category, MessageSource messageSource) {
+		return new Cat(
+				new LocalizedEnum<PowerMethod>(powerMethod, messageSource, null),
+				new LocalizedEnum<Category>(category, messageSource, null));
+	}
+	
+	/**
+	 * Builds a new localized {@code Cat}.
+	 * @param pm the power method value
+	 * @param category the category value
+	 * @param messageSource the message source
+	 * @return a {@code Cat}
+	 */
+	public static Cat buildCat(String pm, String category, MessageSource messageSource) {
+		return new Cat(
+				LocalizedEnum.parseString(pm, messageSource, PowerMethod.class),
+				LocalizedEnum.parseString(category, messageSource, Category.class));
+	}
+	
+	/**
+	 * Returns the localized list of category labels by power method.
+	 * @param pm the power method
+	 * @param ms the message source
+	 * @return the list of {@code Cat}
+	 */
+	public static Iterable<Cat> list(PowerMethod pm, MessageSource ms) {
+		List<Cat> list = new ArrayList<Cat>(Category.values().length);
+		for (Category c : Category.values()) {
+			list.add(buildCat(pm, c, ms));
+		}
+				
+		return Collections.unmodifiableList(list);
+	}
+	
+	/**
 	 * Returns the {@code Category} component.
 	 * @return the {@code Category}
 	 */
 	public Category getCategory() {
-		return category;
+		return category.getValue();
 	}
 
 	/**
@@ -82,7 +133,7 @@ public class Cat {
 	 * @return the {@code Category} label
 	 */
 	public String category() {
-		return getCategory().label();
+		return category.getLabel();
 	}
 	
 	/**
@@ -90,7 +141,7 @@ public class Cat {
 	 * @return the {@code PowerMethod}
 	 */
 	public PowerMethod getPowerMethod() {
-		return powerMethod;
+		return powerMethod.getValue();
 	}
 	
 	/**
@@ -98,7 +149,19 @@ public class Cat {
 	 * @return the {@code PowerMethod} label
 	 */
 	public String powerMethod() {
-		return getPowerMethod().label();
+		return powerMethod.getLabel();
+	}
+	
+	/**
+	 * The label for the current {@code Cat}
+	 * @return the label
+	 */
+	public String label() {
+		return new StringBuilder()
+			.append(powerMethod())
+			.append(" ")
+			.append(category())
+			.toString();
 	}
 	
 	/**
@@ -123,7 +186,7 @@ public class Cat {
 	 * This method returns a string representation like:
 	 * <blockquote>
 	 * <pre>
-	 * 'powerMethod=' + PowerMethod + ', category=' + Category
+	 * powerMethod + '-' + category
 	 * </pre>
 	 * </blockquote>
 	 * </p>
@@ -133,9 +196,9 @@ public class Cat {
 	@Override
 	public String toString() {
 		return new StringBuilder()
-			.append(powerMethod.label())
+			.append(powerMethod.getKey())
 			.append("-")
-			.append(category.label())
+			.append(category.getKey())
 			.toString();
 	}	
 

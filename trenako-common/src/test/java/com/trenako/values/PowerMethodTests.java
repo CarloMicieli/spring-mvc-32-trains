@@ -48,6 +48,6 @@ public class PowerMethodTests {
 	@Test
 	public void shouldListAllPowerMethods() {
 		List<String> l = PowerMethod.list();
-		assertEquals("[ac, dc]", l.toString());
+		assertEquals("[dc, ac]", l.toString());
 	}
 }
