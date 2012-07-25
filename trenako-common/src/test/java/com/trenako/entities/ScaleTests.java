@@ -119,14 +119,18 @@ public class ScaleTests {
 	@Test
 	public void shouldBuildNewScales() {	
 		Scale s = new Scale.Builder("H0")
+			.description("Most famous model railway scale")
 			.ratio(valueOf(87))
 			.gauge(1650)
+			.powerMethods("ac", "dc")
 			.narrow(true)
 			.build();
 		assertEquals("H0", s.getName());
+		assertEquals("Most famous model railway scale", s.getDescription());
 		assertEquals(870, s.getRatio());
 		assertEquals(1650, s.getGauge());
 		assertEquals(true, s.isNarrow());
+		assertEquals("[dc, ac]", s.getPowerMethods().toString());
 	}
 	
 	@Test

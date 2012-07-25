@@ -16,6 +16,7 @@
 package com.trenako.entities;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -64,6 +65,9 @@ public class Scale {
 	@Indexed(unique = true)
 	private String name;
 	
+	@Size(max = 250, message = "scale.description.size.notmet")
+	private String description;
+	
 	@Indexed(unique = true)
 	private String slug;
 	
@@ -77,6 +81,8 @@ public class Scale {
 	
 	@Indexed
 	private Set<String> standards;
+	
+	private Set<String> powerMethods;
 	
 	private boolean narrow;
 	private Date lastModified;
@@ -101,10 +107,12 @@ public class Scale {
 	
 	private Scale(Builder b) {
 		this.name = b.name;
+		this.description = b.description;
 		this.ratio = b.ratio;
 		this.gauge = b.gauge;
 		this.narrow = b.narrow;
 		this.slug = b.slug;
+		this.powerMethods = b.powerMethods;
 	}
 	
 	/**
@@ -117,7 +125,9 @@ public class Scale {
 		private final String name;
 		
 		// optional fields
-		private String slug;
+		private String description = null;
+		private Set<String> powerMethods = null;
+		private String slug = null;
 		private int ratio = 0;
 		private int gauge = 0;
 		private boolean narrow = false;
@@ -137,6 +147,16 @@ public class Scale {
 		 */
 		public Builder slug(String slug) {
 			this.slug = slug;
+			return this;
+		}
+		
+		/**
+		 * Sets the description.
+		 * @param description the description
+		 * @return a builder
+		 */
+		public Builder description(String description) {
+			this.description = description;
 			return this;
 		}
 		
@@ -211,6 +231,16 @@ public class Scale {
 		}
 		
 		/**
+		 * The power methods list.
+		 * @param powerMethods the power methods list
+		 * @return a builder
+		 */
+		public Builder powerMethods(String... powerMethods) {
+			this.powerMethods = new HashSet<String>(Arrays.asList(powerMethods));
+			return this;
+		}
+		
+		/**
 		 * Indicates whether a {@code Scale} is narrow or not.
 		 * @param n {@code true} for narrow scales; {@code false} otherwise
 		 * @return a builder
@@ -238,13 +268,13 @@ public class Scale {
 	}
 	
 	/**
-	 * Sets the {@code Brand} id.
+	 * Sets the {@code Scale} id.
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
 		this.id = id;
 	}
-
+	
 	/**
 	 * Returns the scale name.
 	 * @return the name
@@ -269,7 +299,39 @@ public class Scale {
 		if( slug==null ) slug = Slug.encode(name);
 		return slug;
 	}
-		
+	
+	/**
+	 * Returns the {@code Scale} description.
+	 * @return the {@code Scale} description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * Sets the {@code Scale} description.
+	 * @param description the {@code Scale} description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * Returns the {@code Scale} power methods list.
+	 * @return the power methods list
+	 */
+	public Set<String> getPowerMethods() {
+		return powerMethods;
+	}
+
+	/**
+	 * Sets the {@code Scale} power methods list.
+	 * @param powerMethods the power methods list
+	 */
+	public void setPowerMethods(Set<String> powerMethods) {
+		this.powerMethods = powerMethods;
+	}
+	
 	/**
 	 * Returns the ratio of a linear dimension of the 
 	 * model to the same dimension of the original.

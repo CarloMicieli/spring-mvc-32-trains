@@ -18,8 +18,9 @@ package com.trenako.entities;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -89,7 +90,7 @@ public class Brand {
 	
 	private boolean industrial;
 	
-	private List<String> scales;
+	private Set<String> scales;
 	
 	private Date lastModified;
 	
@@ -143,7 +144,7 @@ public class Brand {
 		private boolean industrial = false;
 		private Address address = null;
 		private String slug = null;
-		private List<String> scales = null;
+		private Set<String> scales = null;
 		private HashMap<String, Address> branches = null;
 		
 		/**
@@ -247,7 +248,7 @@ public class Brand {
 		 * @return a {@code Brand} builder
 		 */
 		public Builder scales(String... scales) {
-			this.scales = Arrays.asList(scales);
+			this.scales = new HashSet<String>(Arrays.asList(scales));
 			return this;
 		}
 		
@@ -467,7 +468,7 @@ public class Brand {
 	 * Returns the scales list.
 	 * @return the scales list
 	 */
-	public List<String> getScales() {
+	public Set<String> getScales() {
 		return scales;
 	}
 
@@ -475,7 +476,7 @@ public class Brand {
 	 * Sets the scales list.
 	 * @param scales the scales list
 	 */
-	public void setScales(List<String> scales) {
+	public void setScales(Set<String> scales) {
 		this.scales = scales;
 	}
 
