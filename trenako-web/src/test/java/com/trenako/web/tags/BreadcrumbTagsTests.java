@@ -24,7 +24,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.springframework.context.MessageSource;
-import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.web.test.AbstractSpringTagsTest;
@@ -54,7 +53,7 @@ public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);
 		
-		String output = ((MockHttpServletResponse) pageContext().getResponse()).getContentAsString();
+		String output = renderTag();
 		assertEquals("", output);
 	}
 	
@@ -81,7 +80,7 @@ public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 						))
 			).cssClass("breadcrumb").build();
 				
-		String output = ((MockHttpServletResponse) pageContext().getResponse()).getContentAsString();
+		String output = renderTag();
 		assertEquals(expected+"\n", output);
 	}
 	
@@ -119,7 +118,7 @@ public class BreadcrumbTagsTests extends AbstractSpringTagsTest {
 							))
 			).cssClass("breadcrumb").build();
 				
-		String output = ((MockHttpServletResponse) pageContext().getResponse()).getContentAsString();
+		String output = renderTag();
 		assertEquals(expected+"\n", output);
 	}
 }
