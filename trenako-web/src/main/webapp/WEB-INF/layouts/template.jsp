@@ -76,6 +76,9 @@
 							<li class="<decorator:getProperty property="meta.you"/>">
 								<a href="<c:url value="/you" />"><s:message code="menu.you.label"/></a>
 							</li>
+							<li class="<decorator:getProperty property="meta.rs"/>">
+								<a href="<c:url value="/rs" />"><s:message code="menu.rollingStocks.label"/></a>
+							</li>						
 							<li class="<decorator:getProperty property="meta.browse"/>">
 								<a href="<c:url value="/browse" />"><s:message code="menu.browse.label"/></a>
 							</li>

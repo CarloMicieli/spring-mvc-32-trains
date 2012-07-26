@@ -5,11 +5,10 @@
 <html>
 <head>
 	<title></title>
-	<meta name="browse" content="active"/>
+	<meta name="rs" content="active"/>
 </head>
 
 <body>
-
 	<div class="row-fluid">
 		<div class="span2">
 			<tk:searchBar results="${results}">

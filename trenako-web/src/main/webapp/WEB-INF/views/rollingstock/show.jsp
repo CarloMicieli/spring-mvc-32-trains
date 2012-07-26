@@ -6,20 +6,22 @@
 		<title>
 			<s:message code="rollingStock.page.new.title" />
 		</title>
-		<meta name="browse" content="active"/>
+		<meta name="rs" content="active"/>
 	</head>
 	<body>
-		<div class="row-fluid">
-       		<ul class="breadcrumb">
-            	<li>
-                	<a href="#">Home</a> <span class="divider">/</span>
-                </li>
-                <li>
-                	<a href="#">Library</a> <span class="divider">/</span>
-				</li>
-                <li class="active">Data</li>
-			</ul>
-		</div>
+		<ul class="breadcrumb">
+			<li>
+				<s:url value="/rs" var="rsUrl"/>
+		    	<a href="${rsUrl}"><s:message code="browse.breadcrumb.rollingStocks.label"/></a> <span class="divider">/</span>
+			</li>
+			<li>
+				<s:url value="/browse/brands/{slug}" var="brandsUrl">
+					<s:param name="slug" value="${rollingStock.brand.slug}"></s:param>
+				</s:url>
+		    	<a href="${brandsUrl}">${rollingStock.brand.name}</a> <span class="divider">/</span>
+			</li>		
+		  	<li class="active">${rollingStock.itemNumber}</li>
+		</ul>
 		<div class="row-fluid">
         	<div class="page-header">
 				<h1>${rollingStock.brand.name} ${rollingStock.itemNumber}</h1>
