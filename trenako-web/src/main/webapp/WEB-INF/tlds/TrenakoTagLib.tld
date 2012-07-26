@@ -103,6 +103,15 @@
 			Display the eras for the search bar rolling stock search.
 		</description>
 	</tag>
+	
+	<tag>
+		<name>powerMethods</name>
+		<tagclass>com.trenako.web.tags.PowerMethodsSearchTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display the power methods for the search bar rolling stock search.
+		</description>
+	</tag>
 
 	<tag>
 		<name>categories</name>

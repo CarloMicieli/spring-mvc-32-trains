@@ -14,9 +14,10 @@
 			<tk:searchBar results="${results}">
 				<tk:brands label="name" />
 				<tk:railways  label="name" />
-				<tk:scales />
-				<tk:eras />
-				<tk:categories />
+				<tk:scales/>
+				<tk:eras/>
+				<tk:powerMethods/>
+				<tk:categories/>
 			</tk:searchBar>
 		</div>
 		<div class="span10">

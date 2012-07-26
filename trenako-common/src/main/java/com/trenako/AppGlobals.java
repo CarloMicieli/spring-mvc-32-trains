@@ -63,27 +63,27 @@ public class AppGlobals {
 	@SuppressWarnings("serial")
 	public static SortedMap<String, String> countries() {
 		return Collections.unmodifiableSortedMap(new TreeMap<String, String>() {{ 
-			put("AT", "Austria");
-			put("BE", "Belgium");
-			put("CA", "Canada");
-			put("CN", "China");
-			put("DK", "Denmark");
-			put("FI", "Finland");
-			put("FR", "France");
-			put("DE", "Germany");
-			put("IT", "Italy");
-			put("JP", "Japan");
-			put("MX", "Mexico");
-			put("NL", "Netherlands");
-			put("NO", "Norway");
-			put("RO", "Romania");
-			put("RU", "Russian Federation");
-			put("ES", "Spain");
-			put("SE", "Sweden");
-			put("CH", "Switzerland");
-			put("TR", "Turkey");
-			put("UK", "United Kingdom");
-			put("US", "United States");
+			put("at", "Austria");
+			put("be", "Belgium");
+			put("ca", "Canada");
+			put("cn", "China");
+			put("dk", "Denmark");
+			put("fi", "Finland");
+			put("fr", "France");
+			put("de", "Germany");
+			put("it", "Italy");
+			put("jp", "Japan");
+			put("mx", "Mexico");
+			put("nl", "Netherlands");
+			put("no", "Norway");
+			put("ro", "Romania");
+			put("ru", "Russian Federation");
+			put("es", "Spain");
+			put("se", "Sweden");
+			put("ch", "Switzerland");
+			put("tr", "Turkey");
+			put("uk", "United Kingdom");
+			put("us", "United States");
 		}});
 	}
 	

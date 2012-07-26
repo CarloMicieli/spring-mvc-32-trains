@@ -67,6 +67,11 @@ public class BrowseServiceImpl implements BrowseService {
 	}
 	
 	@Override
+	public Iterable<LocalizedEnum<PowerMethod>> powerMethods() {
+		return LocalizedEnum.list(PowerMethod.class, messageSource, null);
+	}
+	
+	@Override
 	public Iterable<Scale> scales() {
 		return repo.getScales();
 	}

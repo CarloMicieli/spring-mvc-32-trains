@@ -25,6 +25,7 @@ import com.trenako.results.RangeRequest;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
+import com.trenako.values.PowerMethod;
 
 /**
  * It represents a service for the rolling stocks browsing.
@@ -41,9 +42,15 @@ public interface BrowseService {
 	
 	/**
 	 * Returns the list of model railway {@code Category}.
-	 * @return the brands list
+	 * @return the categories list
 	 */
 	Iterable<LocalizedEnum<Category>> categories();
+	
+	/**
+	 * Returns the list of model railway {@code PowerMethod}.
+	 * @return the power methods list
+	 */
+	Iterable<LocalizedEnum<PowerMethod>> powerMethods();
 	
 	/**
 	 * Returns the list of model railway {@code Scale}.

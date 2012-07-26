@@ -39,6 +39,7 @@ import com.trenako.results.RangeRequestImpl;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
+import com.trenako.values.PowerMethod;
 
 /**
  * 
@@ -90,6 +91,16 @@ public class BrowseServiceTests {
 				"(electric-locomotives), (railcars), (electric-multiple-unit), " +
 				"(freight-cars), (passenger-cars), (train-sets), (starter-sets)]";
 		assertEquals(expected, categories.toString());
+	}
+	
+	@Test
+	public void shouldGetAllPowerMethods() {
+		List<LocalizedEnum<PowerMethod>> powerMethods = (List<LocalizedEnum<PowerMethod>>) service.powerMethods();
+		assertNotNull(powerMethods);
+		assertEquals(PowerMethod.values().length, powerMethods.size());
+		
+		String expected = "[(dc), (ac)]";
+		assertEquals(expected, powerMethods.toString());
 	}
 	
 	@Test
