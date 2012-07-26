@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Option;
-import com.trenako.entities.OptionFamily;
 import com.trenako.repositories.OptionsRepository;
+import com.trenako.values.OptionFamily;
 
 /**
  * A concrete implementation for the options service for mongodb.

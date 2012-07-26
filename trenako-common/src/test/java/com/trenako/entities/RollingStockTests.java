@@ -17,6 +17,8 @@ package com.trenako.entities;
 
 import org.junit.Test;
 
+import com.trenako.values.OptionFamily;
+
 
 import static org.junit.Assert.*;
 

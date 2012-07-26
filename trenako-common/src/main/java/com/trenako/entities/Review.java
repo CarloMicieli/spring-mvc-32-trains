@@ -75,8 +75,10 @@ public class Review {
 	@Indexed(direction = IndexDirection.DESCENDING)
 	private Date postedAt;
 	
-	// required by spring data
-	Review() {
+	/**
+	 * Creates an empty {@code Review}.
+	 */
+	public Review() {
 	}
 	
 	/**
@@ -245,6 +247,22 @@ public class Review {
 	}
 	
 	/**
+	 * Returns the first character of the {@code Review} content.
+	 * @return the summary.
+	 */
+	public String getSummary() {
+		if (getContent() == null) return null;
+
+		int len = getContent().length();
+		if (len < 150) {
+			return getContent();
+		}
+		else {
+			return getContent().substring(0, 150).concat("..");
+		}
+	}
+	
+	/**
 	 * Indicates whether some other {@code Review} is equal to this one.
 	 * 
 	 * @param obj the reference {@code Account} with which to compare
@@ -264,16 +282,16 @@ public class Review {
 	
 	/**
 	 * Returns a string representation of the {@code Review}.
-     * <p>
-     * This method returns a string equal to the value of:
+	 * <p>
+	 * This method returns a string equal to the value of:
 	 * <blockquote>
-     * <pre>
-     * getAuthorName() + ': ' + getRsSlug() + ' (' + getTitle() + ')'
-     * </pre>
-     * </blockquote>
+	 * <pre>
+	 * getAuthorName() + ': ' + getRsSlug() + ' (' + getTitle() + ')'
+	 * </pre>
+	 * </blockquote>
 	 * </p>
 	 * @return a string representation of the {@code Review}
-     */
+	 */
 	@Override
 	public String toString() {
         return new StringBuilder()

@@ -18,7 +18,7 @@ package com.trenako.services;
 import org.bson.types.ObjectId;
 
 import com.trenako.entities.Option;
-import com.trenako.entities.OptionFamily;
+import com.trenako.values.OptionFamily;
 
 /**
  * The interface for the rolling stock options service.
@@ -35,7 +35,7 @@ import com.trenako.entities.OptionFamily;
  *
  * @author Carlo Micieli
  * @see com.trenako.entities.Option
- * @see com.trenako.entities.OptionFamily
+ * @see com.trenako.values.OptionFamily
  */
 public interface OptionsService {
 
@@ -61,7 +61,7 @@ public interface OptionsService {
 	 *
 	 * @param family the {@code OptionFamily}
 	 * @return a {@code Option} list
-	 * @see com.trenako.entities.OptionFamily
+	 * @see com.trenako.values.OptionFamily
 	 */	 
 	Iterable<Option> findByFamily(OptionFamily family);
 

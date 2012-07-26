@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trenako.test.AbstractValidationTests;
+import com.trenako.values.OptionFamily;
 
 /**
  * 

@@ -19,7 +19,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.entities.Option;
-import com.trenako.entities.OptionFamily;
+import com.trenako.values.OptionFamily;
 
 /**
  * The interface for the options repository.

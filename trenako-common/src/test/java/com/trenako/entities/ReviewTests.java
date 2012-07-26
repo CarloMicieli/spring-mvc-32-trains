@@ -32,7 +32,7 @@ public class ReviewTests {
 			.displayName("User Name")
 			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		Review r = new Review(author, rs, "Title", "Comment content");
+		Review r = new Review(author, rs, "Title", "Review content");
 	
 		assertEquals("user-name: acme-123456 (Title)", r.toString());
 	}
@@ -44,7 +44,7 @@ public class ReviewTests {
 			.build();
 		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		
-		Review r = new Review(author, rs, "Title", "Comment content");
+		Review r = new Review(author, rs, "Title", "Review content");
 		
 		assertEquals("user-name", r.getAuthorName());
 		assertEquals("acme-123456", r.getRsSlug());
@@ -74,5 +74,23 @@ public class ReviewTests {
 		Review y = new Review(author, rs, "Title", "Review content 2");
 		
 		assertFalse(x.equals(y));
+	}
+	
+	@Test
+	public void shouldReturnsAReviewSummary() {
+		Account author = new Account.Builder("mail@mail.com")
+			.displayName("User Name")
+			.build();
+		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		
+		Review r1 = new Review(author, rs, "Title", "Review content");
+		assertEquals("Review content", r1.getSummary());
+		
+		String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "+
+				"Proin nisl erat, mattis commodo iaculis a, hendrerit at turpis. Fusce odio dui, "+
+				"feugiat sit amet placerat vitae, hendrerit non ipsum cras amet.";
+		Review r2 = new Review(author, rs, "Title", content);
+		assertEquals(150 + "..".length(), r2.getSummary().length());
+		assertTrue(r2.getSummary().endsWith(".."));
 	}
 }

@@ -26,8 +26,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trenako.entities.Option;
-import com.trenako.entities.OptionFamily;
 import com.trenako.repositories.OptionsRepository;
+import com.trenako.values.OptionFamily;
 
 /**
  * 

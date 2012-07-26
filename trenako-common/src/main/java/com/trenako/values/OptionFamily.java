@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.entities;
+package com.trenako.values;
 
 /**
  * The enumeration of option family for a rolling stock model.
@@ -25,14 +25,17 @@ public enum OptionFamily {
 	 * The digital control interface.
 	 */
 	DCC_INTERFACE,
+	
 	/**
 	 * The head lights configuration.
 	 */
 	HEADLIGHTS,
+	
 	/**
 	 * The transmission configuration.
 	 */
 	TRANSMISSION,
+	
 	/**
 	 * The coupler plug.
 	 */

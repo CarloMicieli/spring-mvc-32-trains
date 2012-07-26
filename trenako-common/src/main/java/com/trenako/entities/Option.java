@@ -23,6 +23,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.values.OptionFamily;
+
 /**
  * It represents a rolling stock option
  * (DCC interface, head lights configuration, coupler...).
