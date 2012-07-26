@@ -24,6 +24,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
+import com.trenako.AppGlobals;
+
 /**
  * It represents an immutable search range for rolling stocks.
  * @author Carlo Micieli
@@ -84,18 +86,52 @@ public final class SearchRange {
 	public int getPageSize() {
 		return pageSize;
 	}
+	
+	/**
+	 * Checks whether the current sort has the default value.
+	 * @return {@code true} if sort is the default; {@code false} otherwise
+	 */
+	public boolean isDefaultSort() {
+		if (getSort() == null) return true;
+		return getSort().equals(RangeRequest.DEFAULT_SORT);
+	}
+	
+	/**
+	 * Checks whether the current page size has the default value.
+	 * @return {@code true} if page size is the default; {@code false} otherwise
+	 */
+	public boolean isDefaultPageSize() {
+		return getPageSize() == AppGlobals.PAGE_SIZE;
+	}
 
 	/**
 	 * Returns the current {@code SearchRange} as a {@code Map}.
+	 * <p>
+	 * The returned maps contain only not default values.
+	 * </p>
+	 * 
 	 * @return the values {@code Map}
 	 */
 	public Map<String, Object> asMap() {
 		Map<String, Object> params = new TreeMap<String, Object>();
-		params.put("since", sinceId);
-		params.put("max", maxId);
-		params.put("sort", getFirstOrder().getProperty());
-		params.put(RangeRequest.ORDER_NAME, getFirstOrder().getDirection());
-		params.put("size", pageSize);
+		
+		if (getSince() != null) {
+			params.put(RangeRequest.SINCE_NAME, getSince());
+		}
+		
+		if (getMax() != null) {
+			params.put(RangeRequest.MAX_NAME, getMax());
+		}
+		
+		if (getSort() != null && !isDefaultSort()) {
+			params.put(RangeRequest.SORT_NAME, getFirstOrder().getProperty());
+			params.put(RangeRequest.ORDER_NAME, getFirstOrder().getDirection());
+		}
+
+		if (!isDefaultPageSize()) {
+			params.put(RangeRequest.SIZE_NAME, getPageSize());
+		}
+		
 		return Collections.unmodifiableMap(params);
 	}
 		

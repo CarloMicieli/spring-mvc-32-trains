@@ -23,6 +23,8 @@ import org.junit.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
+import com.trenako.AppGlobals;
+
 /**
  * 
  * @author Carlo Micieli
@@ -35,14 +37,63 @@ public class SearchRangeTests {
 	
 	@Test
 	public void shouldReturnParamsAsMaps() {
-		SearchRange range = new SearchRange(10, new Sort(Direction.DESC, "name"), SINCE, MAX);
+		SearchRange range = new SearchRange(25, new Sort(Direction.DESC, "name"), SINCE, MAX);
 		
 		Map<String, Object> params = range.asMap();
 		
+		String expected = "{dir=DESC, max=501171ab575ef9abd1a0c71f, " +
+				"since=501171ab575ef9abd1a0c71e, size=25, sort=name}";
+		
 		assertNotNull(params);
 		assertEquals(5, params.size());
-		assertEquals("{dir=DESC, max=501171ab575ef9abd1a0c71f, since=501171ab575ef9abd1a0c71e, size=10, sort=name}", 
-				params.toString());
+		assertEquals(expected, params.toString());
+	}
+	
+	@Test
+	public void shouldReturnParamsAsMapsOnlyNotDefaultValues() {
+		SearchRange range = new SearchRange(10, new Sort(Direction.DESC, "lastModified"), SINCE, MAX);
+		
+		Map<String, Object> params = range.asMap();
+		
+		String expected = "{max=501171ab575ef9abd1a0c71f, since=501171ab575ef9abd1a0c71e}";
+		
+		assertNotNull(params);
+		assertEquals(2, params.size());
+		assertEquals(expected, params.toString());
+	}
+	
+	@Test
+	public void shouldReturnParamsAsMapsOnlyNotNullValues() {
+		SearchRange range = new SearchRange(20, new Sort(Direction.DESC, "name"), null, null);
+		
+		Map<String, Object> params = range.asMap();
+		
+		String expected = "{dir=DESC, size=20, sort=name}";
+		
+		assertNotNull(params);
+		assertEquals(3, params.size());
+		assertEquals(expected, params.toString());
+	}
+	
+	@Test
+	public void shouldCheckDefaultSort() {
+		SearchRange r1 = new SearchRange(10, null, null, null);
+		assertTrue(r1.isDefaultSort());
+		
+		SearchRange r2 = new SearchRange(10, new Sort(Direction.DESC, "lastModified"), SINCE, MAX);
+		assertTrue(r2.isDefaultSort());
+		
+		SearchRange r3 = new SearchRange(10, new Sort(Direction.DESC, "name"), SINCE, MAX);
+		assertFalse(r3.isDefaultSort());
+	}
+	
+	@Test
+	public void shouldCheckDefaultPageSize() {
+		SearchRange r1 = new SearchRange(AppGlobals.PAGE_SIZE, null, null, null);
+		assertTrue(r1.isDefaultPageSize());
+		
+		SearchRange r2 = new SearchRange(50, null, null, null);
+		assertFalse(r2.isDefaultPageSize());
 	}
 	
 }

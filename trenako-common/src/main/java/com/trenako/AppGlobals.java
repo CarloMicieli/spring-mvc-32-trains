@@ -43,6 +43,11 @@ public class AppGlobals {
 	public static final int MAX_RESULT_SET_SIZE = 100;
 	
 	/**
+	 * The default page size for result sets.
+	 */
+	public static final int PAGE_SIZE = 10;
+	
+	/**
 	 * Returns the list of the locale supported by the application.
 	 * @return the list of locale
 	 */

@@ -21,11 +21,13 @@ import static org.junit.Assert.*;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
 import com.trenako.results.RangeRequest;
+import com.trenako.results.SearchRange;
 
 /**
  * 
@@ -34,39 +36,57 @@ import com.trenako.results.RangeRequest;
  */
 public class RangeRequestQueryParamsBuilderTests {
 	
-	RangeRequest rangeRequest = new RangeRequest();
+	final static ObjectId SINCE = new ObjectId("501190f0575eef87e33687d7");
+	final static ObjectId MAX = new ObjectId("501190f0575eef87e33687d8");
+	SearchRange searchRange;
 
 	@Test
 	public void shouldBuildQueryParamsForDefaultRanges() {
-		String queryParams = buildQueryParams(rangeRequest);
-		assertEquals("?size=10", queryParams);
+		searchRange = new SearchRange(10, new Sort(Direction.DESC, "lastModified"), null, null);
+		
+		String queryParams = buildQueryParamsNext(searchRange);
+		assertEquals("", queryParams);
 	}
 
 	@Test
 	public void shouldBuildQueryParamsForRangesWithCountOnly() {
-		((RangeRequest)rangeRequest).setSize(50);
+		searchRange = new SearchRange(50, null, null, null);
 		
-		String queryParams = buildQueryParams(rangeRequest);
+		String queryParams = buildQueryParamsNext(searchRange);
 		assertEquals("?size=50", queryParams);
 	}
 
 	@Test
 	public void shouldBuildQueryParamsForRangesWithCountAndSort() {
-		((RangeRequest)rangeRequest).setSize(25);
-		((RangeRequest)rangeRequest).setSort(new Sort(Direction.DESC, "name"));
+		searchRange = new SearchRange(25, new Sort(Direction.DESC, "name"), null, null);
 		
-		String queryParams = buildQueryParams(rangeRequest);
-		assertEquals("?size=25&sort=name&dir=DESC", queryParams);
+		String queryParams = buildQueryParamsNext(searchRange);
+		assertEquals("?dir=DESC&size=25&sort=name", queryParams);
 	}
 	
 	@Test
-	public void shouldBuildQueryParamsFromMaps() {
+	public void shouldBuildQueryParamsForNextPage() {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("size", 25);
 		params.put("sort", "name");
 		params.put("dir", "DESC");
+		params.put("since", SINCE);
+		params.put("max", MAX);
 		
-		String queryParams = buildQueryParams(params);
-		assertEquals("?dir=DESC&size=25&sort=name", queryParams);
+		String queryParams = buildQueryParams(params, RangeRequest.SINCE_NAME);
+		assertEquals("?dir=DESC&since=501190f0575eef87e33687d7&size=25&sort=name", queryParams);
+	}
+	
+	@Test
+	public void shouldBuildQueryParamsForPreviousPage() {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("size", 25);
+		params.put("sort", "name");
+		params.put("dir", "DESC");
+		params.put("since", SINCE);
+		params.put("max", MAX);
+		
+		String queryParams = buildQueryParams(params, RangeRequest.MAX_NAME);
+		assertEquals("?dir=DESC&max=501190f0575eef87e33687d8&size=25&sort=name", queryParams);
 	}
 }

@@ -32,9 +32,29 @@ import com.trenako.AppGlobals;
 public class RangeRequest {
 	
 	/**
-	 * The name for the sort order as used for the query parameters.
+	 * The {@code since} query parameter name.
+	 */
+	public final static String SINCE_NAME = "since"; 
+	
+	/**
+	 * The {@code max} query parameter name.
+	 */
+	public final static String MAX_NAME = "max"; 
+	
+	/**
+	 * The {@code sort} query parameter name.
+	 */
+	public final static String SORT_NAME = "sort"; 
+	
+	/**
+	 * The {@code sort direction} query parameter name.
 	 */
 	public final static String ORDER_NAME = "dir"; 
+	
+	/**
+	 * The {@code page size} query parameter name.
+	 */
+	public final static String SIZE_NAME = "size"; 
 	
 	/**
 	 * The default {@code Sort} for a range request.
@@ -119,7 +139,7 @@ public class RangeRequest {
 	 * @return the size
 	 */
 	public int getSize() {
-		return validateCount(size, 10);
+		return validateCount(size, AppGlobals.PAGE_SIZE);
 	}
 
 	/**

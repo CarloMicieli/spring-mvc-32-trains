@@ -27,9 +27,11 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
-import com.trenako.results.RangeRequest;
 import com.trenako.results.RollingStockResults;
+import com.trenako.results.SearchRange;
 import com.trenako.web.tags.html.HtmlTag;
 import com.trenako.web.test.AbstractSpringTagsTest;
 
@@ -43,6 +45,9 @@ import static com.trenako.web.tags.html.HtmlBuilder.*;
 public class PagerTagsTests extends AbstractSpringTagsTest {
 
 	private PagerTags tag;
+	
+	static final ObjectId SINCE = new ObjectId("5011996c575e5447d5375afa");
+	static final ObjectId MAX = new ObjectId("5011996c575e5447d5375afb");
 	
 	@Override
 	protected void setupTag(PageContext pageContext, MessageSource messageSource) {
@@ -61,27 +66,46 @@ public class PagerTagsTests extends AbstractSpringTagsTest {
 	}
 	
 	@Test
-	public void shouldRenderPreviousAndNextPagers() throws JspException, UnsupportedEncodingException {
-
-		RangeRequest range = mock(RangeRequest.class);
-		when(range.getSize()).thenReturn(10);
+	public void shouldRenderPagersWithBothNextAndPreviousDisabled() throws JspException, UnsupportedEncodingException {
 		
 		RollingStockResults results = mock(RollingStockResults.class);
 		when(results.isEmpty()).thenReturn(false);
-		when(results.hasPreviousPage()).thenReturn(true);
-		when(results.hasNextPage()).thenReturn(true);
-//		when(results.getSinceId()).thenReturn(new ObjectId("47cc67093475061e3d95369d"));
-//		when(results.getMaxId()).thenReturn(new ObjectId("47cc67093475061e3d95369e"));
-//		when(results.getRange()).thenReturn(range);
-		
+		when(results.hasPreviousPage()).thenReturn(false);
+		when(results.hasNextPage()).thenReturn(false);
+
 		tag.setResults(results);
 		
 		int rv = tag.doStartTag();
 		assertEquals(TagSupport.SKIP_BODY, rv);
 
 		HtmlTag html = ul(
-				li(a("&larr; Older").href("#")).cssClass("previous"),
-				li(a("Newer &rarr;").href("#")).cssClass("next")
+				li(a("&larr; Older").href("/trenako-web")).cssClass("previous .disabled"),
+				li(a("Newer &rarr;").href("/trenako-web")).cssClass("next .disabled")
+				).cssClass("pager");
+		
+		String output = renderTag();
+		assertEquals(html.build(), output);
+	}
+	
+	@Test
+	public void shouldRenderPagersWithBothNextAndPrevious() throws JspException, UnsupportedEncodingException {
+
+		SearchRange range = new SearchRange(20, new Sort(Direction.ASC, "name"), SINCE, MAX);
+		
+		RollingStockResults results = mock(RollingStockResults.class);
+		when(results.isEmpty()).thenReturn(false);
+		when(results.hasPreviousPage()).thenReturn(true);
+		when(results.hasNextPage()).thenReturn(true);
+		when(results.getRange()).thenReturn(range);
+
+		tag.setResults(results);
+		
+		int rv = tag.doStartTag();
+		assertEquals(TagSupport.SKIP_BODY, rv);
+
+		HtmlTag html = ul(
+				li(a("&larr; Older").href("/trenako-web?dir=ASC&max=5011996c575e5447d5375afb&size=20&sort=name")).cssClass("previous"),
+				li(a("Newer &rarr;").href("/trenako-web?dir=ASC&since=5011996c575e5447d5375afa&size=20&sort=name")).cssClass("next")
 				).cssClass("pager");
 		
 		String output = renderTag();

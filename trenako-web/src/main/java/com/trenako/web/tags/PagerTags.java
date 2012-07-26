@@ -15,9 +15,8 @@
  */
 package com.trenako.web.tags;
 
-import static com.trenako.web.tags.html.HtmlBuilder.a;
-import static com.trenako.web.tags.html.HtmlBuilder.li;
-import static com.trenako.web.tags.html.HtmlBuilder.ul;
+import static com.trenako.web.tags.html.HtmlBuilder.*;
+import static com.trenako.web.infrastructure.RangeRequestQueryParamsBuilder.*;
 
 import java.io.IOException;
 
@@ -66,11 +65,25 @@ public class PagerTags extends SpringTagSupport {
 			String prev = messageSource.getMessage("pages.previous.label", null, "&larr; Older", null);
 			String next = messageSource.getMessage("pages.next.label", null, "Newer &rarr;", null);
 			
-
+			String nextParams = "";
+			String prevParams = "";
+			
+			String nextCss = getResults().hasNextPage() ? "next" : "next .disabled";
+			String previousCss = getResults().hasPreviousPage() ? "previous" : "previous .disabled";
+			
+			if (getResults().getRange() != null) {
+				if (getResults().hasNextPage()) {
+					nextParams = buildQueryParamsNext(getResults().getRange());
+				}
+				
+				if (getResults().hasPreviousPage()) {
+					prevParams = buildQueryParamsPrevious(getResults().getRange());
+				}
+			}
 			
 			HtmlTag html = ul(
-					li(a(prev).href("#")).cssClass("previous"),
-					li(a(next).href("#")).cssClass("next")
+					li(a(prev).href(contextPath, prevParams)).cssClass(previousCss),
+					li(a(next).href(contextPath, nextParams)).cssClass(nextCss)
 					).cssClass("pager");
 			jspWriter.write(html.build());
 			

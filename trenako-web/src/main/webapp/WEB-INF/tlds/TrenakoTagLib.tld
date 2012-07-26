@@ -42,6 +42,21 @@
 	</tag>
 
 	<tag>
+		<name>pager</name>
+		<tagclass>com.trenako.web.tags.PagerTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display the pager for rolling stock results.
+		</description>
+		<attribute>
+			<name>results</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.trenako.results.RollingStockResults</type>
+		</attribute>
+	</tag>
+
+	<tag>
 		<name>searchBar</name>
 		<tagclass>com.trenako.web.tags.SearchBarTags</tagclass>
 		<bodycontent>scriptless</bodycontent>
