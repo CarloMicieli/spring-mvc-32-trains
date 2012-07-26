@@ -172,10 +172,10 @@ public class RollingStock {
 		// optional fields
 		private ObjectId id = null;
 		private String description = null;
-		private Map<String,String> localDescs = null;
+		private Map<String, String> localDescs = null;
 		
 		private String details = null;
-		private Map<String,String> localDetails = null;	
+		private Map<String, String> localDetails = null;	
 		
 		private Set<String> tags = null;
 		private Railway railway = null; 
@@ -218,8 +218,9 @@ public class RollingStock {
 		}
 
 		public Builder description(String lang, String d) {
-			if( localDescs==null )
+			if (localDescs == null) {
 				localDescs = new HashMap<String, String>();
+			}
 			
 			localDescs.put(lang, d);
 			
@@ -237,8 +238,9 @@ public class RollingStock {
 		}
 
 		public Builder details(String lang, String d) {
-			if( localDetails==null )
+			if (localDetails == null) {
 				localDetails = new HashMap<String, String>();
+			}
 			
 			localDetails.put(lang, d);
 			
@@ -250,8 +252,9 @@ public class RollingStock {
 		}
 		
 		public Builder option(String family, String opt) {
-			if( options==null )
+			if (options == null) {
 				options = new HashMap<String, String>();
+			}
 			
 			options.put(family, opt);
 			return this;
@@ -332,10 +335,8 @@ public class RollingStock {
 	 * @return the slug value
 	 */
 	public String getSlug() {
-		if (slug==null && brand!=null) {
-			String s = Slug.encode(
-					String.format("%s %s", brand.getName(), itemNumber));
-			setSlug(s);
+		if (slug == null && brand != null) {
+			setSlug(Slug.encode(String.format("%s %s", brand.getName(), itemNumber)));
 		}
 		return slug;
 	}
@@ -373,7 +374,10 @@ public class RollingStock {
 	 * @return the brand name
 	 */		
 	public String getBrandName() {
-		if( brandName==null) brandName = getBrand().getSlug();
+		if (brandName == null) {
+			brandName = getBrand().getSlug();
+		}
+		
 		return brandName;
 	}
 
@@ -424,13 +428,14 @@ public class RollingStock {
 	 * @return the description
 	 */
 	public String getDescription(String lang) {
-		if( localDescriptions==null || lang.equals(AppGlobals.DEFAULT_LANGUAGE) ) {
+		if (localDescriptions == null || lang.equals(AppGlobals.DEFAULT_LANGUAGE)) {
 			return getDescription();
 		}
 		
 		String msg = localDescriptions.get(lang);
-		if( msg==null )
+		if (msg == null) {
 			msg = getDescription();
+		}
 
 		return msg;
 	}
@@ -449,7 +454,7 @@ public class RollingStock {
 	 * @param description the description
 	 */
 	public void setDescription(String lang, String description) {
-		if( localDescriptions==null ) {
+		if (localDescriptions == null) {
 			localDescriptions = new HashMap<String,String>();
 		}
 		
@@ -470,13 +475,14 @@ public class RollingStock {
 	 * @return the details
 	 */
 	public String getDetails(String lang) {
-		if( localDetails==null || lang.equals(AppGlobals.DEFAULT_LANGUAGE) ) {
+		if (localDetails == null || lang.equals(AppGlobals.DEFAULT_LANGUAGE)) {
 			return getDetails();
 		}
 		
 		String d = localDetails.get(lang);
-		if( d==null )
+		if (d == null) {
 			d = getDetails();
+		}
 		
 		return d;
 	}
@@ -499,7 +505,7 @@ public class RollingStock {
 	 * @param details the details
 	 */
 	public void setDetails(String lang, String details) {
-		if( localDetails==null ) {
+		if (localDetails == null) {
 			localDetails = new HashMap<String, String>();
 		}
 		
@@ -533,7 +539,10 @@ public class RollingStock {
 	 */
 
 	public String getRailwayName() {
-		if( railwayName==null ) railwayName = getRailway().getSlug();
+		if (railwayName == null) {
+			railwayName = getRailway().getSlug();
+		}
+		
 		return railwayName;
 	}
 
@@ -571,7 +580,10 @@ public class RollingStock {
 	 * @return the scale name
 	 */
 	public String getScaleName() {
-		if( scaleName==null ) scaleName = getScale().getSlug();
+		if (scaleName == null) {
+			scaleName = getScale().getSlug();
+		}
+		
 		return scaleName;
 	}
 
@@ -700,7 +712,10 @@ public class RollingStock {
 	 * @return the country code
 	 */
 	public String getCountry() {
-		if( country==null ) country = railway.getCountry();
+		if (country == null) {
+			country = railway.getCountry();
+		}
+		
 		return country;
 	}
 
@@ -766,7 +781,7 @@ public class RollingStock {
 	 * @param tag the tag
 	 */
 	public void addTag(String tag) {
-		if (tags==null) {
+		if (tags == null) {
 			tags = new HashSet<String>();
 		}
 		tags.add(tag);
@@ -782,7 +797,7 @@ public class RollingStock {
 	 * @param option the option value
 	 */
 	public void addOption(Option option) {
-		if( options==null ) {
+		if (options == null) {
 			options = new HashMap<String, String>();
 		}
 		
@@ -797,9 +812,10 @@ public class RollingStock {
 	 * <em>false</em> otherwise
 	 */
 	public boolean hasOption(Option option) {
-		final String key = optionsKey(option);
-		if( !options.containsKey(key) )
+		String key = optionsKey(option);
+		if (!options.containsKey(key)) {
 			return false;
+		}
 		
 		return options.containsValue(option.getName());
 	}
@@ -811,10 +827,14 @@ public class RollingStock {
 	 * @return the option value
 	 */
 	public Option getOption(OptionFamily family) {
-		if( options==null ) return null;
+		if (options == null) {
+			return null;
+		}
 		
 		String name = options.get(family.name());
-		if( name==null ) return null;
+		if (name == null) {
+			return null;
+		}
 		
 		return new Option(name, family);
 	}
@@ -886,10 +906,10 @@ public class RollingStock {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if( this==obj ) return true;
-		if( !(obj instanceof RollingStock) ) return false;
+		if (this == obj) return true;
+		if (!(obj instanceof RollingStock)) return false;
 		
-		RollingStock other = (RollingStock)obj;
+		RollingStock other = (RollingStock) obj;
 		return new EqualsBuilder()
 			.append(brand, other.brand)
 			.append(itemNumber, other.itemNumber)
