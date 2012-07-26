@@ -33,6 +33,7 @@
 		<intercept-url pattern="/rs/**" access="permitAll" />
 		<intercept-url pattern="/browse/**" access="permitAll" />
 		<intercept-url pattern="/default" access="isAuthenticated()" />
+		<intercept-url pattern="/rollingstocks/new**" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/**" method="GET" access="permitAll" />
 		<intercept-url pattern="/rollingstocks/**" access="isAuthenticated()" />
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />

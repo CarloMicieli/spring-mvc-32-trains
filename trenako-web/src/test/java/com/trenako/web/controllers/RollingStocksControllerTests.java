@@ -15,6 +15,7 @@
  */
 package com.trenako.web.controllers;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.*;
@@ -41,6 +42,10 @@ import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
 import com.trenako.services.RollingStocksService;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
+import com.trenako.values.PowerMethod;
 import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.WebImageService;
 
@@ -52,6 +57,14 @@ import com.trenako.web.images.WebImageService;
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStocksControllerTests {
 	
+	static final List<Brand> BRANDS = Arrays.asList(acme(), marklin(), roco());
+	static final List<Railway> RAILWAYS = Arrays.asList(db(), fs());
+	static final List<Scale> SCALES = Arrays.asList(scaleH0(), scaleN());
+
+	static final List<LocalizedEnum<Era>> ERAS = (List<LocalizedEnum<Era>>) LocalizedEnum.list(Era.class); 
+	static final List<LocalizedEnum<PowerMethod>> POWERMETHODS = (List<LocalizedEnum<PowerMethod>>) LocalizedEnum.list(PowerMethod.class);
+	static final List<LocalizedEnum<Category>> CATEGORIES = (List<LocalizedEnum<Category>>) LocalizedEnum.list(Category.class);
+
 	@Mock MultipartFile mockFile;
 	@Mock RedirectAttributes mockRedirect;
 	@Mock BindingResult mockResult;
@@ -64,6 +77,15 @@ public class RollingStocksControllerTests {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		controller = new RollingStocksController(service, imgService);
+		
+		when(service.brands()).thenReturn(BRANDS);
+		when(service.railways()).thenReturn(RAILWAYS);
+		when(service.scales()).thenReturn(SCALES);
+		
+		when(service.categories()).thenReturn(CATEGORIES);
+		when(service.eras()).thenReturn(ERAS);
+		when(service.powerMethods()).thenReturn(POWERMETHODS);
+
 	}
 	
 	@Test
@@ -91,30 +113,17 @@ public class RollingStocksControllerTests {
 	
 	@Test
 	public void shouldRenderNewRollingStockForms() {		
-	
-		List<Brand> brandValue = Arrays.asList(new Brand(), new Brand());
-		List<Railway> railwayValue = Arrays.asList(new Railway(), new Railway());
-		List<Scale> scaleValue = Arrays.asList(new Scale(), new Scale());
-
-		when(service.brands()).thenReturn(brandValue);
-		when(service.railways()).thenReturn(railwayValue);
-		when(service.scales()).thenReturn(scaleValue);
-		
-		List<String> value = Arrays.asList("aaa", "bbb");
-		when(service.categories()).thenReturn(value);
-		//when(service.eras()).thenReturn(value);
-		when(service.powerMethods()).thenReturn(value);
 		
 		ModelAndView mav = controller.createNew();
 		
 		assertViewName(mav, "rollingstock/new");
 		assertAndReturnModelAttributeOfType(mav, "rollingStock", RollingStock.class);
-		assertCompareListModelAttribute(mav, "brands", brandValue);
-		assertCompareListModelAttribute(mav, "railways", railwayValue);
-		assertCompareListModelAttribute(mav, "scales", scaleValue);
-		assertModelAttributeAvailable(mav, "categories");
-		assertModelAttributeAvailable(mav, "eras");
-		assertModelAttributeAvailable(mav, "powerMethods");
+		assertCompareListModelAttribute(mav, "brands", BRANDS);
+		assertCompareListModelAttribute(mav, "railways", RAILWAYS);
+		assertCompareListModelAttribute(mav, "scales", SCALES);
+		assertCompareListModelAttribute(mav, "categories", CATEGORIES);
+		assertCompareListModelAttribute(mav, "eras", ERAS);
+		assertCompareListModelAttribute(mav, "powerMethods", POWERMETHODS);
 	}
 	
 	@Test
@@ -166,30 +175,17 @@ public class RollingStocksControllerTests {
 		RollingStock value = new RollingStock.Builder("ACME", "123456").build();
 		when(service.findBySlug(eq(slug))).thenReturn(value);
 		
-		List<Brand> brandValue = Arrays.asList(new Brand(), new Brand());
-		List<Railway> railwayValue = Arrays.asList(new Railway(), new Railway());
-		List<Scale> scaleValue = Arrays.asList(new Scale(), new Scale());
-
-		when(service.brands()).thenReturn(brandValue);
-		when(service.railways()).thenReturn(railwayValue);
-		when(service.scales()).thenReturn(scaleValue);
-		
-		List<String> list = Arrays.asList("aaa", "bbb");
-		when(service.categories()).thenReturn(list);
-		//when(service.eras()).thenReturn(list);
-		when(service.powerMethods()).thenReturn(list);
-		
 		ModelAndView mav = controller.editForm(slug);
 		
 		verify(service, times(1)).findBySlug(slug);
 		assertViewName(mav, "rollingstock/edit");
 		assertModelAttributeValue(mav, "rollingStock", value);
-		assertCompareListModelAttribute(mav, "brands", brandValue);
-		assertCompareListModelAttribute(mav, "railways", railwayValue);
-		assertCompareListModelAttribute(mav, "scales", scaleValue);
-		assertModelAttributeAvailable(mav, "categories");
-		assertModelAttributeAvailable(mav, "eras");
-		assertModelAttributeAvailable(mav, "powerMethods");
+		assertCompareListModelAttribute(mav, "brands", BRANDS);
+		assertCompareListModelAttribute(mav, "railways", RAILWAYS);
+		assertCompareListModelAttribute(mav, "scales", SCALES);
+		assertCompareListModelAttribute(mav, "categories", CATEGORIES);
+		assertCompareListModelAttribute(mav, "eras", ERAS);
+		assertCompareListModelAttribute(mav, "powerMethods", POWERMETHODS);
 	}
 	
 	@Test
@@ -232,7 +228,7 @@ public class RollingStocksControllerTests {
 		
 		String viewName = controller.delete(rs, mockRedirect);
 		
-		assertEquals("redirect:/rollingstocks", viewName);
+		assertEquals("redirect:/rs", viewName);
 		verify(service, times(1)).remove(eq(rs));
 	}
 }

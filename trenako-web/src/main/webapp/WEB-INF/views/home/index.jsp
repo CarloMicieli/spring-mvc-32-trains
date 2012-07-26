@@ -80,11 +80,18 @@
         	</div>
         	<div class="span4">
           		<h2>New rolling stocks</h2>
+          		<p>
+          		To help us create new rolling stocks
+          		</p>
+          		<p>
+          		<a class="btn btn-info" href="<s:url value="/rollingstocks/new" />">New rolling stock</a>
+          		</p>
+          		
            		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           		<p><a class="btn" href="#">View details &raquo;</a></p>
        		</div>
         	<div class="span4">
-          		<h2>Last activity</h2>
+          		<h2>Recent activity</h2>
           		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
           		<p><a class="btn" href="#">View details &raquo;</a></p>
         	</div>

@@ -167,7 +167,7 @@ public class RollingStocksController {
 			RedirectAttributes redirectAtts) {
 		
 		service.remove(rs);
-		return "redirect:/rollingstocks";
+		return "redirect:/rs";
 	}
 	
 	// initialize the referenced values

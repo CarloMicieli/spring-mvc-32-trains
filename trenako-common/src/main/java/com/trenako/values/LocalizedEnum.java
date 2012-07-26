@@ -218,7 +218,14 @@ public class LocalizedEnum<T extends Enum<T>> {
 	public static class EraMessageFailback implements MessageFailback<Era> {
 		@Override
 		public String failbackMessage(Era val) {
-			return val.name();
+			return val.name().toUpperCase();
+		}
+	}
+	
+	public static class PowerMethodMessageFailback implements MessageFailback<PowerMethod> {
+		@Override
+		public String failbackMessage(PowerMethod val) {
+			return val.name().toUpperCase();
 		}
 	}
 	

@@ -15,8 +15,7 @@
  */
 package com.trenako.services;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.eq;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
@@ -40,6 +39,10 @@ import com.trenako.repositories.RailwaysRepository;
 import com.trenako.repositories.RollingStocksRepository;
 import com.trenako.repositories.ScalesRepository;
 import com.trenako.services.RollingStocksServiceImpl;
+import com.trenako.values.Category;
+import com.trenako.values.Era;
+import com.trenako.values.LocalizedEnum;
+import com.trenako.values.PowerMethod;
 
 /**
  * 
@@ -147,12 +150,44 @@ public class RollingStocksServiceTests {
 	
 	@Test
 	public void shouldReturnScalesList() {
-		Sort sort = new Sort(Direction.DESC, "ratio");
+		Sort sort = new Sort(new Sort.Order(Direction.ASC, "ratio"), new Sort.Order(Direction.DESC, "gauge"));
 		when(scalesRepo.findAll(eq(sort))).thenReturn(Arrays.asList(new Scale(), new Scale()));
 		
 		Iterable<Scale> scales = service.scales();
 		
 		assertNotNull(scales);
 		verify(scalesRepo, times(1)).findAll(eq(sort));
+	}
+	
+	@Test
+	public void shouldReturnCategoriesList() {
+		
+		Iterable<LocalizedEnum<Category>> categories = service.categories();
+		
+		String expected = "[(steam-locomotives), (diesel-locomotives), (electric-locomotives), " +
+				"(railcars), (electric-multiple-unit), (freight-cars), "+
+				"(passenger-cars), (train-sets), (starter-sets)]";
+		assertEquals(expected, categories.toString());
+		
+	}
+	
+	@Test
+	public void shouldReturnErasList() {
+		
+		Iterable<LocalizedEnum<Era>> eras = service.eras();
+		
+		String expected = "[(i), (ii), (iii), (iv), (v), (vi)]";
+		assertEquals(expected, eras.toString());
+		
+	}
+	
+	@Test
+	public void shouldReturnPowerMethodsList() {
+		
+		Iterable<LocalizedEnum<PowerMethod>> powerMethods = service.powerMethods();
+		
+		String expected = "[(dc), (ac)]";
+		assertEquals(expected, powerMethods.toString());
+		
 	}
 }

@@ -2,9 +2,12 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
-	<title>
-		<s:message code="rollingStock.page.new.title" />
-	</title>
+	<head>
+		<title>
+			<s:message code="rollingStock.page.new.title" />
+		</title>
+		<meta name="rs" content="active"/>
+	</head>
 	<body>
 		<div class="row-fluid">
 			<div class="span3">
@@ -87,7 +90,7 @@
 							<div class="controls">
 							<form:select path="era">
 								<form:option value="" label="--eras--"/>
-								<form:options items="${eras}"/>
+								<form:options items="${eras}" itemLabel="label" itemValue="key"/>
 							</form:select>
 							<form:errors path="era" element="span" cssClass="help-inline"/>
 							</div>
@@ -102,23 +105,45 @@
 							<div class="controls">
 							<form:select path="category" required="required">
 								<form:option value="" label="--categories--"/>
-								<form:options items="${categories}"/>
+								<form:options items="${categories}" itemLabel="label" itemValue="key"/>
 							</form:select>
 							<form:errors path="category" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
 						
+					 	<s:bind path="rollingStock.powerMethod">
+						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+							<form:label path="powerMethod" cssClass="control-label">
+								<s:message code="rollingStock.powerMethod.label" />:
+							</form:label>
+							<div class="controls">
+							<form:select path="powerMethod">
+								<form:option value="" label="--power methods--"/>
+								<form:options items="${powerMethods}" itemLabel="label" itemValue="key"/>
+							</form:select>
+							<form:errors path="powerMethod" element="span" cssClass="help-inline"/>
+							</div>
+						</div>
+						</s:bind>
+						
 						<fieldset class="embedded description">
-							<legend><s:message code="rollingStock.descriptions.title.label" /></legend>
-
+							<legend>
+								<s:message code="rollingStock.descriptions.title.label" />
+								<img src="/trenako-web/resources/img/flags/32/gb.png" alt="de">
+							</legend>
+							<p>
+								This is the default description. Please, take the time to enter
+								a short description in English.
+							</p>
+								
 							<s:bind path="rollingStock.description">
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 								<form:label path="description" cssClass="control-label">
 									<s:message code="rollingStock.description.label" />:
 								</form:label>
 								<div class="controls">
-									<form:textarea path="description" cssClass="input-xlarge focused" required="required" />
+									<form:textarea path="description" rows="2" cssClass="input-xlarge focused" required="required" />
 									<form:errors path="description" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
@@ -130,7 +155,7 @@
 									<s:message code="rollingStock.details.label" />:
 								</form:label>
 								<div class="controls">
-									<form:textarea path="details" cssClass="input-xlarge focused"/>
+									<form:textarea path="details" rows="4" cssClass="input-xlarge focused"/>
 									<form:errors path="details" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
@@ -152,22 +177,7 @@
 					
 						<fieldset class="embedded options">
 							<legend><s:message code="rollingStock.descriptions.options.label" /></legend>
-							
-							<s:bind path="rollingStock.powerMethod">
-							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-								<form:label path="powerMethod" cssClass="control-label">
-									<s:message code="rollingStock.powerMethod.label" />:
-								</form:label>
-								<div class="controls">
-								<form:select path="powerMethod">
-									<form:option value="" label="--power methods--"/>
-									<form:options items="${powerMethods}"/>
-								</form:select>
-								<form:errors path="powerMethod" element="span" cssClass="help-inline"/>
-								</div>
-							</div>
-							</s:bind>
-							
+						
 							<s:bind path="rollingStock.totalLength">
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 								<form:label path="totalLength" cssClass="control-label">

@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -42,10 +43,15 @@ import com.trenako.values.PowerMethod;
 @Service("rollingStocksService")
 public class RollingStocksServiceImpl implements RollingStocksService {
 	
+	private @Autowired(required = false) MessageSource messageSource;
+	
 	private final RollingStocksRepository rollingStocks;
 	private final BrandsRepository brands;
 	private final ScalesRepository scales;
 	private final RailwaysRepository railways;
+	
+	private final static Sort BY_NAME_SORT_ORDER = new Sort(Direction.ASC, "name");
+	private final static Sort SCALES_SORT_ORDER = new Sort(new Sort.Order(Direction.ASC, "ratio"), new Sort.Order(Direction.DESC, "gauge"));
 	
 	/**
 	 * Creates a {@code RollingStocksServiceImpl}
@@ -87,32 +93,32 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	
 	@Override
 	public Iterable<Brand> brands() {
-		return brands.findAll(new Sort(Direction.ASC, "name"));
+		return brands.findAll(BY_NAME_SORT_ORDER);
 	}
 
 	@Override
 	public Iterable<Railway> railways() {
-		return railways.findAll(new Sort(Direction.ASC, "name"));
+		return railways.findAll(BY_NAME_SORT_ORDER);
 	}
 
 	@Override
 	public Iterable<Scale> scales() {
-		return scales.findAll(new Sort(Direction.DESC, "ratio"));
+		return scales.findAll(SCALES_SORT_ORDER);
 	}
 
 	@Override
-	public Iterable<String> categories() {
-		return Category.list();
+	public Iterable<LocalizedEnum<Category>> categories() {
+		return LocalizedEnum.list(Category.class, messageSource, null);
 	}
 
 	@Override
 	public Iterable<LocalizedEnum<Era>> eras() {
-		return LocalizedEnum.list(Era.class);
+		return LocalizedEnum.list(Era.class, messageSource, null);
 	}
 
 	@Override
-	public Iterable<String> powerMethods() {
-		return PowerMethod.list();
+	public Iterable<LocalizedEnum<PowerMethod>> powerMethods() {
+		return LocalizedEnum.list(PowerMethod.class, messageSource, null);
 	}
 
 	@Override

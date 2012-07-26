@@ -22,8 +22,10 @@ import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
+import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
+import com.trenako.values.PowerMethod;
 
 /**
  * The interface for the rolling stocks service.
@@ -100,7 +102,7 @@ public interface RollingStocksService {
 	 * Returns the list of categories.
 	 * @return the {@code Category} list
 	 */
-	Iterable<String> categories();
+	Iterable<LocalizedEnum<Category>> categories();
 	
 	/**
 	 * Returns the list of eras.
@@ -112,7 +114,7 @@ public interface RollingStocksService {
 	 * Returns the list of power methods.
 	 * @return the {@code power method} list
 	 */
-	Iterable<String> powerMethods();
+	Iterable<LocalizedEnum<PowerMethod>> powerMethods();
 
 	/**
 	 * Returns the {@code Brand} with the provided id.
