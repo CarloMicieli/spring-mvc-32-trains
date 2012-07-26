@@ -18,12 +18,14 @@ package com.trenako.web.infrastructure;
 import static com.trenako.web.infrastructure.RangeRequestQueryParamsBuilder.*;
 import static org.junit.Assert.*;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
 import com.trenako.results.RangeRequest;
-import com.trenako.results.RangeRequestImpl;
 
 /**
  * 
@@ -32,29 +34,39 @@ import com.trenako.results.RangeRequestImpl;
  */
 public class RangeRequestQueryParamsBuilderTests {
 	
-	RangeRequest rangeRequest = new RangeRequestImpl();
+	RangeRequest rangeRequest = new RangeRequest();
 
 	@Test
 	public void shouldBuildQueryParamsForDefaultRanges() {
 		String queryParams = buildQueryParams(rangeRequest);
-		assertEquals("?count=10", queryParams);
+		assertEquals("?size=10", queryParams);
 	}
 
 	@Test
 	public void shouldBuildQueryParamsForRangesWithCountOnly() {
-		((RangeRequestImpl)rangeRequest).setCount(50);
+		((RangeRequest)rangeRequest).setSize(50);
 		
 		String queryParams = buildQueryParams(rangeRequest);
-		assertEquals("?count=50", queryParams);
+		assertEquals("?size=50", queryParams);
 	}
 
 	@Test
 	public void shouldBuildQueryParamsForRangesWithCountAndSort() {
-		((RangeRequestImpl)rangeRequest).setCount(25);
-		((RangeRequestImpl)rangeRequest).setSort(new Sort(Direction.DESC, "name"));
+		((RangeRequest)rangeRequest).setSize(25);
+		((RangeRequest)rangeRequest).setSort(new Sort(Direction.DESC, "name"));
 		
 		String queryParams = buildQueryParams(rangeRequest);
-		assertEquals("?count=25&sort=name&order=DESC", queryParams);
+		assertEquals("?size=25&sort=name&dir=DESC", queryParams);
 	}
 	
+	@Test
+	public void shouldBuildQueryParamsFromMaps() {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("size", 25);
+		params.put("sort", "name");
+		params.put("dir", "DESC");
+		
+		String queryParams = buildQueryParams(params);
+		assertEquals("?dir=DESC&size=25&sort=name", queryParams);
+	}
 }

@@ -31,7 +31,6 @@ import com.trenako.criteria.SearchCriteria;
 import com.trenako.criteria.SearchRequest;
 import com.trenako.entities.RollingStock;
 import com.trenako.results.RangeRequest;
-import com.trenako.results.RangeRequestImpl;
 import com.trenako.results.RollingStockResults;
 import com.trenako.services.BrowseService;
 import com.trenako.web.test.AbstractSpringControllerTests;
@@ -50,7 +49,7 @@ public class RollingStockSearchControllerMappingTests extends AbstractSpringCont
 		RollingStockResults value = new RollingStockResults(
 				Arrays.asList(new RollingStock(), new RollingStock()),
 				new SearchCriteria(),
-				new RangeRequestImpl());
+				new RangeRequest());
 		
 		when(mockService.findByCriteria(isA(SearchRequest.class), isA(RangeRequest.class)))
 			.thenReturn(value);

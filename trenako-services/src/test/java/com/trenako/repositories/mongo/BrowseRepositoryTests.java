@@ -43,7 +43,6 @@ import com.trenako.entities.Scale;
 import com.trenako.repositories.BrowseRepository;
 import com.trenako.results.PaginatedResults;
 import com.trenako.results.RangeRequest;
-import com.trenako.results.RangeRequestImpl;
 
 /**
  * 
@@ -109,8 +108,8 @@ public class BrowseRepositoryTests {
 	
 
 	private RangeRequest buildRange(int count) {
-		RangeRequestImpl range = new RangeRequestImpl();
-		range.setCount(count);
+		RangeRequest range = new RangeRequest();
+		range.setSize(count);
 		return range;
 	}
 	

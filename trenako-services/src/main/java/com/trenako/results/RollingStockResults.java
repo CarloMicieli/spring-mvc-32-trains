@@ -48,10 +48,8 @@ import com.trenako.entities.RollingStock;
 public class RollingStockResults implements PaginatedResults<RollingStock> {
 
 	private final List<RollingStock> results;
-	private final RangeRequest range;
+	private final SearchRange range;
 	private final SearchCriteria criteria;
-	private final ObjectId maxId;
-	private final ObjectId sinceId;
 	
 	private final boolean hasNext;
 	private final boolean hasPrevious;
@@ -63,49 +61,29 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 	 */
 	public RollingStockResults(List<RollingStock> results, SearchCriteria criteria, RangeRequest range) {
 		
-		int size = results.size() > range.getCount()
-				? range.getCount() : results.size();
+		int size = results.size() > range.getSize()
+				? range.getSize() : results.size();
 		
 		this.results = results.subList(0, size);
-		this.range = range;
 		this.criteria = criteria;
 		
-		if (results.size() > 0) {
-			RollingStock min = results.get(0);
-			RollingStock max = results.get(size - 1);
+		if (!isEmpty()) {
+			final RollingStock min = results.get(0);
+			final RollingStock max = results.get(size - 1);
 		
-			this.sinceId = min.getId();
-			this.maxId = max.getId();
+			final ObjectId sinceId = min.getId();
+			final ObjectId maxId = max.getId();
 			
-			this.hasPrevious = range.getSinceId() != null;
-			this.hasNext = results.size() > range.getCount();
+			this.hasPrevious = range.getSince() != null;
+			this.hasNext = results.size() > range.getSize();
+			
+			this.range = new SearchRange(range.getSize(), range.getSort(), sinceId, maxId); 
 		}
 		else {
-			this.sinceId = null;
-			this.maxId = null;
+			this.range = null;
 			this.hasPrevious = false;
 			this.hasNext = false;
 		}
-	}
-	
-	@Override
-	public ObjectId getSinceId() {
-		return this.sinceId;
-	}
-
-	@Override
-	public ObjectId getMaxId() {
-		return this.maxId;
-	}
-
-	@Override
-	public long getTotalSize() {
-		return 0;
-	}
-
-	@Override
-	public int getPageSize() {
-		return range.getCount();
 	}
 
 	@Override
@@ -129,7 +107,12 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 	}
 	
 	@Override
-	public RangeRequest getRange() {
+	public SearchRange getRange() {
 		return range;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return (results == null || results.size() == 0);
 	}
 }

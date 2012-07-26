@@ -1,5 +1,7 @@
 package com.trenako.web.infrastructure;
 
+import java.util.Map;
+
 import org.springframework.data.domain.Sort.Order;
 
 import com.trenako.results.RangeRequest;
@@ -15,7 +17,7 @@ public class RangeRequestQueryParamsBuilder {
 	}
 	
 	/**
-	 * Builds the Url for the provided {@code RangeRequest}.
+	 * Builds the query parameters for the provided {@code RangeRequest}.
 	 * @param rangeRequest the {@code RangeRequest}
 	 * @return the Url
 	 */
@@ -23,7 +25,7 @@ public class RangeRequestQueryParamsBuilder {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("?")
-			.append("count=").append(rangeRequest.getCount());
+			.append("size=").append(rangeRequest.getSize());
 		
 		if (rangeRequest.getSort() != RangeRequest.DEFAULT_SORT) {
 			
@@ -34,5 +36,29 @@ public class RangeRequestQueryParamsBuilder {
 		}
 				
 		return sb.toString();
+	}
+	
+	/**
+	 * Builds the query parameters for the provided parameters {@code Map}.
+	 * @param params the parameters
+	 * @return the query parameters
+	 */
+	public static String buildQueryParams(Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder();
+		
+		boolean first = true;
+		for (Map.Entry<String, Object> entry : params.entrySet()) {
+			if (first) {
+				sb.append("?");
+				first = false;
+			}
+			else {
+				sb.append("&");
+			}
+			sb.append(entry.getKey()).append("=").append(entry.getValue().toString());
+		}
+		
+		return sb.toString();
+		
 	}
 }

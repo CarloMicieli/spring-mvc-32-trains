@@ -24,7 +24,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import com.trenako.results.RangeRequestImpl;
+import com.trenako.results.RangeRequest;
 
 
 import static org.springframework.data.mongodb.core.query.Criteria.*;
@@ -43,10 +43,10 @@ public class RollingStockQueryBuilderTests {
 	@Test
 	public void shouldBuildAQueryWithDefaultSortingAndCompleteRange() {
 		
-		RangeRequestImpl range = new RangeRequestImpl();
-		range.setMaxId(maxId);
-		range.setSinceId(sinceId);
-		range.setCount(10);
+		RangeRequest range = new RangeRequest();
+		range.setMax(maxId);
+		range.setSince(sinceId);
+		range.setSize(10);
 		
 		Query query = RollingStockQueryBuilder.buildQuery(where, range);
 		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
@@ -59,9 +59,9 @@ public class RollingStockQueryBuilderTests {
 	@Test
 	public void shouldBuildQueryWithSinceValueOnly() {
 		
-		RangeRequestImpl range = new RangeRequestImpl();
-		range.setSinceId(sinceId);
-		range.setCount(10);
+		RangeRequest range = new RangeRequest();
+		range.setSince(sinceId);
+		range.setSize(10);
 		
 		Query query = RollingStockQueryBuilder.buildQuery(where, range);
 		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
@@ -73,9 +73,9 @@ public class RollingStockQueryBuilderTests {
 	@Test
 	public void shouldBuildQueryWithMaxValueOnly() {
 		
-		RangeRequestImpl range = new RangeRequestImpl();
-		range.setMaxId(maxId);
-		range.setCount(10);
+		RangeRequest range = new RangeRequest();
+		range.setMax(maxId);
+		range.setSize(10);
 		
 		Query query = RollingStockQueryBuilder.buildQuery(where, range);
 		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
@@ -86,9 +86,9 @@ public class RollingStockQueryBuilderTests {
 
 	@Test
 	public void shouldBuildQueryWithSorting() {
-		RangeRequestImpl range = new RangeRequestImpl();
-		range.setMaxId(maxId);
-		range.setCount(10);
+		RangeRequest range = new RangeRequest();
+		range.setMax(maxId);
+		range.setSize(10);
 		range.setSort(new Sort(Direction.ASC, "powerMethod"));
 		
 		Query query = RollingStockQueryBuilder.buildQuery(where, range);

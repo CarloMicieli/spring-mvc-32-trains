@@ -35,7 +35,7 @@ import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
 import com.trenako.repositories.BrowseRepository;
-import com.trenako.results.RangeRequestImpl;
+import com.trenako.results.RangeRequest;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
@@ -128,8 +128,8 @@ public class BrowseServiceTests {
 	public void shouldFindAllRollingStocks() {
 		SearchCriteria searchCriteria = new SearchCriteria.Builder()
 			.build();
-		RangeRequestImpl range = new RangeRequestImpl();
-		range.setCount(10);
+		RangeRequest range = new RangeRequest();
+		range.setSize(10);
 		SearchRequest searchReq = new SearchRequest();
 
 		service.findByCriteria(searchReq, range);
@@ -148,8 +148,8 @@ public class BrowseServiceTests {
 			.category(electricLocomotives())
 			.build();
 		
-		RangeRequestImpl range = new RangeRequestImpl();
-		range.setCount(10);
+		RangeRequest range = new RangeRequest();
+		range.setSize(10);
 		
 		SearchRequest sr = new SearchRequest(
 			acme().getSlug(),

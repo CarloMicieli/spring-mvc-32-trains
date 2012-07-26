@@ -41,18 +41,18 @@ public class RollingStockQueryBuilder {
 	 */
 	public static Query buildQuery(Criteria criteria, RangeRequest range) {
 		
-		if (range.getSinceId()!=null && range.getMaxId()!=null) {
-			criteria.and("id").gt(range.getSinceId()).lt(range.getMaxId());
+		if (range.getSince()!=null && range.getMax()!=null) {
+			criteria.and("id").gt(range.getSince()).lt(range.getMax());
 		}
-		else if (range.getSinceId()!=null) {
-			criteria.and("id").gt(range.getSinceId());
+		else if (range.getSince()!=null) {
+			criteria.and("id").gt(range.getSince());
 		}
-		else if (range.getMaxId()!=null) {
-			criteria.and("id").lt(range.getMaxId());
+		else if (range.getMax()!=null) {
+			criteria.and("id").lt(range.getMax());
 		}
 		
 		final Query q = query(criteria);
-		q.limit(range.getCount() + 1);
+		q.limit(range.getSize() + 1);
 		QueryUtils.applySorting(q, range.getSort());
 		
 		return q;

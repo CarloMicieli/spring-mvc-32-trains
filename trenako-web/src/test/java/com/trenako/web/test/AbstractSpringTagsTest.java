@@ -41,7 +41,6 @@ import org.springframework.web.context.WebApplicationContext;
 import com.trenako.entities.RollingStock;
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
-import com.trenako.results.RangeRequestImpl;
 import com.trenako.results.RollingStockResults;
 
 /**
@@ -118,7 +117,7 @@ public abstract class AbstractSpringTagsTest {
 	}
 	
 	protected RangeRequest mockRange() {
-		return new RangeRequestImpl();
+		return new RangeRequest();
 	}
 	
 	protected RollingStockResults mockResults(int numberOfItems, SearchCriteria sc, RangeRequest range) {

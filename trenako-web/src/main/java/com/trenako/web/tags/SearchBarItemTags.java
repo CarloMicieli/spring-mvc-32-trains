@@ -31,7 +31,7 @@ import org.springframework.context.MessageSource;
 
 import com.trenako.criteria.Criteria;
 import com.trenako.criteria.SearchCriteria;
-import com.trenako.results.RangeRequest;
+import com.trenako.results.SearchRange;
 import com.trenako.services.BrowseService;
 import com.trenako.values.LocalizedEnum;
 import com.trenako.web.tags.html.HtmlTag;
@@ -84,7 +84,7 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 		return new SearchCriteria();
 	}
 	
-	public RangeRequest getRange() {
+	public SearchRange getRange() {
 		if (getParent() != null &&
 			getParent().getClass().isAssignableFrom(SearchBarTags.class)) {
 			

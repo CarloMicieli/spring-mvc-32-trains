@@ -33,7 +33,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequ
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.results.RangeRequest;
-import com.trenako.results.RangeRequestImpl;
 
 /**
  * 
@@ -42,7 +41,7 @@ import com.trenako.results.RangeRequestImpl;
  */
 public class RangeRequestArgumentResolverTests {
 	
-	RangeRequest rangeRequest = new RangeRequestImpl();
+	RangeRequest rangeRequest = new RangeRequest();
 	RangeRequestArgumentResolver resolver = new RangeRequestArgumentResolver(rangeRequest);
 
 	MethodParameter parSearchCriteria;
@@ -64,11 +63,11 @@ public class RangeRequestArgumentResolverTests {
 	@Test
 	public void shouldResolveRequestAsRangeRequest() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.addParameter("maxId", "47cc67093475061e3d95369d");
-		request.addParameter("sinceId", "47cc67093475061e3d95369e");
-		request.addParameter("count", "50");
+		request.addParameter("max", "47cc67093475061e3d95369d");
+		request.addParameter("since", "47cc67093475061e3d95369e");
+		request.addParameter("size", "50");
 		request.addParameter("sort", "name");
-		request.addParameter("order", "desc");
+		request.addParameter("dir", "desc");
 		
 		NativeWebRequest webRequest = mock(NativeWebRequest.class);
 		when(webRequest.getNativeRequest()).thenReturn(request);
@@ -85,7 +84,7 @@ public class RangeRequestArgumentResolverTests {
 		assertNotNull(obj);
 		assertTrue(obj instanceof RangeRequest);
 		
-		assertEquals("maxid=47cc67093475061e3d95369d,sinceid=47cc67093475061e3d95369e,count=50,sort=name: DESC", 
+		assertEquals("max=47cc67093475061e3d95369d,since=47cc67093475061e3d95369e,size=50,sort=name: DESC", 
 				obj.toString());
 	}
 	

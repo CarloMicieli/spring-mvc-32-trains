@@ -15,8 +15,6 @@
  */
 package com.trenako.results;
 
-import org.bson.types.ObjectId;
-
 import com.trenako.criteria.SearchCriteria;
 
 /**
@@ -43,34 +41,16 @@ import com.trenako.criteria.SearchCriteria;
 public interface PaginatedResults<T> {
 	
 	/**
-	 * Returns the search criteria that produced this result set.
+	 * Returns the {@code SearchCriteria} that produced this result set.
 	 * @return the search criteria
 	 */
 	SearchCriteria getCriteria();
-
-	/**
-	 * Returns the minimum {@code id} in the result page.
-	 * @return the minimum {@code id}
-	 */
-	ObjectId getSinceId();
-
-	/**
-	 * Returns the maximum {@code id} in the result page.
-	 * @return the maximum {@code id}
-	 */
-	ObjectId getMaxId();
 	
 	/**
-	 * Returns the total number of items in the result set.
-	 * @return the number of items
+	 * Returns the {@code RangeRequest} that produced this result set.
+	 * @return the range request
 	 */
-	long getTotalSize();
-	
-	/**
-	 * Returns the page size.
-	 * @return the size
-	 */
-	int getPageSize();
+	SearchRange getRange();
 	
 	/**
 	 * Indicates whether the result set has a previous page.
@@ -91,8 +71,8 @@ public interface PaginatedResults<T> {
 	Iterable<T> getItems();
 
 	/**
-	 * 
-	 * @return
+	 * Checks whether the results set is empty.
+	 * @return {@code true} if empty; {@code false} otherwise
 	 */
-	RangeRequest getRange();
+	boolean isEmpty();
 }

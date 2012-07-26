@@ -16,42 +16,33 @@
 package com.trenako.results;
 
 import static org.junit.Assert.*;
+import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-
-import com.trenako.AppGlobals;
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-public class RangeRequestTests {
-	RangeRequest range = new RangeRequest();
+public class SearchRangeTests {
+	
+	static final ObjectId SINCE = new ObjectId("501171ab575ef9abd1a0c71e");
+	static final ObjectId MAX = new ObjectId("501171ab575ef9abd1a0c71f");
 	
 	@Test
-	public void shouldSetOnlyValidCountValues() {
-		range.setSize(1000);
-		assertEquals(AppGlobals.MAX_RESULT_SET_SIZE, range.getSize());		
-	
-		range.setSize(0);
-		assertEquals(10, range.getSize());		
+	public void shouldReturnParamsAsMaps() {
+		SearchRange range = new SearchRange(10, new Sort(Direction.DESC, "name"), SINCE, MAX);
 		
-		range.setSize(-10);
-		assertEquals(10, range.getSize());	
-	}
-
-	@Test
-	public void shouldReturnTheDefaultSort() {
-		assertEquals(RangeRequest.DEFAULT_SORT, range.getSort());
+		Map<String, Object> params = range.asMap();
+		
+		assertNotNull(params);
+		assertEquals(5, params.size());
+		assertEquals("{dir=DESC, max=501171ab575ef9abd1a0c71f, since=501171ab575ef9abd1a0c71e, size=10, sort=name}", 
+				params.toString());
 	}
 	
-	@Test
-	public void shouldReturnTheFirstOrder() {
-		range.setSort(new Sort(Direction.ASC, "name"));
-		assertEquals("name", range.getFirstOrder().getProperty());
-		assertEquals(Direction.ASC, range.getFirstOrder().getDirection());
-	}
 }

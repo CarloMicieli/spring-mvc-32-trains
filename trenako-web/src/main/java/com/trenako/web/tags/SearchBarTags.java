@@ -21,8 +21,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import com.trenako.criteria.SearchCriteria;
-import com.trenako.results.RangeRequest;
 import com.trenako.results.RollingStockResults;
+import com.trenako.results.SearchRange;
 
 /**
  * It represents an enclosing tag for the rolling stock search bar.
@@ -52,7 +52,7 @@ public class SearchBarTags extends SpringTagSupport {
 		return results.getCriteria();
 	}
 		
-	protected RangeRequest getRange() {
+	protected SearchRange getRange() {
 		return results.getRange();
 	}
 

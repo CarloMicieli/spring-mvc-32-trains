@@ -52,16 +52,16 @@ public class RollingStockResultsTests {
 	}
 
 	private RangeRequest buildRange(int count) {
-		RangeRequestImpl r = new RangeRequestImpl();
-		r.setCount(count);
+		RangeRequest r = new RangeRequest();
+		r.setSize(count);
 		return r;
 	}
 	
 	private RangeRequest buildRange(int count, ObjectId since, ObjectId max) {
-		RangeRequestImpl r = new RangeRequestImpl();
-		r.setSinceId(since);
-		r.setMaxId(max);
-		r.setCount(count);
+		RangeRequest r = new RangeRequest();
+		r.setSince(since);
+		r.setMax(max);
+		r.setSize(count);
 		return r;
 	}
 	
@@ -69,14 +69,14 @@ public class RollingStockResultsTests {
 	public void shouldFillEmptyResults() {
 		RangeRequest range = buildRange(10);
 		
-		PaginatedResults<RollingStock> pagResults =
+		PaginatedResults<RollingStock> results =
 				new RollingStockResults(new ArrayList<RollingStock>(), null, range);
 		
-		assertEquals(0, ((List<RollingStock>)pagResults.getItems()).size());
-		assertEquals(null, pagResults.getSinceId());
-		assertEquals(null, pagResults.getMaxId());
-		assertEquals(false, pagResults.hasNextPage());
-		assertEquals(false, pagResults.hasPreviousPage());
+		assertTrue("Result set is not empty", results.isEmpty());
+		assertEquals(0, ((List<RollingStock>) results.getItems()).size());
+		assertNull(results.getRange());
+		assertEquals(false, results.hasNextPage());
+		assertEquals(false, results.hasPreviousPage());
 	}
 	
 	@Test
@@ -88,8 +88,8 @@ public class RollingStockResultsTests {
 				new RollingStockResults(results, null, range);
 		
 		assertEquals(10, ((List<RollingStock>)pagResults.getItems()).size());
-		assertEquals(SINCE_ID, pagResults.getSinceId());
-		assertEquals(MAX_ID, pagResults.getMaxId());
+		assertEquals(SINCE_ID, pagResults.getRange().getSince());
+		assertEquals(MAX_ID, pagResults.getRange().getMax());
 	}
 	
 	@Test
@@ -101,8 +101,8 @@ public class RollingStockResultsTests {
 				new RollingStockResults(results, null, range);
 		
 		assertEquals(6, ((List<RollingStock>)pagResults.getItems()).size());
-		assertEquals(SINCE_ID, pagResults.getSinceId());
-		assertEquals(MAX_ID, pagResults.getMaxId());
+		assertEquals(SINCE_ID, pagResults.getRange().getSince());
+		assertEquals(MAX_ID, pagResults.getRange().getMax());
 	}
 	
 	@Test

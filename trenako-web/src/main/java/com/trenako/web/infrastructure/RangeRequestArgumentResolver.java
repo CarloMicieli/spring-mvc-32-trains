@@ -34,7 +34,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.trenako.results.RangeRequest;
-import com.trenako.results.RangeRequestImpl;
 
 /**
  * It represents a web request resolver for {@code RangeRequest}.
@@ -43,7 +42,7 @@ import com.trenako.results.RangeRequestImpl;
  */
 public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolver {
 	private static final Object UNRESOLVED = new Object();
-	private static final RangeRequest DEFAULT_RANGE_REQUEST = new RangeRequestImpl(); 
+	private static final RangeRequest DEFAULT_RANGE_REQUEST = new RangeRequest(); 
 	private final RangeRequest failbackRequest;
 	
 	/**
@@ -82,7 +81,7 @@ public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolv
 			wdb.registerCustomEditor(ObjectId.class, new ObjectIdPropertyEditor());
 			wdb.bind(propValues);
 			
-			return rangeRequest.immutableRange();
+			return rangeRequest;
 		}
 		
 		return UNRESOLVED;
