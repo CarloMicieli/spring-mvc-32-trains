@@ -13,7 +13,7 @@
 		<div class="span2">
 			<tk:searchBar results="${results}">
 				<tk:brands label="name" />
-				<tk:railways  label="name" />
+				<tk:railways label="name" />
 				<tk:scales/>
 				<tk:eras/>
 				<tk:powerMethods/>
@@ -22,6 +22,10 @@
 		</div>
 		<div class="span10">
 			<tk:breadcrumb results="${results}"/>
+
+			<div class="row-fluid">
+				<tk:pagerOptions results="${results}"/>
+			</div>
 
         	<c:forEach var="rs" items="${results.items}">
 				<div class="row-fluid" style="border-bottom: 1pt solid silver;">
@@ -53,6 +57,11 @@
 					</div>
 				</div>
         	</c:forEach>
+        	
+        	<div class="row-fluid">
+        		<p><tk:pager results="${results}"/></p>
+        	</div>
+        	
 		</div>
 	</div>
 </body>

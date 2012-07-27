@@ -115,6 +115,15 @@ public class HtmlBuilder {
 	public static li li(HtmlTag... innerTags) {
 		return (HtmlBuilder.li) new li(innerTags);
 	}
+
+	/**
+	 * A form ({@code <form>}).
+	 * @param innerTags the list of inner tags
+	 * @return a tag
+	 */
+	public static form form(HtmlTag... innerTags) {
+		return (HtmlBuilder.form) new form(innerTags);
+	}
 	
 	/**
 	 * A header ({@code <h1>}).
@@ -239,6 +248,36 @@ public class HtmlBuilder {
 		
 		public li cssClass(String value) {
 			addAttribute("class", value);
+			return this;
+		}
+	}
+	
+	public static class form extends HtmlTag {
+		public form(HtmlTag... tags) {
+			super("form", TagType.INNER_TAGS);
+			setInnerTags(tags);
+		}
+		
+		public form action(String value) {
+			addAttribute("action", value);
+			return this;
+		}
+
+		public form action(String context, String path) {		
+			StringBuilder url = new StringBuilder()
+				.append(context)
+				.append(path);
+			addAttribute("action", url.toString());
+			return this;
+		}
+		
+		public form cssClass(String value) {
+			addAttribute("class", value);
+			return this;
+		}
+		
+		public form method(String value) {
+			addAttribute("method", value);
 			return this;
 		}
 	}
