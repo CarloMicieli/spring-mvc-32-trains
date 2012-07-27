@@ -2,20 +2,20 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
-	<title>
-		<s:message code="login.title" />
-	</title>
+	<head>
+		<title>
+			<s:message code="login.title" />
+		</title>
+		<meta name="home" content="active"/>
+	</head>
 	<body>
 		<div class="row-fluid">
-			<div class="span3">
-			</div>
-			<div class="span9">
+			<div class="span6">
 				<div class="page-header">
-					<h1><s:message code="login.title.label" /></h1>
+					<h1>Sign in with Trenako.com...</h1>
 				</div>
 				<s:url var="loginUrl" value="/j_spring_security_check" />
 				<form:form id="form" class="form-horizontal" method="POST" action="${loginUrl}" >
-				    
 				    <div class="control-group">
 						<label for="j_username" class="control-label">
 							<s:message code="account.username.label" />:
@@ -34,6 +34,13 @@
 						</div>
 					</div>
 					
+					<div class="controls">
+						<label class="checkbox">
+							<input type="checkbox" name="_spring_security_remember_me" id="_spring_security_remember_me">
+							Remember me
+					</label>
+					</div>
+					
 					<div class="form-actions">
 						<button type="submit" class="btn btn-primary" name="_action_save">
 							<i class="icon-check icon-white"></i>
@@ -46,7 +53,42 @@
 						</button>
 					</div>
 				</form:form>
-			</div>			
+			</div>
+			<div class="span6">
+				<div class="page-header pull-right">
+					<h1>...or use your account for one of these sites</h1>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						Do you already have an account on one of these sites? Click the logo to log in with it here:
+					</div>
+				</div>
+				<div>
+					<div class="span2"></div>
+					<div class="span10">
+						<ul class="unstyled">
+							<li>
+								<a href="#">
+									<img width="64" height="64" src="<s:url value="/resources/img/social/google.png"/>" />
+									Sign in with Google
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<img width="64" height="64" src="<s:url value="/resources/img/social/yahoo.png"/>" />
+									Sign in with Yahoo
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<img width="64" height="64" src="<s:url value="/resources/img/social/twitter.png"/>" />
+									Sign in with Twitter
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>		
 		</div>
 	</body>
 </html>

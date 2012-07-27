@@ -15,7 +15,6 @@
  */
 package com.trenako.web.controllers;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.ModelAndViewAssert.*;
 import static org.mockito.Mockito.*;
 

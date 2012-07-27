@@ -2,9 +2,12 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
-	<title>
-		<s:message code="signup.title" />
-	</title>
+	<head>
+		<title>
+			<s:message code="signup.title" />
+		</title>
+		<meta name="home" content="active"/>
+	</head>
 	<body>
 		<div class="row-fluid">
 			<div class="span3">
