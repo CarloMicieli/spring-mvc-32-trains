@@ -22,24 +22,59 @@
 	</ul>
 
 	<div class="row-fluid">
-		<div class="span4">
+		<div class="span12">
 			<div class="page-header">
 				<h1>${category.label}</h1>
-				<small></small>
+				<small>${category.description}</small>
 			</div>
 		</div>
-		<div class="span7">
-			<div class="row-fluid">
-				<div class="span3">
-				</div>
-				<div class="span9">
-					${category.description}
-				</div>
-			</div>
-			<hr/>
-		</div>
-		<div class="span1"></div>
 	</div>
+	
+	<hr/>
+	
+	<div class="row-fluid">
+			<div class="span3"></div>
+			<div class="span8">
+				<div class="row-fluid">
+					<div class="span4">
+						<h3><s:message code="browse.category.brands.label"/></h3>
+						<p><s:message code="browse.category.brands.subtitle" arguments="${category.label}"/></p>
+					</div>
+					<div class="span8">
+						<ul class="unstyled">
+						<c:forEach var="brand" items="${brands}">
+							<s:url var="brandUrl" value="/rs/brand/{brand}/category/{category}">
+								<s:param name="brand" value="${brand.slug}"/>
+								<s:param name="category" value="${category.key}"/>
+							</s:url>
+							<li><a class="browse" href="${brandUrl}" title="${brand.label}">${brand.name}</a></li> 
+						</c:forEach>
+						</ul>
+					</div>
+				</div>
+				<hr />
+				<div class="row-fluid">
+					<div class="span4">
+						<h3><s:message code="browse.category.railways.label"/></h3>
+						<p><s:message code="browse.category.railways.subtitle" arguments="${category.label}"/></p>
+					</div>
+					<div class="span8">
+						<ul class="unstyled">
+						<c:forEach var="railway" items="${railways}">
+							<s:url var="railwayUrl" value="/rs/railway/{railway}/category/{category}">
+								<s:param name="railway" value="${railway.slug}"/>
+								<s:param name="category" value="${category.key}"/>
+							</s:url>
+							<li><a class="browse" href="${railwayUrl}" title="${railway.label}">${railway.name}</a></li> 
+						</c:forEach>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="span1"></div>
+		</div>
+		
+		<p/>
 	
 </body>
 </html>

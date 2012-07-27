@@ -59,6 +59,48 @@
 			<div class="span1"></div>
 		</div>
 	
+		<div class="row-fluid">
+			<div class="span3"></div>
+			<div class="span8">
+				<div class="row-fluid">
+					<div class="span4">
+						<h3><s:message code="browse.scale.eras.label"/></h3>
+						<p><s:message code="browse.scale.eras.subtitle" arguments="${scale.name}"/></p>
+					</div>
+					<div class="span8">
+						<ul class="unstyled">
+						<c:forEach var="era" items="${eras}">
+							<s:url var="eraUrl" value="/rs/scale/{scale}/era/{era}">
+								<s:param name="scale" value="${scale.slug}"/>
+								<s:param name="era" value="${era.key}"/>
+							</s:url>
+							<li><a class="browse" href="${eraUrl}" title="${era.description}">${era.label}</a></li> 
+						</c:forEach>
+						</ul>
+					</div>
+				</div>
+				<hr />
+				<div class="row-fluid">
+					<div class="span4">
+						<h3><s:message code="browse.scale.categories.label"/></h3>
+						<p><s:message code="browse.scale.categories.subtitle" arguments="${scale.name}"/></p>
+					</div>
+					<div class="span8">
+						<ul class="unstyled">
+						<c:forEach var="cat" items="${categories}">
+							<s:url var="categoryUrl" value="/rs/scale/{scale}/category/{category}">
+								<s:param name="scale" value="${scale.slug}"/>
+								<s:param name="category" value="${cat.key}"/>
+							</s:url>
+							<li><a class="browse" href="${categoryUrl}" title="${cat.description}">${cat.label}</a></li> 
+						</c:forEach>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="span1"></div>
+		</div>
+	
 		<p/>
 		
 	</body>

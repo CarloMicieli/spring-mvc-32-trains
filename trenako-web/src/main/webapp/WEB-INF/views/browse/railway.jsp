@@ -23,7 +23,7 @@
 		</ul>
 	
 		<div class="row-fluid">
-			<div class="span2">
+			<div class="span3">
 				<div class="page-header">
 					<h1>
 						${railway.name}
@@ -35,10 +35,13 @@
 					<small>${railway.companyName}</small>
 				</div>
 			</div>
-			<div class="span9">
+			<div class="span8">
 				<div class="row-fluid">
 					<div class="span3">
-						<img src="http://placehold.it/250x120" alt="">
+						<s:url value="/images/railway/{id}" var="logoUrl">
+							<s:param name="id" value="${railway.id}" />
+						</s:url>
+						<img src="${logoUrl}" alt="Not found"/>
 					</div>
 					<div class="span9">
 						${railway.description}
@@ -50,8 +53,8 @@
 		</div>
 	
 		<div class="row-fluid">
-			<div class="span2"></div>
-			<div class="span9">
+			<div class="span3"></div>
+			<div class="span8">
 				<div class="row-fluid">
 					<div class="span4">
 						<h3><s:message code="browse.railway.eras.label"/></h3>

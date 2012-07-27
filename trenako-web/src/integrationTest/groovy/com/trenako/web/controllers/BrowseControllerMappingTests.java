@@ -128,8 +128,10 @@ public class BrowseControllerMappingTests extends AbstractSpringControllerTests 
 	public void shouldRenderBrowseScaleHomepage() throws Exception {
 		mockMvc().perform(get("/browse/scales/{slug}", "h0"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(3))
 			.andExpect(model().attributeExists("scale"))
+			.andExpect(model().attributeExists("eras"))
+			.andExpect(model().attributeExists("categories"))
 			.andExpect(forwardedUrl(view("browse", "scale")));
 	}
 	
@@ -146,8 +148,10 @@ public class BrowseControllerMappingTests extends AbstractSpringControllerTests 
 	public void shouldRenderBrowseEraHomepage() throws Exception {
 		mockMvc().perform(get("/browse/eras/{slug}", "iii"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(3))
 			.andExpect(model().attributeExists("era"))
+			.andExpect(model().attributeExists("brands"))
+			.andExpect(model().attributeExists("railways"))
 			.andExpect(forwardedUrl(view("browse", "era")));
 	}
 	
@@ -164,8 +168,10 @@ public class BrowseControllerMappingTests extends AbstractSpringControllerTests 
 	public void shouldRenderBrowseCategoryHomepage() throws Exception {
 		mockMvc().perform(get("/browse/categories/{slug}", "electric-locomotives"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(3))
 			.andExpect(model().attributeExists("category"))
+			.andExpect(model().attributeExists("brands"))
+			.andExpect(model().attributeExists("railways"))
 			.andExpect(forwardedUrl(view("browse", "category")));
 	}
 }

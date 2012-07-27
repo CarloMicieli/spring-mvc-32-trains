@@ -22,24 +22,59 @@
 	</ul>
 
 	<div class="row-fluid">
-		<div class="span2">
+		<div class="span12">
 			<div class="page-header">
-				<h1>${era.label}</h1>
-				<small></small>
+				<h1 style="font-family: verdana; font-size: 36px">${era.label}</h1>
+				<small>${era.description}</small>
 			</div>
 		</div>
-		<div class="span9">
+	</div>
+	
+	<hr/>
+
+	<div class="row-fluid">
+		<div class="span3"></div>
+		<div class="span8">
 			<div class="row-fluid">
-				<div class="span3">
+				<div class="span4">
+					<h3><s:message code="browse.era.brands.label"/></h3>
+					<p><s:message code="browse.era.brands.subtitle" arguments="${era.label}"/></p>
 				</div>
-				<div class="span9">
-					${era.description}
+				<div class="span8">
+					<ul class="unstyled">
+					<c:forEach var="brand" items="${brands}">
+						<s:url var="brandUrl" value="/rs/brand/{brand}/era/{era}">
+							<s:param name="brand" value="${brand.slug}"/>
+							<s:param name="era" value="${era.key}"/>
+						</s:url>
+						<li><a class="browse" href="${brandUrl}" title="${brand.label}">${brand.name}</a></li> 
+					</c:forEach>
+					</ul>
 				</div>
 			</div>
-			<hr/>
+			<hr />
+			<div class="row-fluid">
+				<div class="span4">
+					<h3><s:message code="browse.era.railways.label"/></h3>
+					<p><s:message code="browse.era.railways.subtitle" arguments="${era.label}"/></p>
+				</div>
+				<div class="span8">
+					<ul class="unstyled">
+					<c:forEach var="railway" items="${railways}">
+						<s:url var="railwayUrl" value="/rs/railway/{railway}/era/{era}">
+							<s:param name="railway" value="${railway.slug}"/>
+							<s:param name="era" value="${era.key}"/>
+						</s:url>
+						<li><a class="browse" href="${railwayUrl}" title="${railway.label}">${railway.name}</a></li> 
+					</c:forEach>
+					</ul>
+				</div>
+			</div>
 		</div>
 		<div class="span1"></div>
 	</div>
 	
+	<p/>
+
 </body>
 </html>

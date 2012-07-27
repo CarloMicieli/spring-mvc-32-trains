@@ -121,11 +121,6 @@ public class BrowseController {
 		return new ModelAndView("browse/brand", "brand", service.findBrand(slug));
 	}
 
-	@RequestMapping(value = "/eras/{slug}", method = RequestMethod.GET)
-	public ModelAndView era(@PathVariable("slug") String slug) {
-		return new ModelAndView("browse/era", "era", service.findEra(slug));
-	}
-
 	@RequestMapping(value = "/railways/{slug}", method = RequestMethod.GET)
 	public ModelAndView railway(@PathVariable("slug") String slug) {
 		ModelAndView mav = new ModelAndView("browse/railway");
@@ -137,11 +132,28 @@ public class BrowseController {
 
 	@RequestMapping(value = "/scales/{slug}", method = RequestMethod.GET)
 	public ModelAndView scale(@PathVariable("slug") String slug) {
-		return new ModelAndView("browse/scale", "scale", service.findScale(slug));
+		ModelAndView mav = new ModelAndView("browse/scale");
+		mav.addObject("scale", service.findScale(slug));
+		mav.addObject("categories", service.categories());
+		mav.addObject("eras", service.eras());
+		return mav;
 	}
 
 	@RequestMapping(value = "/categories/{slug}", method = RequestMethod.GET)
 	public ModelAndView category(@PathVariable("slug") String slug) {
-		return new ModelAndView("browse/category", "category", service.findCategory(slug));
+		ModelAndView mav = new ModelAndView("browse/category");
+		mav.addObject("category", service.findCategory(slug));
+		mav.addObject("brands", service.brands());
+		mav.addObject("railways", service.railways());
+		return mav;
+	}
+	
+	@RequestMapping(value = "/eras/{slug}", method = RequestMethod.GET)
+	public ModelAndView era(@PathVariable("slug") String slug) {
+		ModelAndView mav = new ModelAndView("browse/era");
+		mav.addObject("era", service.findEra(slug));
+		mav.addObject("brands", service.brands());
+		mav.addObject("railways", service.railways());
+		return mav;
 	}
 }

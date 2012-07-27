@@ -129,6 +129,8 @@ public class BrowseControllerTests {
 		
 		assertViewName(mav, "browse/era");
 		assertModelAttributeValue(mav, "era", value);
+		assertModelAttributeValue(mav, "brands", BRANDS);
+		assertModelAttributeValue(mav, "railways", RAILWAYS);
 	}
 	
 	@Test
@@ -194,5 +196,7 @@ public class BrowseControllerTests {
 		
 		assertViewName(mav, "browse/category");
 		assertModelAttributeValue(mav, "category", value);
+		assertModelAttributeValue(mav, "brands", BRANDS);
+		assertModelAttributeValue(mav, "railways", RAILWAYS);
 	}
 }
