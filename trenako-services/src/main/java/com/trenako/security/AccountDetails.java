@@ -77,9 +77,13 @@ public class AccountDetails implements UserDetails {
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
-
+	
 	@Override
 	public boolean isEnabled() {
 		return account.isEnabled();
+	}
+	
+	public String getDisplayName() {
+		return account.getDisplayName();
 	}
 }

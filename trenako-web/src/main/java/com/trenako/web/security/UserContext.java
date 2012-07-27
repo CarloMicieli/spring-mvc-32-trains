@@ -16,6 +16,7 @@
 package com.trenako.web.security;
 
 import com.trenako.entities.Account;
+import com.trenako.security.AccountDetails;
 
 /**
  * It represent a security context, used to retrieve the current 
@@ -30,5 +31,5 @@ public interface UserContext {
      * Gets the currently logged in {@link Account} or {@code null} if not logged in.
      * @return
      */
-    Account getCurrentUser();
+    AccountDetails getCurrentUser();
 }

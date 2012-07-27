@@ -20,7 +20,7 @@ import org.springframework.security.core.Authentication;
 
 import org.springframework.stereotype.Component;
 
-import com.trenako.entities.Account;
+import com.trenako.security.AccountDetails;
 
 /**
  * It represent a Spring security user context.
@@ -31,8 +31,8 @@ import com.trenako.entities.Account;
 public class SpringUserContext implements UserContext {
 
 	@Override
-    public Account getCurrentUser() {
+    public AccountDetails getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication == null ? null : (Account) authentication.getPrincipal();
+        return authentication == null ? null : (AccountDetails) authentication.getPrincipal();
     }
 }

@@ -26,13 +26,13 @@
 	<http pattern="/resources/**" security="none" />
 	
 	<http auto-config="true" use-expressions="true" access-denied-page="/error/denied">
-		<intercept-url pattern="/auth/login*" access="permitAll" />
-		<intercept-url pattern="/auth/signup*" access="permitAll" />
-		<intercept-url pattern="/auth/logout*" access="permitAll" />
+		<intercept-url pattern="/auth/logout*" access="isAuthenticated()" />
+		<intercept-url pattern="/auth/**" access="permitAll" />
 		<intercept-url pattern="/images/**" access="permitAll" />
 		<intercept-url pattern="/rs/**" access="permitAll" />
 		<intercept-url pattern="/browse/**" access="permitAll" />
 		<intercept-url pattern="/default" access="isAuthenticated()" />
+		<intercept-url pattern="/you/**" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/new**" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/**" method="GET" access="permitAll" />
 		<intercept-url pattern="/rollingstocks/**" access="isAuthenticated()" />
