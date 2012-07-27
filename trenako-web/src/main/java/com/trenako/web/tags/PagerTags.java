@@ -61,30 +61,26 @@ public class PagerTags extends SpringTagSupport {
 		}
 		
 		try {
-			
 			String prev = messageSource.getMessage("pages.previous.label", null, "&larr; Older", null);
 			String next = messageSource.getMessage("pages.next.label", null, "Newer &rarr;", null);
 			
-			String nextParams = "";
-			String prevParams = "";
-			
-			String nextCss = getResults().hasNextPage() ? "next" : "next .disabled";
-			String previousCss = getResults().hasPreviousPage() ? "previous" : "previous .disabled";
-			
+			HtmlTag nextTag = li(a(next).href("#")).cssClass("next disabled");
 			if (getResults().getRange() != null) {
 				if (getResults().hasNextPage()) {
-					nextParams = buildQueryParamsNext(getResults().getRange());
-				}
-				
-				if (getResults().hasPreviousPage()) {
-					prevParams = buildQueryParamsPrevious(getResults().getRange());
+					String nextParams = buildQueryParamsNext(getResults().getRange());
+					nextTag = li(a(next).href(contextPath, nextParams)).cssClass("next");
 				}
 			}
 			
-			HtmlTag html = ul(
-					li(a(prev).href(contextPath, prevParams)).cssClass(previousCss),
-					li(a(next).href(contextPath, nextParams)).cssClass(nextCss)
-					).cssClass("pager");
+			HtmlTag prevTag = li(a(prev).href("#")).cssClass("previous disabled");
+			if (getResults().getRange() != null) {
+				if (getResults().hasPreviousPage()) {
+					String nextParams = buildQueryParamsPrevious(getResults().getRange());
+					prevTag = li(a(prev).href(contextPath, nextParams)).cssClass("previous");
+				}
+			}
+			
+			HtmlTag html = ul(prevTag, nextTag).cssClass("pager");
 			jspWriter.write(html.build());
 			
 		} catch (IOException e) {

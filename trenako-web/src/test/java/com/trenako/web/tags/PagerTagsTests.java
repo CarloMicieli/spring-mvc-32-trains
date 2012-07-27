@@ -79,8 +79,8 @@ public class PagerTagsTests extends AbstractSpringTagsTest {
 		assertEquals(TagSupport.SKIP_BODY, rv);
 
 		HtmlTag html = ul(
-				li(a("&larr; Older").href("/trenako-web")).cssClass("previous .disabled"),
-				li(a("Newer &rarr;").href("/trenako-web")).cssClass("next .disabled")
+				li(a("&larr; Older").href("#")).cssClass("previous disabled"),
+				li(a("Newer &rarr;").href("#")).cssClass("next disabled")
 				).cssClass("pager");
 		
 		String output = renderTag();
