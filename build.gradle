@@ -21,7 +21,9 @@ def springVersion = "3.1.2.RELEASE"
 def springDataVersion = "1.1.0.RELEASE"
 def springDataMongoVersion = "1.0.3.RELEASE"
 def securityVersion = "3.1.1.RELEASE"
-def slf4jVersion = "1.6.1"
+def slf4jVersion = "1.6.6"
+def log4jVersion = "1.2.17"
+def logbackVersion = "1.0.6"
 def spockVersion = "0.6-groovy-1.8"
 def mongoDriverVersion = "2.8.0"
 def hibernateValidationVersion = "4.3.0.Final"
@@ -74,8 +76,10 @@ allprojects {
 		// logging
 		compile "org.slf4j:slf4j-api:${slf4jVersion}"
 		runtime "org.slf4j:jcl-over-slf4j:${slf4jVersion}",
-			"org.slf4j:slf4j-log4j12:${slf4jVersion}",
-			"log4j:log4j:1.2.16"
+			"log4j:log4j:${log4jVersion}",
+			"ch.qos.logback:logback-classic:${logbackVersion}",
+			"ch.qos.logback:logback-core:${logbackVersion}"
+			
 
 		// spring framework
 		compile("org.springframework:spring-context:${springVersion}") {
