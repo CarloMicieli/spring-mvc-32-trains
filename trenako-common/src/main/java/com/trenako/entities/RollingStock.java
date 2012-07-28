@@ -37,6 +37,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 
 import com.trenako.AppGlobals;
+import com.trenako.mapping.DbReferenceable;
 import com.trenako.utility.Slug;
 import com.trenako.values.Era;
 import com.trenako.values.OptionFamily;
@@ -56,7 +57,7 @@ import com.trenako.values.PowerMethod;
  * 
  */
 @Document(collection = "rollingStocks")
-public class RollingStock {
+public class RollingStock implements DbReferenceable {
 
 	@Id
 	private ObjectId id;
@@ -318,6 +319,11 @@ public class RollingStock {
 		this.id = id;
 	}
 	
+	@Override
+	public String getLabel() {
+		return getBrandName() + " " + getItemNumber();
+	}
+	
 	/**
 	 * Returns the slug for the rolling stock.
 	 * <p>
@@ -335,6 +341,7 @@ public class RollingStock {
 	 * 
 	 * @return the slug value
 	 */
+	@Override
 	public String getSlug() {
 		if (slug == null && brand != null) {
 			setSlug(Slug.encode(String.format("%s %s", brand.getName(), itemNumber)));

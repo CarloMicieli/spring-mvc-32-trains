@@ -35,6 +35,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.mapping.DbReferenceable;
 import com.trenako.utility.Slug;
 import com.trenako.validation.constraints.ValidAddress;
 
@@ -58,7 +59,7 @@ import com.trenako.validation.constraints.ValidAddress;
  *
  */
 @Document(collection = "brands")
-public class Brand {
+public class Brand implements DbReferenceable {
 
 	@Id
 	private ObjectId id;
@@ -310,6 +311,19 @@ public class Brand {
 	}
 	
 	/**
+	 * Returns a label for the current {@code Brand}.
+	 * <p>
+	 * The application will show this value as string representation
+	 * for the current {@code Brand} instead of the usual {@code Brand#toString()}.
+	 * </p>
+	 * @return the label string
+	 */
+	@Override
+	public String getLabel() {
+		return name;
+	}
+	
+	/**
 	 * Returns the {@code Brand} slug.
 	 * <p>
 	 * If this property is not set then this method will return
@@ -318,6 +332,7 @@ public class Brand {
 	 * 
 	 * @return the slug
 	 */
+	@Override
 	public String getSlug() {
 		if( slug==null ) slug = Slug.encode(name);
 		return slug;
@@ -478,18 +493,6 @@ public class Brand {
 	 */
 	public void setScales(Set<String> scales) {
 		this.scales = scales;
-	}
-
-	/**
-	 * Returns a label for the current {@code Brand}.
-	 * <p>
-	 * The application will show this value as string representation
-	 * for the current {@code Brand} instead of the usual {@code Brand#toString()}.
-	 * </p>
-	 * @return the label string
-	 */
-	public String getLabel() {
-		return name;
 	}
 	
 	/**

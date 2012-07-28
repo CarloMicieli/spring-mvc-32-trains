@@ -21,6 +21,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.trenako.mapping.DbReferenceable;
+
 /**
  * 
  * @author Carlo Micieli
@@ -90,5 +92,12 @@ public class RailwayTests {
 	public void shouldFillTheSlugValue() {
 		Railway x = new Railway("s.n.c.f.");
 		assertEquals("sncf", x.getSlug());
+	}
+	
+	@Test
+	public void shouldImplementDbReferenceable() {
+		DbReferenceable ref = new Railway.Builder("DB").companyName("Die bahn").build();
+		assertEquals("db", ref.getSlug());
+		assertEquals("DB (Die bahn)", ref.getLabel());
 	}
 }

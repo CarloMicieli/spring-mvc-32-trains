@@ -20,6 +20,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
+import com.trenako.mapping.DbReferenceable;
 import com.trenako.values.Standard;
 
 import static java.math.BigDecimal.*;
@@ -146,5 +147,12 @@ public class ScaleTests {
 		Scale s = new Scale.Builder("H0").build();
 		s.addStandard(Standard.NMRA);
 		assertEquals(1, s.getStandards().size());
+	}
+	
+	@Test
+	public void shouldImplementDbReferenceable() {
+		DbReferenceable ref = new Scale.Builder("H0").ratio(870).build();
+		assertEquals("h0", ref.getSlug());
+		assertEquals("H0 (1:87)", ref.getLabel());
 	}
 }

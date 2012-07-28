@@ -34,6 +34,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.trenako.format.annotations.IntegerFormat;
 import com.trenako.format.annotations.IntegerFormat.Style;
+import com.trenako.mapping.DbReferenceable;
 import com.trenako.utility.Slug;
 import com.trenako.values.Standard;
 
@@ -52,7 +53,7 @@ import com.trenako.values.Standard;
  *
  */
 @Document(collection = "scales")
-public class Scale {
+public class Scale implements DbReferenceable {
 	
 	public final static BigDecimal GAUGE_FACTOR = BigDecimal.valueOf(100);
 	public final static BigDecimal RATIO_FACTOR = BigDecimal.valueOf(10);
@@ -295,6 +296,7 @@ public class Scale {
 	 * Returns the {@code Scale} slug.
 	 * @return the slug
 	 */
+	@Override
 	public String getSlug() {
 		if( slug==null ) slug = Slug.encode(name);
 		return slug;
@@ -490,6 +492,7 @@ public class Scale {
 	 * </p>
 	 * @return the label string
 	 */
+	@Override
 	public String getLabel() {
 		return new StringBuffer()
 			.append(getName())

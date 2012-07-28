@@ -17,6 +17,8 @@ package com.trenako.entities;
 
 import org.junit.Test;
 
+import com.trenako.mapping.DbReferenceable;
+
 import static org.junit.Assert.*;
 
 /**
@@ -138,5 +140,12 @@ public class BrandTests {
 				b.getAddress("de").toString());
 		
 		assertEquals(null, b.getAddress("fr"));
+	}
+	
+	@Test
+	public void shouldImplementDbReferenceable() {
+		DbReferenceable ref = new Brand.Builder("ACME").build();
+		assertEquals("acme", ref.getSlug());
+		assertEquals("ACME", ref.getLabel());
 	}
 }

@@ -30,6 +30,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.StringUtils;
 
+import com.trenako.mapping.DbReferenceable;
 import com.trenako.utility.Slug;
 
 /**
@@ -38,7 +39,7 @@ import com.trenako.utility.Slug;
  *
  */
 @Document(collection = "railways")
-public class Railway {
+public class Railway implements DbReferenceable {
 	
 	@Id
 	private ObjectId id;
@@ -282,6 +283,7 @@ public class Railway {
 	 * 
 	 * @return the slug
 	 */
+	@Override
 	public String getSlug() {
 		if( slug==null ) slug = Slug.encode(getName());
 		return slug;
@@ -319,6 +321,7 @@ public class Railway {
 	 * </p>
 	 * @return the label string
 	 */
+	@Override
 	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getName());

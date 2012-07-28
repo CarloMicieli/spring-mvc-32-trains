@@ -17,6 +17,7 @@ package com.trenako.entities;
 
 import org.junit.Test;
 
+import com.trenako.mapping.DbReferenceable;
 import com.trenako.values.OptionFamily;
 
 
@@ -229,5 +230,13 @@ public class RollingStockTests {
 			.railway(DB)
 			.build();
 		assertEquals("DEU", rs.getCountry());		
+	}
+	
+	@Test
+	public void shouldImplementDbReferenceable() {
+		Brand brand = new Brand.Builder("ACME").slug("acme").build();
+		DbReferenceable ref = new RollingStock.Builder(brand, "123456").build();
+		assertEquals("acme-123456", ref.getSlug());
+		assertEquals("acme 123456", ref.getLabel());
 	}
 }
