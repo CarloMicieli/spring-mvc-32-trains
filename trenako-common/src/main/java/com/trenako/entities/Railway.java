@@ -47,7 +47,7 @@ import com.trenako.validation.constraints.ISOCountry;
 public class Railway implements DbReferenceable {
 	
 	@Id
-	private ObjectId _id;
+	private ObjectId id;
 	
 	@NotBlank(message = "railway.name.required")
 	@Size(max = 10, message = "railway.name.size.notmet")
@@ -94,7 +94,7 @@ public class Railway implements DbReferenceable {
 	 * @param id the railway id.
 	 */
 	public Railway(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 	
 	private Railway(Builder b) {
@@ -182,7 +182,7 @@ public class Railway implements DbReferenceable {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return _id;
+		return id;
 	}
 	
 	/**
@@ -190,7 +190,7 @@ public class Railway implements DbReferenceable {
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 
 	/**

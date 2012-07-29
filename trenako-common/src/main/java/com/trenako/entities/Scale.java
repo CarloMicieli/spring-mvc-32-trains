@@ -63,7 +63,7 @@ public class Scale implements DbReferenceable {
 	public final static BigDecimal RATIO_FACTOR = BigDecimal.valueOf(10);
 
 	@Id
-	private ObjectId _id;
+	private ObjectId id;
 	
 	@NotBlank(message = "scale.name.required")
 	@Size(max = 10, message = "scale.name.size.notmet")
@@ -108,7 +108,7 @@ public class Scale implements DbReferenceable {
 	}
 
 	public Scale(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 	
 	private Scale(Builder b) {
@@ -289,7 +289,7 @@ public class Scale implements DbReferenceable {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return _id;
+		return id;
 	}
 	
 	/**
@@ -297,7 +297,7 @@ public class Scale implements DbReferenceable {
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 	
 	/**

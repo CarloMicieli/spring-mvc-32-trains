@@ -50,6 +50,14 @@ public class LocalizedFieldTests {
 	}
 	
 	@Test
+	public void shouldCheckWhetherTwoLocalizedFieldsAreEquals() {
+		LocalizedField<String> x = new LocalizedField<String>("hello world");
+		LocalizedField<String> y = new LocalizedField<String>("hello world");
+		assertTrue(x.equals(x));
+		assertTrue(x.equals(y));
+	}
+	
+	@Test
 	public void shouldGetDefaultDescriptionWhenTheLocalizedDontExist() {
 		LocalizedField<String> field = new LocalizedField<String>("We few, we happy few, we band of brothers.");
 		field.put(Locale.FRENCH, "French");

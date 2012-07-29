@@ -34,7 +34,7 @@ import com.trenako.values.OptionFamily;
 @Document(collection = "options")
 public class Option {
 	@Id
-	private ObjectId _id;
+	private ObjectId id;
 	
 	@NotBlank(message = "option.name.required")
 	private String name;
@@ -63,7 +63,7 @@ public class Option {
 	 * @return the id
 	 */
 	public ObjectId getId() {
-		return _id;
+		return id;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class Option {
 	 * @param id the id
 	 */
 	public void setId(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 	
 	/**

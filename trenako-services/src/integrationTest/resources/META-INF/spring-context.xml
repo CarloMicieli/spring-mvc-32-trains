@@ -18,11 +18,22 @@
 	<mongo host="localhost" port="27017"/>
 	<db-factory dbname="trenako-testdb" mongo-ref="mongo"/>
 
+	<!-- Register the converters -->
+	<mapping-converter base-package="com.trenako.mapping">
+		<custom-converters>
+    		<converter ref="localizedFieldWriteConverter"/>
+    	</custom-converters>
+	</mapping-converter>
+
 	<!-- Register the mongodb repositories -->
 	<repositories base-package="com.trenako.repositories"/>
 
+	<beans:bean id="localizedFieldWriteConverter" 
+		class="com.trenako.mapping.LocalizedFieldWriteConverter"/>
+
 	<beans:bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
   		<beans:constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+  		<beans:constructor-arg name="mongoConverter" ref="mappingConverter"/>
   		<beans:property name="writeConcern">
             <util:constant static-field="com.mongodb.WriteConcern.SAFE"></util:constant>
         </beans:property>

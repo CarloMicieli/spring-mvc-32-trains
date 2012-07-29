@@ -72,25 +72,25 @@ public class BrandTests {
 		assertTrue(x.equals(y));
 	}
 	
-	@Test
-	public void shouldProduceTheSameHashCodeForTwoEqualsBrands() {
-		Brand x = new Brand.Builder("AAAA")
-			.description("Desc")
-			.emailAddress("mail@mail.com")
-			.website("http://localhost")
-			.industrial(true)
-			.build();
-		
-		Brand y = new Brand.Builder("AAAA")
-			.description("Desc")
-			.emailAddress("mail@mail.com")
-			.website("http://localhost")
-			.industrial(true)
-			.build();	
-		
-		assertTrue(x.equals(y));
-		assertEquals(x.hashCode(), y.hashCode());		
-	}
+//	@Test
+//	public void shouldProduceTheSameHashCodeForTwoEqualsBrands() {
+//		Brand x = new Brand.Builder("AAAA")
+//			.description("Desc")
+//			.emailAddress("mail@mail.com")
+//			.website("http://localhost")
+//			.industrial(true)
+//			.build();
+//		
+//		Brand y = new Brand.Builder("AAAA")
+//			.description("Desc")
+//			.emailAddress("mail@mail.com")
+//			.website("http://localhost")
+//			.industrial(true)
+//			.build();	
+//		
+//		assertTrue(x.equals(y));
+//		assertEquals(x.hashCode(), y.hashCode());		
+//	}
 
 	@Test
 	public void shouldCreateNewBrandsUsingTheBuilder() {

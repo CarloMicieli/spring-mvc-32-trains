@@ -15,6 +15,8 @@
 */
 package com.trenako.services
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+import com.trenako.mapping.LocalizedField
 import spock.lang.*
 import com.gmongo.GMongo
 import com.mongodb.MongoOptions;
@@ -40,17 +42,17 @@ import com.trenako.services.BrandsService
 class BrandsServiceSpecification extends MongoSpecification {
 
 	@Autowired BrandsService service
-
+	
 	def setup() {
 		db.brands << [
-			[name: 'ACME', slug: 'acme', description: 'Acme descritpion', 
-				emailAddress: 'mail@acme.com', industrial: true, website: "http://www.acmetreni.com"],
-			[name: 'Roco', slug: 'roco', description: 'Roco descritpion',
-				emailAddress: 'mail@roco.cc', industrial: true, website: "http://www.roco.cc"],
-			[name: 'Märklin', slug: 'marklin', description: 'Märklin descritpion',
-				emailAddress: 'mail@maerklin.de', industrial: true, website: "http://www.maerklin.de"],
-			[name: 'LS Models', slug: 'ls-models', description: 'Ls Models descritpion',
-				emailAddress: 'mail@lsmodels.com', industrial: true, website: "http://www.lsmodels.com"]]
+			[name: 'ACME', slug: 'acme', description: localize('Acme description'), 
+				scales: ['h0'], emailAddress: 'mail@acme.com', industrial: true, website: "http://www.acmetreni.com"],
+			[name: 'Roco', slug: 'roco', description: localize('Roco description'),
+				scales: ['h0', 'tt', 'n'], emailAddress: 'mail@roco.cc', industrial: true, website: "http://www.roco.cc"],
+			[name: 'Märklin', slug: 'marklin', description: localize('Märklin description'),
+				scales: ['1', 'h0', 'n', 'z'], emailAddress: 'mail@maerklin.de', industrial: true, website: "http://www.maerklin.de"],
+			[name: 'LS Models', slug: 'ls-models', description: localize('Ls Models description'),
+				scales: ['h0', 'n'], emailAddress: 'mail@lsmodels.com', industrial: true, website: "http://www.lsmodels.com"]]
 	}
 	
 	def cleanup() {
@@ -95,12 +97,12 @@ class BrandsServiceSpecification extends MongoSpecification {
 	def "should throw exception if the brand name is already used"() {
 		given: "a brand with an already used slug"
 		def newBrand = new Brand(
-			name: "Roco",
-			slug: "brawa",
-			description: "Brand description",
-			emailAddress: "mail@brawa.de",
+			name: 'Roco',
+			slug: 'brawa',
+			description: localizedDesc('Brand description'),
+			emailAddress: 'mail@brawa.de',
 			industrial: true,
-			website: "http://www.brawa.de")
+			website: 'http://www.brawa.de')
 		
 		when:
 		service.save newBrand
@@ -113,12 +115,12 @@ class BrandsServiceSpecification extends MongoSpecification {
 	def "should throw exception if the brand slug is already used"() {
 		given: "a brand with an already used slug"
 		def newBrand = new Brand(
-			name: "Brawa",
-			slug: "roco",
-			description: "Brand description",
-			emailAddress: "mail@brawa.de",
+			name: 'Brawa',
+			slug: 'roco',
+			description: localizedDesc('Brand description'),
+			emailAddress: 'mail@brawa.de',
 			industrial: true,
-			website: "http://www.brawa.de")
+			website: 'http://www.brawa.de')
 		
 		when:
 		service.save newBrand
@@ -131,11 +133,11 @@ class BrandsServiceSpecification extends MongoSpecification {
 	def "should create new brands"() {
 		given:
 		def newBrand = new Brand(
-			name: "Brawa",
-			description: "Brand description",
-			emailAddress: "mail@brawa.de",
+			name: 'Brawa',
+			description: localizedDesc('Brawa description'),
+			emailAddress: 'mail@brawa.de',
 			industrial: true,
-			website: "http://www.brawa.de")
+			website: 'http://www.brawa.de')
 			
 		when:
 		service.save newBrand
@@ -145,7 +147,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 		
 		def brand = db.brands.findOne(_id: newBrand.id)
 		brand.name == "Brawa"
-		brand.description == "Brand description"
+		brand.description == localizedDesc('Brawa description')
 		brand.emailAddress == "mail@brawa.de"
 		brand.website == "http://www.brawa.de"
 

@@ -62,7 +62,7 @@ import com.trenako.values.Category;
 public class Collection {
 
 	@Id
-	private ObjectId _id;
+	private ObjectId id;
 	
     @Indexed(unique = true)
     private String ownerName;
@@ -94,7 +94,7 @@ public class Collection {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return _id;
+		return id;
 	}
     
 	/**

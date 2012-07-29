@@ -65,7 +65,7 @@ import com.trenako.values.PowerMethod;
 public class RollingStock implements DbReferenceable {
 
 	@Id
-	private ObjectId _id;
+	private ObjectId id;
 	
 	@NotNull(message = "rs.brand.required")
 	private WeakDbRef<Brand> brand;
@@ -130,7 +130,7 @@ public class RollingStock implements DbReferenceable {
 	 * @param id the {@code RollingStock} id
 	 */
 	public RollingStock(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 	
 	private RollingStock(Builder b) {
@@ -142,7 +142,7 @@ public class RollingStock implements DbReferenceable {
 		this.description = b.description;
 		this.details = b.details;
 		
-		this._id = b.id;
+		this.id = b.id;
 		this.tags = b.tags;
 		this.era = b.era;
 		this.category = b.category;
@@ -304,7 +304,7 @@ public class RollingStock implements DbReferenceable {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return _id;
+		return id;
 	}
 	
 	/**
@@ -312,7 +312,7 @@ public class RollingStock implements DbReferenceable {
 	 * @param id the id
 	 */
 	public void setId(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 	
 	@Override

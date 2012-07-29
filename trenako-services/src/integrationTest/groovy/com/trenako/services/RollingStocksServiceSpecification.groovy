@@ -30,26 +30,24 @@ import org.springframework.data.mongodb.core.query.Query
 import static org.springframework.data.mongodb.core.query.Query.*
 import static org.springframework.data.mongodb.core.query.Criteria.*
 
-import com.trenako.entities.Brand;
-import com.trenako.entities.DeliveryDate;
-import com.trenako.entities.Railway;
-import com.trenako.entities.RollingStock;
-import com.trenako.entities.Scale;
-import com.trenako.services.RollingStocksServiceImpl;
-import com.trenako.values.Category;
-import com.trenako.values.Era;
-import com.trenako.values.PowerMethod;
+import com.trenako.entities.Brand
+import com.trenako.entities.DeliveryDate
+import com.trenako.entities.Railway
+import com.trenako.entities.RollingStock
+import com.trenako.entities.Scale
+import com.trenako.services.RollingStocksService
+import com.trenako.values.Category
+import com.trenako.values.Era
+import com.trenako.values.PowerMethod
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-@ContextConfiguration(locations = "classpath:META-INF/spring-context.xml")
-class RollingStocksServiceSpecification extends Specification {
+class RollingStocksServiceSpecification  extends MongoSpecification {
 
-	@Autowired MongoTemplate mongoTemplate
-	@Autowired RollingStocksServiceImpl service
+	@Autowired RollingStocksService service
 	
 	def rollingStocks = RollingStock.class
 	

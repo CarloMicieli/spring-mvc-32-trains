@@ -53,6 +53,15 @@ public class LocalizedField<T> {
 	}
 	
 	/**
+	 * Builds a new {@code LocalizedField} with a value for the default {@code Locale}.
+	 * @param value the value
+	 * @return a {@code LocalizedField}
+	 */
+	public static <T> LocalizedField<T> localized(T value) {
+		return new LocalizedField<T>(value);
+	}
+	
+	/**
 	 * Returns the localized value for the provided {@code Locale}.
 	 * @param lang the {@code Locale}
 	 * @return the value to which the specified {@code Locale} is mapped; 

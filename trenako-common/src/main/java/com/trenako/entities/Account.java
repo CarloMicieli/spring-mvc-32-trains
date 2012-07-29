@@ -55,7 +55,7 @@ public class Account implements Serializable, DbReferenceable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	private ObjectId _id;
+	private ObjectId id;
 
 	@NotEmpty(message = "account.emailAddress.required")
 	@Email(message = "account.emailAddress.email.invalid")
@@ -192,7 +192,7 @@ public class Account implements Serializable, DbReferenceable {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return _id;
+		return id;
 	}
 	
 	/**
@@ -200,7 +200,7 @@ public class Account implements Serializable, DbReferenceable {
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 
 	/**

@@ -35,7 +35,7 @@ import com.trenako.mapping.WeakDbRef;
 @Document(collection = "comments")
 public class Comment {
 	@Id
-	private ObjectId _id;
+	private ObjectId id;
 
 	@NotNull(message = "comment.author.required")
 	private WeakDbRef<Account> author;
@@ -73,7 +73,7 @@ public class Comment {
 	 * @return the id
 	 */
 	public ObjectId getId() {
-		return _id;
+		return id;
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class Comment {
 	 * @param id the id
 	 */
 	public void setId(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 
 	/**
