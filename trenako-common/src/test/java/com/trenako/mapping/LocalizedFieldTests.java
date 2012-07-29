@@ -18,7 +18,6 @@ package com.trenako.mapping;
 import static org.junit.Assert.*;
 
 import java.util.Locale;
-import java.util.Map;
 
 import org.junit.Test;
 
@@ -52,23 +51,9 @@ public class LocalizedFieldTests {
 	
 	@Test
 	public void shouldGetDefaultDescriptionWhenTheLocalizedDontExist() {
-		LocalizedField<String> field = new LocalizedField<String>("English");
+		LocalizedField<String> field = new LocalizedField<String>("We few, we happy few, we band of brothers.");
 		field.put(Locale.FRENCH, "French");
 
-		assertEquals("English", field.getValue(Locale.ITALIAN));
-	}
-
-	@Test
-	public void shouldImplementMapInterface() {
-		Map<Locale, String> map = new LocalizedField<String>();
-		assertTrue(map.isEmpty());
-		
-		map.put(Locale.ENGLISH, "We few, we happy few, we band of brothers.");
-		assertFalse(map.isEmpty());
-		assertNotNull(map.get(Locale.ENGLISH));
-		assertNull(map.get(Locale.CHINESE));
-		
-		map.clear();
-		assertTrue(map.isEmpty());
+		assertEquals("We few, we happy few, we band of brothers.", field.getValue(Locale.ITALIAN));
 	}
 }

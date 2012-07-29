@@ -15,7 +15,6 @@
  */
 package com.trenako.mapping;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -31,7 +30,7 @@ import com.trenako.AppGlobals;
  *
  * @param <T>
  */
-public class LocalizedField<T> extends AbstractMap<Locale, T> {
+public class LocalizedField<T> {
 
 	private Map<Locale, T> values;
 	
@@ -53,24 +52,42 @@ public class LocalizedField<T> extends AbstractMap<Locale, T> {
 		putDefault(defaultValue);
 	}
 	
-	@Override
+	/**
+	 * Returns the localized value for the provided {@code Locale}.
+	 * @param lang the {@code Locale}
+	 * @return the value to which the specified {@code Locale} is mapped; 
+	 * 			or {@code null} if no value is mapped with the {@code Locale}
+	 */
 	public T get(Object lang) {
 		return values.get(lang);
 	}
-	
-	@Override
+
+	/**
+	 * Returns a {@code Set} view of the localized values contained 
+	 * in this field.
+	 * @return a set view of the localized values
+	 */
 	public Set<Map.Entry<Locale, T>> entrySet() {
 		return values.entrySet();
 	}
 	
-	@Override
-	public T put(Locale lang, T msg) {
-		return values.put(lang, msg);
+	/**
+	 * Associates the provided value with the corresponding {@code Locale}.
+	 * @param lang the {@code Locale}
+	 * @param value the localized value
+	 * @return the previous value associated with this {@code Locale}; {@code null} 
+	 * 			if there was no mapping for {@code Locale}. 
+ 	 */
+	public T put(Locale lang, T value) {
+		return values.put(lang, value);
 	}
 
-	@Override
-	public String toString() {
-		return values.toString();
+	/**
+	 * Associates the provided value with the default {@code Locale}.
+	 * @param value the localized value
+	 */
+	public final void putDefault(T value) {
+		values.put(AppGlobals.DEFAULT_LOCALE, value);	
 	}
 	
 	/**
@@ -103,7 +120,17 @@ public class LocalizedField<T> extends AbstractMap<Locale, T> {
 		return msg;
 	}
 
-	public final void putDefault(T desc) {
-		values.put(AppGlobals.DEFAULT_LOCALE, desc);	
+	@Override
+	public String toString() {
+		return values.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof LocalizedField<?>)) return false;
+		
+		LocalizedField<?> other = (LocalizedField<?>) obj;
+		return this.values.equals(other.values);
 	}
 }
