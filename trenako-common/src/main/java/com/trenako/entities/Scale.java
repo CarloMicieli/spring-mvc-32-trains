@@ -19,8 +19,10 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -35,7 +37,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.trenako.format.annotations.IntegerFormat;
 import com.trenako.format.annotations.IntegerFormat.Style;
 import com.trenako.mapping.DbReferenceable;
+import com.trenako.mapping.LocalizedField;
 import com.trenako.utility.Slug;
+import com.trenako.validation.constraints.ContainsDefault;
 import com.trenako.values.Standard;
 
 /**
@@ -59,15 +63,16 @@ public class Scale implements DbReferenceable {
 	public final static BigDecimal RATIO_FACTOR = BigDecimal.valueOf(10);
 
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 	
 	@NotBlank(message = "scale.name.required")
 	@Size(max = 10, message = "scale.name.size.notmet")
 	@Indexed(unique = true)
 	private String name;
 	
-	@Size(max = 250, message = "scale.description.size.notmet")
-	private String description;
+	@NotNull(message = "scale.description.required")
+	@ContainsDefault(message = "scale.description.default.required")
+	private LocalizedField<String> description;
 	
 	@Indexed(unique = true)
 	private String slug;
@@ -103,7 +108,7 @@ public class Scale implements DbReferenceable {
 	}
 
 	public Scale(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 	
 	private Scale(Builder b) {
@@ -126,7 +131,7 @@ public class Scale implements DbReferenceable {
 		private final String name;
 		
 		// optional fields
-		private String description = null;
+		private LocalizedField<String> description = null;
 		private Set<String> powerMethods = null;
 		private String slug = null;
 		private int ratio = 0;
@@ -152,12 +157,31 @@ public class Scale implements DbReferenceable {
 		}
 		
 		/**
-		 * Sets the description.
-		 * @param description the description
-		 * @return a builder
+		 * The default description.
+		 * @param desc the description
+		 * @return a {@code Brand} builder
 		 */
-		public Builder description(String description) {
-			this.description = description;
+		public Builder description(String desc) {
+			if (this.description == null) {
+				this.description = new LocalizedField<String>(desc);
+			}
+			else {
+				this.description.putDefault(desc);
+			}
+			return this;
+		}
+		
+		/**
+		 * The localized description.
+		 * @param lang the Locale
+		 * @param desc the description
+		 * @return a {@code Brand} builder
+		 */
+		public Builder description(Locale lang, String desc) {
+			if (this.description == null) {
+				this.description = new LocalizedField<String>();
+			}
+			this.description.put(lang, desc);
 			return this;
 		}
 		
@@ -265,7 +289,7 @@ public class Scale implements DbReferenceable {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
 	
 	/**
@@ -273,7 +297,7 @@ public class Scale implements DbReferenceable {
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 	
 	/**
@@ -293,12 +317,32 @@ public class Scale implements DbReferenceable {
 	}
 
 	/**
+	 * Returns a label for the current {@code Scale}.
+	 * <p>
+	 * The application will show this value as string representation
+	 * for the current {@code Scale} instead of the usual {@code Scale#toString()}.
+	 * </p>
+	 * @return the label string
+	 */
+	@Override
+	public String getLabel() {
+		return new StringBuffer()
+			.append(getName())
+			.append(" (")
+			.append(getRatioText())
+			.append(")")
+			.toString();
+	}
+	
+	/**
 	 * Returns the {@code Scale} slug.
 	 * @return the slug
 	 */
 	@Override
 	public String getSlug() {
-		if( slug==null ) slug = Slug.encode(name);
+		if (slug == null) {
+			slug = Slug.encode(name);
+		}
 		return slug;
 	}
 	
@@ -306,7 +350,7 @@ public class Scale implements DbReferenceable {
 	 * Returns the {@code Scale} description.
 	 * @return the {@code Scale} description
 	 */
-	public String getDescription() {
+	public LocalizedField<String> getDescription() {
 		return description;
 	}
 
@@ -314,7 +358,7 @@ public class Scale implements DbReferenceable {
 	 * Sets the {@code Scale} description.
 	 * @param description the {@code Scale} description
 	 */
-	public void setDescription(String description) {
+	public void setDescription(LocalizedField<String> description) {
 		this.description = description;
 	}
 
@@ -444,7 +488,9 @@ public class Scale implements DbReferenceable {
 	 * @param standard a standard
 	 */
 	public void addStandard(Standard standard) {
-		if( standards==null ) standards = new HashSet<String>();
+		if (standards == null) {
+			standards = new HashSet<String>();
+		}
 		standards.add(standard.toString());
 	}
 
@@ -453,7 +499,9 @@ public class Scale implements DbReferenceable {
 	 * @return the the standards list
 	 */
 	public String getStandardsList() {
-		if (standards==null || standards.size()==0 ) return "";
+		if (standards == null || standards.size() == 0) {
+			return "";
+		}
 		return standards.toString();
 	}
 	
@@ -485,24 +533,6 @@ public class Scale implements DbReferenceable {
 	}
 	
 	/**
-	 * Returns a label for the current {@code Scale}.
-	 * <p>
-	 * The application will show this value as string representation
-	 * for the current {@code Scale} instead of the usual {@code Scale#toString()}.
-	 * </p>
-	 * @return the label string
-	 */
-	@Override
-	public String getLabel() {
-		return new StringBuffer()
-			.append(getName())
-			.append(" (")
-			.append(getRatioText())
-			.append(")")
-			.toString();
-	}
-	
-	/**
 	 * Returns a string representation of this object.
 	 * @return a string representation of the object.
 	 */	
@@ -524,8 +554,8 @@ public class Scale implements DbReferenceable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if( this==obj ) return true;
-		if( !(obj instanceof Scale) ) return false;
+		if (this == obj) return true;
+		if (!(obj instanceof Scale)) return false;
 		
 		Scale other = (Scale)obj;
 		return new EqualsBuilder()

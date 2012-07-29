@@ -15,6 +15,7 @@
  */
 package com.trenako.services;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 
 import org.bson.types.ObjectId;
@@ -38,7 +39,12 @@ import com.trenako.repositories.CollectionsRepository;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CollectionsServiceTests {
-
+	
+	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+		.railway(fs())
+		.scale(scaleH0())
+		.build();
+	
 	@Mock CollectionsRepository repo;
 	CollectionsService service;
 	
@@ -77,7 +83,6 @@ public class CollectionsServiceTests {
 	@Test
 	public void shouldCheckIfCollectionContainsRollingStock() {
 		ObjectId collectionId = new ObjectId();
-		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
 		
 		service.containsRollingStock(collectionId, rollingStock);
 		verify(repo, times(1)).containsRollingStock(eq(collectionId), eq(rollingStock));
@@ -86,7 +91,6 @@ public class CollectionsServiceTests {
 	@Test
 	public void shouldCheckIfUserCollectionContainsRollingStock() {
 		String owner = "user-name";
-		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
 		
 		service.containsRollingStock(owner, rollingStock);
 		verify(repo, times(1)).containsRollingStock(eq(owner), eq(rollingStock));

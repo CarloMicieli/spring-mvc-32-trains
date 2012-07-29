@@ -15,6 +15,7 @@
  */
 package com.trenako.services;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 
 import org.bson.types.ObjectId;
@@ -37,9 +38,13 @@ import com.trenako.repositories.ReviewsRepository;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ReviewsServiceTests {
-
-	@Mock ReviewsRepository repo;
-	ReviewsService service;
+	
+	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+		.railway(fs())
+		.scale(scaleH0())
+		.build();
+	private @Mock ReviewsRepository repo;
+	private ReviewsService service;
 	
 	@Before
 	public void setUp() {
@@ -74,9 +79,8 @@ public class ReviewsServiceTests {
 
 	@Test
 	public void shouldFindReviewsByRollingStock() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		service.findByRollingStock(rs);
-		verify(repo, times(1)).findByRollingStock(eq(rs));
+		service.findByRollingStock(rollingStock);
+		verify(repo, times(1)).findByRollingStock(eq(rollingStock));
 	}
 
 	@Test
@@ -104,8 +108,7 @@ public class ReviewsServiceTests {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
-		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
-		final Review c = new Review(author, rollingStock, "Title", "Review");
-		return c;
+
+		return new Review(author, rollingStock, "Title", "Review");
 	}
 }

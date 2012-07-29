@@ -13,25 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.listeners;
+package com.trenako.validation;
 
-import java.util.Date;
+import java.util.Arrays;
+import java.util.Locale;
 
-import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
-import org.springframework.stereotype.Component;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
-import com.mongodb.DBObject;
-import com.trenako.entities.Comment;
+import org.springframework.util.StringUtils;
+
+import com.trenako.validation.constraints.ISOCountry;
 
 /**
- * The listener to change the document just before the comments are saved.
+ * 
  * @author Carlo Micieli
  *
  */
-@Component
-public class CommentsEventListener extends AbstractMongoEventListener<Comment> {
+public class ISOCountryValidator implements ConstraintValidator<ISOCountry, String> {
+
 	@Override
-	public void onBeforeSave(Comment comment, DBObject dbo) {
-		dbo.put("postedAt", new Date());
+	public void initialize(ISOCountry constraintAnnotation) {
 	}
+
+	@Override
+	public boolean isValid(String value, ConstraintValidatorContext context) {
+		if (!StringUtils.hasText(value)) {
+			return true;
+		}
+		return Arrays.binarySearch(Locale.getISOCountries(), value.toUpperCase()) >= 0;
+	}
+
 }

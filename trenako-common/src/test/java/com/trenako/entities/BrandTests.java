@@ -15,9 +15,12 @@
  */
 package com.trenako.entities;
 
+import java.util.Locale;
+
 import org.junit.Test;
 
 import com.trenako.mapping.DbReferenceable;
+import com.trenako.mapping.LocalizedField;
 
 import static org.junit.Assert.*;
 
@@ -29,35 +32,48 @@ import static org.junit.Assert.*;
 public class BrandTests {
 
 	@Test
-	public void shouldReturnBrandLabels() {
+	public void shouldProduceBrandLabels() {
 		Brand b = new Brand("Ls Models");
 		assertEquals("Ls Models", b.getLabel());
 	}
 	
 	@Test
-	public void shouldFillTheSlugValue() {
+	public void shouldFillTheSlugValueForBrands() {
 		Brand x = new Brand("Ls Models");
 		assertEquals("ls-models", x.getSlug());
 	}
 	
 	@Test
-	public void equalsShouldFalseForDifferentBrands() {
+	public void shouldProduceStringRepresentations() {
+		Brand brand = new Brand.Builder("ACME")
+			.description("Italian brand")
+			.emailAddress("mail@acme.com")
+			.website("http://www.acmetreni.com")
+			.industrial(true)
+			.build();
+		assertEquals("ACME", brand.toString());
+	}
+	
+	@Test
+	public void shouldChecksWhetherTwoBrandsAreDifferent() {
 		Brand x = new Brand("AAAA");
 		Brand y = new Brand("BBBB");
 		
 		assertFalse(x.equals(y));
+		assertFalse(x.equals(new String()));
 	}
 	
 	@Test
-	public void equalsShouldTrueForEqualBrands() {
+	public void shouldChecksWhetherTwoBrandsAreEquals() {
 		Brand x = new Brand("AAAA");
 		Brand y = new Brand("AAAA");
 		
+		assertTrue(x.equals(x));
 		assertTrue(x.equals(y));
 	}
 	
 	@Test
-	public void shouldProduceTheSameHashCodeForTwoEgualsBrands() {
+	public void shouldProduceTheSameHashCodeForTwoEqualsBrands() {
 		Brand x = new Brand.Builder("AAAA")
 			.description("Desc")
 			.emailAddress("mail@mail.com")
@@ -77,7 +93,7 @@ public class BrandTests {
 	}
 
 	@Test
-	public void shouldBuildNewBrands() {
+	public void shouldCreateNewBrandsUsingTheBuilder() {
 		Brand b = new Brand.Builder("ACME")
 			.companyName("Anonima Costruttori Modelli Esatti")
 			.website("http://localhost")
@@ -91,13 +107,13 @@ public class BrandTests {
 		assertEquals("Anonima Costruttori Modelli Esatti", b.getCompanyName());
 		assertEquals("http://localhost", b.getWebsite());
 		assertEquals("mail@mail.com", b.getEmailAddress());
-		assertEquals("Description", b.getDescription());
+		assertEquals("Description", b.getDescription().getDefault());
 		assertEquals(true, b.isIndustrial());
 		assertEquals("[H0, N]", b.getScales().toString());
 	}
 	
 	@Test
-	public void shouldManageBrandAddress() {
+	public void shouldAssignAddressToBrands() {
 		Address a = new Address.Builder()
 			.streetAddress("30 Commercial Rd.")
 			.city("Bristol")
@@ -114,7 +130,7 @@ public class BrandTests {
 	}
 	
 	@Test
-	public void shouldManageLocalBranches() {
+	public void shouldManageLocalBranchesForBrands() {
 		Address en = new Address.Builder()
 			.streetAddress("30 Commercial Rd.")
 			.city("Bristol")
@@ -147,5 +163,17 @@ public class BrandTests {
 		DbReferenceable ref = new Brand.Builder("ACME").build();
 		assertEquals("acme", ref.getSlug());
 		assertEquals("ACME", ref.getLabel());
+	}
+	
+	@Test
+	public void shouldProduceLocalizedBrandsDescriptions() {
+		Brand x = new Brand("ACME");
+		LocalizedField<String> desc = new LocalizedField<String>("English description");
+		desc.put(Locale.ITALIAN, "Descrizione");
+		x.setDescription(desc);
+
+		assertEquals("English description", x.getDescription().getDefault());
+		assertEquals("English description", x.getDescription().getValue(Locale.CHINESE));
+		assertEquals("Descrizione", x.getDescription().getValue(Locale.ITALIAN));
 	}
 }

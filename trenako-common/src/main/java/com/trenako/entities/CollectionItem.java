@@ -23,9 +23,8 @@ import javax.validation.constraints.Past;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.values.Condition;
 
 /**
@@ -36,12 +35,8 @@ import com.trenako.values.Condition;
  */
 public class CollectionItem {
     
-	@DBRef
 	@NotNull(message = "item.rollingStock.required")
-	private RollingStock rollingStock;
-	
-	@Indexed
-    private String rsSlug;
+	private WeakDbRef<RollingStock> rollingStock;
 
 	@Past(message = "item.addedAt.past.notmet")
     private Date addedAt;
@@ -56,11 +51,12 @@ public class CollectionItem {
     @Range(min = 1, max = 99, message = "item.quantity.range.notmet")
     private int quantity = 1;
     
-    CollectionItem() {
+    public CollectionItem() {
 	}
 
     private CollectionItem(Builder b) {
-    	this.rollingStock = b.rs;
+    	setRollingStock(b.rs);
+    	
     	this.addedAt = b.addedAt;
     	this.price = b.price;
     	this.condition = b.condition;
@@ -117,20 +113,12 @@ public class CollectionItem {
      * Returns the rolling stock.
      * @return the rolling stock
      */
-	public RollingStock getRollingStock() {
+	public WeakDbRef<RollingStock> getRollingStock() {
 		return rollingStock;
 	}
 
-	/**
-	 * Returns the rolling stock slug.
-	 * <p>
-	 * If the value is not already set then the method will return
-	 * the {@link RollingStock#getSlug()}.
-	 * </p>
-	 * @return the rolling stock slug
-	 */
-	public String getRsSlug() {
-		return rsSlug;
+	public void setRollingStock(RollingStock rollingStock) {
+		this.rollingStock = WeakDbRef.buildRef(rollingStock);
 	}
 
 	/**

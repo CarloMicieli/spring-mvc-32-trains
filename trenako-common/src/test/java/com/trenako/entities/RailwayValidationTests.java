@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -39,7 +40,8 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	@Test
 	public void shouldValidateRailways() {
 		Railway railway = new Railway.Builder("AAA")
-			.country("DE")
+			.description("Railway description")
+			.country("de")
 			.build();
 		
 		Map<String, String> errors = validate(railway);
@@ -51,15 +53,17 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 		Railway railway = new Railway();
 		
 		Map<String, String> errors = validate(railway);
-		assertEquals(2, errors.size());
+		assertEquals(3, errors.size());
 		assertEquals("railway.name.required", errors.get("name"));
 		assertEquals("railway.country.required", errors.get("country"));
+		assertEquals("railway.description.required", errors.get("description"));
 	}
 	
 	@Test
 	public void shouldValidateRailwayNameSize() {
 		Railway railway = new Railway.Builder("12345678901") //max = 10
-			.country("DE")
+			.description("Railway description")
+			.country("de")
 			.build();
 		
 		Map<String, String> errors = validate(railway);
@@ -68,20 +72,23 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	}
 	
 	@Test
-	public void shouldValidateRailwayCountrySize() {
+	public void shouldValidateRailwayCountryCodes() {
+		Map<String, String> errors = null;
 		Railway railway = new Railway.Builder("AAA")
-			.country("1234") //max = 3
+			.description("Railway description")
+			.country("rr") 
 			.build();
 		
-		Map<String, String> errors = validate(railway);
+		errors = validate(railway);
 		assertEquals(1, errors.size());
-		assertEquals("railway.country.size.notmet", errors.get("country"));
+		assertEquals("railway.country.code.invalid", errors.get("country"));
 	}
 	
 	@Test
 	public void shouldValidateOperatingSinceYear() {
 		Railway railway = new Railway.Builder("AAA")
-			.country("DE")
+			.description("Railway description")
+			.country("de")
 			.operatingSince(tomorrow())
 			.build();
 
@@ -93,7 +100,8 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 	@Test
 	public void shouldValidateOperatingUntilYear() {
 		Railway railway = new Railway.Builder("AAA")
-			.country("DE")
+			.description("Railway description")
+			.country("de")	
 			.operatingUntil(tomorrow())
 			.build();
 
@@ -102,4 +110,22 @@ public class RailwayValidationTests extends AbstractValidationTests<Railway> {
 		assertEquals("railway.operatingUntil.past.notmet", errors.get("operatingUntil"));
 	}
 	
+	@Test
+	public void shouldValidateDescriptionForDefaultLanguage() {
+		Map<String, String> errors = null;
+		Railway r1 = new Railway.Builder("AAA")
+			.description("Railway description")
+			.country("de")
+			.build();
+		errors = validate(r1);
+		assertEquals(0, errors.size());
+		
+		Railway r2 = new Railway.Builder("AAA")
+			.description(Locale.FRENCH, "Railway description")
+			.country("de")
+			.build();
+		errors = validate(r2);
+		assertEquals(1, errors.size());
+		assertEquals("railway.description.default.required", errors.get("description"));
+	}
 }

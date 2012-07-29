@@ -13,25 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.listeners;
+package com.trenako.validation;
 
-import java.util.Date;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
-import org.springframework.stereotype.Component;
-
-import com.mongodb.DBObject;
-import com.trenako.entities.Comment;
+import com.trenako.mapping.LocalizedField;
+import com.trenako.validation.constraints.ContainsDefault;
 
 /**
- * The listener to change the document just before the comments are saved.
+ * 
  * @author Carlo Micieli
  *
  */
-@Component
-public class CommentsEventListener extends AbstractMongoEventListener<Comment> {
+public class LocalizedFieldValidator 
+	implements ConstraintValidator<ContainsDefault, LocalizedField<?>> {
+
 	@Override
-	public void onBeforeSave(Comment comment, DBObject dbo) {
-		dbo.put("postedAt", new Date());
+	public void initialize(ContainsDefault constraintAnnotation) {
 	}
+
+	@Override
+	public boolean isValid(LocalizedField<?> value, ConstraintValidatorContext context) {
+		if (value == null) {
+			return true;
+		}
+		return value.containsDefault();
+	}
+
 }

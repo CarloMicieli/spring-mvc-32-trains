@@ -33,7 +33,5 @@ public class ReviewsEventListener extends AbstractMongoEventListener<Review> {
 	@Override
 	public void onBeforeSave(Review review, DBObject dbo) {
 		dbo.put("postedAt", new Date());
-		dbo.put("authorName", review.getAuthorName());
-		dbo.put("rsSlug", review.getRsSlug());
 	}
 }

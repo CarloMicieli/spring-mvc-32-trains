@@ -32,7 +32,8 @@ public class UploadFile {
 	/**
 	 * Creates an empty {@code UploadFile}.
 	 */
-	public UploadFile() {}
+	public UploadFile() {
+	}
 	
 	/**
 	 * Creates a new {@code UploadFile}.

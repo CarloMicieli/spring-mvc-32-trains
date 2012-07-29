@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import com.trenako.test.AbstractValidationTests;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 /**
@@ -31,6 +32,11 @@ import static org.junit.Assert.*;
  */
 public class CommentValidationTests extends AbstractValidationTests<Comment> {
 	
+	private RollingStock rs = new RollingStock.Builder(acme(), "123456")
+		.scale(scaleH0())
+		.railway(db())
+		.build();
+	
 	@Before
 	public void initValidator() {
 		super.init(Comment.class);
@@ -38,8 +44,9 @@ public class CommentValidationTests extends AbstractValidationTests<Comment> {
 
 	@Test
 	public void shouldValidateValidComments() {
-		Account author = new Account();
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		Account author = new Account.Builder("mail@mailcom")
+			.displayName("user")
+			.build();
 		
 		Comment c = new Comment(author, rs, "Comment content");
 		Map<String, String> errors = validate(c);

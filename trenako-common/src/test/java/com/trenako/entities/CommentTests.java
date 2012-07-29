@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -24,19 +25,23 @@ import org.junit.Test;
  *
  */
 public class CommentTests {
-
+	
+	private RollingStock rs = new RollingStock.Builder(acme(), "123456")
+		.scale(scaleH0())
+		.railway(db())
+		.build();
+	
+	
 	@Test
 	public void shouldReturnsAuthorAndRollingStockSlugs() {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
 		
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		
 		Comment c = new Comment(author, rs, "Comment content");
 		
-		assertEquals("user-name", c.getAuthorName());
-		assertEquals("acme-123456", c.getRsSlug());
+		assertEquals("user-name", c.getAuthor().getSlug());
+		assertEquals("acme-123456", c.getRollingStock().getSlug());
 	}
 	
 	@Test
@@ -44,7 +49,6 @@ public class CommentTests {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
 		Comment x = new Comment(author, rs, "Comment content");
 		Comment y = new Comment(author, rs, "Comment content");
@@ -57,7 +61,6 @@ public class CommentTests {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
 		Comment x = new Comment(author, rs, "Comment content 1");
 		Comment y = new Comment(author, rs, "Comment content 2");
@@ -70,7 +73,6 @@ public class CommentTests {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 
 		Comment c = new Comment(author, rs, "Comment content");
 		assertEquals("user-name posted 'Comment content' on acme-123456", c.toString());

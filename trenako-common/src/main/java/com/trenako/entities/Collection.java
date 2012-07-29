@@ -62,7 +62,7 @@ import com.trenako.values.Category;
 public class Collection {
 
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 	
     @Indexed(unique = true)
     private String ownerName;
@@ -94,7 +94,7 @@ public class Collection {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
     
 	/**
@@ -141,9 +141,9 @@ public class Collection {
 		if( items==null ) items = new ArrayList<CollectionItem>();
 		items.add(item);
 		
-		String key = item.getRollingStock().getCategory();
-		int count = count(key);
-		setCounter(key, count + 1);
+//		String key = item.getRollingStock().getCategory();
+//		int count = count(key);
+//		setCounter(key, count + 1);
 	}
 	
 	/**
@@ -199,9 +199,9 @@ public class Collection {
 	}
 	
 	// helper method to set the counter for a category
-	private void setCounter(String category, int count) {
-		getCounters().put(category, count);
-	}
+//	private void setCounter(String category, int count) {
+//		getCounters().put(category, count);
+//	}
 	
 	// helper method to get the counter map, with lazy initialization
 	private Map<String, Integer> getCounters() {

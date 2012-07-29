@@ -25,8 +25,9 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.trenako.mapping.WeakDbRef;
 
 /**
  * It represents a user review to a rolling stock.
@@ -47,21 +48,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "reviews")
 public class Review {
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 	
-	@Indexed(unique = false)
-	private String authorName;
-	
-	@DBRef
 	@NotNull(message = "review.author.required")
-	private Account author;
+	private WeakDbRef<Account> author;
 	
-	@Indexed(unique = false)
-	private String rsSlug;
-	
-	@DBRef
 	@NotNull(message = "review.rollingStock.required")
-	private RollingStock rollingStock;
+	private WeakDbRef<RollingStock> rollingStock;
 	
 	@NotBlank(message = "review.title.required")
 	private String title;
@@ -89,8 +82,8 @@ public class Review {
 	 * @param content the review content
 	 */
 	public Review(Account author, RollingStock rollingStock, String title, String content) {
-		this.author = author;
-		this.rollingStock = rollingStock;
+		this.setAuthor(author);
+		this.setRollingStock(rollingStock);
 		this.title = title;
 		this.content = content;
 	}
@@ -100,36 +93,14 @@ public class Review {
 	 * @return the id
 	 */
 	public ObjectId getId() {
-		return id;
-	}
-
-	/**
-	 * Returns the review's author name.
-	 * <p>
-	 * If the author's name is not provided, this value will be
-	 * filled with the {@link Account#getSlug()} value.
-	 * </p>
-	 * 
-	 * @return the author's name
-	 */
-	public String getAuthorName() {
-		if( authorName==null ) authorName = author.getSlug();
-		return authorName;
-	}
-
-	/**
-	 * Sets the review's author name.
-	 * @param authorName the author's name
-	 */
-	public void setAuthorName(String authorName) {
-		this.authorName = authorName;
+		return _id;
 	}
 
 	/**
 	 * Sets the review's author name.
 	 * @return the author's name
 	 */	
-	public Account getAuthor() {
+	public WeakDbRef<Account> getAuthor() {
 		return author;
 	}
 
@@ -138,36 +109,14 @@ public class Review {
 	 * @param author the author's name
 	 */
 	public void setAuthor(Account author) {
-		this.author = author;
-	}
-
-	/**
-	 * Returns the rolling stock slug.
-	 * <p>
-	 * If the rolling stock slug is not provided, this value will be
-	 * filled with the {@link RollingStock#getSlug()} value.
-	 * </p>
-	 * 
-	 * @return the slug
-	 */
-	public String getRsSlug() {
-		if( rsSlug==null ) rsSlug = rollingStock.getSlug();
-		return rsSlug;
-	}
-
-	/**
-	 * Sets the rolling stock slug.
-	 * @param rsSlug the slug
-	 */
-	public void setRsSlug(String rsSlug) {
-		this.rsSlug = rsSlug;
+		this.author = WeakDbRef.buildRef(author);
 	}
 
 	/**
 	 * Returns the rolling stock under review.
 	 * @return the rolling stock
 	 */
-	public RollingStock getRollingStock() {
+	public WeakDbRef<RollingStock> getRollingStock() {
 		return rollingStock;
 	}
 
@@ -176,7 +125,7 @@ public class Review {
 	 * @param rollingStock the rolling stock
 	 */
 	public void setRollingStock(RollingStock rollingStock) {
-		this.rollingStock = rollingStock;
+		this.rollingStock = WeakDbRef.buildRef(rollingStock);
 	}
 
 	/**
@@ -295,9 +244,9 @@ public class Review {
 	@Override
 	public String toString() {
         return new StringBuilder()
-        	.append(getAuthorName())
+        	.append(getAuthor().getSlug())
         	.append(": ")
-        	.append(getRsSlug())
+        	.append(getRollingStock().getSlug())
         	.append(" (")
         	.append(getTitle())
         	.append(")")

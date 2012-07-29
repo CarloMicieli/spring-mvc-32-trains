@@ -15,15 +15,13 @@
  */
 package com.trenako.listeners;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
-import com.trenako.entities.Brand;
-import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
-import com.trenako.entities.Scale;
 
 /**
  * 
@@ -35,41 +33,14 @@ public class RollingStocksEventListenerTests {
 	public void shouldFillTheValuesBeforeSave() {
 		RollingStocksEventListener listener = new RollingStocksEventListener();
 		
-		Railway railway = new Railway.Builder("S.N.C.F.")
-			.slug("sncf")
-			.country("de").build();
-		
-		Scale scale = new Scale.Builder("H0")
-			.slug("h0").build();
-		
-		Brand brand = new Brand.Builder("ACME")
-			.slug("acme").build();
-		
-		RollingStock rs = new RollingStock.Builder(brand, "123456")
-			.scale(scale)
-			.railway(railway)
+		RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+			.railway(fs())
+			.scale(scaleH0())
 			.build();
 		BasicDBObject dbo = new BasicDBObject();
-		listener.onBeforeSave(rs, dbo);
+		listener.onBeforeSave(rollingStock, dbo);
 		
 		assertNotNull(dbo.get("lastModified"));
-		assertEquals("h0", dbo.get("scaleName"));
-		assertEquals("sncf", dbo.get("railwayName"));
-		assertEquals("acme", dbo.get("brandName"));
-		assertEquals("de", dbo.get("country"));
-	}
-	
-	@Test
-	public void shouldLeaveCountryNullIfTheRailwayHasNone() {
-		RollingStocksEventListener listener = new RollingStocksEventListener();
-	
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.scale("H0")
-			.railway("DB")
-			.build();
-		BasicDBObject dbo = new BasicDBObject();
-		listener.onBeforeSave(rs, dbo);
-		
-		assertNull(dbo.get("country"));
-	}
+		assertEquals("acme-123456", dbo.get("slug"));
+	}	
 }

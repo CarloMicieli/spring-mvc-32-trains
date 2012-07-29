@@ -16,7 +16,9 @@
 package com.trenako.entities;
 
 import java.util.Date;
+import java.util.Locale;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
@@ -31,7 +33,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.StringUtils;
 
 import com.trenako.mapping.DbReferenceable;
+import com.trenako.mapping.LocalizedField;
 import com.trenako.utility.Slug;
+import com.trenako.validation.constraints.ContainsDefault;
+import com.trenako.validation.constraints.ISOCountry;
 
 /**
  * It represents a operator of the rail transport.
@@ -42,7 +47,7 @@ import com.trenako.utility.Slug;
 public class Railway implements DbReferenceable {
 	
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 	
 	@NotBlank(message = "railway.name.required")
 	@Size(max = 10, message = "railway.name.size.notmet")
@@ -55,11 +60,12 @@ public class Railway implements DbReferenceable {
 	@Size(max = 100, message = "railway.companyName.size.notmet")
 	private String companyName;
 	
-	@Size(max = 250, message = "railway.description.size.notmet")
-	private String description;
+	@NotNull(message = "railway.description.required")
+	@ContainsDefault(message = "railway.description.default.required")
+	private LocalizedField<String> description;
 	
 	@NotBlank(message = "railway.country.required")
-	@Size(max = 2, message = "railway.country.size.notmet")
+	@ISOCountry(message = "railway.country.code.invalid")
 	private String country;
 	
 	@Past(message = "railway.operatingSince.past.notmet")
@@ -83,8 +89,12 @@ public class Railway implements DbReferenceable {
 		this.name = name;
 	}
 	
+	/**
+	 * Creates a new {@code Railway} with the provided id.
+	 * @param id the railway id.
+	 */
 	public Railway(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 	
 	private Railway(Builder b) {
@@ -107,7 +117,7 @@ public class Railway implements DbReferenceable {
 		private final String name;
 		
 		// optional fields
-		private String description = null;
+		private LocalizedField<String> description = null;
 		private String companyName = null;
 		private String country = null;
 		private String slug = null;
@@ -144,8 +154,21 @@ public class Railway implements DbReferenceable {
 			return this;
 		}
 		
-		public Builder description(String description) {
-			this.description = description;
+		public Builder description(String desc) {
+			if (this.description == null) {
+				this.description = new LocalizedField<String>(desc);
+			}
+			else {
+				this.description.putDefault(desc);
+			}
+			return this;
+		}
+		
+		public Builder description(Locale lang, String desc) {
+			if (this.description == null) {
+				this.description = new LocalizedField<String>();
+			}
+			this.description.put(lang, desc);
 			return this;
 		}
 		
@@ -155,11 +178,11 @@ public class Railway implements DbReferenceable {
 	}
 	
 	/**
-	 * Returns the unique id for the {@code Railway}.
+	 * Returns the {@code Railway} id.
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
 	
 	/**
@@ -167,11 +190,11 @@ public class Railway implements DbReferenceable {
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 
 	/**
-	 * Returns the railway name.
+	 * Returns the {@code Railway} name.
 	 * <p>
 	 * This field contains the acronym from the company name.
 	 * </p>
@@ -183,7 +206,7 @@ public class Railway implements DbReferenceable {
 	}
 
 	/**
-	 * Sets the railway name.
+	 * Sets the {@code Railway} name.
 	 * <p>
 	 * This field contains the acronym from the company name.
 	 * </p>
@@ -195,7 +218,7 @@ public class Railway implements DbReferenceable {
 	}
 
 	/**
-	 * Returns the full company name.
+	 * Returns the full {@code Railway} company name.
 	 * @return the full company name
 	 */
 	public String getCompanyName() {
@@ -203,25 +226,33 @@ public class Railway implements DbReferenceable {
 	}
 
 	/**
-	 * Sets the full company name.
+	 * Sets the full {@code Railway} company name.
 	 * @param companyName the full company name
 	 */
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
 	
-	public String getDescription() {
+	/**
+	 * Returns the {@code Railway} description.
+	 * @return the description
+	 */
+	public LocalizedField<String> getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	/**
+	 * Sets the {@code Railway} description.
+	 * @param description the description
+	 */
+	public void setDescription(LocalizedField<String> description) {
 		this.description = description;
 	}
 
 	/**
 	 * Returns the country code.
 	 * <p>
-	 * The country is following ISO 3166-1 alpha-3 code standard.
+	 * The country is following {@code ISO 3166-1 alpha-2} code standard.
 	 * </p>
 	 * 
 	 * @return the country code
@@ -233,7 +264,7 @@ public class Railway implements DbReferenceable {
 	/**
 	 * Sets the country code.
 	 * <p>
-	 * The country is following ISO 3166-1 alpha-3 code standard.
+	 * The country is following {@code ISO 3166-1 alpha-2} code standard.
 	 * </p>
 	 * 
 	 * @param country the country code
@@ -285,7 +316,9 @@ public class Railway implements DbReferenceable {
 	 */
 	@Override
 	public String getSlug() {
-		if( slug==null ) slug = Slug.encode(getName());
+		if (slug == null) {
+			slug = Slug.encode(getName());
+		}
 		return slug;
 	}
 
@@ -354,10 +387,10 @@ public class Railway implements DbReferenceable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if( this==obj ) return true;
-		if( !(obj instanceof Railway) ) return false;
+		if (this == obj) return true;
+		if (!(obj instanceof Railway)) return false;
 		
-		Railway other = (Railway)obj;
+		Railway other = (Railway) obj;
 		return new EqualsBuilder()
 			.append(name, other.name)
 			.append(companyName, other.companyName)

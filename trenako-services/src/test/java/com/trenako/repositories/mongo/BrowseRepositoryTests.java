@@ -138,7 +138,7 @@ public class BrowseRepositoryTests {
 		PaginatedResults<RollingStock> results = repo.findByCriteria(sc, range);
 		
 		assertNotNull("Results is empty", results);
-		verifyMongoQuery("{ \"brandName\" : \"acme\"}", "{ \"lastModified\" : -1}");
+		verifyMongoQuery("{ \"brand.slug\" : \"acme\"}", "{ \"lastModified\" : -1}");
 	}
 	
 	@Test
@@ -166,7 +166,7 @@ public class BrowseRepositoryTests {
 		PaginatedResults<RollingStock> results = repo.findByCriteria(sc, range);
 		
 		assertNotNull("Results is empty", results);
-		verifyMongoQuery("{ \"scaleName\" : \"h0\"}", "{ \"lastModified\" : -1}");
+		verifyMongoQuery("{ \"scale.slug\" : \"h0\"}", "{ \"lastModified\" : -1}");
 	}
 	
 	@Test
@@ -196,7 +196,7 @@ public class BrowseRepositoryTests {
 		PaginatedResults<RollingStock> results = repo.findByCriteria(sc, range);
 		
 		assertNotNull("Results is empty", results);
-		verifyMongoQuery("{ \"railwayName\" : \"db\"}", "{ \"lastModified\" : -1}");
+		verifyMongoQuery("{ \"railway.slug\" : \"db\"}", "{ \"lastModified\" : -1}");
 	}
 	
 	@Test

@@ -18,9 +18,11 @@ package com.trenako.entities;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -29,16 +31,19 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.util.Assert;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 
-import com.trenako.AppGlobals;
 import com.trenako.mapping.DbReferenceable;
+import com.trenako.mapping.LocalizedField;
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.utility.Slug;
+import com.trenako.validation.constraints.ContainsDefault;
+import com.trenako.validation.constraints.ISOCountry;
 import com.trenako.values.Era;
 import com.trenako.values.OptionFamily;
 import com.trenako.values.PowerMethod;
@@ -60,13 +65,16 @@ import com.trenako.values.PowerMethod;
 public class RollingStock implements DbReferenceable {
 
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 	
-	@DBRef
 	@NotNull(message = "rs.brand.required")
-	private Brand brand;
-	@Indexed
-	private String brandName;
+	private WeakDbRef<Brand> brand;
+	
+	@NotNull(message = "rs.railway.required")
+	private WeakDbRef<Railway> railway;
+	
+	@NotNull(message = "rs.scale.required")
+	private WeakDbRef<Scale> scale;
 	
 	@Indexed(unique = true)
 	private String slug;
@@ -75,40 +83,25 @@ public class RollingStock implements DbReferenceable {
 	@Size(max = 10, message = "rs.itemNumber.size.notmet")
 	private String itemNumber;
 	
-	@NotBlank(message = "rs.description.required")
-	@Size(max = 150, message = "rs.description.size.notmet")
-	private String description;
-	
-	private Map<String, String> localDescriptions;
+	@NotNull(message = "rs.description.required")
+	@ContainsDefault(message = "rs.description.default.required")
+	private LocalizedField<String> description;
 
-	@Size(max = 1000, message = "rs.details.size.notmet")
-	private String details;
-	
-	private Map<String, String> localDetails;
-	
-	@DBRef
-	@NotNull(message = "rs.railway.required")
-	private Railway railway;
-	@Indexed
-	private String railwayName;
-	
-	@DBRef
-	@NotNull(message = "rs.scale.required")
-	private Scale scale;
-	@Indexed
-	private String scaleName;
+	private LocalizedField<String> details;
 	
 	@Indexed
 	@NotBlank(message = "rs.era.required")
 	private String era;
-	@Indexed
-	private String powerMethod;
+	
 	@Indexed
 	@NotBlank(message = "rs.category.required")
 	private String category;
 	
 	@Indexed
-	private Set<String> tags;
+	private String powerMethod;
+	
+	@Indexed
+	private SortedSet<String> tags;
 	
 	@Range(min = 0, max = 1000, message = "rs.totalLength.range.notmet")
 	private int totalLength;
@@ -117,7 +110,7 @@ public class RollingStock implements DbReferenceable {
 	@Size(max = 12, message = "rs.upcCode.size.notmet")
 	private String upcCode;
 	
-	@Size(max = 2, message = "rs.country.size.notmet")
+	@ISOCountry(message = "rs.country.code.invalid")
 	private String country;
 	
 	private Map<String, String> options;
@@ -137,28 +130,28 @@ public class RollingStock implements DbReferenceable {
 	 * @param id the {@code RollingStock} id
 	 */
 	public RollingStock(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 	
 	private RollingStock(Builder b) {
-		this.brand = b.brand;
+		this.setBrand(b.brand);
+		this.setRailway(b.railway);
+		this.setScale(b.scale);
 		this.itemNumber = b.itemNumber;
-		this.description = b.description;
-		this.localDescriptions = b.localDescs;
-
-		this.details = b.details;
-		this.localDetails = b.localDetails;
 		
-		this.id = b.id;
+		this.description = b.description;
+		this.details = b.details;
+		
+		this._id = b.id;
 		this.tags = b.tags;
-		this.railway = b.railway;
-		this.scale = b.scale;
 		this.era = b.era;
 		this.category = b.category;
 		this.powerMethod = b.powerMethod;
 		this.options = b.options;
 		this.deliveryDate = b.deliveryDate;
 		this.totalLength = b.totalLength;
+		this.country = b.country;
+		this.upcCode = b.upcCode;
 	}
 	
 	/**
@@ -173,20 +166,19 @@ public class RollingStock implements DbReferenceable {
 		
 		// optional fields
 		private ObjectId id = null;
-		private String description = null;
-		private Map<String, String> localDescs = null;
+		private LocalizedField<String> description = null;
+		private LocalizedField<String> details = null;
 		
-		private String details = null;
-		private Map<String, String> localDetails = null;	
-		
-		private Set<String> tags = null;
+		private SortedSet<String> tags = null;
 		private Railway railway = null; 
 		private Scale scale = null;
 		private String era = null;
 		private String powerMethod = null;
 		private String category = null;
+		private String country = null;
 		private DeliveryDate deliveryDate = null;
 		private int totalLength = 0;
+		private String upcCode = null;
 		
 		private Map<String, String> options = null;
 		
@@ -195,37 +187,56 @@ public class RollingStock implements DbReferenceable {
 			this.itemNumber = itemNumber;
 		}
 		
-		public Builder(String brandName, String itemNumber) {
-			this.brand = new Brand(brandName);
-			this.itemNumber = itemNumber;
-		}
-		
 		public RollingStock build() {
+			Assert.notNull(brand, "Brand is required");
+			Assert.notNull(railway, "Railway is required");
+			Assert.notNull(scale, "Scale is required");
 			return new RollingStock(this);
 		}
 		
-		public Builder railway(Railway r) { 
-			railway = r;
+		public Builder railway(Railway railway) { 
+			this.railway = railway;
 			return this;
 		}
 		
-		public Builder railway(String railwayName) { 
-			railway = new Railway(railwayName);
+		public Builder scale(Scale scale) { 
+			this.scale = scale;
 			return this;
 		}
 		
-		public Builder description(String d) { 
-			description = d;
+		public Builder description(String desc) {
+			if (this.description == null) {
+				this.description = new LocalizedField<String>(desc);
+			}
+			else {
+				this.description.putDefault(desc);
+			}
 			return this;
 		}
 
-		public Builder description(String lang, String d) {
-			if (localDescs == null) {
-				localDescs = new HashMap<String, String>();
+		public Builder description(Locale lang, String desc) {
+			if (this.description == null) {
+				this.description = new LocalizedField<String>();
 			}
-			
-			localDescs.put(lang, d);
-			
+			this.description.put(lang, desc);
+			return this;
+		}
+		
+		public Builder details(String det) {
+			if (this.details == null) {
+				this.details = new LocalizedField<String>(det);
+			}
+			else {
+				this.details.putDefault(det);
+			}
+			return this;
+		}
+
+		public Builder details(Locale lang, String det) {
+			if (this.details == null) {
+				this.details = new LocalizedField<String>();
+			}
+			this.details.put(lang, det);
 			return this;
 		}
 
@@ -234,21 +245,6 @@ public class RollingStock implements DbReferenceable {
 			return this;
 		}
 		
-		public Builder details(String d) { 
-			details = d;
-			return this;
-		}
-
-		public Builder details(String lang, String d) {
-			if (localDetails == null) {
-				localDetails = new HashMap<String, String>();
-			}
-			
-			localDetails.put(lang, d);
-			
-			return this;
-		}
-
 		public Builder option(Option opt) {
 			return option(opt.getFamily().name(), opt.getName());
 		}
@@ -259,16 +255,6 @@ public class RollingStock implements DbReferenceable {
 			}
 			
 			options.put(family, opt);
-			return this;
-		}
-		
-		public Builder scale(Scale s) { 
-			scale = s;
-			return this;
-		}
-		
-		public Builder scale(String scaleName) { 
-			scale = new Scale(scaleName);
 			return this;
 		}
 
@@ -282,13 +268,23 @@ public class RollingStock implements DbReferenceable {
 			return this;
 		}
 		
+		public Builder country(String c) { 
+			country = c;
+			return this;
+		}
+		
 		public Builder category(String c) { 
 			category = c;
 			return this;
 		}
 		
+		public Builder upcCode(String c) { 
+			upcCode = c;
+			return this;
+		}
+		
 		public Builder tags(String... t) { 
-			tags = new HashSet<String>(Arrays.asList(t));
+			tags = new TreeSet<String>(Arrays.asList(t));
 			return this;
 		}
 
@@ -308,7 +304,7 @@ public class RollingStock implements DbReferenceable {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
 	
 	/**
@@ -316,12 +312,12 @@ public class RollingStock implements DbReferenceable {
 	 * @param id the id
 	 */
 	public void setId(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 	
 	@Override
 	public String getLabel() {
-		return getBrandName() + " " + getItemNumber();
+		return getBrand().getLabel() + " " + getItemNumber();
 	}
 	
 	/**
@@ -343,8 +339,12 @@ public class RollingStock implements DbReferenceable {
 	 */
 	@Override
 	public String getSlug() {
-		if (slug == null && brand != null) {
-			setSlug(Slug.encode(String.format("%s %s", brand.getName(), itemNumber)));
+		if (slug == null) {
+			return Slug.encode(new StringBuilder()
+				.append(brand.getSlug())
+				.append(" ")
+				.append(itemNumber)
+				.toString());
 		}
 		return slug;
 	}
@@ -361,7 +361,7 @@ public class RollingStock implements DbReferenceable {
 	 * Returns the brand.
 	 * @return the brand
 	 */
-	public Brand getBrand() {
+	public WeakDbRef<Brand> getBrand() {
 		return brand;
 	}
 
@@ -370,31 +370,7 @@ public class RollingStock implements DbReferenceable {
 	 * @param brand the brand
 	 */
 	public void setBrand(Brand brand) {
-		this.brand = brand;
-	}
-
-	/**
-	 * Returns the brand name.
-	 * <p>
-	 * If the brand name is not set then the class is getting a 
-	 * value from {@link Brand#getSlug()}.
-	 * </p>
-	 * @return the brand name
-	 */		
-	public String getBrandName() {
-		if (brandName == null) {
-			brandName = getBrand().getSlug();
-		}
-		
-		return brandName;
-	}
-
-	/**
-	 * Set the brand name.
-	 * @param brandName the brand name
-	 */
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+		this.brand = WeakDbRef.buildRef(brand);
 	}
 
 	/**
@@ -417,82 +393,24 @@ public class RollingStock implements DbReferenceable {
 	 * Returns the rolling stock default description.
 	 * @return the description
 	 */
-	public String getDescription() {
+	public LocalizedField<String> getDescription() {
 		return description;
-	}
-
-	/**
-	 * Returns the rolling stock localized description.
-	 * <p>
-	 * Calling this method for the default language (<em>English</em>) 
-	 * will return the text from {@link RollingStock#getDescription()}.
-	 * </p>
-	 * <p>
-	 * If no description exists for the provided language then
-	 * the default description is returned.
-	 * </p>
-	 * 
-	 * @param lang the locale value
-	 * @return the description
-	 */
-	public String getDescription(String lang) {
-		if (localDescriptions == null || lang.equals(AppGlobals.DEFAULT_LANGUAGE)) {
-			return getDescription();
-		}
-		
-		String msg = localDescriptions.get(lang);
-		if (msg == null) {
-			msg = getDescription();
-		}
-
-		return msg;
 	}
 	
 	/**
 	 * Sets the rolling stock default description.
 	 * @param description the description
 	 */
-	public void setDescription(String description) {
+	public void setDescription(LocalizedField<String> description) {
 		this.description = description;
 	}
 	
 	/**
-	 * Sets a localized rolling stock description.
-	 * @param lang the language
-	 * @param description the description
-	 */
-	public void setDescription(String lang, String description) {
-		if (localDescriptions == null) {
-			localDescriptions = new HashMap<String,String>();
-		}
-		
-		localDescriptions.put(lang, description);
-	}
-
-	/**
 	 * Returns the model detailed description.
 	 * @return the details
 	 */
-	public String getDetails() {
+	public LocalizedField<String> getDetails() {
 		return details;
-	}
-	
-	/**
-	 * Returns the localized details for the rolling stock.
-	 * @param lang the language
-	 * @return the details
-	 */
-	public String getDetails(String lang) {
-		if (localDetails == null || lang.equals(AppGlobals.DEFAULT_LANGUAGE)) {
-			return getDetails();
-		}
-		
-		String d = localDetails.get(lang);
-		if (d == null) {
-			d = getDetails();
-		}
-		
-		return d;
 	}
 	
 	/**
@@ -503,28 +421,15 @@ public class RollingStock implements DbReferenceable {
 	 * 
 	 * @param details the details
 	 */
-	public void setDetails(String details) {
+	public void setDetails(LocalizedField<String> details) {
 		this.details = details;
 	}
 
 	/**
-	 * Sets the localized details for the rolling stock.
-	 * @param lang the language
-	 * @param details the details
-	 */
-	public void setDetails(String lang, String details) {
-		if (localDetails == null) {
-			localDetails = new HashMap<String, String>();
-		}
-		
-		localDetails.put(lang, details);
-	}
-	
-	/**
 	 * Returns the railway.
 	 * @return the railway
 	 */
-	public Railway getRailway() {
+	public WeakDbRef<Railway> getRailway() {
 		return railway;
 	}
 
@@ -533,40 +438,17 @@ public class RollingStock implements DbReferenceable {
 	 * @param railway the railway
 	 */
 	public void setRailway(Railway railway) {
-		this.railway = railway;
-	}
-
-	/**
-	 * Returns the railway name.
-	 * <p>
-	 * If the railway name is not set then this class is getting a value
-	 * from {@link Railway#getSlug()}.
-	 * </p>
-	 * 
-	 * @return the railway name
-	 */
-
-	public String getRailwayName() {
-		if (railwayName == null) {
-			railwayName = getRailway().getSlug();
+		this.railway = WeakDbRef.buildRef(railway);
+		if (railway != null) {
+			this.country = railway.getCountry();
 		}
-		
-		return railwayName;
-	}
-
-	/**
-	 * Sets the railway name.
-	 * @param railwayName the railway name
-	 */
-	public void setRailwayName(String railwayName) {
-		this.railwayName = railwayName;
 	}
 	
 	/**
 	 * Returns the scale.
 	 * @return the scale
 	 */
-	public Scale getScale() {
+	public WeakDbRef<Scale> getScale() {
 		return scale;
 	}
 
@@ -575,34 +457,9 @@ public class RollingStock implements DbReferenceable {
 	 * @param scale the scale
 	 */
 	public void setScale(Scale scale) {
-		this.scale = scale;
+		this.scale = WeakDbRef.buildRef(scale);
 	}
 
-	/**
-	 * Returns the scale name.
-	 * <p>
-	 * If the scale name is not set then the class is getting a 
-	 * value from {@link Scale#getSlug()}.
-	 * </p>
-	 * 
-	 * @return the scale name
-	 */
-	public String getScaleName() {
-		if (scaleName == null) {
-			scaleName = getScale().getSlug();
-		}
-		
-		return scaleName;
-	}
-
-	/**
-	 * Sets the scale name.
-	 * @param scaleName the scale name
-	 */
-	public void setScaleName(String scaleName) {
-		this.scaleName = scaleName;
-	}
-	
 	/**
 	 * Returns the category.
 	 * @return the category
@@ -720,10 +577,6 @@ public class RollingStock implements DbReferenceable {
 	 * @return the country code
 	 */
 	public String getCountry() {
-		if (country == null) {
-			country = railway.getCountry();
-		}
-		
 		return country;
 	}
 
@@ -780,7 +633,7 @@ public class RollingStock implements DbReferenceable {
 	 * Sets the list of tags for the rolling stock.
 	 * @param tags the list of tags
 	 */
-	public void setTags(Set<String> tags) {
+	public void setTags(SortedSet<String> tags) {
 		this.tags = tags;
 	}
 	
@@ -790,7 +643,7 @@ public class RollingStock implements DbReferenceable {
 	 */
 	public void addTag(String tag) {
 		if (tags == null) {
-			tags = new HashSet<String>();
+			tags = new TreeSet<String>();
 		}
 		tags.add(tag);
 	}
@@ -900,9 +753,9 @@ public class RollingStock implements DbReferenceable {
 	@Override
 	public String toString() {
 		return new StringBuffer()
-			.append(getBrand().getName() + " ")
+			.append(getBrand().getLabel() + " ")
 			.append(getItemNumber() + ": ")
-			.append(getDescription())
+			.append(getDescription().getDefault())
 			.toString();
 	}
 

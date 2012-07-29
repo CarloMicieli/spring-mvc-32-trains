@@ -15,8 +15,7 @@
  */
 package com.trenako.repositories.mongo;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
@@ -46,10 +45,13 @@ import com.trenako.repositories.ReviewsRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class ReviewsRepositoryTests {
 
-	Class<?> reviews = Review.class;
+	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+		.railway(fs())
+		.scale(scaleH0())
+		.build();
 	
-	@Mock MongoTemplate mongo;
-	ReviewsRepository repo;
+	private @Mock MongoTemplate mongo;
+	private ReviewsRepository repo;
 	
 	@Before
 	public void setUp() {
@@ -99,12 +101,11 @@ public class ReviewsRepositoryTests {
 
 	@Test
 	public void shouldFindReviewsByRollingStock() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		List<Review> value = 
 				Arrays.asList(newReview(), newReview(), newReview());
 		when(mongo.find(isA(Query.class), eq(Review.class))).thenReturn(value);
 		
-		List<Review> results = (List<Review>) repo.findByRollingStock(rs);
+		List<Review> results = (List<Review>) repo.findByRollingStock(rollingStock);
 		
 		assertEquals(3, results.size());
 		verify(mongo, times(1)).find(isA(Query.class), eq(Review.class));
@@ -140,7 +141,7 @@ public class ReviewsRepositoryTests {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
-		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
+
 		final Review rev = new Review(author, rollingStock, "Title", "Review");
 		return rev;
 	}

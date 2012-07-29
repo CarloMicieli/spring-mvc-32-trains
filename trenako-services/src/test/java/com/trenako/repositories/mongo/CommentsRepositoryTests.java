@@ -15,6 +15,7 @@
  */
 package com.trenako.repositories.mongo;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
@@ -44,6 +45,10 @@ import com.trenako.repositories.CommentsRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class CommentsRepositoryTests {
 
+	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+		.railway(fs())
+		.scale(scaleH0())
+		.build();
 	@Mock MongoTemplate mongo;
 	public CommentsRepository repo;
 	
@@ -96,12 +101,11 @@ public class CommentsRepositoryTests {
 
 	@Test
 	public void shouldFindCommentsByRollingStock() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		List<Comment> value = 
 				Arrays.asList(newComment(), newComment(), newComment());
 		when(mongo.find(isA(Query.class), eq(Comment.class))).thenReturn(value);
 		
-		List<Comment> results = (List<Comment>) repo.findByRollingStock(rs);
+		List<Comment> results = (List<Comment>) repo.findByRollingStock(rollingStock);
 		
 		assertEquals(3, results.size());
 		verify(mongo, times(1)).find(isA(Query.class), eq(Comment.class));
@@ -137,7 +141,7 @@ public class CommentsRepositoryTests {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
-		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
+
 		final Comment c = new Comment(author, rollingStock, "Comment");
 		return c;
 	}

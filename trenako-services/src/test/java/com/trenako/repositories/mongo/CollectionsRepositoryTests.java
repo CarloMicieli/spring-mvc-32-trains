@@ -15,6 +15,7 @@
  */
 package com.trenako.repositories.mongo;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
@@ -43,6 +44,11 @@ import com.trenako.repositories.CollectionsRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class CollectionsRepositoryTests {
 
+	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+		.railway(fs())
+		.scale(scaleH0())
+		.build();
+	
 	@Mock MongoTemplate mongo;
 	CollectionsRepository repo;
 	
@@ -81,7 +87,7 @@ public class CollectionsRepositoryTests {
 	@Test
 	public void shouldCheckIfCollectionIdContainRollingStock() {
 		ObjectId id = new ObjectId();
-		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
+		
 		
 		when(mongo.count(isA(Query.class), eq(Collection.class))).thenReturn(1L);
 		
@@ -94,7 +100,6 @@ public class CollectionsRepositoryTests {
 	@Test
 	public void shouldCheckIfCollectionsContainRollingStock() {
 		String owner = "user-name";
-		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
 		
 		when(mongo.count(isA(Query.class), eq(Collection.class))).thenReturn(1L);
 		

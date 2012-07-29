@@ -15,6 +15,9 @@
  */
 package com.trenako.entities;
 
+import static com.trenako.test.TestDataBuilder.*;
+
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -39,12 +42,12 @@ public class RollingStockValidationTests
 	
 	@Test
 	public void shouldValidateRollingStocks() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
 			.description("AAAA")
 			.era("IV")
 			.category("loco")
-			.scale("H0")
-			.railway("DB")
+			.scale(scaleH0())
+			.railway(db())
 			.build();
 		Map<String, String> errors = validate(rs);
 		assertEquals(0, errors.size());
@@ -65,23 +68,83 @@ public class RollingStockValidationTests
 	}
 	
 	@Test
-	public void shouldValidateItemNumberSize() {
-		RollingStock rs = new RollingStock.Builder("ACME", "12345678901")
+	public void shouldValidateCountryCode() {
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
 			.description("AAAA")
-			.scale("H0")
 			.era("IV")
 			.category("loco")
-			.railway("DB")
+			.scale(scaleH0())
+			.railway(db())
+			.country("rr")
+			.build();
+		Map<String, String> errors = validate(rs);
+		assertEquals(1, errors.size());
+		assertEquals("rs.country.code.invalid", errors.get("country"));
+	}
+	
+	@Test
+	public void shouldValidateDefaultDescriptions() {
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.description(Locale.FRENCH, "AAAA")
+			.era("IV")
+			.category("loco")
+			.scale(scaleH0())
+			.railway(db())
+			.country("fr")
+			.build();
+		Map<String, String> errors = validate(rs);
+		assertEquals(1, errors.size());
+		assertEquals("rs.description.default.required", errors.get("description"));
+	}
+	
+	@Test
+	public void shouldValidateItemNumberSize() {
+		RollingStock rs = new RollingStock.Builder(acme(), "12345678901")
+			.description("AAAA")
+			.railway(db())
+			.scale(scaleH0())
+			.era("IV")
+			.category("loco")
 			.build();
 		Map<String, String> errors = validate(rs);
 		assertEquals(1, errors.size());
 		assertEquals("rs.itemNumber.size.notmet", errors.get("itemNumber"));
 	}
+
+	@Test
+	public void shouldValidateTheProductCode() {
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.description("AAAA")
+			.railway(db())
+			.scale(scaleH0())
+			.era("IV")
+			.category("loco")
+			.upcCode("1234567890123") // max 12
+			.build();
+		Map<String, String> errors = validate(rs);
+		assertEquals(1, errors.size());
+		assertEquals("rs.upcCode.size.notmet", errors.get("upcCode"));
+	}
 	
 	@Test
-	public void shouldInitializeTheSlug() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+	public void shouldValidateTotalLength() {
+		Map<String, String> errors = null;
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.description("AAAA")
+			.railway(db())
+			.scale(scaleH0())
+			.era("IV")
+			.category("loco")
 			.build();
-		assertEquals("acme-123456", rs.getSlug());
+		
+		rs.setTotalLength(-1000);
+		errors = validate(rs);
+		assertEquals(1, errors.size());
+		assertEquals("rs.totalLength.range.notmet", errors.get("totalLength"));
+		
+		rs.setTotalLength(1001);
+		errors = validate(rs);
+		assertEquals(1, errors.size());
+		assertEquals("rs.totalLength.range.notmet", errors.get("totalLength"));
 	}
 }

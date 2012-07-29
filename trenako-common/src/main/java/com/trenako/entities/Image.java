@@ -32,7 +32,7 @@ import com.trenako.validation.constraints.SupportedImage;
 @Document(collection = "images")
 public class Image {
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 	
 	@Indexed
 	@NotNull(message = "image.parentId.required")
@@ -108,11 +108,11 @@ public class Image {
 	}
 	
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
 
 	public void setId(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 
 	public ObjectId getParentId() {

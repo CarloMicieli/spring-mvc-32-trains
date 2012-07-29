@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -40,6 +41,7 @@ public class ScaleValidationTests extends AbstractValidationTests<Scale> {
 	public void shouldValidateScales() {
 		Scale scale = new Scale.Builder("H0")
 			.ratio(870)
+			.description("Scale description")
 			.build();
 		Map<String, String> errors = validate(scale);
 		assertEquals(0, errors.size());
@@ -49,15 +51,17 @@ public class ScaleValidationTests extends AbstractValidationTests<Scale> {
 	public void shouldValidateInvalidScale() {
 		Scale scale = new Scale();
 		Map<String, String> errors = validate(scale);
-		assertEquals(2, errors.size());
+		assertEquals(3, errors.size());
 		assertEquals("scale.name.required", errors.get("name"));
 		assertEquals("scale.ratio.range.notmet", errors.get("ratio"));
+		assertEquals("scale.description.required", errors.get("description"));
 	}
 	
 	@Test
 	public void shouldValidateScaleNameSize() {
 		Scale scale = new Scale.Builder("12345678901") //max = 10
 			.ratio(870)
+			.description("Scale description")
 			.build();
 		Map<String, String> errors = validate(scale);
 		assertEquals(1, errors.size());
@@ -70,6 +74,7 @@ public class ScaleValidationTests extends AbstractValidationTests<Scale> {
 		
 		Scale s1 = new Scale.Builder("H0")
 			.narrow(true)
+			.description("Scale description")
 			.build();
 		errors = validate(s1);
 		assertEquals(1, errors.size());
@@ -78,9 +83,29 @@ public class ScaleValidationTests extends AbstractValidationTests<Scale> {
 		Scale s2 = new Scale.Builder("H0")
 			.ratio(2210)
 			.narrow(true)
+			.description("Scale description")
 			.build();
 		errors = validate(s2);
 		assertEquals(1, errors.size());
 		assertEquals("scale.ratio.range.notmet", errors.get("ratio"));
+	}
+	
+	@Test
+	public void shouldValidateDescriptionForDefaultLanguage() {
+		Map<String, String> errors = null;
+		Scale s1 = new Scale.Builder("H0")
+			.ratio(870)
+			.description("Scale description")
+			.build();
+		errors = validate(s1);
+		assertEquals(0, errors.size());
+		
+		Scale s2 = new Scale.Builder("H0")
+			.ratio(870)
+			.description(Locale.FRENCH, "Scale description")
+			.build();
+		errors = validate(s2);
+		assertEquals(1, errors.size());
+		assertEquals("scale.description.default.required", errors.get("description"));
 	}
 }

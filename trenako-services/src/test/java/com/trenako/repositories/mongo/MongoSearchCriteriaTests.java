@@ -38,7 +38,7 @@ public class MongoSearchCriteriaTests {
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"brandName\" : \"acme\"}", criteria.getCriteriaObject().toString());
+		assertEquals("{ \"brand.slug\" : \"acme\"}", criteria.getCriteriaObject().toString());
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class MongoSearchCriteriaTests {
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"railwayName\" : \"db\"}", 
+		assertEquals("{ \"railway.slug\" : \"db\"}", 
 				criteria.getCriteriaObject().toString());
 	}
 	
@@ -123,7 +123,7 @@ public class MongoSearchCriteriaTests {
 		
 		Criteria criteria = MongoSearchCriteria.buildCriteria(sc);
 		
-		assertEquals("{ \"scaleName\" : \"h0\"}", 
+		assertEquals("{ \"scale.slug\" : \"h0\"}", 
 				criteria.getCriteriaObject().toString());
 	}
 }

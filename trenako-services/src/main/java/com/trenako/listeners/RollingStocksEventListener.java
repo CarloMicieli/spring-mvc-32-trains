@@ -34,11 +34,6 @@ public class RollingStocksEventListener extends AbstractMongoEventListener<Rolli
 	@Override
 	public void onBeforeSave(RollingStock rs, DBObject dbo) {
 		dbo.put("lastModified", new Date());
-		
 		dbo.put("slug", rs.getSlug());
-		dbo.put("brandName", rs.getBrandName());
-		dbo.put("railwayName", rs.getRailwayName());
-		dbo.put("scaleName", rs.getScaleName());
-		dbo.put("country", rs.getRailway().getCountry());
 	}
 }

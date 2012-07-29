@@ -15,9 +15,14 @@
  */
 package com.trenako.entities;
 
+import static com.trenako.test.TestDataBuilder.*;
+
+import java.util.Locale;
+
 import org.junit.Test;
 
 import com.trenako.mapping.DbReferenceable;
+import com.trenako.mapping.LocalizedField;
 import com.trenako.values.OptionFamily;
 
 
@@ -31,140 +36,122 @@ import static org.junit.Assert.*;
 public class RollingStockTests {
 	
 	@Test
-	public void builderShouldInizializeRollingStocks() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+	public void shouldCreateNewRollingStocksUsingTheBuilder() {
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
 			.category("category")
 			.deliveryDate(new DeliveryDate(2012, 1))
 			.description("Description")
-			.description("fr", "French description")
+			.description(Locale.FRENCH, "French description")
 			.details("Details")
-			.details("fr", "French details")
+			.details(Locale.FRENCH, "French details")
 			.era("IV")
 			.powerMethod("DC")
-			.railway("DB")
-			.scale("H0")
+			.railway(db())
+			.scale(scaleH0())
 			.tags("tag1", "tag2")
 			.totalLength(123)
+			.upcCode("ABCD")
+			.country("de")
 			.build();
 				
-		assertEquals("ACME", rs.getBrand().getName());
+		assertEquals("acme", rs.getBrand().getSlug());
 		assertEquals("123456", rs.getItemNumber());
 		assertEquals("category", rs.getCategory());
 		assertEquals("2012/Q1", rs.getDeliveryDate().toString());
-		assertEquals("Description", rs.getDescription());
-		assertEquals("French description", rs.getDescription("fr"));
-		assertEquals("Details", rs.getDetails());
-		assertEquals("French details", rs.getDetails("fr"));
+		assertEquals("Description", rs.getDescription().getDefault());
+		assertEquals("French description", rs.getDescription().getValue(Locale.FRENCH));
+		assertEquals("Details", rs.getDetails().getDefault());
+		assertEquals("French details", rs.getDetails().getValue(Locale.FRENCH));
 		assertEquals("IV", rs.getEra());
 		assertEquals("DC", rs.getPowerMethod());
-		assertEquals("DB", rs.getRailway().getName());
-		assertEquals("H0", rs.getScale().getName());
+		assertEquals("db", rs.getRailway().getSlug());
+		assertEquals("h0", rs.getScale().getSlug());
 		assertEquals(123, rs.getTotalLength());
 		assertEquals(2, rs.getTags().size());
+		assertEquals("de", rs.getCountry());
+		assertEquals("ABCD", rs.getUpcCode());
 	}
 	
 	@Test
-	public void shouldGetLocalizedDescriptions() {
-
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.description("English")
-			.description("fr", "French")
-			.description("de", "German")
-			.build();
-
-		assertEquals("French", rs.getDescription("fr"));
-		assertEquals("German", rs.getDescription("de"));
-	}
-	
-	@Test
-	public void shouldGetDefaultDescriptionWhenTheLocalizedDontExist() {
-
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.description("English")
-			.description("fr", "French")
-			.build();
-
-		assertEquals("English", rs.getDescription("it"));
-	}
-	
-	@Test
-	public void shouldReplaceADescription() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.description("English")
-			.description("fr", "French")
-			.build();
+	public void shouldProduceLocalizedRollingStocksDescriptions() {
+		RollingStock x = new RollingStock();
+		LocalizedField<String> desc = new LocalizedField<String>("English description");
+		desc.put(Locale.ITALIAN, "Descrizione");
+		x.setDescription(desc);
 		
-		rs.setDescription("fr", "French2");
-		assertEquals("French2", rs.getDescription("fr"));
+		assertEquals("English description", x.getDescription().getDefault());
+		assertEquals("English description", x.getDescription().getValue(Locale.CHINESE));
+		assertEquals("Descrizione", x.getDescription().getValue(Locale.ITALIAN));
 	}
-	
-	@Test
-	public void shouldGetLocalizedDetails() {
-
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.details("English")
-			.details("fr", "French")
-			.details("de", "German")
-			.build();
-
-		assertEquals("French", rs.getDetails("fr"));
-		assertEquals("German", rs.getDetails("de"));
-	}
-	
-	@Test
-	public void shouldGetDefaultDetailsWhenTheLocalizedDontExist() {
-
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.details("English")
-			.details("fr", "French")
-			.build();
-
-		assertEquals("English", rs.getDetails("it"));
-	}
-	
-	@Test
-	public void shouldReplaceTheDetails() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.details("English")
-			.details("fr", "French")
-			.build();
 		
-		rs.setDetails("fr", "French2");
-		assertEquals("French2", rs.getDetails("fr"));
+	@Test
+	public void shouldProduceLocalizedRollingStocksDetails() {
+		RollingStock x = new RollingStock();
+		LocalizedField<String> det = new LocalizedField<String>("English details");
+		det.put(Locale.ITALIAN, "Dettagli");
+		x.setDetails(det);
+		
+		assertEquals("English details", x.getDetails().getDefault());
+		assertEquals("English details", x.getDetails().getValue(Locale.CHINESE));
+		assertEquals("Dettagli", x.getDetails().getValue(Locale.ITALIAN));
 	}
 	
 	@Test
-	public void equalsShouldReturnsTrueForEqualObjects() {
-		RollingStock x = new RollingStock.Builder("ACME", "123456").build();
-		RollingStock y = new RollingStock.Builder("ACME", "123456").build();
+	public void shouldChecksWhetherTwoRollingStocksAreEquals() {
+		RollingStock z = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())
+			.build();
+		assertTrue(z.equals(z));
+		
+		RollingStock x = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.description("rolling stock desc")
+			.scale(scaleH0())
+			.build();
+		RollingStock y = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.description("rolling stock desc")
+			.scale(scaleH0())
+			.build();
 		assertTrue(x.equals(y));
 	}
 	
 	@Test
-	public void equalsShouldReturnsFalseForEqualObjects() {
-		RollingStock x = new RollingStock.Builder("ACME", "123456").build();
-		RollingStock y = new RollingStock.Builder("ACME", "123456")
+	public void shouldChecksWhetherTwoRollingStocksAreDifferent() {
+		RollingStock x = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())
+			.build();
+		RollingStock y = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())
 			.description("aaaa")
 			.build();
 		assertFalse(x.equals(y));
+		
+		assertFalse(x.equals(new Brand()));
 	}
 	
 	@Test
-	public void shouldTwoEqualObjectsHaveTheSameHashcode() {
-		RollingStock x = new RollingStock.Builder("ACME", "123456").build();
-		RollingStock y = new RollingStock.Builder("ACME", "123456").build();
+	public void shouldProduceTheSameHashCodeForTwoEqualsRollingStocks() {
+		RollingStock x = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())
+			.build();
+		RollingStock y = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())
+			.build();
+		assertTrue(x.equals(y));
 		assertEquals(x.hashCode(), y.hashCode());
 	}
-		
-	@Test
-	public void equalsShouldBeReflexive() {
-		RollingStock x = new RollingStock.Builder("ACME", "123456").build();
-		assertTrue(x.equals(x));
-	}
-	
+
 	@Test
 	public void shouldAssignOptionsToRollingStocks() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())	
 			.option(new Option("NEM-651", OptionFamily.DCC_INTERFACE))
 			.build();
 		assertEquals(1, rs.getOptions().size());
@@ -173,13 +160,19 @@ public class RollingStockTests {
 	
 	@Test
 	public void shouldReturnNullIfTheOptionIsNotFound() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())
+			.build();
 		assertEquals(null, rs.getOption(OptionFamily.DCC_INTERFACE));
 	}
 	
 	@Test
-	public void shouldAssignOnly1OptionForEachFamily() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+	public void shouldAssignOnlyOneOptionForEachFamily() {
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())
+			.build();
 		
 		Option op1 = new Option("Op1", OptionFamily.HEADLIGHTS);
 		
@@ -197,46 +190,79 @@ public class RollingStockTests {
 	}
 	
 	@Test
-	public void shouldFillTheBrandName() {
-		Brand brand = new Brand.Builder("ACME").slug("acme").build();
-		RollingStock rs = new RollingStock.Builder(brand, "123456").build();
-		assertEquals(brand.getSlug(), rs.getBrandName());
+	public void shouldInitTheBrandDbReferences() {
+		RollingStock rs = new RollingStock();
+		rs.setBrand(acme());
+		assertEquals(acme().getSlug(), rs.getBrand().getSlug());
+		assertEquals(acme().getLabel(), rs.getBrand().getLabel());
 	}
 	
 	@Test
-	public void shouldFillTheRailwayName() {
-		Railway railway = new Railway.Builder("SCNF").slug("scnf").build();
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.railway(railway)
-			.build();
-		assertEquals(railway.getSlug(), rs.getRailwayName());
+	public void shouldInitTheRailwayDbReferences() {
+		RollingStock rs = new RollingStock();
+		rs.setRailway(db());
+		assertEquals(db().getSlug(), rs.getRailway().getSlug());
+		assertEquals(db().getLabel(), rs.getRailway().getLabel());
 	}
 	
 	@Test
-	public void shouldFillTheScaleName() {
-		Scale scale = new Scale.Builder("H0").slug("h0").build();
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.scale(scale)
-			.build();
-		assertEquals(scale.getSlug(), rs.getScaleName());
+	public void shouldInitTheScaleDbReferences() {
+		RollingStock rs = new RollingStock();
+		rs.setScale(scaleH0());
+		assertEquals(scaleH0().getSlug(), rs.getScale().getSlug());
+		assertEquals(scaleH0().getLabel(), rs.getScale().getLabel());
 	}
 	
 	@Test
-	public void shouldFillTheCountryFromTheRailway() {
-		Railway DB = new Railway.Builder("DB")
-			.country("DEU")
-			.build();
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.railway(DB)
-			.build();
-		assertEquals("DEU", rs.getCountry());		
+	public void shouldFillTheCountryCodeUsingTheRailwayCountry() {
+		RollingStock rs = new RollingStock();
+		rs.setRailway(db());
+		assertEquals("de", rs.getCountry());
+		
+		RollingStock rs2 = new RollingStock();
+		rs2.setCountry("fr");
+		rs2.setRailway(db());
+		assertEquals("de", rs2.getCountry());	
 	}
 	
 	@Test
 	public void shouldImplementDbReferenceable() {
-		Brand brand = new Brand.Builder("ACME").slug("acme").build();
-		DbReferenceable ref = new RollingStock.Builder(brand, "123456").build();
+		DbReferenceable ref = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())
+			.build();
 		assertEquals("acme-123456", ref.getSlug());
-		assertEquals("acme 123456", ref.getLabel());
+		assertEquals("ACME 123456", ref.getLabel());
+	}
+	
+	@Test
+	public void shouldInitializeTheSlug() {
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())
+			.build();
+		assertEquals("acme-123456", rs.getSlug());
+	}
+	
+	@Test
+	public void shouldProduceStringRepresentationsOfRollingStocks() {
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleH0())		
+			.description("rolling stock description")
+			.build();
+
+		assertEquals("ACME 123456: rolling stock description", rs.toString());
+	}
+	
+	@Test
+	public void shouldAssignTagsToRollingStocks() {
+		RollingStock rs = new RollingStock();
+		rs.addTag("tag2");
+		rs.addTag("tag1");
+		rs.addTag("tag3");
+		rs.addTag("tag1");
+		assertEquals(3, rs.getTags().size());
+		assertEquals("[tag1, tag2, tag3]", rs.getTags().toString());
 	}
 }

@@ -15,6 +15,8 @@
  */
 package com.trenako.entities;
 
+import static com.trenako.test.TestDataBuilder.*;
+
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
@@ -33,12 +35,15 @@ import com.trenako.values.Condition;
  */
 public class CollectionItemTests {
 	
+	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+		.railway(db())
+		.scale(scaleN())
+		.build();
+	
 	@Test
 	public void shouldCreateNewCollectionItems() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		
 		Date now = new Date();
-		CollectionItem item = new CollectionItem.Builder(rs)
+		CollectionItem item = new CollectionItem.Builder(rollingStock)
 			.addedAt(now)
 			.condition(Condition.NEW)
 			.quantity(2)
@@ -46,7 +51,7 @@ public class CollectionItemTests {
 			.price(100)
 			.build();
 		
-		assertEquals(rs, item.getRollingStock());
+		assertEquals("{label=ACME 123456, slug=acme-123456}", item.getRollingStock().toString());
 		assertEquals("new", item.getCondition());
 		assertEquals(now, item.getAddedAt());
 		assertEquals("Notes text", item.getNotes());
@@ -56,15 +61,13 @@ public class CollectionItemTests {
 	
 	@Test
 	public void shouldCreateItemWithDefaultQuantity() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		CollectionItem item = new CollectionItem.Builder(rs).build();
+		CollectionItem item = new CollectionItem.Builder(rollingStock).build();
 		assertEquals(1, item.getQuantity());
 	}
 	
 	@Test
 	public void shouldReturnThePriceAsMoney() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		CollectionItem item = new CollectionItem.Builder(rs)
+		CollectionItem item = new CollectionItem.Builder(rollingStock)
 			.price(9912)
 			.build();
 		BigDecimal money = item.price();
@@ -74,12 +77,10 @@ public class CollectionItemTests {
 	@Test
 	public void shouldCheckWhetherTwoItemsAreEquals() {
 		Date now = new Date();
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.build();
-		CollectionItem x = new CollectionItem.Builder(rs)
+		CollectionItem x = new CollectionItem.Builder(rollingStock)
 			.addedAt(now)
 			.build();
-		CollectionItem y = new CollectionItem.Builder(rs)
+		CollectionItem y = new CollectionItem.Builder(rollingStock)
 			.addedAt(now)
 			.build();
 		assertTrue(x.equals(y));
@@ -90,12 +91,11 @@ public class CollectionItemTests {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date date1 = format.parse("2012-01-31");
 		Date date2 = format.parse("2012-02-11");
-		RollingStock rs = new RollingStock.Builder("ACME", "123456")
-			.build();
-		CollectionItem x = new CollectionItem.Builder(rs)
+
+		CollectionItem x = new CollectionItem.Builder(rollingStock)
 			.addedAt(date1)
 			.build();
-		CollectionItem y = new CollectionItem.Builder(rs)
+		CollectionItem y = new CollectionItem.Builder(rollingStock)
 			.addedAt(date2)
 			.build();
 		assertFalse(x.equals(y));

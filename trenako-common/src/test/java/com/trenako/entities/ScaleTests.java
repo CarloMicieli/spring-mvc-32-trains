@@ -17,10 +17,12 @@ package com.trenako.entities;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 
 import org.junit.Test;
 
 import com.trenako.mapping.DbReferenceable;
+import com.trenako.mapping.LocalizedField;
 import com.trenako.values.Standard;
 
 import static java.math.BigDecimal.*;
@@ -36,9 +38,9 @@ public class ScaleTests {
 	@Test
 	public void shouldReturnScaleLabels() {
 		Scale s = new Scale.Builder("H0")
-		.ratio(870) // stored as integer
-		.build();
-	assertEquals("H0 (1:87)", s.getLabel());	
+			.ratio(870) // stored as integer
+			.build();
+		assertEquals("H0 (1:87)", s.getLabel());	
 	}
 	
 	@Test
@@ -127,7 +129,7 @@ public class ScaleTests {
 			.narrow(true)
 			.build();
 		assertEquals("H0", s.getName());
-		assertEquals("Most famous model railway scale", s.getDescription());
+		assertEquals("Most famous model railway scale", s.getDescription().getDefault());
 		assertEquals(870, s.getRatio());
 		assertEquals(1650, s.getGauge());
 		assertEquals(true, s.isNarrow());
@@ -154,5 +156,17 @@ public class ScaleTests {
 		DbReferenceable ref = new Scale.Builder("H0").ratio(870).build();
 		assertEquals("h0", ref.getSlug());
 		assertEquals("H0 (1:87)", ref.getLabel());
+	}
+	
+	@Test
+	public void shouldProduceLocalizedScalesDescriptions() {
+		Scale x = new Scale("H0");
+		LocalizedField<String> desc = new LocalizedField<String>("Scale half-0");
+		desc.put(Locale.ITALIAN, "Scala H0");
+		x.setDescription(desc);
+
+		assertEquals("Scale half-0", x.getDescription().getDefault());
+		assertEquals("Scale half-0", x.getDescription().getValue(Locale.CHINESE));
+		assertEquals("Scala H0", x.getDescription().getValue(Locale.ITALIAN));
 	}
 }

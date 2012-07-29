@@ -23,9 +23,9 @@ import javax.validation.constraints.Size;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.trenako.mapping.WeakDbRef;
 
 /**
  * It represents a user comment to a rolling stock.
@@ -35,21 +35,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "comments")
 public class Comment {
 	@Id
-	private ObjectId id;
-	
-	@Indexed(unique = false)
-	private String authorName;
-	
-	@DBRef
+	private ObjectId _id;
+
 	@NotNull(message = "comment.author.required")
-	private Account author;
+	private WeakDbRef<Account> author;
 	
-	@Indexed(unique = false)
-	private String rsSlug;
-	
-	@DBRef
 	@NotNull(message = "comment.rollingStock.required")
-	private RollingStock rollingStock;
+	private WeakDbRef<RollingStock> rollingStock;
 
 	@NotBlank(message = "comment.content.required")
 	@Size(max = 150, message = "comment.content.size.notmet")	 
@@ -57,8 +49,10 @@ public class Comment {
 	
 	private Date postedAt;
 
-	// required by spring data
-	Comment() {
+	/**
+	 * Creates an empty rolling stock {@code Comment}.
+	 */
+	public Comment() {
 	}
 	
 	/**
@@ -69,8 +63,8 @@ public class Comment {
 	 * @param content the comment content
 	 */
 	public Comment(Account author, RollingStock rollingStock, String content) {
-		this.author = author;
-		this.rollingStock = rollingStock;
+		this.setAuthor(author);
+		this.setRollingStock(rollingStock);
 		this.content = content;
 	}
 	
@@ -79,39 +73,22 @@ public class Comment {
 	 * @return the id
 	 */
 	public ObjectId getId() {
-		return id;
-	}
-
-	void setId(ObjectId id) {
-		this.id = id;
+		return _id;
 	}
 
 	/**
-	 * Returns the comment's author name.
-	 * 
-	 * If the author's name is not provided, this value will be
-	 * filled with the {@link Account#getSlug()} value.
-	 * 
-	 * @return the author's name
+	 * Sets the comment unique id.
+	 * @param id the id
 	 */
-	public String getAuthorName() {
-		if( authorName==null ) authorName = author.getSlug();
-		return authorName;
-	}
-
-	/**
-	 * Sets the comment's author name.
-	 * @param authorName the author's name
-	 */
-	public void setAuthorName(String authorName) {
-		this.authorName = authorName;
+	public void setId(ObjectId id) {
+		this._id = id;
 	}
 
 	/**
 	 * Returns the comment's author.
 	 * @return the author
 	 */
-	public Account getAuthor() {
+	public WeakDbRef<Account> getAuthor() {
 		return author;
 	}
 
@@ -120,35 +97,14 @@ public class Comment {
 	 * @param author the author
 	 */
 	public void setAuthor(Account author) {
-		this.author = author;
-	}
-
-	/**
-	 * Returns the rolling stock slug.
-	 * 
-	 * If the rolling stock slug is not provided, this value will be
-	 * filled with the {@link RollingStock#getSlug()} value.
-	 * 
-	 * @return the slug
-	 */
-	public String getRsSlug() {
-		if( rsSlug==null ) rsSlug = rollingStock.getSlug();
-		return rsSlug;
-	}
-
-	/**
-	 * Sets the rolling stock slug.
-	 * @param rsSlug  the slug
-	 */
-	public void setRsSlug(String rsSlug) {
-		this.rsSlug = rsSlug;
+		this.author = WeakDbRef.buildRef(author);
 	}
 
 	/**
 	 * Returns the commented rolling stock.
 	 * @return the rolling stock
 	 */
-	public RollingStock getRollingStock() {
+	public WeakDbRef<RollingStock> getRollingStock() {
 		return rollingStock;
 	}
 
@@ -157,7 +113,7 @@ public class Comment {
 	 * @param rollingStock the rolling stock
 	 */
 	public void setRollingStock(RollingStock rollingStock) {
-		this.rollingStock = rollingStock;
+		this.rollingStock = WeakDbRef.buildRef(rollingStock);
 	}
 
 	/**
@@ -215,11 +171,11 @@ public class Comment {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getAuthorName());
+		sb.append(getAuthor().getSlug());
 		sb.append(" posted '");
 		sb.append(getContent());
 		sb.append("' on ");
-		sb.append(getRsSlug());
+		sb.append(getRollingStock().getSlug());
 		return sb.toString();	
 	}
 }

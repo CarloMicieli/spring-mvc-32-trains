@@ -15,6 +15,7 @@
  */
 package com.trenako.listeners;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -38,14 +39,15 @@ public class ReviewsEventListenerTests {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
-		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
+		RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+			.railway(fs())
+			.scale(scaleH0())
+			.build();
 		Review review = new Review(author, rollingStock, "Title", "Review");
 	
 		DBObject dbo = new BasicDBObject();
 		lis.onBeforeSave(review, dbo);
 		
-		assertEquals("user-name", dbo.get("authorName"));
-		assertEquals("acme-123456", dbo.get("rsSlug"));
 		assertNotNull(dbo.get("postedAt"));
 	}
 }

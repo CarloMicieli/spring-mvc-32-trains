@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 import java.util.Map;
@@ -31,6 +32,11 @@ import com.trenako.test.AbstractValidationTests;
  */
 public class CollectionItemValidationTests extends AbstractValidationTests<CollectionItem> {
 	
+	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+		.scale(scaleH0())
+		.railway(db())
+		.build();
+	
 	@Before
 	public void initValidator() {
 		super.init(CollectionItem.class);
@@ -38,8 +44,7 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 
 	@Test
 	public void shouldValidateValidCollectionsItem() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		CollectionItem item = new CollectionItem.Builder(rs).build();
+		CollectionItem item = new CollectionItem.Builder(rollingStock).build();
 		
 		Map<String, String> errors = validate(item);
 		
@@ -59,9 +64,8 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 	@Test
 	public void shouldValidateItemQuantity() {
 		Map<String, String> errors = null;
-		
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		CollectionItem item1 = new CollectionItem.Builder(rs)
+
+		CollectionItem item1 = new CollectionItem.Builder(rollingStock)
 			.quantity(0)
 			.build();
 		
@@ -69,7 +73,7 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 		assertEquals(1, errors.size());
 		assertEquals("item.quantity.range.notmet", errors.get("quantity"));
 		
-		CollectionItem item2 = new CollectionItem.Builder(rs)
+		CollectionItem item2 = new CollectionItem.Builder(rollingStock)
 			.quantity(100)
 			.build();
 	
@@ -80,8 +84,7 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 	
 	@Test
 	public void shouldValidateItemPrice() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		CollectionItem item = new CollectionItem.Builder(rs)
+		CollectionItem item = new CollectionItem.Builder(rollingStock)
 			.price(-1)
 			.build();
 		
@@ -92,8 +95,7 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 	
 	@Test
 	public void shouldValidateAddedAtDate() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		CollectionItem item = new CollectionItem.Builder(rs)
+		CollectionItem item = new CollectionItem.Builder(rollingStock)
 			.addedAt(tomorrow())
 			.build();
 		

@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -38,7 +39,9 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 
 	@Test
 	public void shouldValidateValidBrands() {
-		Brand b = new Brand.Builder("ACME").build();
+		Brand b = new Brand.Builder("ACME")
+			.description("Brand description")
+			.build();
 		
 		Map<String, String> errors = validate(b);
 		assertEquals(0, errors.size());
@@ -49,13 +52,15 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 		Brand b = new Brand();
 		
 		Map<String, String> errors = validate(b);
-		assertEquals(1, errors.size());
+		assertEquals(2, errors.size());
 		assertEquals("brand.name.required", errors.get("name"));
+		assertEquals("brand.description.required", errors.get("description"));
 	}
 	
 	@Test
 	public void shouldValidateBrandNameSize() {
 		Brand b = new Brand.Builder("12345678901234567890123456")
+			.description("Brand description")
 			.build();
 		
 		Map<String, String> errors = validate(b);
@@ -66,6 +71,7 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 	@Test
 	public void shouldValidateBrandWebsite() {
 		Brand b = new Brand.Builder("AAA")
+			.description("Brand description")	
 			.website("http://localhost")
 			.build();
 		
@@ -76,6 +82,7 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 	@Test
 	public void shouldValidateInvalidBrandWebsite() {
 		Brand b = new Brand.Builder("AAA")
+			.description("Brand description")
 			.website("wr0ng$website")
 			.build();
 		
@@ -87,6 +94,7 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 	@Test
 	public void shouldValidateBrandEmail() {
 		Brand b = new Brand.Builder("AAA")
+			.description("Brand description")
 			.emailAddress("mail@mail.com")
 			.build();
 		
@@ -97,11 +105,30 @@ public class BrandValidationTests extends AbstractValidationTests<Brand> {
 	@Test
 	public void shouldValidateInvalidBrandEmail() {
 		Brand b = new Brand.Builder("AAA")
+			.description("Brand description")
 			.emailAddress("wr0ng$mail")
 			.build();
 
 		Map<String, String> errors = validate(b);
 		assertEquals(1, errors.size());
 		assertEquals("brand.emailAddress.email.invalid", errors.get("emailAddress"));
+	}
+	
+	@Test
+	public void shouldValidateDescriptionForDefaultLanguage() {
+		Map<String, String> errors = null;
+		Brand b = new Brand.Builder("AAA")
+			.description("Brand description")
+			.build();
+		errors = validate(b);
+		assertEquals(0, errors.size());
+		
+		Brand b2 = new Brand.Builder("AAA")
+			.description(Locale.FRENCH, "Brand description")
+			.build();
+		
+		errors = validate(b2);
+		assertEquals(1, errors.size());
+		assertEquals("brand.description.default.required", errors.get("description"));
 	}
 }

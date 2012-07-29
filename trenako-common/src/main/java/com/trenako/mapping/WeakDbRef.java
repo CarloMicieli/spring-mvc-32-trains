@@ -15,52 +15,93 @@
  */
 package com.trenako.mapping;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
+ * It represents a wrapper for <em>"weak"</em> database references.
+ * <p>
+ * As stated in the official Mongodb documentation, {@code manual reference}
+ * are the preferred way to link two collections.
+ * </p>
+ * <p>
+ * Typically the entities wrapped in a {@code WeakDbRef} contains all
+ * the information needed to fully describe the entity. This produces a
+ * de-normalized schemas, but it requires less database queries to populate
+ * the field values.
+ * </p>
+ * <p>
+ * The {@code WeakDbRef} already create an index on the slug of the wrapped
+ * slug, so no other indexes are usually needed.
+ * </p>
  * 
  * @author Carlo Micieli
  *
  */
-public class WeakDbRef implements Serializable {
-	private static final long serialVersionUID = 1265205378294217474L;
-	private Map<String, String> values;
-
-	private static final String SLUG_KEY = "slug";
-	private static final String LABEL_KEY = "label";
+public class WeakDbRef<E extends DbReferenceable> {
 	
-	private WeakDbRef(Map<String, String> values) {
-		this.values = values;
-	}
+	@Indexed(unique = false)
+	private String slug;
+	private String label;
 	
 	/**
 	 * Creates an empty {@code WeakDbRef}.
 	 */
 	public WeakDbRef() {
-		values = new HashMap<String, String>();
 	}
 	
-	public static <E extends DbReferenceable> WeakDbRef buildRef(E entity) {
-		Map<String, String> values = new HashMap<String, String>();
-		values.put("slug", entity.getSlug());
-		values.put("label", entity.getLabel());
-		return new WeakDbRef(Collections.unmodifiableMap(values));
+	private WeakDbRef(E entity) {
+		this.slug = entity.getSlug();
+		this.label = entity.getLabel();
+	}
+	
+	/**
+	 * Builds a new {@code WeakDbRef} for the provided entity.
+	 * @param entity the entity object
+	 * @return the new {@code WeakDbRef}
+	 */
+	public static <E extends DbReferenceable> WeakDbRef<E> buildRef(E entity) {
+		if (entity == null) return null;
+		return new WeakDbRef<E>(entity);
 	}
 
-	public String getLabel() {
-		return values.get(LABEL_KEY);
-	}
-
+	/**
+	 * Returns the {@code WeakDbRef} slug.
+	 * @return the slug
+	 */
 	public String getSlug() {
-		return values.get(SLUG_KEY);
+		return slug;
 	}
-	
+
+	/**
+	 * Sets the {@code WeakDbRef} slug.
+	 * @param slug the slug
+	 */
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
+	/**
+	 * Returns the {@code WeakDbRef} label.
+	 * @return the label
+	 */
+	public String getLabel() {
+		return label;
+	}
+	/**
+	 * Returns the {@code WeakDbRef} label.
+	 * @param label the label
+	 */	
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	@Override
 	public String toString() {
-		return values.toString();
+		return new StringBuilder()
+			.append("{label=").append(getLabel())
+			.append(", slug=").append(getSlug())
+			.append("}")
+			.toString();
 	}
 	
 	@Override
@@ -68,7 +109,13 @@ public class WeakDbRef implements Serializable {
 		if (obj == this) return true;
 		if (!(obj instanceof WeakDbRef)) return false;
 		
-		WeakDbRef other = (WeakDbRef) obj;
-		return this.values.equals(other.values);
+		WeakDbRef<?> other = (WeakDbRef<?>) obj;
+		return this.slug.equals(other.slug) &&
+				this.label.equals(other.label);
+	}
+	
+	@Override
+	public int hashCode() {
+		return slug.hashCode();
 	}
 }

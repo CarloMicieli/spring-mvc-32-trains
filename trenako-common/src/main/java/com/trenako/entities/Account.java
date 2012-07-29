@@ -29,6 +29,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.mapping.DbReferenceable;
 import com.trenako.utility.Slug;
 
 /**
@@ -50,11 +51,11 @@ import com.trenako.utility.Slug;
  *
  */
 @Document(collection = "accounts")
-public class Account implements Serializable {
+public class Account implements Serializable, DbReferenceable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 
 	@NotEmpty(message = "account.emailAddress.required")
 	@Email(message = "account.emailAddress.email.invalid")
@@ -77,7 +78,9 @@ public class Account implements Serializable {
 	private boolean enabled;
 	private List<String> roles;
 	
-	// required by spring data
+	/**
+	 * Creates a new empty {@code Account}.
+	 */
 	public Account() {
 	}
 	
@@ -189,7 +192,7 @@ public class Account implements Serializable {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
 	
 	/**
@@ -197,7 +200,7 @@ public class Account implements Serializable {
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 
 	/**
@@ -269,9 +272,15 @@ public class Account implements Serializable {
 	 * 
 	 * @return the slug
 	 */
+	@Override
 	public String getSlug() {
 		if( slug==null ) slug = Slug.encode(displayName);
 		return slug;
+	}
+	
+	@Override
+	public String getLabel() {
+		return displayName;
 	}
 
 	/**

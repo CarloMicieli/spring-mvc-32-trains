@@ -31,7 +31,7 @@ package com.trenako.mapping;
  *
  */
 public interface DbReferenceable {
-
+	
 	/**
 	 * Returns the {@code slug} for the current entity object.
 	 * @return the entity {@code slug} value

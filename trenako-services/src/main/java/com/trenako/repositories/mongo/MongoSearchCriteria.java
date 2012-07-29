@@ -39,7 +39,7 @@ public final class MongoSearchCriteria {
 		Criteria c = new Criteria();
 		
 		if (sc.hasBrand()) {
-			c.and("brandName").is(sc.getBrand());
+			c.and("brand.slug").is(sc.getBrand());
 		}
 		
 		if (sc.hasEra()) {
@@ -47,11 +47,11 @@ public final class MongoSearchCriteria {
 		}
 		
 		if (sc.hasRailway()) {
-			c.and("railwayName").is(sc.getRailway());
+			c.and("railway.slug").is(sc.getRailway());
 		}
 		
 		if (sc.hasScale()) {
-			c.and("scaleName").is(sc.getScale());
+			c.and("scale.slug").is(sc.getScale());
 		}
 		
 		if (sc.hasCat()) {

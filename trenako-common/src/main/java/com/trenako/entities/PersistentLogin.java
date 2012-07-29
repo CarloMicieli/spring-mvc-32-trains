@@ -30,7 +30,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "persistentLogins")
 public class PersistentLogin {
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 	
 	@Indexed(unique = true)
 	private String series;
@@ -38,12 +38,14 @@ public class PersistentLogin {
 	private String tokenValue;
 	private String username;
 
-	// required by spring data
+	/**
+	 * Creates a new empty {@code PersistentLogin} token.
+	 */
 	public PersistentLogin() {
 	}
 	
 	/**
-	 * Creates a new persistent login token.
+	 * Creates a new {@code PersistentLogin} token.
 	 * @param username
 	 * @param series
 	 * @param date
@@ -57,11 +59,11 @@ public class PersistentLogin {
 	}
 	
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
 
 	public void setId(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 
 	public Date getDate() {

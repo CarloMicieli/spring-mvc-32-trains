@@ -15,6 +15,7 @@
  */
 package com.trenako.services;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 
 import org.bson.types.ObjectId;
@@ -38,6 +39,11 @@ import com.trenako.repositories.CommentsRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class CommentsServiceTests {
 
+	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+		.railway(fs())
+		.scale(scaleH0())
+		.build();
+	
 	@Mock CommentsRepository repo;
 	CommentsService service;
 	
@@ -74,9 +80,8 @@ public class CommentsServiceTests {
 
 	@Test
 	public void shouldFindCommentsByRollingStock() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
-		service.findByRollingStock(rs);
-		verify(repo, times(1)).findByRollingStock(eq(rs));
+		service.findByRollingStock(rollingStock);
+		verify(repo, times(1)).findByRollingStock(eq(rollingStock));
 	}
 
 	@Test
@@ -104,7 +109,7 @@ public class CommentsServiceTests {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
-		RollingStock rollingStock = new RollingStock.Builder("ACME", "123456").build();
+
 		final Comment c = new Comment(author, rollingStock, "Comment");
 		return c;
 	}

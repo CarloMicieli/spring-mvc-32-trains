@@ -15,6 +15,7 @@
  */
 package com.trenako.services;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -52,6 +53,11 @@ import com.trenako.values.PowerMethod;
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStocksServiceTests {
 
+	private RollingStock rs = new RollingStock.Builder(acme(), "123456")
+		.railway(fs())
+		.scale(scaleH0())
+		.build();
+	
 	@Mock RollingStocksRepository repo;
 	@Mock BrandsRepository brandsRepo;
 	@Mock RailwaysRepository railwaysRepo;
@@ -80,14 +86,12 @@ public class RollingStocksServiceTests {
 	
 	@Test
 	public void shouldSaveRollingStocks() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		service.save(rs);
 		verify(repo, times(1)).save(eq(rs));
 	}
 
 	@Test
 	public void shouldRemoveRollingStocks() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
 		service.remove(rs);
 		verify(repo, times(1)).delete(eq(rs));
 	}

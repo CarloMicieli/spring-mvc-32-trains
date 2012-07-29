@@ -19,10 +19,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -36,7 +38,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.trenako.mapping.DbReferenceable;
+import com.trenako.mapping.LocalizedField;
 import com.trenako.utility.Slug;
+import com.trenako.validation.constraints.ContainsDefault;
 import com.trenako.validation.constraints.ValidAddress;
 
 /**
@@ -62,7 +66,7 @@ import com.trenako.validation.constraints.ValidAddress;
 public class Brand implements DbReferenceable {
 
 	@Id
-	private ObjectId id;
+	private ObjectId _id;
 
 	@NotBlank(message = "brand.name.required")
 	@Size(max = 25, message = "brand.name.size.notmet")
@@ -86,8 +90,9 @@ public class Brand implements DbReferenceable {
 	@Email(message = "brand.emailAddress.email.invalid")
 	private String emailAddress;
 	
-	@Size(max = 250, message = "brand.description.size.notmet")
-	private String description;
+	@NotNull(message = "brand.description.required")
+	@ContainsDefault(message = "brand.description.default.required")
+	private LocalizedField<String> description;
 	
 	private boolean industrial;
 	
@@ -95,7 +100,9 @@ public class Brand implements DbReferenceable {
 	
 	private Date lastModified;
 	
-	// required by spring data
+	/**
+	 * Creates an empty {@code Brand}.
+	 */
 	public Brand() {
 	}
 
@@ -104,7 +111,7 @@ public class Brand implements DbReferenceable {
 	 * @param id the unique id
 	 */
 	public Brand(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 	
 	/**
@@ -141,122 +148,76 @@ public class Brand implements DbReferenceable {
 		private String companyName = null;
 		private String website = null;
 		private String emailAddress = null;
-		private String description = null;
+		private LocalizedField<String> description = null;
 		private boolean industrial = false;
 		private Address address = null;
 		private String slug = null;
 		private Set<String> scales = null;
 		private HashMap<String, Address> branches = null;
 		
-		/**
-		 * Creates a new {@code Brand} builder.
-		 * @param name the brand name
-		 */
 		public Builder(String name) {
 			this.name = name;
 		}
 		
-		/**
-		 * The company name.
-		 * @param companyName the company name
-		 * @return a {@code Brand} builder
-		 */
 		public Builder companyName(String companyName) {
 			this.companyName = companyName;
 			return this;
 		}
 		
-		/**
-		 * The email address.
-		 * @param emailAddress the email address
-		 * @return a {@code Brand} builder
-		 */
 		public Builder emailAddress(String emailAddress) {
 			this.emailAddress = emailAddress;
 			return this;
 		}
 
-		/**
-		 * It indicates whether is using the die casting method. 
-		 * @param industrial the industrial flag
-		 * @return a {@code Brand} builder
-		 */
 		public Builder industrial(boolean industrial) {
 			this.industrial = industrial;
 			return this;
 		}
 
-		/**
-		 * The description.
-		 * @param desc the description
-		 * @return a {@code Brand} builder
-		 */
 		public Builder description(String desc) {
-			this.description = desc;
+			if (this.description == null) {
+				this.description = new LocalizedField<String>(desc);
+			}
+			else {
+				this.description.putDefault(desc);
+			}
 			return this;
 		}
 
-		/**
-		 * The brand slug.
-		 * @param slug the slug
-		 * @return a {@code Brand} builder
-		 */
+		public Builder description(Locale lang, String desc) {
+			if (this.description == null) {
+				this.description = new LocalizedField<String>();
+			}
+			this.description.put(lang, desc);
+			return this;
+		}
+
 		public Builder slug(String slug) {
 			this.slug = slug;
 			return this;
 		}
 		
-		/**
-		 * The address.
-		 * @param addr the address
-		 * @return a {@code Brand} builder
-		 */
 		public Builder address(Address addr) {
 			address = addr;
 			return this;
 		}
 		
-		/**
-		 * The local address.
-		 * <p>
-		 * The country code is one of the {@code ISO 3166-1 alpha-2} 
-		 * standard codes.
-		 * </p>
-		 * 
-		 * @param country the country code
-		 * @param a the address
-		 * @return a {@code Brand} builder
-		 */
 		public Builder address(String country, Address a) {
-			if( branches==null ) branches = new HashMap<String, Address>();
+			if (branches == null) branches = new HashMap<String, Address>();
 			branches.put(country, a);
 			return this;
 		}
 		
-		/**
-		 * The website url.
-		 * @param url the website url
-		 * @return a {@code Brand} builder
-		 */
 		public Builder website(String url) {
 			website = url;
 			return this;
 		}
 		
-		/**
-		 * The list of scales.
-		 * @param scales the scales
-		 * @return a {@code Brand} builder
-		 */
 		public Builder scales(String... scales) {
 			this.scales = new HashSet<String>(Arrays.asList(scales));
 			return this;
 		}
 		
-		/**
-		 * Builds a {@code Brand} object using the values for this builder.
-		 * @return a {@code Brand} builder
-		 */
 		public Brand build() {
 			return new Brand(this);
 		}
@@ -267,7 +228,7 @@ public class Brand implements DbReferenceable {
 	 * @return the unique id
 	 */
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
 	
 	/**
@@ -275,7 +236,7 @@ public class Brand implements DbReferenceable {
 	 * @param id the unique id
 	 */
 	public void setId(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
 	
 	/**
@@ -334,7 +295,9 @@ public class Brand implements DbReferenceable {
 	 */
 	@Override
 	public String getSlug() {
-		if( slug==null ) slug = Slug.encode(name);
+		if (slug == null) {
+			slug = Slug.encode(name);
+		}
 		return slug;
 	}
 	
@@ -353,7 +316,9 @@ public class Brand implements DbReferenceable {
 	 * @return the address
 	 */
 	public Address getAddress(String country) {
-		if( branches==null ) return null;
+		if (branches == null) {
+			return null;
+		}
 		return branches.get(country);
 	}
 	
@@ -368,7 +333,9 @@ public class Brand implements DbReferenceable {
 	 * @param a the address
 	 */
 	public void setAddress(String country, Address a) {
-		if( branches==null ) branches = new HashMap<String, Address>();
+		if (branches == null) {
+			branches = new HashMap<String, Address>();
+		}
 		branches.put(country, a);
 	}
 
@@ -417,7 +384,7 @@ public class Brand implements DbReferenceable {
 	 * Returns the {@code Brand} company description.
 	 * @return the description
 	 */
-	public String getDescription() {
+	public LocalizedField<String> getDescription() {
 		return description;
 	}
 
@@ -425,7 +392,7 @@ public class Brand implements DbReferenceable {
 	 * Sets the {@code Brand} company description.
 	 * @param description the description
 	 */
-	public void setDescription(String description) {
+	public void setDescription(LocalizedField<String> description) {
 		this.description = description;
 	}
 
@@ -512,10 +479,10 @@ public class Brand implements DbReferenceable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if( this==obj ) return true;
-		if( !(obj instanceof Brand) ) return false;
+		if (this == obj) return true;
+		if (!(obj instanceof Brand)) return false;
 		
-		Brand other = (Brand)obj;
+		Brand other = (Brand) obj;
 		return new EqualsBuilder()
 			.append(name, other.name)
 			.append(website, other.website)
