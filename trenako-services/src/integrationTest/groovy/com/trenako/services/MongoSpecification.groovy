@@ -15,12 +15,8 @@
 */
 package com.trenako.services
 
-import com.trenako.mapping.LocalizedField
-import com.trenako.mapping.LocalizedFieldWriteConverter
-
 import com.gmongo.GMongo
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.beans.factory.annotation.Autowired
 
 import spock.lang.Specification;
 
@@ -32,15 +28,4 @@ import spock.lang.Specification;
 @ContextConfiguration(locations = "classpath:META-INF/spring-context.xml")
 class MongoSpecification extends Specification {
 	def db = new GMongo("localhost:27017").getDB("trenako-testdb")
-	
-	@Autowired LocalizedFieldWriteConverter writeConverter
-	
-	def localize(String v) {
-		LocalizedField<String> field = new LocalizedField<String>(v)
-		writeConverter.convert(field)
-	}
-	
-	LocalizedField<String> localizedDesc(String v) {
-		return new LocalizedField<String>(v)
-	}
 }

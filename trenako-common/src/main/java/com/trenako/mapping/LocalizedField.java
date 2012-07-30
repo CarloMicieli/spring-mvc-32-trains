@@ -57,8 +57,37 @@ public class LocalizedField<T> {
 	 * @param value the value
 	 * @return a {@code LocalizedField}
 	 */
-	public static <T> LocalizedField<T> localized(T value) {
+	public static <T> LocalizedField<T> localize(T value) {
 		return new LocalizedField<T>(value);
+	}
+	
+	/**
+	 * Builds a new {@code LocalizedField} using the values from the provided map.
+	 * @param values the map
+	 * @return a {@code LocalizedField}
+	 */
+	public static <T> LocalizedField<T> localize(Map<String, T> values) {
+		LocalizedField<T> field = new LocalizedField<T>();
+		
+		for (Map.Entry<String, T> entry : values.entrySet()) {
+			field.put(new Locale(entry.getKey()), entry.getValue());
+		}
+		
+		return field;
+	}
+	
+	/**
+	 * Returns the localized values as {@code Map}.
+	 * @return the map
+	 */
+	public Map<String, T> asMap() {
+		Map<String, T> v = new HashMap<String, T>();
+		
+		for (Map.Entry<Locale, T> e : values.entrySet()) {
+			v.put(e.getKey().getLanguage(), e.getValue());
+		}
+		
+		return v;
 	}
 	
 	/**

@@ -395,7 +395,7 @@ public class Brand implements DbReferenceable {
 	public void setDescription(LocalizedField<String> description) {
 		this.description = description;
 	}
-
+	
 	/**
 	 * Returns the {@code Brand} email address.
 	 * @return the email address

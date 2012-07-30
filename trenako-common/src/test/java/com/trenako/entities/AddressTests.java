@@ -27,6 +27,45 @@ import org.junit.Test;
 public class AddressTests {
 
 	@Test
+	public void shouldCheckWhetherTwoAddressesAreEquals() {
+		Address x = new Address.Builder()
+			.streetAddress("30 Commercial Rd.")
+			.city("Bristol")
+			.postalCode("PO1 1AA")
+			.country("England")
+			.locality("2A")
+			.build();
+		Address y = new Address.Builder()
+			.streetAddress("30 Commercial Rd.")
+			.city("Bristol")
+			.postalCode("PO1 1AA")
+			.country("England")
+			.locality("2A")
+			.build();
+		assertTrue(x.equals(x));
+		assertTrue(x.equals(y));
+	}
+	
+	@Test
+	public void shouldCheckWhetherTwoAddressesAreDifferent() {
+		Address x = new Address.Builder()
+			.streetAddress("30 Commercial Rd.")
+			.city("London")
+			.postalCode("PO1 1AA")
+			.country("England")
+			.locality("2A")
+			.build();
+		Address y = new Address.Builder()
+			.streetAddress("30 Commercial Rd.")
+			.city("Bristol")
+			.postalCode("PO1 1AA")
+			.country("USA")
+			.locality("2A")
+			.build();
+		assertFalse(x.equals(y));
+	}
+	
+	@Test
 	public void shouldBuildAddresses() {
 		Address a = new Address.Builder()
 			.streetAddress("30 Commercial Rd.")

@@ -1,14 +1,14 @@
 /*
 * Copyright 2012 the original author or authors.
 *
-* Licensed under the Apache License, Version 2.0 (the "License");
+* Licensed under the Apache License, Version 2.0 (the 'License');
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
 *   http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
+* distributed under the License is distributed on an 'AS IS' BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
@@ -17,70 +17,74 @@ package com.trenako.services
 
 import spock.lang.*
 
+import org.bson.types.ObjectId
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
 
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Query
 
-import static org.springframework.data.mongodb.core.query.Query.*
-import static org.springframework.data.mongodb.core.query.Criteria.*
-
-import com.trenako.entities.Railway;
-import com.trenako.services.RailwaysServiceImpl;
+import com.trenako.mapping.LocalizedField
+import com.trenako.entities.Railway
+import com.trenako.services.RailwaysService
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-@ContextConfiguration(locations = "classpath:META-INF/spring-context.xml")
-class RailwaysServiceSpecification extends Specification {
+class RailwaysServiceSpecification extends MongoSpecification {
 
-	@Autowired MongoTemplate mongoTemplate
-	@Autowired RailwaysServiceImpl service
-	
-	def railways = Railway.class
+	@Autowired RailwaysService service
 	
 	def setup() {
+		def year1994 = new GregorianCalendar(1994, Calendar.JANUARY, 1).time
+		def year1905 = new GregorianCalendar(1905, Calendar.JANUARY, 1).time
+		def year1938 = new GregorianCalendar(1938, Calendar.JANUARY, 1).time
+		def year1956 = new GregorianCalendar(1956, Calendar.JANUARY, 1).time
 		
-		
-		def y1994 = new GregorianCalendar(1994, Calendar.JANUARY, 1).time
-		def y1949 = new GregorianCalendar(1949, Calendar.JANUARY, 1).time
-		def y1938 = new GregorianCalendar(1938, Calendar.JANUARY, 1).time
-		
-		
-		def collection = [
-			new Railway(name: "Die Bahn", companyName: "Deutsche Bahn AG",
-				country: "DEU", operatingSince: y1994),
-			new Railway(name: "DB", companyName: "Deutsche Bundesbahn",
-				country: "DEU", operatingSince: y1949, operatingUntil: y1994),
-			new Railway(name: "Sncf", companyName: "Société Nationale des Chemins de fer Français",
-				country: "FRA", operatingSince: y1938)
+		db.railways << [
+				[name: 'Die bahn', 
+					slug: 'die-bahn', 
+					description: [en: 'The German railways'], 
+					companyName: 'Die bahn', 
+					country: 'de', 
+					operatingSince: year1994, 
+					lastModified: new Date()],
+				[name: 'DB', 
+					slug: 'db', 
+					description: [en: 'The German railways'], 
+					companyName: 'Deutshe bundesbahn', 
+					country: 'de', 
+					operatingSince: year1956, 
+					operatingUntil: year1994,
+					lastModified: new Date()],
+				[name: 'Sncf', 
+					slug: 'sncf', 
+					description: [en: 'The French railways'], 
+					companyName: 'Société Nationale des Chemins de fer Français', 
+					country: 'fr', 
+					operatingSince: year1938, 
+					lastModified: new Date()],
+				[name: 'FS',
+					slug: 'fs', 
+					description: [en: 'The Italian railways'], 
+					companyName: 'Ferrovie dello stato', 
+					country: 'it', 
+					operatingSince: year1905, 
+					lastModified: new Date()],					
 			]
-		mongoTemplate.insert collection, railways
 	}
 	
 	def cleanup() {
-		def all = new Query()
-		mongoTemplate.remove all, railways
+		db.railways.remove([:])
 	}
 	
-	def "should find all railways"() {
-		when:
-		def paging = new PageRequest(0, 10)
-		def result = service.findAll(paging).content
-		
-		then:
-		result != null
-		result.size() == 3
-	}
-	
-	def "should find railways by id"() {
+	def "should find railways for the provided unique id"() {
 		given:
-		def id = mongoTemplate.findOne(query(where("name").is("DB")), railways).id
+		def doc = db.railways.findOne(slug: 'db')
+		def id = doc?._id
+		assert id != null
 		
 		when:
 		def railway = service.findById id
@@ -88,42 +92,126 @@ class RailwaysServiceSpecification extends Specification {
 		then:
 		railway != null
 		railway.id == id
-		railway.name == "DB"		
+		railway.name == 'DB'
+	}
+	
+	def "should return null if no railway is found for the provided id"() {
+		given:
+		def id = new ObjectId('47cc67093475061e3d95369d')
+		
+		when:
+		def railway = service.findById id
+		
+		then:
+		railway == null
+	}
+	
+	def "should find a railway for the provided slug value"() {
+		when:
+		def railway = service.findBySlug 'sncf'
+		
+		then:
+		railway != null
+		railway.slug == 'sncf'
+		railway.name == 'Sncf'
+	}
+	
+	def "should return null if no railway is found for the provided slug value"() {
+		when:
+		def railway = service.findBySlug 'not-found'
+		
+		then:
+		railway == null
+	}
+	
+	def "should find railways for the provided name"() {
+		when:
+		def railway = service.findByName 'Sncf'
+
+		then:
+		railway != null
+		railway.name == 'Sncf'
+	}
+	
+	def "should return null if no railway exists for the provided name"() {
+		when:
+		def railway = service.findByName 'Not found'
+
+		then:
+		railway == null
+	}
+	
+	def "should return null if no railway exists for the provided country"() {
+		when:
+		def result = service.findByCountry 'dk'
+		
+		then:
+		result.empty
 	}
 	
 	def "should find railways by country"() {
 		when:
-		def result = service.findByCountry "DEU"
+		def result = service.findByCountry 'de'
 		
 		then:
 		result != null
 		result.size == 2
-		result.collect {it.name} == ["DB", "Die Bahn"]
+		result.collect {it.name} == ['DB', 'Die bahn']
 	}
-	
-	def "should find railways by slug"() {
+		
+	def "should find railways returning paginated results"() {
+		given:
+		def paging = new PageRequest(0, 10)
+		
 		when:
-		def railway = service.findBySlug "die-bahn"
+		def result = service.findAll(paging)
 		
 		then:
-		railway != null
-		railway.name == "Die Bahn"
+		result != null
+		result.content != null
+		result.content.size() == 4
 	}
 	
-	def "should find railways by name"() {
+	def "should throw an exception if the railway name is already used"() {
+		given:
+		def newRailway = new Railway(
+			name: 'DB', 
+			companyName: 'German railways',
+			country: 'de')
+			
 		when:
-		def railway = service.findByName "Sncf"
-
+		service.save newRailway
+		
 		then:
-		railway != null
-		railway.name == "Sncf"
+		thrown(DuplicateKeyException)
+		newRailway.id == null
+	}
+	
+	def "should throw an exception if the railway slug is already used"() {
+		given:
+		def newRailway = new Railway(
+			name: 'D?B',
+			slug: 'db',
+			companyName: 'German railways',
+			country: 'de')
+			
+		when:
+		service.save newRailway
+		
+		then:
+		thrown(DuplicateKeyException)
+		newRailway.id == null
 	}
 	
 	def "should create new railways"() {
 		given:
-		def y1903 = new GregorianCalendar(1903, Calendar.JANUARY, 1).time
-		def newRailway = new Railway(name: "FS", companyName: "Ferrovie dello stato",
-			country: "ITA", operatingSince: y1903)
+		def year1903 = new GregorianCalendar(1903, Calendar.JANUARY, 1).time
+		def newRailway = new Railway(
+			name: 'S.N.C.B.', 
+			companyName: 'Société Nationale des Chemins de fer Belges',
+			description: LocalizedField.localize([en: 'National railway company of Belgium']),
+			country: 'be', 
+			operatingSince: year1903)
 		
 		when:
 		service.save newRailway
@@ -131,23 +219,31 @@ class RailwaysServiceSpecification extends Specification {
 		then:
 		newRailway.id != null
 		
-		def railway = mongoTemplate.findById newRailway.id, railways
-		railway.name == "FS"
-		railway.slug == "fs"
-		railway.companyName == "Ferrovie dello stato"
-		railway.country == "ITA"
-		String.format('%tF', railway.operatingSince) == "1903-01-01"
+		and:
+		def railway = db.railways.findOne(_id: newRailway.id)
+		railway.name == 'S.N.C.B.'
+		railway.companyName == 'Société Nationale des Chemins de fer Belges'
+		railway.description == [en: 'National railway company of Belgium']
+		railway.country == 'be'
+		String.format('%tF', railway.operatingSince) == '1903-01-01'
+		railway.operatingUntil == null
+		
+		// added automatically before saving
+		railway.slug == 'sncb'
+		railway.lastModified != null
 	}
-	
+		
 	def "should remove railways"() {
 		given:
-		def railway = mongoTemplate.findOne query(where("name").is("DB")), railways
+		def doc = db.railways.findOne(slug: 'db')
+		def railway = new Railway(id: doc._id)
+		assert railway != null
 		
 		when:
 		service.remove railway
 		
 		then:
-		def r = mongoTemplate.findById railway.id, railways
-		r == null
+		def docDb = db.railways.findOne(_id: railway.id)
+		docDb == null
 	}
 }

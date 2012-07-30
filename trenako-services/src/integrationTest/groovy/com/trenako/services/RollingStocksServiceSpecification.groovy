@@ -15,30 +15,23 @@
 */
 package com.trenako.services
 
-import java.util.Arrays;
-import java.util.List;
-
 import spock.lang.*
 
-import org.junit.Test;
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Query
-
-import static org.springframework.data.mongodb.core.query.Query.*
-import static org.springframework.data.mongodb.core.query.Criteria.*
+import org.springframework.dao.DuplicateKeyException
 
 import com.trenako.entities.Brand
 import com.trenako.entities.DeliveryDate
 import com.trenako.entities.Railway
 import com.trenako.entities.RollingStock
 import com.trenako.entities.Scale
-import com.trenako.services.RollingStocksService
+import com.trenako.mapping.LocalizedField
 import com.trenako.values.Category
 import com.trenako.values.Era
 import com.trenako.values.PowerMethod
+
+import com.trenako.services.RollingStocksService
 
 /**
  * 
@@ -49,111 +42,106 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 
 	@Autowired RollingStocksService service
 	
-	def rollingStocks = RollingStock.class
-	
 	def setup() {
-		def acme = new Brand(name: "ACME")
-		def bemo = new Brand(name: "Bemo")
-		def roco = new Brand(name: "Roco")
-		def brands = [acme, bemo, roco]
-		mongoTemplate.insert brands, Brand.class
-		
-		def H0m = new Scale(name: "H0m", ratio: 870)
-		def H0 = new Scale(name: "H0", ratio: 870)
-		def N = new Scale(name: "N", ratio: 1600)
-		def scales = [H0m, H0, N]
-		mongoTemplate.insert scales, Scale.class
-		
-		def MGB = new Railway(name: "MGB", country: 'SWI')
-		def DRG = new Railway(name: "DRG", country: 'DEU')
-		def FS = new Railway(name: "FS", country: 'ITA')
-		def DB = new Railway(name: "DB", country: 'DEU')
-		def railways = [MGB, DRG, FS, DB]
-		mongoTemplate.insert railways, Railway.class
-		
-		def collection = [
-			new RollingStock(brand: bemo, itemNumber: "1262 256",
-				description: "MGB HGe 4/4 II 106 'St.Gotthard/Gottardo' Zahnradlok 'Glacier-Express'",
-				category: Category.ELECTRIC_LOCOMOTIVES.label(),
-				era: Era.VI.name(),
-				powerMethod: PowerMethod.DC.label(),
-				railway: MGB,
-				scale: H0m,
-				tags: ["glacier", "express"]),
-			new RollingStock(brand: bemo, itemNumber: "3267 254",
-				description: "MGB B 4254 Leichtmetallwagen",
-				category: Category.PASSENGER_CARS.label(),
-				powerMethod: PowerMethod.DC.label(),
-				era: Era.V.name(),
-				railway: MGB,
-				scale: H0m),
-			new RollingStock(brand: acme, itemNumber: "69501",
-				description: "Gr 685 172",
-				category: Category.STEAM_LOCOMOTIVES.label(),
-				powerMethod: PowerMethod.DC.label(),
-				era: Era.III.name(),
-				railway: FS,
-				tags: ['museum'],
-				scale: H0),
-			new RollingStock(brand: roco, itemNumber: "43858",
-				description: "Electric loco 101 0004-0",
-				category: Category.ELECTRIC_LOCOMOTIVES.label(),
-				powerMethod: PowerMethod.AC.label(),
-				era: Era.V.name(),
-				railway: DB,
-				scale: H0)
+		db.rollingStocks << [
+			[brand: [slug: 'roco', label: 'Roco'],
+				itemNumber: '62193',
+				slug: 'roco-62193',
+				railway: [slug: 'db', label: 'DB'],
+				scale: [slug: 'h0', label: 'H0'],
+				description: [en: 'Steam locomotive BR 10 002'],
+				details: [en: 'The model additionally features a smoke generator, sound decoder and speakers'],
+				category: 'steam-locomotives',
+				era: 'iii',
+				powerMethod: 'dc',
+				country: 'de',
+				totalLength: 305,
+				lastModified: new Date()],
+			[brand: [slug: 'acme', label: 'ACME'],
+				itemNumber: '69501',
+				slug: 'acme-69501',
+				railway: [slug: 'fs', label: 'FS'],
+				scale: [slug: 'h0', label: 'H0'],
+				description: [en: 'Steam locomotive Gr 685 172'],
+				category: 'steam-locomotives',
+				era: 'iii',
+				powerMethod: 'dc',
+				country: 'it',
+				totalLength: 242,
+				lastModified: new Date()],
+			[brand: [slug: 'bemo', label: 'BEMO'],
+				itemNumber: '1262 256',
+				slug: 'bemo-1262-256',
+				railway: [slug: 'mgb', label: 'MGB'],
+				scale: [slug: 'h0m', label: 'H0m'],
+				description: [en: 'HGe 4/4 II 106'],
+				category: 'electric-locomotives',
+				era: 'iv',
+				powerMethod: 'dc',
+				country: 'ch',
+				tags: ["glacier", "express"],
+				totalLength: 140,
+				lastModified: new Date()],
+			[brand: [slug: 'roco', label: 'Roco'],
+				itemNumber: '43858',
+				slug: 'roco-43858',
+				railway: [slug: 'db', label: 'DB'],
+				scale: [slug: 'h0', label: 'H0'],
+				description: [en: 'Electric locomotive 101 0004-0'],
+				category: 'electric-locomotives',
+				era: 'v',
+				powerMethod: 'ac',
+				country: 'de',
+				totalLength: 220,
+				lastModified: new Date()]
 			]
-		mongoTemplate.insert collection, rollingStocks
 	}
 	
 	def cleanup() {
-		def all = new Query()
-		
-		mongoTemplate.remove all, rollingStocks
-		mongoTemplate.remove all, Scale.class
-		mongoTemplate.remove all, Brand.class
-		mongoTemplate.remove all, Railway.class
+		db.rollingStocks.remove([:])
 	}
 
 	def "should find a rolling stock by id"() {
 		given:
-		def id = mongoTemplate.findOne(query(where("slug").is("bemo-1262-256")), rollingStocks).id
-		
+		def rs = db.rollingStocks.findOne(slug: 'bemo-1262-256')
+		def id = rs._id
+			
 		when:
 		def rollingStock = service.findById id
 		
 		then:
 		rollingStock != null
-		rollingStock.slug == "bemo-1262-256"
-		rollingStock.brand.name == "Bemo"
-		rollingStock.itemNumber == "1262 256"
+		rollingStock.slug == 'bemo-1262-256'
+		rollingStock.brand.slug == 'bemo'
+		rollingStock.itemNumber == '1262 256'
 	}
 	
 	def "should find a rolling stock by slug"() {
 		when:
-		def rollingStock = service.findBySlug "bemo-1262-256"
+		def rollingStock = service.findBySlug 'bemo-1262-256'
 
 		then:
 		rollingStock != null
-		rollingStock.slug == "bemo-1262-256"
-		rollingStock.brand.name == "Bemo"
-		rollingStock.itemNumber == "1262 256"
+		rollingStock.slug == 'bemo-1262-256'
+		rollingStock.brand.slug == 'bemo'
+		rollingStock.itemNumber == '1262 256'
 	}
 		
 	def "should create new rolling stocks"() {
 		given:
-		def brand = mongoTemplate.findOne query(where("name").is("ACME")), Brand.class
-		def scale = mongoTemplate.findOne query(where("name").is("H0")), Scale.class
-		def railway = mongoTemplate.findOne query(where("name").is("DB")), Railway.class
+		def ACME = new Brand(name: 'ACME', slug: 'acme')
+		def H0 = new Scale(name: 'H0', slug: 'h0', ratio: 870)
+		def DB = new Railway(name: 'DB', slug: 'db')
 		
-		def newRs = new RollingStock(brand: brand, 
+		def newRs = new RollingStock(brand: ACME, 
 			itemNumber: "123456", 
-			description: 'Description',
+			scale: H0,
+			railway: DB,
+			description: LocalizedField.localize([en: 'Description']),
+			details: LocalizedField.localize([en: 'Details']),
 			category: 'eletric-locomotives',
-			details: 'Details',
-			scale: scale,
-			railway: railway,
-			era: "IV",
+			era: 'iv',
+			country: 'it',
 			deliveryDate: new DeliveryDate(2012, 1)
 			)
 		
@@ -163,26 +151,34 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 		then:
 		newRs.id != null
 		
-		def rs = mongoTemplate.findOne query(where("slug").is("acme-123456")), rollingStocks
-		rs != null
-		rs.brandName == "acme"
-		rs.itemNumber == "123456"
-		rs.description == "Description"
-		rs.details == "Details"
+		def rsDoc = db.rollingStocks.findOne(slug: 'acme-123456')
+		rsDoc != null
+		rsDoc.itemNumber == '123456'
+		rsDoc.brand == [slug: 'acme', label: 'ACME']
+		rsDoc.scale == [slug: 'h0', label: 'H0 (1:87)']
+		rsDoc.railway == [slug: 'db', label: 'DB']
+		rsDoc.description == [en: 'Description']
+		rsDoc.details == [en: 'Details']
+		rsDoc.category == 'eletric-locomotives'
+		rsDoc.era == 'iv'
+		rsDoc.country == 'it'
+		rsDoc.deliveryDate == [year: 2012, quarter: 1]
 		
-		rs.slug == "acme-123456"
-		rs.lastModified != null
+		and:
+		rsDoc.slug == "acme-123456"
+		rsDoc.lastModified != null
 	}
 	
 	def "should remove rolling stocks"() {
 		given:
-		def rs = mongoTemplate.findOne query(where("slug").is("acme-69501")), rollingStocks
+		def doc = db.rollingStocks.findOne(slug: 'acme-69501')
+		def rs = new RollingStock(id: doc._id)
 		
 		when:
 		service.remove rs
 		
 		then:
-		def rs2 = mongoTemplate.findOne query(where("slug").is("acme-69501")), rollingStocks
-		rs2 == null
+		def dbDoc = db.rollingStocks.findOne(slug: 'acme-69501')
+		dbDoc == null
 	}
 }

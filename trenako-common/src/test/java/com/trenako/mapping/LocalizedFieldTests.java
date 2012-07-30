@@ -17,7 +17,9 @@ package com.trenako.mapping;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -28,6 +30,19 @@ import org.junit.Test;
  */
 public class LocalizedFieldTests {
 
+	@Test
+	public void shouldCreateLocalizedFieldFromMaps() {
+		Map<String, String> values = new HashMap<String, String>();
+		values.put("en", "English");
+		values.put("fr", "French");
+		
+		LocalizedField<String> field = LocalizedField.localize(values);
+		
+		assertNotNull(field);
+		assertEquals("English", field.getValue(Locale.ENGLISH));
+		assertEquals("French", field.getValue(Locale.FRENCH));
+	}
+	
 	@Test
 	public void shouldCreateALocalizedFieldWithDefaultValues() {
 		LocalizedField<String> field = new LocalizedField<String>("default message");

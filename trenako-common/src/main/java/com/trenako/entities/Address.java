@@ -15,6 +15,9 @@
  */
 package com.trenako.entities;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * It represents an address.
  * @author Carlo Micieli
@@ -178,6 +181,33 @@ public class Address {
 	
 	private boolean emptyOrNull(String s) {
 		return s==null || s.isEmpty();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof Address)) return false;
+		
+		Address other = (Address) obj;
+		EqualsBuilder eb = new EqualsBuilder();
+		
+		return eb.append(this.streetAddress, other.streetAddress)
+					.append(this.postalCode, other.postalCode)
+					.append(this.city, other.city)
+					.append(this.locality, other.locality)
+					.append(this.country, other.country)
+					.isEquals();
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(15, 37)
+			.append(streetAddress)
+			.append(postalCode)
+			.append(city)
+			.append(locality)
+			.append(country)
+			.toHashCode();
 	}
 	
 	/**

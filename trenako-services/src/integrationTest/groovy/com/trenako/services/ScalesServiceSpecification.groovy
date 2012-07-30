@@ -15,102 +15,182 @@
 */
 package com.trenako.services
 
-import java.util.List;
-
 import spock.lang.*
 
 import org.bson.types.ObjectId;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
+import org.springframework.dao.DuplicateKeyException
+import org.springframework.data.domain.PageRequest
 
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Query
-
-import static org.springframework.data.mongodb.core.query.Query.*
-import static org.springframework.data.mongodb.core.query.Criteria.*
-
-import com.trenako.entities.Scale;
-import com.trenako.services.ScalesServiceImpl;
+import com.trenako.entities.Scale
+import com.trenako.services.ScalesService
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-@ContextConfiguration(locations = "classpath:META-INF/spring-context.xml")
-class ScalesServiceSpecification {
-	@Autowired MongoTemplate mongoTemplate
-	@Autowired ScalesServiceImpl service
-	
-	def scales = Scale.class
-	
+class ScalesServiceSpecification extends MongoSpecification {
+
+	@Autowired ScalesService service
 	
 	def setup() {
-		def collection = [
-			new Scale(name: "1", ratio: 32, gauge: 44.45, narrow: false),
-			new Scale(name: "0", ratio: 43.5, gauge: 32, narrow: false),
-			new Scale(name: "H0", ratio: 87, gauge: 16.5, narrow: false),
-			new Scale(name: "N", ratio: 160, gauge: 9, narrow: false)
+		db.scales << [
+				[name: '1', slug: '1', description: [en: 'Scale 1'], standards: ['NEM'], powerMethods: ['dc'], ratio: 320, gauge: 4445, narrow: false],
+				[name: 'H0', slug: 'h0', description: [en: 'Scale H0'], standards: ['NEM'], powerMethods: ['ac', 'dc'], ratio: 870, gauge: 1650, narrow: false],
+				[name: '0', slug: '0', description: [en: 'Scale 0'], standards: ['NEM'], powerMethods: ['dc'], ratio: 435, gauge: 3200, narrow: false],
+				[name: 'N', slug: 'n', description: [en: 'Scale N'], standards: ['NEM'], powerMethods: ['dc'], ratio: 160, gauge: 900, narrow: false]
 			]
-		mongoTemplate.insert collection, scales
 	}
 	
 	def cleanup() {
-		def all = new Query()
-		mongoTemplate.remove all, scales
+		db.scales.remove([:])
 	}
 	
-	def "should find all scales"() {
+	def "should find all scaleswith paginated results"() {
+		given:
+		def paging = new PageRequest(1, 2) 
+		
 		when:
-		def result = service.findAll()
+		def results = service.findAll(paging)
 		
 		then:
-		result != null
-		result.size == 4
+		results != null
+		results.number == 1
+		results.numberOfElements == 2
+		results.totalElements == 4
+		results.content != null
 	}
 
-	def "should find scales by id"() {
+	def "should return null if no scale has the provided id"() {
 		given:
-		def id = mongoTemplate.findOne(query(where("name").is("H0")), scales).id
+		def id = new ObjectId('47cc67093475061e3d95369d')
+		
+		when:
+		def scale = service.findById id
+
+		then:
+		scale == null
+	}
+	
+	def "should find the scale for the provided id"() {
+		given:
+		def doc = db.scales.findOne(slug: 'h0')
+		def id = doc._id
 		
 		when:
 		def scale = service.findById id
 		
 		then:
 		scale != null
-		scale.name == "H0"
+		scale.id == id
+		scale.name == 'H0'
 	}
 	
-	def "should find scales by name"() {
+	def "should return null if no scale has the provided name"() {
 		when:
-		def scale = service.findByName "H0"
+		def scale = service.findByName 'Not found'
+
+		then:
+		scale == null
+	}
+	
+	def "should find the scale with the provided name"() {
+		when:
+		def scale = service.findByName 'H0'
 
 		then:
 		scale != null
-		scale.name == "H0"
+		scale.name == 'H0'
 	}
 	
+	def "should return null if no scale has the provided slug"() {
+		when:
+		def scale = service.findBySlug 'not-found'
+
+		then:
+		scale == null
+	}
+	
+	def "should find the scale with the provided slug"() {
+		when:
+		def scale = service.findBySlug 'h0'
+
+		then:
+		scale != null
+		scale.slug == 'h0'
+		scale.name == 'H0'
+	}
+	
+	def "should throw an exception if the scale name is already used"() {
+		given: "the scale name is already in use"
+		def newScale = new Scale(
+			name: 'H0',
+			gauge: 1650,
+			ratio: 870)
+		
+		when:
+		service.save newScale
+
+		then:
+		thrown(DuplicateKeyException)
+		newScale.id == null
+	}
+	
+	def "should throw an exception if the scale slug is already used"() {
+		given: "the scale slug is already in use"
+		def newScale = new Scale(
+			name: 'H0-2',
+			slug: 'h0',
+			gauge: 1650,
+			ratio: 870)
+		
+		when:
+		service.save newScale
+
+		then:
+		thrown(DuplicateKeyException)
+		newScale.id == null
+	}
+		
 	def "should create new scales"() {
 		given:
-		def newScale = new Scale(name: "H0m", ratio: 87, gauge: 9, narrow: false)
+		def newScale = new Scale(name: 'H0m', 
+			ratio: 870, 
+			gauge: 900, 
+			powerMethods: ['ac', 'dc'],
+			standards: ['NEM'],
+			narrow: false)
 
 		when:
-		repo.save newScale
+		service.save newScale
 		
 		then:
 		newScale.id != null
+		
+		and:
+		def savedDoc = db.scales.findOne(slug: 'h0m')
+		assert savedDoc != null
+		
+		savedDoc.name == 'H0m'
+		savedDoc.ratio == 870
+		savedDoc.gauge == 900
+		savedDoc.narrow == false
+		savedDoc.slug == 'h0m'
+		savedDoc.powerMethods == ['dc', 'ac']
+		savedDoc.standards == ['NEM']
 	}
 	
 	def "should remove scales"() {
 		given:
-		def scale = mongoTemplate.findOne query(where("name").is("H0")), scales
+		def doc = db.scales.findOne(slug: 'h0')
+		def scale = new Scale(id: doc._id)
 		
 		when:
 		service.remove scale 
 		
 		then:
-		def s = mongoTemplate.findOne query(where("name").is("H0")), scales
-		s == null
+		def dbDoc = db.scales.findOne(slug: 'h0')
+		dbDoc == null
 	}
 }

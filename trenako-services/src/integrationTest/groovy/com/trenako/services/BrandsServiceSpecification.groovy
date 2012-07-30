@@ -1,37 +1,30 @@
 /*
 * Copyright 2012 the original author or authors.
 *
-* Licensed under the Apache License, Version 2.0 (the "License");
+* Licensed under the Apache License, Version 2.0 (the 'License');
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
 *   http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
+* distributed under the License is distributed on an 'AS IS' BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
 package com.trenako.services
 
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
-import com.trenako.mapping.LocalizedField
-import spock.lang.*
-import com.gmongo.GMongo
-import com.mongodb.MongoOptions;
-
-import org.junit.Test;
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
-
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.dao.DuplicateKeyException
 
-import static org.springframework.data.mongodb.core.query.Query.*
-import static org.springframework.data.mongodb.core.query.Criteria.*
+import org.springframework.data.domain.PageRequest 
 
+import com.trenako.entities.Address
 import com.trenako.entities.Brand
+import com.trenako.mapping.LocalizedField
+
 import com.trenako.services.BrandsService
 
 /**
@@ -45,47 +38,113 @@ class BrandsServiceSpecification extends MongoSpecification {
 	
 	def setup() {
 		db.brands << [
-			[name: 'ACME', slug: 'acme', description: localize('Acme description'), 
-				scales: ['h0'], emailAddress: 'mail@acme.com', industrial: true, website: "http://www.acmetreni.com"],
-			[name: 'Roco', slug: 'roco', description: localize('Roco description'),
-				scales: ['h0', 'tt', 'n'], emailAddress: 'mail@roco.cc', industrial: true, website: "http://www.roco.cc"],
-			[name: 'Märklin', slug: 'marklin', description: localize('Märklin description'),
-				scales: ['1', 'h0', 'n', 'z'], emailAddress: 'mail@maerklin.de', industrial: true, website: "http://www.maerklin.de"],
-			[name: 'LS Models', slug: 'ls-models', description: localize('Ls Models description'),
-				scales: ['h0', 'n'], emailAddress: 'mail@lsmodels.com', industrial: true, website: "http://www.lsmodels.com"]]
+			[name: 'ACME', 
+				slug: 'acme', 
+				companyName: 'Anonima Costruzioni Modellistiche Esatte', 
+				description: [en: 'Acme description'], 
+				address: [streetAddress: 'Viale Lombardia, 27', postalCode: '20131', city: 'Milano', country: 'Italy'],
+				scales: ['h0'], 
+				industrial: true, 
+				emailAddress: 'mail@acme.com', 
+				website: 'http://www.acmetreni.com',
+				lastModified: new Date()],
+			[name: 'Roco', 
+				slug: 'roco', 
+				companyName: 'Modelleisenbahn GmbH', 
+				description: [en: 'Roco description'], 
+				address: [streetAddress: 'Plainbachstraße 4', postalCode: 'A-5101', city: 'Bergheim', country: 'Austria'],
+				scales: ['h0', 'tt', 'n'], 
+				emailAddress: 'roco@roco.cc', 
+				industrial: true, 
+				website: 'http://www.roco.cc',
+				lastModified: new Date()],
+			[name: 'Märklin', 
+				slug: 'marklin', 
+				companyName: 'Gebr. Märklin & Cie. GmbH', 
+				description: [en: 'Märklin description'],
+				address: [streetAddress: 'Stuttgarter Straße 55-57', postalCode: 'D-73033', city: 'Göppingen', country: 'Germany'],
+				scales: ['1', 'h0', 'n', 'z'],
+				emailAddress: 'service@maerklin.de', 
+				industrial: true, 
+				website: 'http://www.maerklin.de',
+				lastModified: new Date()],
+			[name: 'LS Models', 
+				slug: 'ls-models', 
+				companyName: 'L.S. Models Exclusive S.A.', 
+				description: [en: 'Ls Models description'], 
+				address: [streetAddress: 'Rue des Maximins 1', postalCode: 'L 8247', city: 'Mamer', country: 'Luxembourg'],
+				scales: ['h0', 'n'], 
+				emailAddress: 'mail@lsmodels.com', 
+				industrial: true, 
+				website: 'http://www.lsmodels.com',
+				lastModified: new Date()]]
 	}
 	
 	def cleanup() {
 		db.brands.remove([:])
 	}
 	
-	def "should return Null if no brand is found"() {
+	def "should return null if no brand is found for the provided name"() {
 		when:
-		def brand = service.findByName "AAAA"
+		def brand = service.findByName 'AAAA'
 
 		then:
 		brand == null
 	}
 	
-	def "should find a brand by name"() {
+	def "should find a brand for the provided name"() {
 		when:
-		def brand = service.findByName "ACME"
+		def brand = service.findByName 'ACME'
 		
 		then:
 		brand != null
-		brand.name == "ACME"
+		brand.name == 'ACME'
 	}
 	
-	def "should find a brand by slug"() {
+	def "should return null if no brand is found for the provided slug value"() {
 		when:
-		def brand = service.findBySlug "ls-models"
+		def brand = service.findBySlug 'AAAA'
+
+		then:
+		brand == null
+	}
+	
+	def "should find a brand for the provided slug value"() {
+		when:
+		def brand = service.findBySlug 'ls-models'
 
 		then:
 		brand != null
-		brand.name == "LS Models"
+		brand.name == 'LS Models'
 	}
 	
-	def "should find all the brands"() {
+	def "should return null if no brand is found for the provided id"() {
+		given:
+		def brandId = new ObjectId('47cc67093475061e3d95369d')
+	
+		when:
+		def brand = service.findById brandId
+
+		then:
+		brand == null
+	}
+	
+	def "should find a brand for the provided id"() {
+		given:
+		def b = db.brands.findOne(slug: 'acme')
+		def brandId = b._id
+		assert brandId != null
+	
+		when:
+		def brand = service.findById brandId
+		
+		then:
+		brand != null
+		brand.id == brandId
+		brand.name == 'ACME'
+	}
+	
+	def "should find all brands"() {
 		when:
 		def brands = service.findAll()
 		
@@ -94,12 +153,26 @@ class BrandsServiceSpecification extends MongoSpecification {
 		brands.size == 4
 	}
 
-	def "should throw exception if the brand name is already used"() {
-		given: "a brand with an already used slug"
+	def "should find brands with paginated results"() {
+		given:
+		def paging = new PageRequest(1, 2) 
+
+		when:
+		def brands = service.findAll(paging)
+		
+		then:
+		brands != null
+		brands.number == 1
+		brands.numberOfElements == 2
+		brands.totalElements == 4
+		brands.content != null
+	}
+	
+	def "should throw an exception if the brand name is already used"() {
+		given: "the brand name is already in use"
 		def newBrand = new Brand(
 			name: 'Roco',
 			slug: 'brawa',
-			description: localizedDesc('Brand description'),
 			emailAddress: 'mail@brawa.de',
 			industrial: true,
 			website: 'http://www.brawa.de')
@@ -112,12 +185,11 @@ class BrandsServiceSpecification extends MongoSpecification {
 		newBrand.id == null
 	}
 		
-	def "should throw exception if the brand slug is already used"() {
-		given: "a brand with an already used slug"
+	def "should throw an exception if the brand slug is already used"() {
+		given: "the brand slug is already in use"
 		def newBrand = new Brand(
 			name: 'Brawa',
 			slug: 'roco',
-			description: localizedDesc('Brand description'),
 			emailAddress: 'mail@brawa.de',
 			industrial: true,
 			website: 'http://www.brawa.de')
@@ -134,7 +206,10 @@ class BrandsServiceSpecification extends MongoSpecification {
 		given:
 		def newBrand = new Brand(
 			name: 'Brawa',
-			description: localizedDesc('Brawa description'),
+			companyName: 'Brawa AG',
+			address: new Address(streetAddress: 'Uferstraße 26-28', postalCode: '73625', city: 'Remshalden', country: 'Germany'),
+			scales: ['h0', 'n'],
+			description: LocalizedField.localize([en: 'Brawa description']),
 			emailAddress: 'mail@brawa.de',
 			industrial: true,
 			website: 'http://www.brawa.de')
@@ -145,33 +220,37 @@ class BrandsServiceSpecification extends MongoSpecification {
 		then:
 		newBrand.id != null
 		
+		and:
 		def brand = db.brands.findOne(_id: newBrand.id)
-		brand.name == "Brawa"
-		brand.description == localizedDesc('Brawa description')
-		brand.emailAddress == "mail@brawa.de"
-		brand.website == "http://www.brawa.de"
-
+		brand.name == 'Brawa'
+		brand.companyName == 'Brawa AG'
+		brand.emailAddress == 'mail@brawa.de'
+		brand.website == 'http://www.brawa.de'
+		brand.address == [streetAddress: 'Uferstraße 26-28', postalCode: '73625', city: 'Remshalden', country: 'Germany']
+		brand.scales == ['n', 'h0']
+		brand.description == [en: 'Brawa description'] 
+		brand.industrial == true
+		
 		// added automatically 
-		brand.slug == "brawa"
+		brand.slug == 'brawa'
 		brand.lastModified != null
 	}
 	
-	def "should find brands by id"() {
+	def "should modify brands"() {
 		given:
-		def b = db.brands.findOne(slug: 'acme')
-		def id = b._id
-		assert id != null
+		def brand = service.findBySlug('roco')
+		assert brand != null
 		
 		when:
-		def brand = service.findById id
-		
+		brand.branches = [it: new Address(streetAddress: 'Via Manzoni 144', postalCode: '20811', city: 'Cesano Maderno', country: 'Italy')]
+		service.save brand
+
 		then:
-		brand != null
-		brand.id == id
-		brand.name == "ACME"
+		def doc = db.brands.findOne(slug: 'roco')
+		doc.branches == [it: [streetAddress: 'Via Manzoni 144', postalCode: '20811', city: 'Cesano Maderno', country: 'Italy']]
 	}
 	
-	def "should remove brand"() {
+	def "should remove brands"() {
 		given:
 		def doc = db.brands.findOne(slug: 'acme')
 		def brand = new Brand(id: doc._id)
@@ -184,4 +263,3 @@ class BrandsServiceSpecification extends MongoSpecification {
 		notFound == null
 	}
 }
-
