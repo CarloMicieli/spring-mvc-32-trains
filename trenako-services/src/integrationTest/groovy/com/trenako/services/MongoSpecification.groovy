@@ -26,6 +26,6 @@ import spock.lang.Specification;
  *
  */
 @ContextConfiguration(locations = "classpath:META-INF/spring-context.xml")
-class MongoSpecification extends Specification {
+abstract class MongoSpecification extends Specification {
 	def db = new GMongo("localhost:27017").getDB("trenako-testdb")
 }
