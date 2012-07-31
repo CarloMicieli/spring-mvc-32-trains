@@ -15,6 +15,8 @@
  */
 package com.trenako.listeners;
 
+import java.util.Date;
+
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.stereotype.Component;
 
@@ -32,5 +34,6 @@ public class AccountsEventListener extends AbstractMongoEventListener<Account> {
 	@Override
 	public void onBeforeSave(Account user, DBObject dbo) {
 		dbo.put("slug", user.getSlug());
+		dbo.put("lastModified", new Date());
 	}
 }

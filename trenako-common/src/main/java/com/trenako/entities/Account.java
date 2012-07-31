@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -77,6 +78,8 @@ public class Account implements Serializable, DbReferenceable {
 	private boolean locked;
 	private boolean enabled;
 	private List<String> roles;
+	
+	private Date lastModified;
 	
 	/**
 	 * Creates a new empty {@code Account}.
@@ -274,7 +277,9 @@ public class Account implements Serializable, DbReferenceable {
 	 */
 	@Override
 	public String getSlug() {
-		if( slug==null ) slug = Slug.encode(displayName);
+		if (slug == null) {
+			slug = Slug.encode(displayName);
+		}
 		return slug;
 	}
 	
@@ -348,10 +353,20 @@ public class Account implements Serializable, DbReferenceable {
 	 * @param role the role
 	 */
 	public void addRole(String role) {
-		if (roles==null) roles = new ArrayList<String>();
+		if (roles == null) {
+			roles = new ArrayList<String>();
+		}
 		roles.add(role);
 	}
 	
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
+	}
+
 	/**
 	 * Indicates whether some other {@code Account} is equal to this one.
 	 * <p>
@@ -363,8 +378,8 @@ public class Account implements Serializable, DbReferenceable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if( obj==this ) return true;
-		if( !(obj instanceof Account) ) return false;
+		if (obj == this) return true;
+		if (!(obj instanceof Account)) return false;
 		
 		Account other = (Account) obj;
 		return this.emailAddress.equals(other.emailAddress);

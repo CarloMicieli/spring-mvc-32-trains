@@ -16,6 +16,7 @@
 package com.trenako.listeners;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
@@ -42,5 +43,6 @@ public class AccountsEventListenerTests {
 		lis.onBeforeSave(account, dbo);
 		
 		assertEquals("the-user", dbo.get("slug"));
+		assertNotNull(dbo.get("lastModified"));
 	}
 }
