@@ -86,48 +86,28 @@ public class RollingStocksServiceTests {
 	
 	@Test
 	public void shouldSaveRollingStocks() {
+		when(brandsRepo.findBySlug(eq(acme().getSlug()))).thenReturn(acme());
+		when(railwaysRepo.findBySlug(eq(fs().getSlug()))).thenReturn(fs());
+		when(scalesRepo.findBySlug(eq(scaleH0().getSlug()))).thenReturn(scaleH0());
+		
+		RollingStock newRs = new RollingStock();
+		newRs.setItemNumber("123456");
+		newRs.setBrand(acme().getSlug());
+		newRs.setRailway(fs().getSlug());
+		newRs.setScale(scaleH0().getSlug());
+		
 		service.save(rs);
+		
 		verify(repo, times(1)).save(eq(rs));
+		assertEquals("{label=ACME, slug=acme}", rs.getBrand().toString());
+		assertEquals("{label=FS (Ferrovie dello stato), slug=fs}", rs.getRailway().toString());
+		assertEquals("{label=H0 (1:87), slug=h0}", rs.getScale().toString());
 	}
 
 	@Test
 	public void shouldRemoveRollingStocks() {
 		service.remove(rs);
 		verify(repo, times(1)).delete(eq(rs));
-	}
-
-	@Test
-	public void shouldFindBrands() {
-		ObjectId brandId = new ObjectId();
-		Brand value = new Brand();
-		when(brandsRepo.findOne(eq(brandId))).thenReturn(value);
-		
-		Brand brand = service.findBrand(brandId);
-		assertNotNull(brand);
-		verify(brandsRepo, times(1)).findOne(eq(brandId));
-	}
-	
-	@Test
-	public void shouldFindScales() {
-		ObjectId scaleId = new ObjectId();
-		Scale value = new Scale();
-		when(scalesRepo.findOne(eq(scaleId))).thenReturn(value);
-		
-		Scale scale = service.findScale(scaleId);
-		assertNotNull(scale);
-		verify(scalesRepo, times(1)).findOne(eq(scaleId));
-	}
-	
-	
-	@Test
-	public void shouldFindRailways() {
-		ObjectId railwayId = new ObjectId();
-		Railway value = new Railway();
-		when(railwaysRepo.findOne(eq(railwayId))).thenReturn(value);
-		
-		Railway railway = service.findRailway(railwayId);
-		assertNotNull(railway);
-		verify(railwaysRepo, times(1)).findOne(eq(railwayId));
 	}
 
 	@Test

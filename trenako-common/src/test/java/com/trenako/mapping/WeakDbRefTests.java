@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.trenako.entities.Brand;
+
 /**
  * 
  * @author Carlo Micieli
@@ -11,6 +13,14 @@ import org.junit.Test;
  */
 public class WeakDbRefTests {
 
+	@Test
+	public void shouldCreateWeakRefFromSlug() {
+		WeakDbRef<Brand> ref = WeakDbRef.buildFromSlug("acme", Brand.class);
+		assertNotNull(ref);
+		assertEquals("{label=null, slug=acme}", ref.toString());
+	}
+	
+	
 	@Test
 	public void shouldCreateWeakRef() {
 		WeakDbRef<?> ref = WeakDbRef.buildRef(entity("slug", "label"));

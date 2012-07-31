@@ -20,6 +20,8 @@ import java.text.Normalizer.Form;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import org.springframework.util.Assert;
+
 /**
  * It converts a string to a "slug".
  * 
@@ -37,8 +39,7 @@ public class Slug {
 	 * @return the slug
 	 */
 	public static String encode(String input) {
-		if(input==null)
-			throw new IllegalArgumentException();
+		Assert.notNull(input, "The input string must be not null");
 
 		String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");  
 		String normalized = Normalizer.normalize(nowhitespace, Form.NFD);  

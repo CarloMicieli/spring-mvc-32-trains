@@ -43,6 +43,11 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 	@Autowired RollingStocksService service
 	
 	def setup() {
+		
+		db.brands << [[name: 'ACME', slug: 'acme']]
+		db.scales << [[name: 'H0', slug: 'h0', ratio: 870]]
+		db.railways << [[name: 'DB', slug: 'db', country: 'de']]
+				
 		db.rollingStocks << [
 			[brand: [slug: 'roco', label: 'Roco'],
 				itemNumber: '62193',
@@ -99,6 +104,9 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 	
 	def cleanup() {
 		db.rollingStocks.remove([:])
+		db.scales.remove([:])
+		db.railways.remove([:])
+		db.brands.remove([:])
 	}
 
 	def "should find a rolling stock by id"() {
@@ -129,14 +137,8 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 		
 	def "should create new rolling stocks"() {
 		given:
-		def ACME = new Brand(name: 'ACME', slug: 'acme')
-		def H0 = new Scale(name: 'H0', slug: 'h0', ratio: 870)
-		def DB = new Railway(name: 'DB', slug: 'db')
-		
-		def newRs = new RollingStock(brand: ACME, 
+		def newRs = new RollingStock(
 			itemNumber: "123456", 
-			scale: H0,
-			railway: DB,
 			description: LocalizedField.localize([en: 'Description']),
 			details: LocalizedField.localize([en: 'Details']),
 			category: 'eletric-locomotives',
@@ -144,6 +146,9 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 			country: 'it',
 			deliveryDate: new DeliveryDate(2012, 1)
 			)
+		newRs.setBrand('acme')
+		newRs.setScale('h0')
+		newRs.setRailway('db')
 		
 		when:
 		service.save newRs
@@ -161,7 +166,7 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 		rsDoc.details == [en: 'Details']
 		rsDoc.category == 'eletric-locomotives'
 		rsDoc.era == 'iv'
-		rsDoc.country == 'it'
+		rsDoc.country == 'de'
 		rsDoc.deliveryDate == [year: 2012, quarter: 1]
 		
 		and:

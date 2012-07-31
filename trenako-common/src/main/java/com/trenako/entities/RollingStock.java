@@ -373,6 +373,10 @@ public class RollingStock implements DbReferenceable {
 		this.brand = WeakDbRef.buildRef(brand);
 	}
 
+	public void setBrand(String brand) {
+		this.brand = WeakDbRef.buildFromSlug(brand, Brand.class);
+	}
+	
 	/**
 	 * Returns the item number.
 	 * @return the item number
@@ -443,6 +447,10 @@ public class RollingStock implements DbReferenceable {
 			this.country = railway.getCountry();
 		}
 	}
+
+	public void setRailway(String railway) {
+		this.railway = WeakDbRef.buildFromSlug(railway, Railway.class);
+	}
 	
 	/**
 	 * Returns the scale.
@@ -460,6 +468,10 @@ public class RollingStock implements DbReferenceable {
 		this.scale = WeakDbRef.buildRef(scale);
 	}
 
+	public void setScale(String scale) {
+		this.scale = WeakDbRef.buildFromSlug(scale, Scale.class);
+	}
+	
 	/**
 	 * Returns the category.
 	 * @return the category

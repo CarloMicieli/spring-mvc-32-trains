@@ -115,25 +115,4 @@ public interface RollingStocksService {
 	 * @return the {@code power method} list
 	 */
 	Iterable<LocalizedEnum<PowerMethod>> powerMethods();
-
-	/**
-	 * Returns the {@code Brand} with the provided id.
-	 * @param brandId the {@code Brand} id
-	 * @return a {@code Brand} if found; {@code null} otherwise
-	 */
-	Brand findBrand(ObjectId brandId);
-	
-	/**
-	 * Returns the {@code Scale} with the provided id.
-	 * @param scaleId the {@code Scale} id
-	 * @return a {@code Scale} if found; {@code null} otherwise
-	 */
-	Scale findScale(ObjectId scaleId);
-	
-	/**
-	 * Returns the {@code Railway} with the provided id.
-	 * @param railwayId the {@code Railway} id
-	 * @return a {@code Railway} if found; {@code null} otherwise
-	 */
-	Railway findRailway(ObjectId railwayId);
 }

@@ -82,16 +82,6 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	}
 	
 	@Override
-	public void save(RollingStock rs) {
-		rollingStocks.save(rs);
-	}
-
-	@Override
-	public void remove(RollingStock rs) {
-		rollingStocks.delete(rs);
-	}
-	
-	@Override
 	public Iterable<Brand> brands() {
 		return brands.findAll(BY_NAME_SORT_ORDER);
 	}
@@ -120,19 +110,32 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	public Iterable<LocalizedEnum<PowerMethod>> powerMethods() {
 		return LocalizedEnum.list(PowerMethod.class, messageSource, null);
 	}
-
+		
 	@Override
-	public Brand findBrand(ObjectId brandId) {
-		return brands.findOne(brandId);
+	public void save(RollingStock rs) {
+		loadBrand(rs);
+		loadRailway(rs);
+		loadScale(rs);
+		rollingStocks.save(rs);
 	}
 
 	@Override
-	public Scale findScale(ObjectId scaleId) {
-		return scales.findOne(scaleId);
+	public void remove(RollingStock rs) {
+		rollingStocks.delete(rs);
 	}
 
-	@Override
-	public Railway findRailway(ObjectId railwayId) {
-		return railways.findOne(railwayId);
+	private void loadBrand(RollingStock rs) {
+		String slug = rs.getBrand().getSlug();
+		rs.setBrand(brands.findBySlug(slug));
+	}
+
+	private void loadRailway(RollingStock rs) {
+		String slug = rs.getRailway().getSlug();
+		rs.setRailway(railways.findBySlug(slug));
+	}
+
+	private void loadScale(RollingStock rs) {
+		String slug = rs.getScale().getSlug();
+		rs.setScale(scales.findBySlug(slug));
 	}
 }

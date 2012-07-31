@@ -16,6 +16,7 @@
 package com.trenako.mapping;
 
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.util.Assert;
 
 /**
  * It represents a wrapper for <em>"weak"</em> database references.
@@ -60,10 +61,21 @@ public class WeakDbRef<E extends DbReferenceable> {
 	 * @return the new {@code WeakDbRef}
 	 */
 	public static <E extends DbReferenceable> WeakDbRef<E> buildRef(E entity) {
-		if (entity == null) return null;
+		Assert.notNull(entity, "Entity is required.");
 		return new WeakDbRef<E>(entity);
 	}
 
+	/**
+	 * Builds a new {@code WeakDbRef} for the provided slug string.
+	 * @param slug the slug string
+	 * @param entity the entity type
+	 * @return the new {@code WeakDbRef}
+	 */
+	public static <E extends DbReferenceable> WeakDbRef<E> buildFromSlug(String slug, Class<E> entity) {
+		Assert.notNull(slug, "Slug text is required.");
+		return new WeakDbRef<E>().setSlug(slug);
+	}
+	
 	/**
 	 * Returns the {@code WeakDbRef} slug.
 	 * @return the slug
@@ -76,8 +88,9 @@ public class WeakDbRef<E extends DbReferenceable> {
 	 * Sets the {@code WeakDbRef} slug.
 	 * @param slug the slug
 	 */
-	public void setSlug(String slug) {
+	public WeakDbRef<E> setSlug(String slug) {
 		this.slug = slug;
+		return this;
 	}
 
 	/**
@@ -91,8 +104,9 @@ public class WeakDbRef<E extends DbReferenceable> {
 	 * Returns the {@code WeakDbRef} label.
 	 * @param label the label
 	 */	
-	public void setLabel(String label) {
+	public WeakDbRef<E> setLabel(String label) {
 		this.label = label;
+		return this;
 	}
 
 	@Override
