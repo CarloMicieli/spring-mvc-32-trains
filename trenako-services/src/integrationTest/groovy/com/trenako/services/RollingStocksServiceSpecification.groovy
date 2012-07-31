@@ -15,8 +15,6 @@
 */
 package com.trenako.services
 
-import spock.lang.*
-
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DuplicateKeyException
@@ -44,9 +42,15 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 	
 	def setup() {
 		
-		db.brands << [[name: 'ACME', slug: 'acme']]
-		db.scales << [[name: 'H0', slug: 'h0', ratio: 870]]
-		db.railways << [[name: 'DB', slug: 'db', country: 'de']]
+		db.brands << [[name: 'ACME', slug: 'acme'], 
+			[name: 'LS Models', slug: 'ls-models'], 
+			[name: 'Roco', slug: 'roco']]
+		db.scales << [[name: 'H0', slug: 'h0', ratio: 870],
+			[name: '1', slug: '1', ratio: 325],
+			[name: 'N', slug: 'n', ratio: 1600]]
+		db.railways << [[name: 'DB', slug: 'db', country: 'de'],
+			[name: 'FS', slug: 'fs', country: 'it'],
+			[name: 'Sncf', slug: 'sncf', country: 'fr']]
 				
 		db.rollingStocks << [
 			[brand: [slug: 'roco', label: 'Roco'],
@@ -108,7 +112,7 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 		db.railways.remove([:])
 		db.brands.remove([:])
 	}
-
+	
 	def "should find a rolling stock by id"() {
 		given:
 		def rs = db.rollingStocks.findOne(slug: 'bemo-1262-256')
@@ -134,7 +138,58 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 		rollingStock.brand.slug == 'bemo'
 		rollingStock.itemNumber == '1262 256'
 	}
+	
+	def "should fill the list of brands for rolling stocks creation"() {
+		when:
+		def results = service.brands()
 		
+		then:
+		results != null
+		results.size == 3
+		results.collect { it.slug }.sort() == ['acme', 'ls-models', 'roco']
+	}
+		
+	def "should fill the list of railways for rolling stocks creation"() {
+		when:
+		def results = service.railways()
+		
+		then:
+		results != null
+		results.size == 3 
+		results.collect { it.slug }.sort() == ['db', 'fs', 'sncf']
+	}
+	
+	def "should fill the list of scales for rolling stocks creation"() {
+		when:
+		def results = service.scales()
+		
+		then:
+		results != null
+		results.size == 3
+		results.collect { it.slug }.sort() == ['1', 'h0', 'n']
+	}
+	
+	def "should throw an exception if rolling stock slug is already used"() {
+		given:
+		def newRs = new RollingStock(
+			itemNumber: "62193",
+			description: LocalizedField.localize([en: 'Description']),
+			category: 'eletric-locomotives',
+			era: 'iv',
+			country: 'it',
+			)
+		newRs.setBrand('roco')
+		newRs.setScale('h0')
+		newRs.setRailway('db')
+		
+		when:
+		service.save newRs
+
+		then:
+		thrown(DuplicateKeyException)
+		newRs.id == null
+	}
+	
 	def "should create new rolling stocks"() {
 		given:
 		def newRs = new RollingStock(
