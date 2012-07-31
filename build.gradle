@@ -104,7 +104,7 @@ allprojects {
 			"org.springframework:spring-test:${springVersion}"
 
 		// integration testing
-		groovy "org.codehaus.groovy:groovy-all:1.8.6"
+		groovy "org.codehaus.groovy:groovy-all:1.8.7"
 		integrationTestCompile "org.spockframework:spock-core:${spockVersion}",
 			"org.spockframework:spock-spring:${spockVersion}"
 	}
@@ -241,6 +241,6 @@ task projectDoc(type: Javadoc, group: 'Documentation', description: 'Generates a
 
 // wrapper task to create the download script
 task wrapper(type: Wrapper, group: 'Gradle wrapper', description: 'Gradle will be automatically downloaded and used to run the build.') {
-	gradleVersion = '1.0'
+	gradleVersion = '1.1'
 }
 
