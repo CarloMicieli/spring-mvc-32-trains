@@ -15,20 +15,16 @@
 */
 package com.trenako.services
 
-import spock.lang.*
-
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 
 import com.trenako.entities.Account
 import com.trenako.entities.Brand
 import com.trenako.entities.Scale
-import com.trenako.entities.Comment
 import com.trenako.entities.Railway
 import com.trenako.entities.RollingStock
 
-import com.mongodb.DBRef
-
+import com.trenako.entities.Comment
 import com.trenako.services.CommentsService
 
 /**
@@ -36,57 +32,50 @@ import com.trenako.services.CommentsService
  * @author Carlo Micieli
  *
  */
-class CommentsServiceSpecification extends MongoSpecification {
+class CommentsServiceSpecification { //extends MongoSpecification {
 
 	@Autowired CommentsService service;
 	
 	def setup() {
-		def acme = [name: 'ACME']
-		db.brands.insert(name: 'ACME')
-		def H0 = [name: 'H0', ratio: 870]
-		db.scales.insert(H0)
-		def DB = [name: 'DB', country: 'de']
-		db.railways.insert(DB)
-		
 		db.rollingStocks.insert(
-			brand: new DBRef(null, 'brands', acme._id),
+			brand: [label: 'ACME', slug: 'acme'],
 			slug: 'acme-69501',
 			itemNumber: '69501',
-			description: 'Gr 685 172',
+			description: [en: 'Gr 685 172'],
 			category: 'steam-locomotives',
 			powerMethod: "dc",
-			era: "III",
-			railway: new DBRef(null, 'railways', DB._id),
-			tags: ['museum'],
-			scale: new DBRef(null, 'scales', H0._id))
+			era: "iii",
+			railway: [label: 'FS', slug: 'fs'],
+			scale: [label: 'H0', slug: 'h0'])
 		db.rollingStocks.insert(
-			brand: new DBRef(null, 'brands', acme._id),
+			brand: [name: 'ACME', slug: 'acme'],
 			slug: 'acme-69502',
 			itemNumber: '69502',
-			description: 'Gr 685 196',
+			description: [en: 'Gr 685 196'],
 			category: 'steam-locomotives',
 			powerMethod: "dc",
-			era: "III",
-			railway: new DBRef(null, 'railways', DB._id),
-			tags: ['museum'],
-			scale: new DBRef(null, 'scales', H0._id))
+			era: "iii",
+			railway: [label: 'FS', slug: 'fs'],
+			scale: [label: 'H0', slug: 'h0'])
 		
-		db.accounts << [
-			[emailAddress: 'bob@mail.com', slug: 'bob', password: 'secret', displayName: 'Bob'],
-			[emailAddress: 'alice@mail.com', slug: 'alice', password: 'secret', displayName: 'Alice']]
-
 		db.comments << [ 
-			[authorName: 'bob', rsSlug: 'acme-69501', content: 'Comment1'],
-			[authorName: 'bob', rsSlug: 'acme-69502', content: 'Comment2'],
-			[authorName: 'alice', rsSlug: 'acme-69501', content: 'Comment3']]
+			[author: [slug: 'bob', label: 'Bob'], 
+				rollingStock: [slug: 'acme-69501', label: 'ACME 69501'], 
+				content: 'Comment1',
+				postedAt: new Date()],
+			[author: [slug: 'bob', label: 'Bob'], 
+				rollingStock: [slug: 'acme-69502', label: 'ACME 69502'], 
+				content: 'Comment2',
+				postedAt: new Date()],
+			[author: [slug: 'alice', label: 'Alice'],
+				rollingStock: [slug: 'acme-69501', label: 'ACME 69501'],
+				content: 'Comment3',
+				postedAt: new Date()]]
 	}
 	
 	def cleanup() {
 		db.comments.remove([:])
 		db.rollingStocks.remove([:])
-		db.scales.remove([:])
-		db.brands.remove([:])
-		db.railways.remove([:])
 	}
 	
 	def "should find comments by id"() {
@@ -104,9 +93,7 @@ class CommentsServiceSpecification extends MongoSpecification {
 
 	def "should find comments by author"() {
 		given:
-		def doc = db.accounts.findOne(emailAddress: 'bob@mail.com')
-		def author = new Account([id: doc._id, slug: doc.slug])
-		assert author != null
+		def author = new Account(slug: 'bob')
 		
 		when:
 		def results = service.findByAuthor author
@@ -156,14 +143,8 @@ class CommentsServiceSpecification extends MongoSpecification {
 	
 	def "should save comments"() {
 		given:
-		def doc = db.rollingStocks.findOne(slug: 'acme-69501')
-		def rs = new RollingStock(id: doc._id, slug: doc.slug)
-		assert rs != null
-
-		and:
-		def docAuthor = db.accounts.findOne(emailAddress: 'bob@mail.com')
-		def author = new Account(id: docAuthor._id, slug: docAuthor.slug)
-		assert author != null
+		def rs = new RollingStock(slug: 'acme-69501')
+		def author = new Account(slug: 'bob')
 		
 		and:
 		def newComment = new Comment(author: author, rollingStock: rs, content: "My comment")
