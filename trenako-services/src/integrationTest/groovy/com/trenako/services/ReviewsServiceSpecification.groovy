@@ -36,7 +36,7 @@ import com.trenako.services.ReviewsService
  * @author Carlo Micieli
  *
  */
-class ReviewsServiceSpecification extends MongoSpecification {
+class ReviewsServiceSpecification { //extends MongoSpecification {
 
 	@Autowired ReviewsService service;
 	

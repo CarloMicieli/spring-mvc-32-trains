@@ -85,7 +85,6 @@ public class RollingStocksControllerTests {
 		when(service.categories()).thenReturn(CATEGORIES);
 		when(service.eras()).thenReturn(ERAS);
 		when(service.powerMethods()).thenReturn(POWERMETHODS);
-
 	}
 	
 	@Test
@@ -129,7 +128,7 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldRedirectAfterCreateValidationErrors() {
 		when(mockResult.hasErrors()).thenReturn(true);
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		RollingStock rs = new RollingStock.Builder(acme(), "123456").build();
 		
 		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
 		
@@ -137,28 +136,13 @@ public class RollingStocksControllerTests {
 		assertEquals("rollingstock/new", viewName);
 	}
 		
-	RollingStock build(ObjectId rsId, ObjectId brandId, ObjectId railwayId, ObjectId scaleId) {
-		when(service.findBrand(eq(brandId))).thenReturn(new Brand("ACME"));
-		when(service.findRailway(eq(railwayId))).thenReturn(new Railway("DB"));
-		when(service.findScale(eq(scaleId))).thenReturn(new Scale("H0"));
-	
-		return new RollingStock.Builder(new Brand(brandId), "123456")
-			.id(rsId)
-			.railway(new Railway(railwayId))
-			.scale(new Scale(scaleId))
-			.build();
-	}	
-	
 	@Test
 	public void shouldCreateRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
 		when(mockFile.isEmpty()).thenReturn(false);
 		
-		ObjectId brandId = new ObjectId();
-		ObjectId railwayId = new ObjectId();
-		ObjectId scaleId = new ObjectId();
 		ObjectId rsId = new ObjectId();
-		RollingStock rs = build(rsId, brandId, railwayId, scaleId);
+		RollingStock rs = build(null, acme(), db(), scaleH0());
 		
 		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
 		
@@ -172,7 +156,7 @@ public class RollingStocksControllerTests {
 	@Test 
 	public void shouldRenderEditRollingStockForms() {
 		String slug = "rs-slug";
-		RollingStock value = new RollingStock.Builder("ACME", "123456").build();
+		RollingStock value = new RollingStock.Builder(acme(), "123456").build();
 		when(service.findBySlug(eq(slug))).thenReturn(value);
 		
 		ModelAndView mav = controller.editForm(slug);
@@ -191,11 +175,8 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldSaveRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
-		ObjectId brandId = new ObjectId();
-		ObjectId railwayId = new ObjectId();
-		ObjectId scaleId = new ObjectId();
 		ObjectId rsId = new ObjectId();
-		RollingStock rs = build(rsId, brandId, railwayId, scaleId);
+		RollingStock rs = build(rsId, acme(), db(), scaleH0());
 		
 		String viewName = controller.save(rs, mockResult, mockRedirect);
 		
@@ -206,7 +187,7 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldRedirectAfterSaveValidationErrors() {
 		when(mockResult.hasErrors()).thenReturn(true);
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		RollingStock rs = new RollingStock.Builder(acme(), "123456").build();
 		
 		String viewName = controller.save(rs, mockResult, mockRedirect);
 		
@@ -224,11 +205,23 @@ public class RollingStocksControllerTests {
 	
 	@Test
 	public void shouldDeleteRollingStocks() {
-		RollingStock rs = new RollingStock.Builder("ACME", "123456").build();
+		RollingStock rs = new RollingStock.Builder(acme(), "123456").build();
 		
 		String viewName = controller.delete(rs, mockRedirect);
 		
 		assertEquals("redirect:/rs", viewName);
 		verify(service, times(1)).remove(eq(rs));
 	}
+	
+	// helper methods
+	
+	RollingStock build(ObjectId rsId, Brand brand, Railway railway, Scale scale) {
+		RollingStock rs = new RollingStock();
+		rs.setId(rsId);
+		rs.setItemNumber("123456");
+		rs.setBrand(brand);
+		rs.setRailway(railway);
+		rs.setScale(scale);
+		return rs;
+	}	
 }

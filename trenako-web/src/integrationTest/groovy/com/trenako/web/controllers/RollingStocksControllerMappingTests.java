@@ -24,7 +24,6 @@ import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.trenako.entities.Brand;
 import com.trenako.entities.RollingStock;
 import com.trenako.services.RollingStocksService;
 import com.trenako.web.test.AbstractSpringControllerTests;
@@ -86,8 +85,6 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 	
 	@Test
 	public void shouldCreateNewRollingStocks() throws Exception {
-		when(mockService.findBrand(eq(OID))).thenReturn(new Brand("ACME"));
-		
 		mockMvc().perform(fileUpload("/rollingstocks")
 				.file("file", new byte[]{})
 				.param("brand", ID)

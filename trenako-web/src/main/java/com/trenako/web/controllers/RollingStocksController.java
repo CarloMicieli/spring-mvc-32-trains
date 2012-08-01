@@ -17,7 +17,6 @@ package com.trenako.web.controllers;
 
 import javax.validation.Valid;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,16 +32,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.trenako.entities.Brand;
 import com.trenako.entities.DeliveryDate;
-import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
-import com.trenako.entities.Scale;
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.RollingStocksService;
-import com.trenako.web.editors.BrandPropertyEditor;
+import com.trenako.web.editors.WeakDbRefPropertyEditor;
 import com.trenako.web.editors.DeliveryDatePropertyEditor;
-import com.trenako.web.editors.RailwayPropertyEditor;
-import com.trenako.web.editors.ScalePropertyEditor;
 import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.WebImageService;
 
@@ -73,9 +68,7 @@ public class RollingStocksController {
 	// registers the custom property editors
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(Brand.class, new BrandPropertyEditor(true));
-		binder.registerCustomEditor(Railway.class, new RailwayPropertyEditor(true));
-		binder.registerCustomEditor(Scale.class, new ScalePropertyEditor(true));
+		binder.registerCustomEditor(WeakDbRef.class, new WeakDbRefPropertyEditor(true));
 		binder.registerCustomEditor(DeliveryDate.class, new DeliveryDatePropertyEditor(true));
 	}
 	
@@ -112,11 +105,6 @@ public class RollingStocksController {
 			return "rollingstock/new";
 		}
 		
-		// loading for the referenced entities
-		// (given that they are required it is safe to
-		// assume values are provided by the client.)
-		init(rs);
-		
 		service.save(rs);
 		if (!file.isEmpty()) {
 			imgService.saveImage(rs.getId(), file);
@@ -129,12 +117,12 @@ public class RollingStocksController {
 
 	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
 	public ModelAndView editForm(@PathVariable("slug") String slug) {
-		ModelAndView mav = new ModelAndView("rollingstock/edit");
 		RollingStock rs = service.findBySlug(slug);
 		if ( rs==null ) {
 			throw new NotFoundException();
 		}
 		
+		ModelAndView mav = new ModelAndView("rollingstock/edit");
 		mav.addObject("rollingStock", rs);
 		
 		// fills the data for the drop down lists.
@@ -153,11 +141,6 @@ public class RollingStocksController {
 			return "rollingstock/edit";
 		}
 		
-		// loading for the referenced entities
-		// (given that they are required it is safe to
-		// assume values are provided by the client.)
-		init(rs);
-		
 		redirectAtts.addFlashAttribute("message", "rolling.stock.saved");
 		return "redirect:/rollingstocks/{slug}";
 	}
@@ -168,31 +151,6 @@ public class RollingStocksController {
 		
 		service.remove(rs);
 		return "redirect:/rs";
-	}
-	
-	// initialize the referenced values
-	private void init(RollingStock rs) {
-		loadBrand(rs);
-		loadScale(rs);
-		loadRailway(rs);
-	}
-	
-	private void loadBrand(RollingStock rs) {
-		final ObjectId brandId = rs.getBrand().getId();
-		final Brand brand = service.findBrand(brandId);
-		rs.setBrand(brand);		
-	}
-	
-	private void loadRailway(RollingStock rs) {
-		final ObjectId railwayId = rs.getRailway().getId();
-		final Railway railway = service.findRailway(railwayId);
-		rs.setRailway(railway);		
-	}
-	
-	private void loadScale(RollingStock rs) {
-		final ObjectId scaleId = rs.getScale().getId();
-		final Scale scale = service.findScale(scaleId);
-		rs.setScale(scale);		
 	}
 	
 	private void fillDropdownLists(ModelAndView mav) {

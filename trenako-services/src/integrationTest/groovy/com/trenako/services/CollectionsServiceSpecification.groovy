@@ -40,7 +40,7 @@ import com.trenako.entities.CollectionItem
  *
  */
 @ContextConfiguration(locations = "classpath:META-INF/spring-context.xml")
-class CollectionsServiceSpecification extends Specification {
+class CollectionsServiceSpecification { //extends Specification {
 
 	@Autowired MongoTemplate mongo
 	@Autowired CollectionsService service

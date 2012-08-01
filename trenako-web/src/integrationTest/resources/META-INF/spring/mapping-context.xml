@@ -36,4 +36,8 @@
      <bean id="browseService" class="com.trenako.web.test.MockitoFactoryBean">
         <constructor-arg name="classToBeMocked" value="com.trenako.services.BrowseService" />
     </bean>
+    
+   	<bean id="userContext" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.web.security.UserContext" />
+    </bean>
 </beans>

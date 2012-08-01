@@ -26,6 +26,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
@@ -42,7 +43,7 @@ import com.mongodb.WriteConcern;
 @PropertySource("classpath:META-INF/app.properties")
 @ImportResource(value = {"classpath:META-INF/spring/spring-data.xml", 
 		"classpath:META-INF/spring/spring-security.xml"})
-public class ApplicationConfig {
+public class ApplicationConfig extends AbstractMongoConfiguration {
 	
 	private @Autowired Environment env;
 	
@@ -62,10 +63,7 @@ public class ApplicationConfig {
 	 * @throws Exception if the mongo settings are not correct
 	 */
 	public @Bean MongoDbFactory mongoDbFactory() throws Exception {
-		return new SimpleMongoDbFactory(
-				new Mongo(env.getProperty("mongo.hostName"), 
-						env.getProperty("mongo.portNumber", Integer.class)), 
-						env.getProperty("mongo.databaseName"));
+		return new SimpleMongoDbFactory(mongo(), getDatabaseName());
 	}
 	
 	/**
@@ -77,5 +75,21 @@ public class ApplicationConfig {
 		MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
 		mongoTemplate.setWriteConcern(WriteConcern.SAFE);
 		return mongoTemplate;
+	}
+
+	@Override
+	public String getDatabaseName() {
+		return env.getProperty("mongo.databaseName");
+	}
+
+	@Override
+	public Mongo mongo() throws Exception {
+		return new Mongo(env.getProperty("mongo.hostName"), 
+				env.getProperty("mongo.portNumber", Integer.class));
+	}
+	
+	@Override
+	public String getMappingBasePackage() {
+		return "com.trenako.mapping";
 	}
 }

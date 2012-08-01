@@ -79,7 +79,6 @@ allprojects {
 			"log4j:log4j:${log4jVersion}",
 			"ch.qos.logback:logback-classic:${logbackVersion}",
 			"ch.qos.logback:logback-core:${logbackVersion}"
-			
 
 		// spring framework
 		compile("org.springframework:spring-context:${springVersion}") {
@@ -109,11 +108,6 @@ allprojects {
 			"org.spockframework:spock-spring:${spockVersion}"
 	}
 
-	task testJar(description: 'Assembles a jar archive containing the test classes.', group: 'Build', type: Jar) {
-		classifier = 'tests'
-		from sourceSets.test.output.classesDir
-	}
-
 	task integrationTest(description: 'Runs the integration tests.', group: 'Verification', type: Test) {
 		testClassesDir = sourceSets.integrationTest.output.classesDir
 		classpath = sourceSets.integrationTest.runtimeClasspath
@@ -138,6 +132,11 @@ project("trenako-common") {
 		compile "org.hibernate:hibernate-validator:${hibernateValidationVersion}",
 			"org.hibernate:hibernate-validator-annotation-processor:${hibernateValidationVersion}"
 	}
+
+	task testJar(description: 'Assembles a jar archive containing the test classes.', group: 'Build', type: Jar) {
+		classifier = 'tests'
+		from sourceSets.test.output.classesDir
+	}
 } 
 
 project("trenako-services") {
@@ -145,9 +144,6 @@ project("trenako-services") {
 
 	dependencies {
 		compile project(":trenako-common")
-		compile files(project(":trenako-common").jar.archivePath) {
-			builtBy project(":trenako-common").jar
-		}
 
 		// spring security
 		compile("org.springframework.security:spring-security-core:${securityVersion}") {
@@ -179,13 +175,7 @@ project("trenako-web") {
 
 	dependencies {
 		compile project(":trenako-common")
-		compile files(project(":trenako-common").jar.archivePath) {
-			builtBy project(":trenako-common").jar
-		}
 		compile project(":trenako-services")
-		compile files(project(":trenako-services").jar.archivePath) {
-			builtBy project(":trenako-services").jar
-		}
 
 		// spring mvc
 		compile "org.springframework:spring-web:${springVersion}"
