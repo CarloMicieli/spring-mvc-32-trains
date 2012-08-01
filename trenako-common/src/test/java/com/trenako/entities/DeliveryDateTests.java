@@ -29,6 +29,24 @@ import com.trenako.DeliveryDateFormatException;
 public class DeliveryDateTests {
 
 	@Test
+	public void shouldCreateDeliveryDatesList() {
+		Iterable<DeliveryDate> dates =
+				DeliveryDate.list(1978, 1980, 1981, 1982);
+		
+		String expected = "[1982/Q4, 1982/Q3, 1982/Q2, 1982/Q1, "+
+				"1981/Q4, 1981/Q3, 1981/Q2, 1981/Q1, " +
+				"1980, 1979, 1978]";
+		assertEquals(expected, dates.toString());
+
+	
+		Iterable<DeliveryDate> dates2 =
+				DeliveryDate.list(1978, 1978, 1979, 1979);
+		
+		String expected2 = "[1979/Q4, 1979/Q3, 1979/Q2, 1979/Q1, 1978]";
+		assertEquals(expected2, dates2.toString());
+	}
+		
+	@Test
 	public void shouldCreateDeliveryDateWithQuarter() {
 		DeliveryDate dd = new DeliveryDate(2012, 1);
 		assertEquals("2012/Q1", dd.toString());

@@ -15,10 +15,14 @@
  */
 package com.trenako.entities;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.trenako.DeliveryDateFormatException;
@@ -102,6 +106,45 @@ public class DeliveryDate {
 	public int getQuarter() {
 		return quarter;
 	}
+	
+	/**
+	 * Returns the list of {@code DeliveryDate}.
+	 * <p>
+	 * This methods provides two different years ranges:
+	 * <ul>
+	 * <li>since {@code endYearWithQuarters} back to {@code startYearWithQuarters} the years are listed with quarter information;
+	 * <li>since {@code endYearWithoutQuarters} back to {@code startYearWithoutQuarters} the years are listed without quarter information.
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param startYearWithoutQuarters
+	 * @param endYearWithoutQuarters
+	 * @param startYearWithQuarters
+	 * @param endYearWithQuarters
+	 * @return the {@code DeliveryDate} list
+	 */
+	public static Iterable<DeliveryDate> list(int startYearWithoutQuarters, 
+		int endYearWithoutQuarters, 
+		int startYearWithQuarters, 
+		int endYearWithQuarters) {
+			
+		Assert.isTrue(startYearWithoutQuarters <= endYearWithoutQuarters);
+		Assert.isTrue(startYearWithQuarters <= endYearWithQuarters);
+		
+		List<DeliveryDate> list = new ArrayList<DeliveryDate>();
+		
+		for (int year : inverseRange(startYearWithQuarters, endYearWithQuarters)) {
+			for (int q = 4; q >= 1; q--) {
+				list.add(new DeliveryDate(year, q));
+			}
+		}
+		
+		for (int year : inverseRange(startYearWithoutQuarters, endYearWithoutQuarters)) {
+			list.add(new DeliveryDate(year));
+		}
+		
+		return Collections.unmodifiableList(list);		
+	}
 
 	/**
 	 * Parses the string argument as a {@code DeliveryDate}.
@@ -183,5 +226,34 @@ public class DeliveryDate {
 		}
 		
 		return String.format("%d", year);
+	}
+	
+	private static Iterable<Integer> inverseRange(final int start, final int end) {
+		return new Iterable<Integer>() {
+			@Override
+			public Iterator<Integer> iterator() {
+				return new Iterator<Integer>() {
+					private int current = end;
+					
+					@Override
+					public boolean hasNext() {
+						return current >= start;
+					}
+
+					@Override
+					public Integer next() {
+						if (!hasNext())   throw new NoSuchElementException();
+						int n = current;
+						current--;
+						return n;
+					}
+
+					@Override
+					public void remove() {
+						throw new UnsupportedOperationException();
+					}
+				};
+			}
+		};
 	}
 }
