@@ -17,9 +17,11 @@ package com.trenako.services;
 
 import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -53,6 +55,10 @@ import com.trenako.values.PowerMethod;
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStocksServiceTests {
 
+	private static final List<Brand> BRANDS = Arrays.asList(acme(), marklin(), roco());
+	private static final List<Railway> RAILWAYS = Arrays.asList(db(), fs());
+	private static final List<Scale> SCALES = Arrays.asList(scaleH0(), scaleN());
+	
 	private RollingStock rs = new RollingStock.Builder(acme(), "123456")
 		.railway(fs())
 		.scale(scaleH0())
@@ -67,7 +73,21 @@ public class RollingStocksServiceTests {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		service = new RollingStocksServiceImpl(repo, brandsRepo, railwaysRepo, scalesRepo);
+		
+		// mocking repository methods
+		when(brandsRepo.findBySlug(eq(acme().getSlug()))).thenReturn(acme());
+		when(brandsRepo.findAll()).thenReturn(BRANDS);
+		
+		when(railwaysRepo.findBySlug(eq(fs().getSlug()))).thenReturn(fs());
+		when(railwaysRepo.findAll()).thenReturn(RAILWAYS);
+		
+		when(scalesRepo.findBySlug(eq(scaleH0().getSlug()))).thenReturn(scaleH0());
+		when(scalesRepo.findAll()).thenReturn(SCALES);
+		
+		service = new RollingStocksServiceImpl(repo, 
+				brandsRepo,
+				railwaysRepo,
+				scalesRepo);
 	}
 
 	@Test
@@ -86,10 +106,6 @@ public class RollingStocksServiceTests {
 	
 	@Test
 	public void shouldSaveRollingStocks() {
-		when(brandsRepo.findBySlug(eq(acme().getSlug()))).thenReturn(acme());
-		when(railwaysRepo.findBySlug(eq(fs().getSlug()))).thenReturn(fs());
-		when(scalesRepo.findBySlug(eq(scaleH0().getSlug()))).thenReturn(scaleH0());
-		
 		RollingStock newRs = new RollingStock();
 		newRs.setItemNumber("123456");
 		newRs.setBrand(acme().getSlug());
@@ -111,7 +127,7 @@ public class RollingStocksServiceTests {
 	}
 
 	@Test
-	public void shouldReturnBrandsList() {
+	public void shouldReturnTheBrandsList() {
 		Sort sort = new Sort(Direction.ASC, "name");
 		when(brandsRepo.findAll(eq(sort))).thenReturn(Arrays.asList(new Brand(), new Brand()));
 		
@@ -122,7 +138,7 @@ public class RollingStocksServiceTests {
 	}
 
 	@Test
-	public void shouldReturnRailwaysList() {
+	public void shouldReturnTheRailwaysList() {
 		Sort sort = new Sort(Direction.ASC, "name");
 		when(railwaysRepo.findAll(eq(sort))).thenReturn(Arrays.asList(new Railway(), new Railway()));
 		
@@ -133,7 +149,7 @@ public class RollingStocksServiceTests {
 	}
 	
 	@Test
-	public void shouldReturnScalesList() {
+	public void shouldReturnTheScalesList() {
 		Sort sort = new Sort(new Sort.Order(Direction.ASC, "ratio"), new Sort.Order(Direction.DESC, "gauge"));
 		when(scalesRepo.findAll(eq(sort))).thenReturn(Arrays.asList(new Scale(), new Scale()));
 		
@@ -144,34 +160,28 @@ public class RollingStocksServiceTests {
 	}
 	
 	@Test
-	public void shouldReturnCategoriesList() {
-		
+	public void shouldReturnTheCategoriesList() {
 		Iterable<LocalizedEnum<Category>> categories = service.categories();
 		
 		String expected = "[(steam-locomotives), (diesel-locomotives), (electric-locomotives), " +
 				"(railcars), (electric-multiple-unit), (freight-cars), "+
 				"(passenger-cars), (train-sets), (starter-sets)]";
 		assertEquals(expected, categories.toString());
-		
 	}
 	
 	@Test
-	public void shouldReturnErasList() {
-		
+	public void shouldReturnTheErasList() {
 		Iterable<LocalizedEnum<Era>> eras = service.eras();
 		
 		String expected = "[(i), (ii), (iii), (iv), (v), (vi)]";
 		assertEquals(expected, eras.toString());
-		
 	}
 	
 	@Test
-	public void shouldReturnPowerMethodsList() {
-		
+	public void shouldReturnThePowerMethodsList() {
 		Iterable<LocalizedEnum<PowerMethod>> powerMethods = service.powerMethods();
 		
 		String expected = "[(dc), (ac)]";
 		assertEquals(expected, powerMethods.toString());
-		
 	}
 }
