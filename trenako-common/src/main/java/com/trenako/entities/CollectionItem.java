@@ -51,6 +51,9 @@ public class CollectionItem {
     @Range(min = 1, max = 99, message = "item.quantity.range.notmet")
     private int quantity = 1;
     
+    /**
+     * Creates an empty {@code CollectionItem}.
+     */
     public CollectionItem() {
 	}
 
@@ -117,6 +120,10 @@ public class CollectionItem {
 		return rollingStock;
 	}
 
+	/**
+	 * Sets the rolling stock.
+	 * @param rollingStock the rolling stock
+	 */
 	public void setRollingStock(RollingStock rollingStock) {
 		this.rollingStock = WeakDbRef.buildRef(rollingStock);
 	}
@@ -214,8 +221,8 @@ public class CollectionItem {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if( this==obj ) return true;
-		if( !(obj instanceof CollectionItem) ) return false;
+		if (this == obj) return true;
+		if (!(obj instanceof CollectionItem)) return false;
 	
 		CollectionItem other = (CollectionItem) obj;
 		return new EqualsBuilder()
