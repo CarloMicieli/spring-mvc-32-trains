@@ -39,24 +39,24 @@ public class Comment {
 
 	@NotNull(message = "comment.author.required")
 	private WeakDbRef<Account> author;
-	
+
 	@NotNull(message = "comment.rollingStock.required")
 	private WeakDbRef<RollingStock> rollingStock;
 
 	@NotBlank(message = "comment.content.required")
-	@Size(max = 150, message = "comment.content.size.notmet")	 
+	@Size(max = 150, message = "comment.content.size.notmet")
 	private String content;
-	
+
 	private Date postedAt;
 
 	/**
-	 * Creates an empty rolling stock {@code Comment}.
+	 * Creates an empty {@code Comment}.
 	 */
 	public Comment() {
 	}
 	
 	/**
-	 * Creates a new {@link Comment} for a rolling stock model.
+	 * Creates a new {@code Comment} for a rolling stock model.
 	 * 
 	 * @param author the comment's author
 	 * @param rollingStock the rolling stock model under review
@@ -69,7 +69,7 @@ public class Comment {
 	}
 	
 	/**
-	 * Returns the comment unique id.
+	 * Returns the {@code Comment} unique id.
 	 * @return the id
 	 */
 	public ObjectId getId() {
@@ -77,7 +77,7 @@ public class Comment {
 	}
 
 	/**
-	 * Sets the comment unique id.
+	 * Sets the {@code Comment} unique id.
 	 * @param id the id
 	 */
 	public void setId(ObjectId id) {
@@ -85,7 +85,7 @@ public class Comment {
 	}
 
 	/**
-	 * Returns the comment's author.
+	 * Returns the {@code Comment}'s author.
 	 * @return the author
 	 */
 	public WeakDbRef<Account> getAuthor() {
@@ -93,7 +93,7 @@ public class Comment {
 	}
 
 	/**
-	 * Sets the comment's author.
+	 * Sets the {@code Comment}'s author.
 	 * @param author the author
 	 */
 	public void setAuthor(Account author) {
@@ -101,7 +101,7 @@ public class Comment {
 	}
 
 	/**
-	 * Returns the commented rolling stock.
+	 * Returns the rolling stock to be commented.
 	 * @return the rolling stock
 	 */
 	public WeakDbRef<RollingStock> getRollingStock() {
@@ -109,7 +109,7 @@ public class Comment {
 	}
 
 	/**
-	 * Sets the commented rolling stock.
+	 * Sets the rolling stock to be commented.
 	 * @param rollingStock the rolling stock
 	 */
 	public void setRollingStock(RollingStock rollingStock) {
@@ -118,7 +118,7 @@ public class Comment {
 
 	/**
 	 * Returns the comment's content.
-	 * @return the comment
+	 * @return the content
 	 */
 	public String getContent() {
 		return content;
@@ -133,7 +133,7 @@ public class Comment {
 	}
 
 	/**
-	 * Returns the time this comment was posted.
+	 * Returns the time this {@code Comment} has been posted.
 	 * @return the posted time
 	 */
 	public Date getPostedAt() {
@@ -141,22 +141,17 @@ public class Comment {
 	}
 
 	/**
-	 * Sets the time this comment was posted.
+	 * Sets the time this {@code Comment} has been posted.
 	 * @param postedAt the posted time
 	 */
 	public void setPostedAt(Date postedAt) {
 		this.postedAt = postedAt;
 	}
 	
-	/**
-	 * Indicates whether some other object is "equal to" this one.
-	 * @param obj the reference object with which to compare.
-	 * @return <em>true</em> if this object is the same as the obj argument; <em>false</em> otherwise.
-	 */
 	@Override
 	public boolean equals(Object obj) {
-		if( this==obj ) return true;
-		if( !(obj instanceof Comment) ) return false;
+		if (this == obj) return true;
+		if (!(obj instanceof Comment)) return false;
 		
 		Comment other = (Comment) obj;
 		return content.equals(other.content) &&
@@ -164,18 +159,16 @@ public class Comment {
 				rollingStock.equals(other.rollingStock);
 	}
 	
-	/**
-	 * Returns a string representation of the object.
-	 * @return a string representation of the object.
-	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getAuthor().getSlug());
-		sb.append(" posted '");
-		sb.append(getContent());
-		sb.append("' on ");
-		sb.append(getRollingStock().getSlug());
-		return sb.toString();	
+		return new StringBuilder()
+			.append("comment{author: ")
+			.append(getAuthor().getSlug())
+			.append(", content: '")
+			.append(getContent())
+			.append(", rs: ")
+			.append(getRollingStock().getSlug())
+			.append("}")
+			.toString();	
 	}
 }

@@ -75,6 +75,6 @@ public class CommentTests {
 			.build();
 
 		Comment c = new Comment(author, rs, "Comment content");
-		assertEquals("user-name posted 'Comment content' on acme-123456", c.toString());
+		assertEquals("comment{author: user-name, content: 'Comment content, rs: acme-123456}", c.toString());
 	}
 }
