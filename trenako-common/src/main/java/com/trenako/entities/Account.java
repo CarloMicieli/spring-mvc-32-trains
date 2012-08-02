@@ -260,8 +260,8 @@ public class Account implements Serializable, DbReferenceable {
 	}
 	
 	/**
-	 * 
-	 * @param displayName
+	 * Sets the {@code Account} display name.
+	 * @param displayName the user display name
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
@@ -270,7 +270,8 @@ public class Account implements Serializable, DbReferenceable {
 	/**
 	 * Returns the {@code Account} slug.
 	 * <p>
-	 * The slug for the {@code Account} is encoded from {@link Account#getDisplayName()} value.
+	 * The slug for the {@code Account} is encoded from 
+	 * {@link Account#getDisplayName()} value.
 	 * </p>
 	 * 
 	 * @return the slug
@@ -296,6 +297,10 @@ public class Account implements Serializable, DbReferenceable {
 		return enabled;
 	}
 
+	/**
+	 * Indicates whether the {@code Account} is enabled or disabled.
+	 * @param b {@code true} if the account is enabled; {@code false} otherwise
+	 */
 	public void setEnabled(boolean b) {
 		this.enabled = b;		
 	}
@@ -359,10 +364,18 @@ public class Account implements Serializable, DbReferenceable {
 		roles.add(role);
 	}
 	
+	/**
+	 * Returns the last modified timestamp.
+	 * @return the timestamp
+	 */
 	public Date getLastModified() {
 		return lastModified;
 	}
 
+	/**
+	 * Sets the last modified timestamp.
+	 * @param lastModified the timestamp
+	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
@@ -374,7 +387,8 @@ public class Account implements Serializable, DbReferenceable {
 	 * </p>
 	 * 
 	 * @param obj the reference {@code Account} with which to compare
-	 * @return {@code true} if this object is the same as the {@code obj} argument; {@code false} otherwise
+	 * @return {@code true} if this object is the same as the {@code obj} argument; 
+	 * {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -387,16 +401,16 @@ public class Account implements Serializable, DbReferenceable {
 	
 	/**
 	 * Returns a string representation of the {@code Account}.
-     * <p>
-     * This method returns a string equal to the value of:
+	 * <p>
+	 * This method returns a string equal to the value of:
 	 * <blockquote>
-     * <pre>
-     * getEmailAddress() + '(' + getDisplayName() + ')'
-     * </pre>
-     * </blockquote>
+	 * <pre>
+	 * getEmailAddress() + '(' + getDisplayName() + ')'
+	 * </pre>
+	 * </blockquote>
 	 * </p>
 	 * @return a string representation of the {@code Account}
-     */
+	 */
 	@Override
 	public String toString() {
         return new StringBuilder()
