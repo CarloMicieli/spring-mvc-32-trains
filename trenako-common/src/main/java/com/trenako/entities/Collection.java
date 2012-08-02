@@ -60,36 +60,36 @@ import com.trenako.values.Category;
  */
 @Document(collection = "collections")
 public class Collection {
-
+	
 	@Id
 	private ObjectId id;
-
+	
 	@NotNull(message = "collection.owner.required")
 	@Indexed(name = "owner.slug", unique = true)
 	private WeakDbRef<Account> owner;
-
+	
 	private List<CollectionItem> items;
-
+	
 	private Map<String, Integer> categories;
-
+	
 	private boolean visible = true;
 	
 	private Date lastModified;
-
-    /**
-     * Creates an empty {@code Collection} without owner.
-     */
-    public Collection() {
+	
+	/**
+	 * Creates an empty {@code Collection} without owner.
+	 */
+	public Collection() {
 	}
 
-    /**
-     * Creates a new {@code Collection} with the provided owner.
-     * @param owner the user who owns this collection
-     */
+	/**
+	 * Creates a new {@code Collection} with the provided owner.
+	 * @param owner the user who owns this collection
+	 */
 	public Collection(Account owner) {
 		this.setOwner(owner);
 	}
-
+	
 	/**
 	 * Returns the {@code Collection} id.
 	 * @return the unique id
@@ -105,7 +105,7 @@ public class Collection {
 	public void setId(ObjectId id) {
 		this.id = id;
 	}
-    
+	
 	/**
 	 * Returns the account of the {@code Collection}'s owner.
 	 * @return the owner
@@ -114,7 +114,7 @@ public class Collection {
 		return owner;
 	}
 
-		/**
+	/**
 	 * Sets the account of the {@code Collection}'s owner.
 	 * @param owner the owner
 	 */
