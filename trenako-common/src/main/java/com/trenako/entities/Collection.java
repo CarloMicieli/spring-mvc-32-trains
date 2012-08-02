@@ -17,20 +17,20 @@ package com.trenako.entities;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
 
 import javax.validation.constraints.NotNull;
 
 import org.bson.types.ObjectId;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.values.Category;
 
 /**
@@ -41,20 +41,20 @@ import com.trenako.values.Category;
  * user can start adding rolling stock models.
  * </p>
  * <p>
- * Especially for cars, either passenger or freight, it is quite possible one user 
- * owns the same exact item more than once, for this reason the application 
+ * Particularly for cars categories, both passenger and freight, it is quite possible one user 
+ * owns the same exact rolling stock item more than once, for this reason the application 
  * doesn't enforce any check.
  * </p>
  * <p>
- * The application will store some information for each model the users have purchased, 
+ * The application will store additional information for each model the users have purchased, 
  * for instance: the price, rolling stock condition (ie {@code new} or {@code pre owned}) 
- * and the addition date.
+ * and the purchasing date.
  * </p>
  * <p>
  * The collections have a visibility flag, giving the owner the chance to make his 
- * collection private. The application creates public collections by default.
+ * collection private. The collections are public by default.
  * </p>
- * 
+ *
  * @author Carlo Micieli
  * 
  */
@@ -63,22 +63,23 @@ public class Collection {
 
 	@Id
 	private ObjectId id;
+
+	@NotNull(message = "collection.owner.required")
+	@Indexed(name = "owner.slug", unique = true)
+	private WeakDbRef<Account> owner;
+
+	private List<CollectionItem> items;
+
+	private Map<String, Integer> categories;
+
+	private boolean visible = true;
 	
-    @Indexed(unique = true)
-    private String ownerName;
+	private Date lastModified;
 
-    @DBRef
-    @NotNull(message = "collection.owner.required")
-    private Account owner;
-
-    private List<CollectionItem> items;
-
-    private Map<String, Integer> counters;
-
-    private boolean visible = true;
-  
-    // required by spring data
-    Collection() {
+    /**
+     * Creates an empty {@code Collection} without owner.
+     */
+    public Collection() {
 	}
 
     /**
@@ -86,7 +87,7 @@ public class Collection {
      * @param owner the user who owns this collection
      */
 	public Collection(Account owner) {
-		this.owner = owner;
+		this.setOwner(owner);
 	}
 
 	/**
@@ -96,38 +97,50 @@ public class Collection {
 	public ObjectId getId() {
 		return id;
 	}
-    
+	
 	/**
-	 * Returns the {@code Collection}'s owner name.
-	 * <p>
-	 * If this value is null then the method will return {@link Account#getSlug()}.
-	 * </p>
-	 * @return the owner name
+	 * Sets the {@code Collection} id.
+	 * @param id the unique id
 	 */
-	public String getOwnerName() {
-		if( ownerName==null ) ownerName = getOwner().getSlug();
-		return ownerName;
+	public void setId(ObjectId id) {
+		this.id = id;
 	}
-
+    
 	/**
 	 * Returns the account of the {@code Collection}'s owner.
 	 * @return the owner
 	 */
-	public Account getOwner() {
+	public WeakDbRef<Account> getOwner() {
 		return owner;
 	}
 
-	/**
-	 * Sets the account of the collection's owner.
+		/**
+	 * Sets the account of the {@code Collection}'s owner.
 	 * @param owner the owner
 	 */
 	public void setOwner(Account owner) {
+		this.owner = WeakDbRef.buildRef(owner);
+	}
+	
+	/**
+	 * Sets the account of the {@code Collection}'s owner.
+	 * @param owner the owner
+	 */
+	public void setOwner(WeakDbRef<Account> owner) {
 		this.owner = owner;
 	}
 
 	/**
-	 * Returns the list of rolling stock added to the collection.
-	 * @return the list of collection items
+	 * Sets the {@code Collection} rolling stocks list.
+	 * @param items the rolling stocks list
+	 */
+	public void setItems(List<CollectionItem> items) {
+		this.items = items;
+	}
+
+	/**
+	 * Returns the {@code Collection} rolling stocks list.
+	 * @return the rolling stocks list
 	 */
 	public List<CollectionItem> getItems() {
 		return items;
@@ -135,17 +148,17 @@ public class Collection {
 
 	/**
 	 * Adds a new item to the user's collection.
+	 * @param category the item category
 	 * @param item the item to be added
 	 */
-	public void addItem(CollectionItem item) {
-		if( items==null ) items = new ArrayList<CollectionItem>();
+	public void addItem(String category, CollectionItem item) {
+		if (items == null) {
+			items = new ArrayList<CollectionItem>();
+		}
 		items.add(item);
-		
-//		String key = item.getRollingStock().getCategory();
-//		int count = count(key);
-//		setCounter(key, count + 1);
+		incCounter(category);
 	}
-	
+
 	/**
 	 * Returns the number of items in the collection for the provided
 	 * category.
@@ -154,33 +167,32 @@ public class Collection {
 	 * @return the number of items
 	 */
 	public int count(String category) {
-		int count = 0;
-		String key = category;
-		if( getCounters().containsKey(key) )
-			count = getCounters().get(key);
-		return count;
+		if (getCounters() != null && getCounters().containsKey(category)) {
+			return getCounters().get(category);
+		}
+		return 0;
 	}
-	
+
 	/**
-	 * Returns an unmodifiable view of the categories counter map.
+	 * Returns an immutable map with the number of collection items for each category.
 	 * <p>
 	 * The categories are not sorted in alphabetic order, but they are
 	 * listed as they are defined in the {@link Category} enumeration.
 	 * </p>
 	 * @return the counter map
 	 */
-	public SortedMap<String, Integer> getCategories() {
-		final SortedMap<String, Integer> m = new TreeMap<String, Integer>();
+	public Map<String, Integer> getCategories() {
+		Map<String, Integer> m = new LinkedHashMap<String, Integer>();
 		for( Category c : Category.values() ) {
 			m.put(c.label(), count(c.label()));
 		}
-		return Collections.unmodifiableSortedMap(m);
+		return Collections.unmodifiableMap(m);
 	}
-	
+
 	/**
 	 * Indicates whether the collection is public.
 	 * 
-	 * @return <em>true</em> if the collection is public; <em>false</em> otherwise
+	 * @return {@code true} if the collection is public; {@code false} otherwise
 	 */
 	public boolean isVisible() {
 		return visible;
@@ -192,20 +204,31 @@ public class Collection {
 	 * By default the collections are created public, only the owner
 	 * can see the collection if its visibility is set to private.
 	 * </p>
-	 * @param visible <em>true</em> if the collection is public; <em>false</em> otherwise
+	 * @param visible {@code true} if the collection is public; {@code false} otherwise
 	 */
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
+	}	
 	
 	// helper method to set the counter for a category
-//	private void setCounter(String category, int count) {
-//		getCounters().put(category, count);
-//	}
-	
+
+	private void incCounter(String category) {
+		getCounters().put(category, count(category) + 1);
+	}
+
 	// helper method to get the counter map, with lazy initialization
 	private Map<String, Integer> getCounters() {
-		if( counters==null ) counters = new HashMap<String, Integer>();
-		return counters;
+		if (categories == null) {
+			categories = new LinkedHashMap<String, Integer>();
+		}
+		return categories;
 	}
 }

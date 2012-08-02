@@ -19,7 +19,7 @@ import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 import java.util.Date;
-import java.util.SortedMap;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -32,6 +32,9 @@ import com.trenako.values.Condition;
  */
 public class CollectionTests {
 
+	private Account owner = new Account.Builder("mail@mail.com")
+		.displayName("bob")
+		.build();
 	private RollingStock rs = new RollingStock.Builder(acme(), "123456")
 		.scale(scaleH0())
 		.railway(db())
@@ -39,23 +42,18 @@ public class CollectionTests {
 	
 	@Test
 	public void shouldCreatePublicCollections() {
-		Account owner = new Account.Builder("mail@mail.com").build();
 		Collection coll = new Collection(owner);
 		assertEquals(true, coll.isVisible());
 	}
 	
 	@Test
 	public void shouldFillTheNameFromOwner() {
-		Account owner = new Account.Builder("mail@mail.com")
-			.displayName("bob")
-			.build();
 		Collection coll = new Collection(owner);
-		assertEquals("bob", coll.getOwnerName());
+		assertEquals("bob", coll.getOwner().getSlug());
 	}
 	
 	@Test
 	public void shouldAddNewRollingStocks() {
-		Account owner = new Account.Builder("mail@mail.com").build();
 		Collection coll = new Collection(owner);
 	
 		CollectionItem item = new CollectionItem.Builder(rs)
@@ -63,17 +61,16 @@ public class CollectionTests {
 			.condition(Condition.NEW)
 			.build();
 	
-		coll.addItem(item);
+		coll.addItem("electric-locomotives", item);
 	
 		assertEquals(1, coll.getItems().size());
 	}
 	
 	@Test
 	public void shouldReturnReadOnlyMapWithAllCategories() {
-		Account owner = new Account.Builder("mail@mail.com").build();
 		Collection coll = new Collection(owner);
 		
-		SortedMap<String, Integer> categoriesCount = coll.getCategories();
+		Map<String, Integer> categoriesCount = coll.getCategories();
 
 		assertNotNull(categoriesCount);
 		assertEquals(0, (int) categoriesCount.get("electric-locomotives"));
@@ -87,10 +84,9 @@ public class CollectionTests {
 	
 	@Test
 	public void shouldUpdateTheCategoryCounters() {
-		Account owner = new Account.Builder("mail@mail.com").build();
 		Collection coll = new Collection(owner);
 
-		coll.addItem(new CollectionItem.Builder(new RollingStock.Builder(acme(), "123456")
+		coll.addItem("electric-locomotives", new CollectionItem.Builder(new RollingStock.Builder(acme(), "123456")
 				.category("electric-locomotives")
 				.scale(scaleH0())
 				.railway(db())
@@ -98,7 +94,7 @@ public class CollectionTests {
 			.addedAt(new Date())
 			.condition(Condition.NEW)
 			.build());
-		coll.addItem(new CollectionItem.Builder(new RollingStock.Builder(acme(), "123457")
+		coll.addItem("diesel-locomotives", new CollectionItem.Builder(new RollingStock.Builder(acme(), "123457")
 				.category("diesel-locomotives")
 				.scale(scaleH0())
 				.railway(db())
@@ -106,7 +102,7 @@ public class CollectionTests {
 			.addedAt(new Date())
 			.condition(Condition.NEW)
 			.build());
-		coll.addItem(new CollectionItem.Builder(new RollingStock.Builder(acme(), "123458")
+		coll.addItem("electric-locomotives", new CollectionItem.Builder(new RollingStock.Builder(acme(), "123458")
 				.category("electric-locomotives")
 				.scale(scaleH0())
 				.railway(db())
@@ -116,7 +112,7 @@ public class CollectionTests {
 			.build());
 			
 		assertEquals(3, coll.getItems().size());
-//		assertEquals(2, coll.count("electric-locomotives"));
-//		assertEquals(1, coll.count("diesel-locomotives"));
+		assertEquals(2, coll.count("electric-locomotives"));
+		assertEquals(1, coll.count("diesel-locomotives"));
 	}
 }

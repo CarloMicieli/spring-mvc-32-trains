@@ -38,7 +38,9 @@ public class CollectionValidationTests extends AbstractValidationTests<Collectio
 
 	@Test
 	public void shouldValidateValidCollections() {
-		Account owner = new Account.Builder("mail@mail.com").build();
+		Account owner = new Account.Builder("mail@mail.com")
+			.displayName("bob")
+			.build();
 		Collection c = new Collection(owner);
 		
 		Map<String, String> errors = validate(c);
