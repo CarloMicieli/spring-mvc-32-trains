@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import com.trenako.test.AbstractValidationTests;
 
-import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 /**
@@ -32,37 +31,31 @@ import static org.junit.Assert.*;
  */
 public class ReviewValidationTests extends AbstractValidationTests<Review> {
 	
-	private RollingStock rs = new RollingStock.Builder(acme(), "123456")
-		.scale(scaleH0())
-		.railway(db())
-		.build();
-	
 	@Before
 	public void initValidator() {
 		super.init(Review.class);
 	}
 
 	@Test
-	public void shouldValidateValidReviews() {
+	public void shouldValidateValidUserReviews() {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
 		
-		Review review = new Review(author, rs, "Title", "Review content");
+		Review review = new Review(author, "Title", "Review content", 1);
 		Map<String, String> errors = validate(review);
 		
 		assertEquals(0, errors.size());
 	}
-	
+
 	@Test
 	public void shouldValidateInvalidReviews() {
 		Review review = new Review();
 		Map<String, String> errors = validate(review);
 		
-		assertEquals(4, errors.size());
+		assertEquals(3, errors.size());
 		assertEquals("review.author.required", errors.get("author"));
 		assertEquals("review.title.required", errors.get("title"));
-		assertEquals("review.rollingStock.required", errors.get("rollingStock"));
 		assertEquals("review.content.required", errors.get("content"));
 	}
 	
@@ -72,8 +65,7 @@ public class ReviewValidationTests extends AbstractValidationTests<Review> {
 			.displayName("User Name")
 			.build();
 		
-		Review review = new Review(author, rs, "Title", "Review content");
-		review.setRating(6);
+		Review review = new Review(author, "Title", "Review content", 6);
 		
 		Map<String, String> errors = validate(review);
 

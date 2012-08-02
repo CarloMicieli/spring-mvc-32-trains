@@ -16,17 +16,14 @@
 package com.trenako.entities;
 
 import java.util.Date;
+import java.util.Locale;
 
 import javax.validation.constraints.NotNull;
 
-import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.trenako.AppGlobals;
 import com.trenako.mapping.WeakDbRef;
 
 /**
@@ -36,25 +33,19 @@ import com.trenako.mapping.WeakDbRef;
  * A review includes the following components:
  * <ul>
  * <li>an {@code author}, usually a {@link Account} instance;</li>
- * <li>the {@link RollingStock} under review;</li>
  * <li>a {@code title} that should be a short overview for the content;</li>
  * <li>the {@code content} text;</li>
  * <li>a numeric {@code rating} between 0 and 5.</li>
  * </ul>
+ * The {@code RollingStock} under review is stored in the reviews container only.
  * </p>
  *
  * @author Carlo Micieli
+ * @see com.trenako.entities.RollingStockReviews
  */
-@Document(collection = "reviews")
 public class Review {
-	@Id
-	private ObjectId id;
-	
 	@NotNull(message = "review.author.required")
 	private WeakDbRef<Account> author;
-	
-	@NotNull(message = "review.rollingStock.required")
-	private WeakDbRef<RollingStock> rollingStock;
 	
 	@NotBlank(message = "review.title.required")
 	private String title;
@@ -62,10 +53,11 @@ public class Review {
 	@NotBlank(message = "review.content.required")
 	private String content;
 	
+	private String lang;
+	
 	@Range(min = 0, max = 5, message = "review.rating.range.notmet")
 	private int rating;
 	
-	@Indexed(direction = IndexDirection.DESCENDING)
 	private Date postedAt;
 	
 	/**
@@ -75,25 +67,46 @@ public class Review {
 	}
 	
 	/**
+	 * Creates a new {@code Review} for a rolling stock model using the default Locale.
+	 * @param author the review's author
+	 * @param title the review title
+	 * @param content the review content
+	 * @param rating the rating value
+	 */
+	public Review(Account author, String title, String content, int rating) {
+		this(author, title, content, rating, AppGlobals.DEFAULT_LOCALE);
+	}
+	
+	/**
 	 * Creates a new {@code Review} for a rolling stock model.
 	 * @param author the review's author
-	 * @param rollingStock the rolling stock model under review
-	 * @param title the title
+	 * @param title the review title
 	 * @param content the review content
+	 * @param rating the rating value
+	 * @param lang the user's locale
 	 */
-	public Review(Account author, RollingStock rollingStock, String title, String content) {
+	public Review(Account author, String title, String content, int rating, Locale lang) {
 		this.setAuthor(author);
-		this.setRollingStock(rollingStock);
 		this.title = title;
 		this.content = content;
+		this.rating = rating;
+		this.lang = lang.getLanguage();
 	}
 
 	/**
-	 * Returns the {@code Review} unique id.
-	 * @return the id
+	 * Returns the language used for the current {@code Review}.
+	 * @return the language code
 	 */
-	public ObjectId getId() {
-		return id;
+	public String getLang() {
+		return lang;
+	}
+
+	/**
+	 * Sets the language used for the current {@code Review}.
+	 * @param lang the language code
+	 */
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 
 	/**
@@ -105,27 +118,19 @@ public class Review {
 	}
 
 	/**
-	 * Sets the review's author name.
-	 * @param author the author's name
+	 * Sets the {@code Review}'s author name.
+	 * @param author the author name
+	 */
+	public void setAuthor(WeakDbRef<Account> author) {
+		this.author = author;
+	}
+
+	/**
+	 * Sets the {@code Review}'s author name.
+	 * @param author the author name
 	 */
 	public void setAuthor(Account author) {
 		this.author = WeakDbRef.buildRef(author);
-	}
-
-	/**
-	 * Returns the rolling stock under review.
-	 * @return the rolling stock
-	 */
-	public WeakDbRef<RollingStock> getRollingStock() {
-		return rollingStock;
-	}
-
-	/**
-	 * Sets the rolling stock under review.
-	 * @param rollingStock the rolling stock
-	 */
-	public void setRollingStock(RollingStock rollingStock) {
-		this.rollingStock = WeakDbRef.buildRef(rollingStock);
 	}
 
 	/**
@@ -145,7 +150,7 @@ public class Review {
 	}
 
 	/**
-	 * Returns the review's content.
+	 * Returns the {@code Review}'s content.
 	 * @return the content
 	 */
 	public String getContent() {
@@ -153,7 +158,7 @@ public class Review {
 	}
 
 	/**
-	 * Sets the review's content.
+	 * Sets the {@code Review}'s content.
 	 * @param content the content
 	 */
 	public void setContent(String content) {
@@ -161,7 +166,7 @@ public class Review {
 	}
 
 	/**
-	 * Returns the rating value.	
+	 * Returns the {@code Review} numeric rating.
 	 * @return the rating
 	 */
 	public int getRating() {
@@ -169,7 +174,7 @@ public class Review {
 	}
 
 	/**
-	 * Sets the rating value.
+	 * Sets the {@code Review} numeric rating.
 	 * <p>
 	 * The rating value is included in the range between 0 and 5.
 	 * </p>
@@ -180,24 +185,24 @@ public class Review {
 	}
 
 	/**
-	 * Returns the time this review was posted.
-	 * @return the posted time
+	 * Returns the date when the {@code Review} has been posted.
+	 * @return the posting date
 	 */
 	public Date getPostedAt() {
 		return postedAt;
 	}
 
 	/**
-	 * Sets the time this review was posted.
-	 * @param postedAt the posted time
+	 * Sets the date when the {@code Review} has been posted.
+	 * @param postedAt the posting date
 	 */
 	public void setPostedAt(Date postedAt) {
 		this.postedAt = postedAt;
 	}
 	
 	/**
-	 * Returns the first character of the {@code Review} content.
-	 * @return the summary.
+	 * Returns the first character from the {@code Review} content.
+	 * @return the summary
 	 */
 	public String getSummary() {
 		if (getContent() == null) return null;
@@ -220,13 +225,14 @@ public class Review {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if( obj==this ) return true;
-		if( !(obj instanceof Review) ) return false;
+		if (obj == this) return true;
+		if (!(obj instanceof Review)) return false;
 		
 		Review other = (Review) obj;
 		return content.equals(other.content) &&
 				author.equals(other.author) &&
-				rollingStock.equals(other.rollingStock); 
+				title.equals(other.title) &&
+				rating == other.rating; 
 	}
 	
 	/**
@@ -246,7 +252,7 @@ public class Review {
         return new StringBuilder()
         	.append(getAuthor().getSlug())
         	.append(": ")
-        	.append(getRollingStock().getSlug())
+        	.append(getRating())
         	.append(" (")
         	.append(getTitle())
         	.append(")")
