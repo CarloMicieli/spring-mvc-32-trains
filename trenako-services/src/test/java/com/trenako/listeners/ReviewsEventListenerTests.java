@@ -15,7 +15,6 @@
  */
 package com.trenako.listeners;
 
-import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -24,8 +23,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.trenako.entities.Account;
 import com.trenako.entities.Review;
-import com.trenako.entities.RollingStock;
-
 /**
  * 
  * @author Carlo Micieli
@@ -39,11 +36,7 @@ public class ReviewsEventListenerTests {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
 			.build();
-		RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
-			.railway(fs())
-			.scale(scaleH0())
-			.build();
-		Review review = new Review(author, rollingStock, "Title", "Review");
+		Review review = new Review(author, "Title", "Review", 1);
 	
 		DBObject dbo = new BasicDBObject();
 		lis.onBeforeSave(review, dbo);

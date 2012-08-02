@@ -44,6 +44,7 @@ import com.trenako.mapping.WeakDbRef;
 import com.trenako.utility.Slug;
 import com.trenako.validation.constraints.ContainsDefault;
 import com.trenako.validation.constraints.ISOCountry;
+import com.trenako.values.DeliveryDate;
 import com.trenako.values.Era;
 import com.trenako.values.OptionFamily;
 import com.trenako.values.PowerMethod;

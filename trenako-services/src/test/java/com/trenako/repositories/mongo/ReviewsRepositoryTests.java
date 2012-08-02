@@ -142,7 +142,7 @@ public class ReviewsRepositoryTests {
 			.displayName("User Name")
 			.build();
 
-		final Review rev = new Review(author, rollingStock, "Title", "Review");
+		final Review rev = new Review(author, "Title", "Review", 1);
 		return rev;
 	}
 

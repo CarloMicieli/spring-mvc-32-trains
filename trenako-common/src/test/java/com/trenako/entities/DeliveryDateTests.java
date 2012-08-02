@@ -19,6 +19,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.trenako.DeliveryDateFormatException;
+import com.trenako.values.DeliveryDate;
 
 
 /**

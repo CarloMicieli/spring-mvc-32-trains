@@ -109,6 +109,6 @@ public class ReviewsServiceTests {
 			.displayName("User Name")
 			.build();
 
-		return new Review(author, rollingStock, "Title", "Review");
+		return new Review(author, "Title", "Review", 1);
 	}
 }

@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.trenako.entities.DeliveryDate;
+import com.trenako.values.DeliveryDate;
 import com.trenako.web.editors.DeliveryDatePropertyEditor;
 
 /**

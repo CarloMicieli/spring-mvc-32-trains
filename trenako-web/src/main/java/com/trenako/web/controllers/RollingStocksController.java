@@ -32,10 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.trenako.entities.DeliveryDate;
 import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.RollingStocksService;
+import com.trenako.values.DeliveryDate;
 import com.trenako.web.editors.WeakDbRefPropertyEditor;
 import com.trenako.web.editors.DeliveryDatePropertyEditor;
 import com.trenako.web.errors.NotFoundException;

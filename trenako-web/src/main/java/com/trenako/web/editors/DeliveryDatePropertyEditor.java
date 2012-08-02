@@ -5,7 +5,7 @@ import java.beans.PropertyEditorSupport;
 import org.springframework.util.StringUtils;
 
 import com.trenako.DeliveryDateFormatException;
-import com.trenako.entities.DeliveryDate;
+import com.trenako.values.DeliveryDate;
 
 /**
  * It represents a {@code DeliveryDate} property editor.

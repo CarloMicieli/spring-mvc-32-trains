@@ -20,12 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DuplicateKeyException
 
 import com.trenako.entities.Brand
-import com.trenako.entities.DeliveryDate
 import com.trenako.entities.Railway
 import com.trenako.entities.RollingStock
 import com.trenako.entities.Scale
 import com.trenako.mapping.LocalizedField
 import com.trenako.values.Category
+import com.trenako.values.DeliveryDate;
 import com.trenako.values.Era
 import com.trenako.values.PowerMethod
 

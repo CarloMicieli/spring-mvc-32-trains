@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.entities;
+package com.trenako.values;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.trenako.DeliveryDateFormatException;
+import com.trenako.utility.Utils;
 
 /**
  * It represents a delivery date for a rolling stock.
@@ -134,7 +135,7 @@ public class DeliveryDate {
 		List<DeliveryDate> list = new ArrayList<DeliveryDate>();
 		
 		for (int year : inverseRange(startYearWithQuarters, endYearWithQuarters)) {
-			for (int q = 4; q >= 1; q--) {
+			for (int q : Utils.reverseIterable(QUARTERS)) {
 				list.add(new DeliveryDate(year, q));
 			}
 		}

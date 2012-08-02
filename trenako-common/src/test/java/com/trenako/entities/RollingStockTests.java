@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.trenako.mapping.DbReferenceable;
 import com.trenako.mapping.LocalizedField;
+import com.trenako.values.DeliveryDate;
 import com.trenako.values.OptionFamily;
 
 
