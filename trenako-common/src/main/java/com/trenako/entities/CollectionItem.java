@@ -38,19 +38,21 @@ public class CollectionItem {
 	@NotNull(message = "item.rollingStock.required")
 	private WeakDbRef<RollingStock> rollingStock;
 
-	@Past(message = "item.addedAt.past.notmet")
-    private Date addedAt;
-
     @Range(min = 0, max = 999900, message = "item.price.range.notmet")
     private int price;
 
     private String condition;
 
     private String notes;
-    
+
+	private String category;
+
     @Range(min = 1, max = 99, message = "item.quantity.range.notmet")
     private int quantity = 1;
-    
+
+	@Past(message = "item.addedAt.past.notmet")
+    private Date addedAt;
+
     /**
      * Creates an empty {@code CollectionItem}.
      */
@@ -65,6 +67,7 @@ public class CollectionItem {
     	this.condition = b.condition;
     	this.notes = b.notes;
     	this.quantity = b.quantity;
+    	this.category = b.category;
     }
     
     public static class Builder {
@@ -72,6 +75,7 @@ public class CollectionItem {
     	private final RollingStock rs;
     	
     	// optional fields
+    	private String category = null;
     	private Date addedAt = null;
     	private int price = 0;
     	private String condition = null;
@@ -89,6 +93,11 @@ public class CollectionItem {
 
 		public Builder condition(Condition cond) {
 			condition = cond.keyValue();
+			return this;
+		}
+		
+		public Builder category(String category) {
+			this.category = category;
 			return this;
 		}
 
@@ -126,6 +135,23 @@ public class CollectionItem {
 	 */
 	public void setRollingStock(RollingStock rollingStock) {
 		this.rollingStock = WeakDbRef.buildRef(rollingStock);
+		this.category = rollingStock.getCategory();
+	}
+	
+	/**
+	 * Returns the rolling stock category.
+	 * @return the category
+	 */
+	public String getCategory() {
+		return category;
+	}
+
+	/**
+	 * Sets the rolling stock category.
+	 * @param category the category
+	 */
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	/**

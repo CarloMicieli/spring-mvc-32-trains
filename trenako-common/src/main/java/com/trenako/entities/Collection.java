@@ -32,6 +32,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.values.Category;
+import com.trenako.values.Visibility;
 
 /**
  * It represents a user collection of rolling stocks.
@@ -60,22 +61,25 @@ import com.trenako.values.Category;
  */
 @Document(collection = "collections")
 public class Collection {
-	
+
 	@Id
 	private ObjectId id;
-	
+
+	@Indexed(unique = true)
+	private String slug;
+
 	@NotNull(message = "collection.owner.required")
 	@Indexed(name = "owner.slug", unique = true)
 	private WeakDbRef<Account> owner;
-	
+
 	private List<CollectionItem> items;
-	
+
 	private Map<String, Integer> categories;
-	
-	private boolean visible = true;
-	
+
+	private String visibility;
+
 	private Date lastModified;
-	
+
 	/**
 	 * Creates an empty {@code Collection} without owner.
 	 */
@@ -104,6 +108,25 @@ public class Collection {
 	 */
 	public void setId(ObjectId id) {
 		this.id = id;
+	}
+	
+	/**
+	 * Returns the {@code Collection} slug.
+	 * @return the slug
+	 */
+	public String getSlug() {
+		if (slug == null) {
+			slug = getOwner().getSlug();
+		}
+		return slug;
+	}
+	
+	/**
+	 * Sets the {@code Collection} slug.
+	 * @param slug the slug
+	 */
+	public void setSlug(String slug) {
+		this.slug = slug;
 	}
 	
 	/**
@@ -174,7 +197,7 @@ public class Collection {
 	}
 
 	/**
-	 * Returns an immutable map with the number of collection items for each category.
+	 * Returns an immutable map with the counters by rolling stock category.
 	 * <p>
 	 * The categories are not sorted in alphabetic order, but they are
 	 * listed as they are defined in the {@link Category} enumeration.
@@ -190,33 +213,49 @@ public class Collection {
 	}
 
 	/**
-	 * Indicates whether the collection is public.
+	 * Indicates whether the {@code Collection} is visible.
 	 * 
 	 * @return {@code true} if the collection is public; {@code false} otherwise
 	 */
 	public boolean isVisible() {
-		return visible;
+		return true;
 	}
 
 	/**
-	 * Sets the collection visibility.
+	 * Sets the {@code Collection} visibility.
 	 * <p>
-	 * By default the collections are created public, only the owner
-	 * can see the collection if its visibility is set to private.
+	 * By default the collections are created {@link Visibility#PUBLIC}, only the owner
+	 * can see the collection if its visibility is set to {@link Visibility#PRIVATE}.
 	 * </p>
-	 * @param visible {@code true} if the collection is public; {@code false} otherwise
+	 * @param visibility the collection visibility
 	 */
-	public void setVisible(boolean visible) {
-		this.visible = visible;
+	public void setVisibility(String visibility) {
+		this.visibility = visibility;
+	}
+	
+	/**
+	 * Returns the {@code Collection} visibility.
+	 * @return the collection visibility
+	 */
+	public String getVisibility() {
+		return visibility;
 	}
 
+	/**
+	 * Returns the timestamp for the last {@code Collection} changes.
+	 * @return the last modified timestamp
+	 */
 	public Date getLastModified() {
 		return lastModified;
 	}
 
+	/**
+	 * Sets the timestamp for the last {@code Collection} changes.
+	 * @param lastModified the last modified timestamp
+	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
-	}	
+	}
 	
 	// helper method to set the counter for a category
 
