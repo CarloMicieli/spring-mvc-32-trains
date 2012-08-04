@@ -41,7 +41,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 			[name: 'ACME', 
 				slug: 'acme', 
 				companyName: 'Anonima Costruzioni Modellistiche Esatte', 
-				description: [en: 'Acme description'], 
+				description: [en: 'Acme description'],
 				address: [streetAddress: 'Viale Lombardia, 27', postalCode: '20131', city: 'Milano', country: 'Italy'],
 				scales: ['h0'], 
 				industrial: true, 
@@ -51,7 +51,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 			[name: 'Roco', 
 				slug: 'roco', 
 				companyName: 'Modelleisenbahn GmbH', 
-				description: [en: 'Roco description'], 
+				description: [en: 'Roco description'],
 				address: [streetAddress: 'Plainbachstraße 4', postalCode: 'A-5101', city: 'Bergheim', country: 'Austria'],
 				scales: ['h0', 'tt', 'n'], 
 				emailAddress: 'roco@roco.cc', 
@@ -94,11 +94,16 @@ class BrandsServiceSpecification extends MongoSpecification {
 	
 	def "should find a brand for the provided name"() {
 		when:
-		def brand = service.findByName 'ACME'
+		def brand = service.findByName 'Roco'
 		
 		then:
 		brand != null
-		brand.name == 'ACME'
+		brand.name == 'Roco'
+		brand.description.default == 'Roco description'
+		
+		brand.address != null
+		brand.address.toString() == 'Plainbachstraße 4, A-5101 Bergheim, (Austria)'
+		brand.scales.sort() == ['h0', 'n', 'tt']
 	}
 	
 	def "should return null if no brand is found for the provided slug value"() {
@@ -116,6 +121,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 		then:
 		brand != null
 		brand.name == 'LS Models'
+		brand.description.default == 'Ls Models description'
 	}
 	
 	def "should return null if no brand is found for the provided id"() {
@@ -173,6 +179,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 		def newBrand = new Brand(
 			name: 'Roco',
 			slug: 'brawa',
+			description: LocalizedField.localize('Description'),
 			emailAddress: 'mail@brawa.de',
 			industrial: true,
 			website: 'http://www.brawa.de')
@@ -190,6 +197,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 		def newBrand = new Brand(
 			name: 'Brawa',
 			slug: 'roco',
+			description: LocalizedField.localize('Description'),
 			emailAddress: 'mail@brawa.de',
 			industrial: true,
 			website: 'http://www.brawa.de')
@@ -240,6 +248,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 		given:
 		def brand = service.findBySlug('roco')
 		assert brand != null
+		assert brand.description.default != null
 		
 		when:
 		brand.branches = [it: new Address(streetAddress: 'Via Manzoni 144', postalCode: '20811', city: 'Cesano Maderno', country: 'Italy')]

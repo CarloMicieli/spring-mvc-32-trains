@@ -23,6 +23,7 @@ import org.springframework.dao.DuplicateKeyException
 import org.springframework.data.domain.PageRequest
 
 import com.trenako.entities.Scale
+import com.trenako.mapping.LocalizedField
 import com.trenako.services.ScalesService
 
 /**
@@ -85,6 +86,7 @@ class ScalesServiceSpecification extends MongoSpecification {
 		scale != null
 		scale.id == id
 		scale.name == 'H0'
+		scale.description.default == 'Scale H0'
 	}
 	
 	def "should return null if no scale has the provided name"() {
@@ -126,6 +128,7 @@ class ScalesServiceSpecification extends MongoSpecification {
 		given: "the scale name is already in use"
 		def newScale = new Scale(
 			name: 'H0',
+			description: LocalizedField.localize([en: 'H0 description']),
 			gauge: 1650,
 			ratio: 870)
 		
@@ -142,6 +145,7 @@ class ScalesServiceSpecification extends MongoSpecification {
 		def newScale = new Scale(
 			name: 'H0-2',
 			slug: 'h0',
+			description: LocalizedField.localize([en: 'H0 description']),
 			gauge: 1650,
 			ratio: 870)
 		
@@ -159,6 +163,7 @@ class ScalesServiceSpecification extends MongoSpecification {
 			ratio: 870, 
 			gauge: 900, 
 			powerMethods: ['ac', 'dc'],
+			description: LocalizedField.localize([en: 'H0m description']),
 			standards: ['NEM'],
 			narrow: false)
 
@@ -179,6 +184,7 @@ class ScalesServiceSpecification extends MongoSpecification {
 		savedDoc.slug == 'h0m'
 		savedDoc.powerMethods == ['dc', 'ac']
 		savedDoc.standards == ['NEM']
+		savedDoc.description.en == 'H0m description'
 	}
 	
 	def "should remove scales"() {

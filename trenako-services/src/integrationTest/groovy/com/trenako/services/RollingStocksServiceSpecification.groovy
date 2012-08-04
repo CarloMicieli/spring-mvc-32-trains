@@ -178,9 +178,9 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 			era: 'iv',
 			country: 'it',
 			)
-		newRs.setBrand('roco')
-		newRs.setScale('h0')
-		newRs.setRailway('db')
+		newRs.setBrand(new Brand(name: 'Roco'))
+		newRs.setScale(new Scale(name: 'H0', ratio: 870))
+		newRs.setRailway(new Railway(name: 'DB', country: 'de'))
 		
 		when:
 		service.save newRs
@@ -201,9 +201,9 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 			country: 'it',
 			deliveryDate: new DeliveryDate(2012, 1)
 			)
-		newRs.setBrand('acme')
-		newRs.setScale('h0')
-		newRs.setRailway('db')
+		newRs.setBrand(new Brand(name: 'ACME'))
+		newRs.setScale(new Scale(name: 'H0', ratio: 870))
+		newRs.setRailway(new Railway(name: 'DB', country: 'de'))
 		
 		when:
 		service.save newRs

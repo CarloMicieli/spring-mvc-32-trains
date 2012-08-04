@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context-3.1.xsd
 		http://www.springframework.org/schema/data/mongo
-	   	http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+	   	http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
 	   	http://www.springframework.org/schema/util 
 	   	http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
@@ -22,14 +22,17 @@
 	<mapping-converter base-package="com.trenako.mapping">
 		<custom-converters>
     		<converter ref="localizedFieldWriteConverter"/>
-    	</custom-converters>
+    		<converter ref="localizedFieldReadConverter"/>
+    	</custom-converters>    	
 	</mapping-converter>
 
 	<!-- Register the mongodb repositories -->
-	<repositories base-package="com.trenako.repositories"/>
+	<repositories base-package="com.trenako.repositories" />
 
 	<beans:bean id="localizedFieldWriteConverter" 
 		class="com.trenako.mapping.LocalizedFieldWriteConverter"/>
+	<beans:bean id="localizedFieldReadConverter" 
+		class="com.trenako.mapping.LocalizedFieldReadConverter"/>
 
 	<beans:bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
   		<beans:constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>

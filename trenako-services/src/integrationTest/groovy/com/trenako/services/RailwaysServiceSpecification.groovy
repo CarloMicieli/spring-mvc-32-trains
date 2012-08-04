@@ -177,6 +177,7 @@ class RailwaysServiceSpecification extends MongoSpecification {
 		def newRailway = new Railway(
 			name: 'DB', 
 			companyName: 'German railways',
+			description: LocalizedField.localize([en: 'DB description']),
 			country: 'de')
 			
 		when:
@@ -193,6 +194,7 @@ class RailwaysServiceSpecification extends MongoSpecification {
 			name: 'D?B',
 			slug: 'db',
 			companyName: 'German railways',
+			description: LocalizedField.localize([en: 'DB description']),
 			country: 'de')
 			
 		when:
