@@ -108,9 +108,9 @@ public class RollingStocksServiceTests {
 	public void shouldSaveRollingStocks() {
 		RollingStock newRs = new RollingStock();
 		newRs.setItemNumber("123456");
-		newRs.setBrand(acme().getSlug());
-		newRs.setRailway(fs().getSlug());
-		newRs.setScale(scaleH0().getSlug());
+		newRs.setBrand(acme());
+		newRs.setRailway(fs());
+		newRs.setScale(scaleH0());
 		
 		service.save(rs);
 		

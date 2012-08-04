@@ -47,7 +47,6 @@ import com.trenako.validation.constraints.ISOCountry;
 import com.trenako.values.DeliveryDate;
 import com.trenako.values.Era;
 import com.trenako.values.OptionFamily;
-import com.trenako.values.PowerMethod;
 
 /**
  * It represents a rolling stock.
@@ -68,12 +67,15 @@ public class RollingStock implements DbReferenceable {
 	@Id
 	private ObjectId id;
 	
+	@Indexed(name = "brand.slug")
 	@NotNull(message = "rs.brand.required")
 	private WeakDbRef<Brand> brand;
 	
+	@Indexed(name = "railway.slug")
 	@NotNull(message = "rs.railway.required")
 	private WeakDbRef<Railway> railway;
 	
+	@Indexed(name = "scale.slug")
 	@NotNull(message = "rs.scale.required")
 	private WeakDbRef<Scale> scale;
 	
@@ -107,7 +109,7 @@ public class RollingStock implements DbReferenceable {
 	@Range(min = 0, max = 1000, message = "rs.totalLength.range.notmet")
 	private int totalLength;
 	
-	@Indexed
+	@Indexed(unique = true)
 	@Size(max = 12, message = "rs.upcCode.size.notmet")
 	private String upcCode;
 	
@@ -374,8 +376,12 @@ public class RollingStock implements DbReferenceable {
 		this.brand = WeakDbRef.buildRef(brand);
 	}
 
-	public void setBrand(String brand) {
-		this.brand = WeakDbRef.buildFromSlug(brand, Brand.class);
+	/**
+	 * Sets the brand.
+	 * @param brand the brand
+	 */
+	public void setBrand(WeakDbRef<Brand> brand) {
+		this.brand = brand;
 	}
 	
 	/**
@@ -449,8 +455,12 @@ public class RollingStock implements DbReferenceable {
 		}
 	}
 
-	public void setRailway(String railway) {
-		this.railway = WeakDbRef.buildFromSlug(railway, Railway.class);
+	/**
+	 * Sets the railway.
+	 * @param railway the railway
+	 */
+	public void setRailway(WeakDbRef<Railway> railway) {
+		this.railway = railway;
 	}
 	
 	/**
@@ -469,8 +479,12 @@ public class RollingStock implements DbReferenceable {
 		this.scale = WeakDbRef.buildRef(scale);
 	}
 
-	public void setScale(String scale) {
-		this.scale = WeakDbRef.buildFromSlug(scale, Scale.class);
+	/**
+	 * Sets the scale.
+	 * @param scale the scale
+	 */
+	public void setScale(WeakDbRef<Scale> scale) {
+		this.scale = scale;
 	}
 	
 	/**
@@ -508,14 +522,6 @@ public class RollingStock implements DbReferenceable {
 	 */
 	public void setEra(String era) {
 		this.era = era;
-	}
-	
-	/**
-	 * Sets the era.
-	 * @param era the model era
-	 */
-	public void setEra(Era era) {
-		setEra(era.name());
 	}
 	
 	/**
@@ -623,18 +629,6 @@ public class RollingStock implements DbReferenceable {
 	}
 	
 	/**
-	 * Sets the model power method.
-	 * <p>
-	 * This method is getting the value from {@link PowerMethod#label()}.
-	 * </p>
-	 * 
-	 * @param powerMethod the model power method
-	 */
-	public void setPowerMethod(PowerMethod powerMethod) {
-		setPowerMethod(powerMethod.label());
-	}
-
-	/**
 	 * Returns the list of tags for the rolling stock.	
 	 * @return the list of tags
 	 */
@@ -682,8 +676,8 @@ public class RollingStock implements DbReferenceable {
 	 * Checks if the rolling stock has the provided option.
 	 * 
 	 * @param option the option value
-	 * @return <em>true</em> if the rolling stock contains the option; 
-	 * <em>false</em> otherwise
+	 * @return {@code true} if the rolling stock contains the option; 
+	 * {@code true} otherwise
 	 */
 	public boolean hasOption(Option option) {
 		String key = optionsKey(option);
@@ -735,7 +729,6 @@ public class RollingStock implements DbReferenceable {
 		this.options = options;
 	}
 
-
 	/**
 	 * Returns the last modified timestamp.	
 	 * @return the last modified timestamp
@@ -752,32 +745,23 @@ public class RollingStock implements DbReferenceable {
 		this.lastModified = lastModified;
 	}
 
-	/**
-	 * Returns a string representation of the object.
-	 * <p>
-	 * As reference the method will return a string similar to this:
-	 * <ore>
-	 * {@code brandName + itemNumber + ": " + description }
-	 * </pre>
-	 * </p>
-	 * 
-	 * @return a string representation of the object
-	 */
 	@Override
 	public String toString() {
 		return new StringBuffer()
-			.append(getBrand().getLabel() + " ")
-			.append(getItemNumber() + ": ")
+			.append("rollingStock{brand: ")
+			.append(getBrand().getLabel())
+			.append(", itemNumber: ")
+			.append(getItemNumber())
+			.append(", description: ")
 			.append(getDescription().getDefault())
+			.append(", scale: ")
+			.append(getScale().getLabel())
+			.append(", railway: ")
+			.append(getRailway().getLabel())
+			.append("}")
 			.toString();
 	}
 
-	/**
-	 * Indicates whether some other object is "equal to" this one.
-	 * @param obj the reference object with which to compare
-	 * @return <em>true</em> if this object is the same as the obj argument; 
-	 * <em>false</em> otherwise
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
@@ -794,11 +778,7 @@ public class RollingStock implements DbReferenceable {
 			.append(category, other.category)
 			.isEquals();
 	}
-	
-	/**
-	 * Returns a hash code value for the object.
-	 * @return a hash code value for this object
-	 */
+
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(15, 37)

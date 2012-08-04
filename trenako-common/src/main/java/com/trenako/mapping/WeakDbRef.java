@@ -15,7 +15,6 @@
  */
 package com.trenako.mapping;
 
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.util.Assert;
 
 /**
@@ -30,17 +29,12 @@ import org.springframework.util.Assert;
  * de-normalized schemas, but it requires less database queries to populate
  * the field values.
  * </p>
- * <p>
- * The {@code WeakDbRef} already create an index on the slug of the wrapped
- * slug, so no other indexes are usually needed.
- * </p>
  * 
  * @author Carlo Micieli
  *
  */
 public class WeakDbRef<E extends DbReferenceable> {
 	
-	@Indexed(unique = false)
 	private String slug;
 	private String label;
 	

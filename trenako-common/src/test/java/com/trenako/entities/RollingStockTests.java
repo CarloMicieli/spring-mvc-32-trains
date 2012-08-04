@@ -252,8 +252,14 @@ public class RollingStockTests {
 			.scale(scaleH0())		
 			.description("rolling stock description")
 			.build();
+		
+		String expected = "rollingStock{brand: ACME, "+
+			"itemNumber: 123456, "+
+			"description: rolling stock description, "+
+			"scale: H0 (1:87), "+
+			"railway: DB (Die bahn)}";
 
-		assertEquals("ACME 123456: rolling stock description", rs.toString());
+		assertEquals(expected, rs.toString());
 	}
 	
 	@Test
