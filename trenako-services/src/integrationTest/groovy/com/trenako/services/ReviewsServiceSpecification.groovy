@@ -44,10 +44,16 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		db.reviews.insert(
 			slug: 'acme-69501',
 			rollingStock: [slug: 'acme-69501', label: 'ACME 69501'],
-			reviews: [[author: [slug: 'bob', label: 'Bob'], title: 'Review title', content: 'Review content', lang: 'en', rating: 5, postedAt: new Date()]],
-			numberOfReviews: 1,
-			totalRating: 5)
+			reviews: [
+				[author: 'alice', title: 'Review title1', content: 'Review content1', lang: 'en', rating: 5, postedAt: new Date()],
+				[author: 'george', title: 'Review title2', content: 'Review content2', lang: 'en', rating: 2, postedAt: new Date()]],
+			numberOfReviews: 2,
+			totalRating: 7)
 
+	}
+	
+	def cleanup() {
+		db.reviews.remove([:])
 	}
 	
 	def "should find rolling stock reviews with the provided slug"() {
@@ -58,8 +64,8 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		result != null
 		result.slug == 'acme-69501'
 		result.reviews != null
-		result.reviews.size() == 1
-		result.reviews.collect { it.content } == ['Review content']
+		result.reviews.size() == 2
+		result.reviews.collect { it.content }.sort() == ['Review content1', 'Review content2']
 	}
 	
 	def "should return null if no review exists for the provided slug"() {
@@ -81,8 +87,8 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		result != null
 		result.slug == 'acme-69501'
 		result.reviews != null
-		result.reviews.size() == 1
-		result.reviews.collect { it.content } == ['Review content']
+		result.reviews.size() == 2
+		result.reviews.collect { it.content }.sort() == ['Review content1', 'Review content2']
 	}
 	
 	def "should return null if no review exists for the provided rolling stock"() {
@@ -96,5 +102,48 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		result == null
 	}
 	
+	def "should post a new rolling stock review"() {
+		given:
+		def rollingStock = new RollingStock(slug: 'acme-69501')
+		rollingStock.setBrand(new Brand('ACME'))
+		
+		and:
+		def author = new Account(displayName: 'Bob')
+		def newReview = new Review(author, 
+			'My third review', 
+			'My third review content',
+			3)
+		
+		when:
+		service.postReview(rollingStock, newReview)
+		
+		then:
+		def doc = db.reviews.findOne(slug: 'acme-69501')
+		assert doc != null
+		doc.numberOfReviews == 3
+		doc.totalRating == 10
+		doc.reviews.size() == 3
+	}
 	
+	def "should delete rolling stock reviews"() {
+		given:
+		def rollingStock = new RollingStock(slug: 'acme-69501')
+		rollingStock.setBrand(new Brand('ACME'))
+		
+		and:
+		def author = new Account(slug: 'alice')
+		def review = new Review(author, '', '', 5)
+		
+		assert author.slug != null
+		
+		when:
+		service.deleteReview(rollingStock, review)
+		
+		then:
+		def doc = db.reviews.findOne(slug: 'acme-69501')
+		assert doc != null
+		doc.numberOfReviews == 1
+		doc.totalRating == 2
+		doc.reviews.size() == 1
+	}
 }

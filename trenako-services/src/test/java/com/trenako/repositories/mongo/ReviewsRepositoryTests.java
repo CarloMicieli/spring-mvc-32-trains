@@ -113,7 +113,7 @@ public class ReviewsRepositoryTests extends AbstractMongoRepositoryTests {
 		
 		DBObject updateObject = updateObject(argUpdate);
 		String expected = "{ \"$set\" : { \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"}} , " +
-			"\"$push\" : { \"reviews\" : { \"author\" : { \"slug\" : \"user-name\" , \"label\" : \"User Name\"} , " +
+			"\"$push\" : { \"reviews\" : { \"author\" : \"user-name\" , " +
 			"\"title\" : \"Title\" , \"content\" : \"Review\" , \"lang\" : \"en\" , \"rating\" : 3}} , "+
 			"\"$inc\" : { \"numberOfReviews\" : 1 , \"totalRating\" : 3}}";
 		assertEquals(expected, updateObject.toString());
@@ -129,7 +129,7 @@ public class ReviewsRepositoryTests extends AbstractMongoRepositoryTests {
 		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(RollingStockReviews.class));
 		assertEquals("{ \"slug\" : \"acme-123456\"}", queryObject(argQuery).toString());
 		
-		assertEquals("{ \"$pull\" : { \"reviews.author.slug\" : \"user-name\"} , \"$inc\" : { \"numberOfReviews\" : -1 , \"totalRating\" : -3}}", 
+		assertEquals("{ \"$pull\" : { \"reviews\" : { \"author\" : \"user-name\"}} , \"$inc\" : { \"numberOfReviews\" : -1 , \"totalRating\" : -3}}", 
 			updateObject(argUpdate).toString());
 	}
 

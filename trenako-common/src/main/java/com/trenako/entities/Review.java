@@ -24,19 +24,11 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
 import com.trenako.AppGlobals;
-import com.trenako.mapping.WeakDbRef;
 
 /**
- * It represents a user review to a rolling stock.
+ * It represents a user review for a rolling stock.
  * 
  * <p>
- * A review includes the following components:
- * <ul>
- * <li>an {@code author}, usually a {@link Account} instance;</li>
- * <li>a {@code title} that should be a short overview for the content;</li>
- * <li>the {@code content} text;</li>
- * <li>a numeric {@code rating} between 0 and 5.</li>
- * </ul>
  * The {@code RollingStock} under review is stored in the reviews container only.
  * </p>
  *
@@ -45,7 +37,7 @@ import com.trenako.mapping.WeakDbRef;
  */
 public class Review {
 	@NotNull(message = "review.author.required")
-	private WeakDbRef<Account> author;
+	private String author;
 	
 	@NotBlank(message = "review.title.required")
 	private String title;
@@ -113,7 +105,7 @@ public class Review {
 	 * Sets the review's author name.
 	 * @return the author's name
 	 */	
-	public WeakDbRef<Account> getAuthor() {
+	public String getAuthor() {
 		return author;
 	}
 
@@ -121,16 +113,8 @@ public class Review {
 	 * Sets the {@code Review}'s author name.
 	 * @param author the author name
 	 */
-	public void setAuthor(WeakDbRef<Account> author) {
-		this.author = author;
-	}
-
-	/**
-	 * Sets the {@code Review}'s author name.
-	 * @param author the author name
-	 */
 	public void setAuthor(Account author) {
-		this.author = WeakDbRef.buildRef(author);
+		this.author = author.getSlug();
 	}
 
 	/**
@@ -250,7 +234,7 @@ public class Review {
 	@Override
 	public String toString() {
         return new StringBuilder()
-        	.append(getAuthor().getSlug())
+        	.append(getAuthor())
         	.append(": ")
         	.append(getRating())
         	.append(" (")

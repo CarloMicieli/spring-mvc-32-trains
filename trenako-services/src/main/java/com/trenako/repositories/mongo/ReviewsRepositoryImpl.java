@@ -15,6 +15,8 @@
  */
 package com.trenako.repositories.mongo;
 
+import java.util.Map;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -26,6 +28,7 @@ import com.trenako.entities.RollingStock;
 import com.trenako.entities.RollingStockReviews;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.repositories.ReviewsRepository;
+import com.trenako.utility.Maps;
 
 import static org.springframework.data.mongodb.core.query.Query.*;
 import static org.springframework.data.mongodb.core.query.Criteria.*;
@@ -77,8 +80,10 @@ public class ReviewsRepositoryImpl implements ReviewsRepository {
 
 	@Override
 	public void removeReview(RollingStock rs, Review review) {
+		Map<String, Object> m = Maps.map("author", (Object) review.getAuthor());
+
 		Update upd = new Update()
-			.pull("reviews.author.slug", review.getAuthor().getSlug())
+			.pull("reviews", m)
 			.inc("numberOfReviews", -1)
 			.inc("totalRating", -1 * review.getRating());
 		mongo.updateFirst(query(where("slug").is(rs.getSlug())), upd, RollingStockReviews.class);

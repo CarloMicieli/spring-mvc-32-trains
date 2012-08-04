@@ -68,7 +68,7 @@ public class ReviewTests {
 		rsReviews.setReviews(Arrays.asList(review1));
 
 		assertEquals("{label=ACME 123456, slug=acme-123456}", rsReviews.getRollingStock().toString());
-		assertEquals("{label=Alice, slug=alice}", rsReviews.getReviews().get(0).getAuthor().toString());
+		assertEquals("alice", rsReviews.getReviews().get(0).getAuthor().toString());
 		
 	}
 	
