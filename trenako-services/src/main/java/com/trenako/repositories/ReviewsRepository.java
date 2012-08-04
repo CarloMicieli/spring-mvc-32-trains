@@ -17,12 +17,12 @@ package com.trenako.repositories;
 
 import org.bson.types.ObjectId;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockReviews;
 
 /**
- * The interface for the reviews repository.
+ * The interface for the {@code RollingStock} reviews repository.
  * 
  * @author Carlo Micieli
  *
@@ -30,57 +30,54 @@ import com.trenako.entities.RollingStock;
 public interface ReviewsRepository {
 
 	/**
-	 * Finds the review by its unique id.
+	 * Finds the {@code RollingStockReviews} with the provided unique id.
+	 *
 	 * @param id the review id
-	 * @return the review if found; <em>null</em> otherwise
+	 * @return the {@code RollingStockReviews} if found; {@code null} otherwise
 	 */
-	Review findById(ObjectId id);
+	RollingStockReviews findById(ObjectId id);
 	
 	/**
-	 * Finds the list of reviews with the same author.
-	 * @param author the reviews' author
-	 * @return the list of reviews
+	 * Finds the {@code RollingStockReviews} with the provided slug.
+	 *
+	 * @param slug the review slug
+	 * @return the {@code RollingStockReviews} if found; {@code null} otherwise
 	 */
-	Iterable<Review> findByAuthor(Account author);
-
-	/**
-	 * Finds the list of reviews with the same author name.
-	 * @param authorName the reviews' author name
-	 * @return the list of reviews
-	 */
-	Iterable<Review> findByAuthor(String authorName);
+	RollingStockReviews findBySlug(String slug);
 	
 	/**
-	 * Finds the list of reviews for a rolling stock.
-	 * 
-	 * This method returns the last 10 reviews ordered by
-	 * descending posted date. 
-	 * 
+	 * Finds the {@code RollingStockReviews} for the provided {@code RollingStock}.
+	 *
 	 * @param rollingStock the rolling stock
 	 * @return the list of reviews
 	 */	
-	Iterable<Review> findByRollingStock(RollingStock rollingStock);
-
+	RollingStockReviews findByRollingStock(RollingStock rollingStock);
+		
 	/**
-	 * Finds the list of reviews for the provided rolling stock slug.
-	 * 
-	 * This method returns the last 10 reviews ordered by
-	 * descending posted date. 
-	 * 
-	 * @param rsSlug the rolling stock slug
-	 * @return the list of reviews
-	 */	
-	Iterable<Review> findByRollingStock(String rsSlug);
+	 * Adds a new user review to the provided {@code RollingStock}.
+	 *
+	 * @param rs the {@code RollingStock} under review
+	 * @param review the review to be saved	 
+	 */
+	void addReview(RollingStock rs, Review review);
 	
 	/**
-	 * Saves the review.
-	 * @param review the review to be saved
+	 * Removes the review from the provided {@code RollingStock}.
+	 *
+	 * @param rs the {@code RollingStock} under review
+	 * @param review the review to be removed	 
 	 */
-	void save(Review review);
+	void removeReview(RollingStock rs, Review review);
 	
 	/**
-	 * Removes the review.
-	 * @param review the review to be removed
+	 * Saves all the reviews for the {@code RollingStock}.
+	 * @param rsReview the rolling stock reviews
 	 */
-	void remove(Review review);	
+	void save(RollingStockReviews rsReviews);
+	
+	/**
+	 * Removes all the reviews for the {@code RollingStock}.
+	 * @param rsReview the rolling stock reviews
+	 */
+	void remove(RollingStockReviews rsReviews);
 }

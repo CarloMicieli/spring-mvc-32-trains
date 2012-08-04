@@ -18,11 +18,13 @@ package com.trenako.repositories.mongo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockReviews;
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.repositories.ReviewsRepository;
 
 import static org.springframework.data.mongodb.core.query.Query.*;
@@ -46,40 +48,49 @@ public class ReviewsRepositoryImpl implements ReviewsRepository {
 	public ReviewsRepositoryImpl(MongoTemplate mongo) {
 		this.mongo = mongo;
 	}
-	
+
 	@Override
-	public Review findById(ObjectId id) {
-		return mongo.findById(id, Review.class);
+	public RollingStockReviews findById(ObjectId id) {
+		return mongo.findById(id, RollingStockReviews.class);
 	}
 
 	@Override
-	public Iterable<Review> findByAuthor(Account author) {
-		return findByAuthor(author.getSlug());
+	public RollingStockReviews findBySlug(String slug) {
+		return mongo.findOne(query(where("slug").is(slug)), RollingStockReviews.class);
 	}
 
 	@Override
-	public Iterable<Review> findByAuthor(String authorName) {
-		return mongo.find(query(where("authorName").is(authorName)), Review.class);
+	public RollingStockReviews findByRollingStock(RollingStock rollingStock) {
+		return mongo.findOne(query(where("rollingStock.slug").is(rollingStock.getSlug())), 
+				RollingStockReviews.class);
 	}
 
 	@Override
-	public Iterable<Review> findByRollingStock(RollingStock rollingStock) {
-		return findByRollingStock(rollingStock.getSlug());
+	public void addReview(RollingStock rs, Review review) {	
+		Update upd = new Update()
+			.set("rollingStock", WeakDbRef.buildRef(rs))
+			.push("reviews", review)
+			.inc("numberOfReviews", 1)
+			.inc("totalRating", review.getRating());
+		mongo.upsert(query(where("slug").is(rs.getSlug())), upd, RollingStockReviews.class);
 	}
 
 	@Override
-	public Iterable<Review> findByRollingStock(String rsSlug) {
-		return mongo.find(query(where("rsSlug").is(rsSlug)), Review.class);
+	public void removeReview(RollingStock rs, Review review) {
+		Update upd = new Update()
+			.pull("reviews.author.slug", review.getAuthor().getSlug())
+			.inc("numberOfReviews", -1)
+			.inc("totalRating", -1 * review.getRating());
+		mongo.updateFirst(query(where("slug").is(rs.getSlug())), upd, RollingStockReviews.class);
 	}
 
 	@Override
-	public void save(Review review) {
-		mongo.save(review);
+	public void save(RollingStockReviews rsReviews) {
+		mongo.save(rsReviews);
 	}
 
 	@Override
-	public void remove(Review review) {
-		mongo.remove(review);
+	public void remove(RollingStockReviews rsReviews) {
+		mongo.remove(rsReviews);
 	}
-
 }

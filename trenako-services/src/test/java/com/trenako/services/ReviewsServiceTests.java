@@ -17,8 +17,8 @@ package com.trenako.services;
 
 import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,9 +26,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockReviews;
 import com.trenako.repositories.ReviewsRepository;
 
 /**
@@ -51,64 +51,43 @@ public class ReviewsServiceTests {
 		MockitoAnnotations.initMocks(this);
 		service = new ReviewsServiceImpl(repo);
 	}
-
+	
 	@Test
-	public void shouldFindReviewsById() {
-		ObjectId id = new ObjectId();
+	public void shouldFindReviewsBySlug() {
+		String slug = "review-slug";
+		when(repo.findBySlug(eq(slug))).thenReturn(new RollingStockReviews());
 		
-		service.findById(id);
-		verify(repo, times(1)).findById(eq(id));
-	}
-
-	@Test
-	public void shouldFindReviewsByAuthor() {
-		Account author = new Account.Builder("mail@mail.com")
-			.displayName("User Name")
-			.build();
+		RollingStockReviews reviews = service.findBySlug(slug);
 		
-		service.findByAuthor(author);
-		verify(repo, times(1)).findByAuthor(eq(author));
+		assertNotNull(reviews);
+		verify(repo, times(1)).findBySlug(eq(slug));
 	}
-
-	@Test
-	public void shouldFindReviewsByAuthorName() {
-		String author = "name";
-		service.findByAuthor(author);
-		verify(repo, times(1)).findByAuthor(eq(author));
-	}
-
+	
 	@Test
 	public void shouldFindReviewsByRollingStock() {
-		service.findByRollingStock(rollingStock);
+		when(repo.findByRollingStock(eq(rollingStock))).thenReturn(new RollingStockReviews());
+		
+		RollingStockReviews reviews = service.findByRollingStock(rollingStock);
+		
+		assertNotNull(reviews);
 		verify(repo, times(1)).findByRollingStock(eq(rollingStock));
 	}
-
+	
 	@Test
-	public void shouldFindReviewsByRollingStockSlug() {
-		String rs = "acme-123456";
-		service.findByRollingStock(rs);
-		verify(repo, times(1)).findByRollingStock(eq(rs));
+	public void shouldPostNewRollingStockReviews() {
+		Review review = new Review();
+		
+		service.postReview(rollingStock, review);
+		
+		verify(repo, times(1)).addReview(eq(rollingStock), eq(review));
 	}
-
+	
 	@Test
-	public void shouldSaveReviews() {
-		Review c = newReview();
-		service.save(c);
-		verify(repo, times(1)).save(eq(c));
-	}
-
-	@Test
-	public void shouldRemoveReviews() {
-		Review c = newReview();
-		service.remove(c);
-		verify(repo, times(1)).remove(eq(c));
-	}
-
-	private Review newReview() {
-		Account author = new Account.Builder("mail@mail.com")
-			.displayName("User Name")
-			.build();
-
-		return new Review(author, "Title", "Review", 1);
+	public void shouldDeleteRollingStockReviews() {
+		Review review = new Review();
+		
+		service.deleteReview(rollingStock, review);
+		
+		verify(repo, times(1)).removeReview(eq(rollingStock), eq(review));
 	}
 }

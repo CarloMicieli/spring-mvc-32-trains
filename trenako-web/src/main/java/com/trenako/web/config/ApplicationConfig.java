@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.mongodb.MongoDbFactory;
+
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
@@ -62,7 +62,7 @@ public class ApplicationConfig extends AbstractMongoConfiguration {
 	 * @return the mongodb factory bean.
 	 * @throws Exception if the mongo settings are not correct
 	 */
-	public @Bean MongoDbFactory mongoDbFactory() throws Exception {
+	public @Bean SimpleMongoDbFactory mongoDbFactory() throws Exception {
 		return new SimpleMongoDbFactory(mongo(), getDatabaseName());
 	}
 	

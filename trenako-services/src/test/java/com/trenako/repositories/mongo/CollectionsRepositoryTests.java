@@ -48,6 +48,9 @@ public class CollectionsRepositoryTests {
 		.railway(fs())
 		.scale(scaleH0())
 		.build();
+	private Account owner = new Account.Builder("mail@mail.com")
+		.displayName("bob")
+		.build();
 	
 	@Mock MongoTemplate mongo;
 	CollectionsRepository repo;
@@ -61,8 +64,7 @@ public class CollectionsRepositoryTests {
 	@Test
 	public void shouldfindCollectionById() {
 		ObjectId id = new ObjectId();
-		Collection value = new Collection(
-			new Account.Builder("mail@mail.com").build());
+		Collection value = new Collection(owner);
 		when(mongo.findById(eq(id), eq(Collection.class))).thenReturn(value);
 		
 		Collection coll = repo.findById(id);
@@ -73,12 +75,11 @@ public class CollectionsRepositoryTests {
 	
 	@Test
 	public void shouldfindCollectionByOwnerName() {
-		String owner = "user-name";
-		Collection value = new Collection(
-				new Account.Builder("mail@mail.com").build());
+		String ownerName = "user-name";
+		Collection value = new Collection(owner);
 		when(mongo.findOne(isA(Query.class), eq(Collection.class))).thenReturn(value);
 		
-		Collection coll = repo.findByOwnerName(owner);
+		Collection coll = repo.findByOwnerName(ownerName);
 
 		assertNotNull(coll);
 		verify(mongo, times(1)).findOne(isA(Query.class), eq(Collection.class));
@@ -87,8 +88,6 @@ public class CollectionsRepositoryTests {
 	@Test
 	public void shouldCheckIfCollectionIdContainRollingStock() {
 		ObjectId id = new ObjectId();
-		
-		
 		when(mongo.count(isA(Query.class), eq(Collection.class))).thenReturn(1L);
 		
 		boolean ret = repo.containsRollingStock(id, rollingStock);
@@ -100,7 +99,6 @@ public class CollectionsRepositoryTests {
 	@Test
 	public void shouldCheckIfCollectionsContainRollingStock() {
 		String owner = "user-name";
-		
 		when(mongo.count(isA(Query.class), eq(Collection.class))).thenReturn(1L);
 		
 		boolean ret = repo.containsRollingStock(owner, rollingStock);
@@ -130,16 +128,14 @@ public class CollectionsRepositoryTests {
 	
 	@Test
 	public void shouldSaveCollections() {
-		
-		Collection c = null;
+		Collection c = new Collection();
 		repo.save(c);
 		verify(mongo, times(1)).save(eq(c));
 	}
 	
 	@Test
 	public void shouldRemoveCollections() {
-		
-		Collection c = null;
+		Collection c = new Collection();
 		repo.remove(c);
 		verify(mongo, times(1)).remove(eq(c));
 	}	

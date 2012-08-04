@@ -19,22 +19,20 @@ import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.bson.types.ObjectId;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.ArgumentCaptor;
+
+
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
+import com.mongodb.DBObject;
 import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockReviews;
 import com.trenako.repositories.ReviewsRepository;
 
 /**
@@ -42,99 +40,111 @@ import com.trenako.repositories.ReviewsRepository;
  * @author Carlo Micieli
  *
  */
-@RunWith(MockitoJUnitRunner.class)
-public class ReviewsRepositoryTests {
+public class ReviewsRepositoryTests extends AbstractMongoRepositoryTests {
 
 	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
 		.railway(fs())
 		.scale(scaleH0())
 		.build();
-	
-	private @Mock MongoTemplate mongo;
+
 	private ReviewsRepository repo;
 	
-	@Before
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
-		repo = new ReviewsRepositoryImpl(mongo);
+	@Override
+	void initRepository(MongoTemplate mongo) {
+		this.repo = new ReviewsRepositoryImpl(mongo);
 	}
 
 	@Test
-	public void shouldFindReviewsById() {
+	public void shouldFindRollingStockReviewsById() {
 		ObjectId id = new ObjectId();
-		Review value = newReview();
-		when(mongo.findById(eq(id), eq(Review.class))).thenReturn(value);
+		RollingStockReviews value = new RollingStockReviews();
+		when(mongo().findById(eq(id), eq(RollingStockReviews.class))).thenReturn(value);
 		
-		Review review = repo.findById(id);
+		RollingStockReviews rsReviews = repo.findById(id);
 		
-		assertNotNull(review);
-		verify(mongo, times(1)).findById(eq(id), eq(Review.class));
+		assertNotNull("Reviews are null", rsReviews);
+		verify(mongo(), times(1)).findById(eq(id), eq(RollingStockReviews.class));
 	}
 
 	@Test
-	public void shouldFindReviewsByAccount() {
-		Account author = new Account.Builder("mail@mail.com")
-			.displayName("User Name")
+	public void shouldFindRollingStockReviewsBySlug() {
+		String slug = "review-slug";
+		RollingStockReviews value = new RollingStockReviews();
+		when(mongo().findOne(isA(Query.class), eq(RollingStockReviews.class))).thenReturn(value);
+		
+		RollingStockReviews rsReviews = repo.findBySlug(slug);
+		
+		assertNotNull("Reviews are null", rsReviews);
+		
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		verify(mongo(), times(1)).findOne(arg.capture(), eq(RollingStockReviews.class));
+		assertEquals("{ \"slug\" : \"review-slug\"}", queryObject(arg).toString());
+	}
+
+	@Test
+	public void shouldFindRollingStockReviewsByRollingStock() {
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.railway(fs())
+			.scale(scaleH0())
 			.build();
-
-		List<Review> value = 
-				Arrays.asList(newReview(), newReview(), newReview());
-		when(mongo.find(isA(Query.class), eq(Review.class))).thenReturn(value);
+			
+		RollingStockReviews value = new RollingStockReviews();
+		when(mongo().findOne(isA(Query.class), eq(RollingStockReviews.class))).thenReturn(value);
 		
-		List<Review> results = (List<Review>) repo.findByAuthor(author);
+		RollingStockReviews rsReviews = repo.findByRollingStock(rs);
 		
-		assertEquals(3, results.size());
-		verify(mongo, times(1)).find(isA(Query.class), eq(Review.class));
+		assertNotNull("Reviews are null", rsReviews);
+		
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		verify(mongo(), times(1)).findOne(arg.capture(), eq(RollingStockReviews.class));
+		assertEquals("{ \"rollingStock.slug\" : \"acme-123456\"}", queryObject(arg).toString());
+	}
+	
+	@Test
+	public void shouldAddNewReviewsToRollingStockReviews() {
+		Review review = newReview();
+		
+		repo.addReview(rollingStock, review);
+		
+		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
+		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
+		verify(mongo(), times(1)).upsert(argQuery.capture(), argUpdate.capture(), eq(RollingStockReviews.class));
+		assertEquals("{ \"slug\" : \"acme-123456\"}", queryObject(argQuery).toString());
+		
+		DBObject updateObject = updateObject(argUpdate);
+		String expected = "{ \"$set\" : { \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"}} , " +
+			"\"$push\" : { \"reviews\" : { \"author\" : { \"slug\" : \"user-name\" , \"label\" : \"User Name\"} , " +
+			"\"title\" : \"Title\" , \"content\" : \"Review\" , \"lang\" : \"en\" , \"rating\" : 3}} , "+
+			"\"$inc\" : { \"numberOfReviews\" : 1 , \"totalRating\" : 3}}";
+		assertEquals(expected, updateObject.toString());
+	}
+	
+	@Test
+	public void shouldRemoveReviewsFromRollingStockReviews() {
+		Review review = newReview();
+		repo.removeReview(rollingStock, review);
+		
+		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
+		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
+		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(RollingStockReviews.class));
+		assertEquals("{ \"slug\" : \"acme-123456\"}", queryObject(argQuery).toString());
+		
+		assertEquals("{ \"$pull\" : { \"reviews.author.slug\" : \"user-name\"} , \"$inc\" : { \"numberOfReviews\" : -1 , \"totalRating\" : -3}}", 
+			updateObject(argUpdate).toString());
 	}
 
 	@Test
-	public void shouldFindReviewsByAuthorName() {
-		List<Review> value = 
-				Arrays.asList(newReview(), newReview(), newReview());
-		when(mongo.find(isA(Query.class), eq(Review.class))).thenReturn(value);
-		
-		List<Review> results = (List<Review>) repo.findByAuthor("author");
-		
-		assertEquals(3, results.size());
-		verify(mongo, times(1)).find(isA(Query.class), eq(Review.class));
-	}
-
-	@Test
-	public void shouldFindReviewsByRollingStock() {
-		List<Review> value = 
-				Arrays.asList(newReview(), newReview(), newReview());
-		when(mongo.find(isA(Query.class), eq(Review.class))).thenReturn(value);
-		
-		List<Review> results = (List<Review>) repo.findByRollingStock(rollingStock);
-		
-		assertEquals(3, results.size());
-		verify(mongo, times(1)).find(isA(Query.class), eq(Review.class));
-	}
-
-	@Test
-	public void shouldFindReviewsByRollingStockSlug() {
-		List<Review> value = 
-				Arrays.asList(newReview(), newReview(), newReview());
-		when(mongo.find(isA(Query.class), eq(Review.class))).thenReturn(value);
-		
-		List<Review> results = (List<Review>) repo.findByRollingStock("rs");
-		
-		assertEquals(3, results.size());
-		verify(mongo, times(1)).find(isA(Query.class), eq(Review.class));
-	}
-
-	@Test
-	public void shouldSaveReviews() {
-		Review r = newReview();
+	public void shouldSaveRollingStockReviews() {
+		RollingStockReviews r = new RollingStockReviews();
 		repo.save(r);
-		verify(mongo, times(1)).save(eq(r));
+		verify(mongo(), times(1)).save(eq(r));
 	}
 
 	@Test
-	public void shouldRemoveReviews() {
-		Review r = newReview();
+	public void shouldRemoveRollingStockReviews() {
+		RollingStockReviews r = new RollingStockReviews();
 		repo.remove(r);
-		verify(mongo, times(1)).remove(eq(r));
+		verify(mongo(), times(1)).remove(eq(r));
 	}
 	
 	private Review newReview() {
@@ -142,8 +152,7 @@ public class ReviewsRepositoryTests {
 			.displayName("User Name")
 			.build();
 
-		final Review rev = new Review(author, "Title", "Review", 1);
-		return rev;
+		return new Review(author, "Title", "Review", 3);
 	}
 
 }

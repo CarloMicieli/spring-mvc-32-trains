@@ -15,12 +15,9 @@
  */
 package com.trenako.services;
 
-import org.bson.types.ObjectId;
-
-import com.trenako.AppGlobals;
-import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockReviews;
 
 /**
  * The interface for the rolling stock reviews service.
@@ -42,76 +39,33 @@ import com.trenako.entities.RollingStock;
 public interface ReviewsService {
 	
 	/**
-	 * Finds the {@link Review} with the provided id.
-	 * @param id the unique id
-	 * @return a {@code Review} if found; {@code null} otherwise
+	 * Finds the {@code RollingStockReviews} with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code RollingStockReviews} if found; {@code null} otherwise
 	 */
-	Review findById(ObjectId id);
-	
+	RollingStockReviews findBySlug(String slug);
+		
 	/**
-	 * Returns the list of {@link Review} with the same author id.
-	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
-	 * the results are sort by descending posted date. 
-	 * </p>
-	 *
-	 * @param author the reviews' author
-	 * @return a {@code Review} list
-	 */	
-	Iterable<Review> findByAuthor(Account author);
-
-	/**
-	 * Returns the list of {@link Review} with the same author name.
-	 * <p>
-	 * This method is using the {@link Account#getSlug()} value as a search key.
-	 * </p>
-	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
-	 * the results are sort by descending posted date. 
-	 * </p>
-	 *
-	 * @param authorName the reviews' author name
-	 * @return a {@code Review} list
-	 */
-	Iterable<Review> findByAuthor(String authorName);
-	
-	/**
-	 * Returns a list of {@link Review} for the same rolling stock.
-	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
-	 * the results are sort by descending posted date. 
-	 * </p>
+	 * Returns the {@code RollingStockReviews} for the provided rolling stock.
 	 *
 	 * @param rollingStock the rolling stock
-	 * @return a {@code Review} list
+	 * @return a {@code RollingStockReviews} if found; {@code null} otherwise
 	 */	
-	Iterable<Review> findByRollingStock(RollingStock rollingStock);
+	RollingStockReviews findByRollingStock(RollingStock rollingStock);
 
 	/**
-	 * Returns a list of {@link Review} for the same rolling stock slug.
-	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
-	 * the results are sort by descending posted date. 
-	 * </p>
+	 * Posts a new user review for the provided {@code RollingStock}.
 	 *
-	 * @param rsSlug the rolling stock slug
-	 * @return a {@code Review} list
-	 */	
-	Iterable<Review> findByRollingStock(String rsSlug);
+	 * @param rs the {@code RollingStock} under review
+	 * @param review the review to be saved	 
+	 */
+	void postReview(RollingStock rs, Review review);
 	
 	/**
-	 * Persists the {@link Review} changes in the data store.
-	 * <p>
-	 * This method performs a "upsert": if the {@code Review} is not present in the data store
-	 * a new {@code Review} is created; otherwise the method will update the existing {@code Review}. 
-	 * </p>	 
-	 * @param review the {@code Review} to be saved
+	 * Deletes the review from the provided {@code RollingStock}.
+	 *
+	 * @param rs the {@code RollingStock} under review
+	 * @param review the review to be removed	 
 	 */
-	void save(Review review);
-	
-	/**
-	 * Removes a {@link Review} from the data store.
-	 * @param review the {@code Review} to be removed
-	 */
-	void remove(Review review);	
+	void deleteReview(RollingStock rs, Review review);	
 }

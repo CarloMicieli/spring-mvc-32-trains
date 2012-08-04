@@ -15,13 +15,12 @@
  */
 package com.trenako.services;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockReviews;
 import com.trenako.repositories.ReviewsRepository;
 
 /**
@@ -38,40 +37,24 @@ public class ReviewsServiceImpl implements ReviewsService {
 	public ReviewsServiceImpl(ReviewsRepository repo) {
 		this.repo = repo;
 	}
-	
+
 	@Override
-	public Review findById(ObjectId id) {
-		return repo.findById(id);
+	public RollingStockReviews findBySlug(String slug) {
+		return repo.findBySlug(slug);
 	}
 
 	@Override
-	public Iterable<Review> findByAuthor(Account author) {
-		return repo.findByAuthor(author);
-	}
-
-	@Override
-	public Iterable<Review> findByAuthor(String authorName) {
-		return repo.findByAuthor(authorName);
-	}
-
-	@Override
-	public Iterable<Review> findByRollingStock(RollingStock rollingStock) {
+	public RollingStockReviews findByRollingStock(RollingStock rollingStock) {
 		return repo.findByRollingStock(rollingStock);
 	}
 
 	@Override
-	public Iterable<Review> findByRollingStock(String rsSlug) {
-		return repo.findByRollingStock(rsSlug);
+	public void postReview(RollingStock rs, Review review) {
+		repo.addReview(rs, review);
 	}
 
 	@Override
-	public void save(Review review) {
-		repo.save(review);
+	public void deleteReview(RollingStock rs, Review review) {
+		repo.removeReview(rs, review);
 	}
-
-	@Override
-	public void remove(Review review) {
-		repo.remove(review);
-	}
-
 }
