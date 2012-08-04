@@ -50,7 +50,7 @@ public class RollingStockReviews {
 	private WeakDbRef<RollingStock> rollingStock;
 
 	@Valid
-	private List<Review> reviews;
+	private List<Review> items;
 
 	@Range(min = 1, message = "reviews.numberOfReviews.range.notmet")
 	private int numberOfReviews;
@@ -136,16 +136,16 @@ public class RollingStockReviews {
 	 * Returns the list of rolling stock reviews.
 	 * @return the reviews list
 	 */
-	public List<Review> getReviews() {
-		return reviews;
+	public List<Review> getItems() {
+		return items;
 	}
 
 	/**
 	 * Sets the list of rolling stock reviews.
-	 * @param reviews the reviews list
+	 * @param items the reviews list
 	 */
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
+	public void setItems(List<Review> items) {
+		this.items = items;
 	}
 
 	/**

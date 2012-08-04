@@ -15,6 +15,7 @@
  */
 package com.trenako.mapping;
 
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.util.Assert;
 
 /**
@@ -35,6 +36,7 @@ import org.springframework.util.Assert;
  */
 public class WeakDbRef<E extends DbReferenceable> {
 	
+	@Indexed
 	private String slug;
 	private String label;
 	

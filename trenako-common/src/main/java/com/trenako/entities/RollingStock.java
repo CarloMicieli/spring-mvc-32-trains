@@ -67,15 +67,12 @@ public class RollingStock implements DbReferenceable {
 	@Id
 	private ObjectId id;
 	
-	@Indexed(name = "brand.slug")
 	@NotNull(message = "rs.brand.required")
 	private WeakDbRef<Brand> brand;
 	
-	@Indexed(name = "railway.slug")
 	@NotNull(message = "rs.railway.required")
 	private WeakDbRef<Railway> railway;
 	
-	@Indexed(name = "scale.slug")
 	@NotNull(message = "rs.scale.required")
 	private WeakDbRef<Scale> scale;
 	
@@ -109,7 +106,7 @@ public class RollingStock implements DbReferenceable {
 	@Range(min = 0, max = 1000, message = "rs.totalLength.range.notmet")
 	private int totalLength;
 	
-	@Indexed(unique = true)
+	@Indexed
 	@Size(max = 12, message = "rs.upcCode.size.notmet")
 	private String upcCode;
 	

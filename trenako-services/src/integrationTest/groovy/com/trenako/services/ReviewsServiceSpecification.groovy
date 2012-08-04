@@ -18,7 +18,9 @@ package com.trenako.services
 import spock.lang.*
 
 import org.bson.types.ObjectId
+
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DuplicateKeyException
 
 import com.trenako.entities.Account
 import com.trenako.entities.Brand
@@ -44,7 +46,7 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		db.reviews.insert(
 			slug: 'acme-69501',
 			rollingStock: [slug: 'acme-69501', label: 'ACME 69501'],
-			reviews: [
+			items: [
 				[author: 'alice', title: 'Review title1', content: 'Review content1', lang: 'en', rating: 5, postedAt: new Date()],
 				[author: 'george', title: 'Review title2', content: 'Review content2', lang: 'en', rating: 2, postedAt: new Date()]],
 			numberOfReviews: 2,
@@ -63,9 +65,9 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		then:
 		result != null
 		result.slug == 'acme-69501'
-		result.reviews != null
-		result.reviews.size() == 2
-		result.reviews.collect { it.content }.sort() == ['Review content1', 'Review content2']
+		result.items != null
+		result.items.size() == 2
+		result.items.collect { it.content }.sort() == ['Review content1', 'Review content2']
 	}
 	
 	def "should return null if no review exists for the provided slug"() {
@@ -86,9 +88,9 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		then:
 		result != null
 		result.slug == 'acme-69501'
-		result.reviews != null
-		result.reviews.size() == 2
-		result.reviews.collect { it.content }.sort() == ['Review content1', 'Review content2']
+		result.items != null
+		result.items.size() == 2
+		result.items.collect { it.content }.sort() == ['Review content1', 'Review content2']
 	}
 	
 	def "should return null if no review exists for the provided rolling stock"() {
@@ -109,8 +111,8 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		
 		and:
 		def author = new Account(displayName: 'Bob')
-		def newReview = new Review(author, 
-			'My third review', 
+		def newReview = new Review(author,
+			'My third review',
 			'My third review content',
 			3)
 		
@@ -122,7 +124,32 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		assert doc != null
 		doc.numberOfReviews == 3
 		doc.totalRating == 10
-		doc.reviews.size() == 3
+		doc.items.size() == 3
+	}
+	
+	def "should initialize the list when posting a review for a new rolling stock"() {
+		given:
+		def rollingStock = new RollingStock(slug: 'acme-123456')
+		rollingStock.setBrand(new Brand('ACME'))
+		
+		and:
+		def author = new Account(displayName: 'Bob')
+		def newReview = new Review(author, 
+			'My first review', 
+			'My first review content',
+			3)
+		
+		when:
+		service.postReview(rollingStock, newReview)
+		
+		then:
+		def doc = db.reviews.findOne(slug: 'acme-123456')
+		assert doc != null
+		doc.numberOfReviews == 1
+		doc.totalRating == 3
+		doc.items.size() == 1
+		doc.items[0].title == 'My first review'
+		doc.items[0].content == 'My first review content'
 	}
 	
 	def "should delete rolling stock reviews"() {
@@ -144,6 +171,6 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		assert doc != null
 		doc.numberOfReviews == 1
 		doc.totalRating == 2
-		doc.reviews.size() == 1
+		doc.items.size() == 1
 	}
 }

@@ -72,7 +72,7 @@ public class ReviewsRepositoryImpl implements ReviewsRepository {
 	public void addReview(RollingStock rs, Review review) {	
 		Update upd = new Update()
 			.set("rollingStock", WeakDbRef.buildRef(rs))
-			.push("reviews", review)
+			.push("items", review)
 			.inc("numberOfReviews", 1)
 			.inc("totalRating", review.getRating());
 		mongo.upsert(query(where("slug").is(rs.getSlug())), upd, RollingStockReviews.class);
@@ -83,7 +83,7 @@ public class ReviewsRepositoryImpl implements ReviewsRepository {
 		Map<String, Object> m = Maps.map("author", (Object) review.getAuthor());
 
 		Update upd = new Update()
-			.pull("reviews", m)
+			.pull("items", m)
 			.inc("numberOfReviews", -1)
 			.inc("totalRating", -1 * review.getRating());
 		mongo.updateFirst(query(where("slug").is(rs.getSlug())), upd, RollingStockReviews.class);

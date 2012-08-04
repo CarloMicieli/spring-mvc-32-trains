@@ -58,17 +58,17 @@ public class ReviewTests {
 	public void shouldCalculateNumberOfReviewsAndRatingForEmptyReview() {
 		assertEquals(0, rsReviews.getNumberOfReviews());
 		assertEquals(0, rsReviews.getTotalRating());
-		assertEquals(null, rsReviews.getReviews());
+		assertEquals(null, rsReviews.getItems());
 	}
 	
 	@Test
 	public void shouldFillRollingStockAndReviewAuthor() {
 		Review review1 = new Review(alice, "Review1 title", "Review1 content", 5);
 
-		rsReviews.setReviews(Arrays.asList(review1));
+		rsReviews.setItems(Arrays.asList(review1));
 
 		assertEquals("{label=ACME 123456, slug=acme-123456}", rsReviews.getRollingStock().toString());
-		assertEquals("alice", rsReviews.getReviews().get(0).getAuthor().toString());
+		assertEquals("alice", rsReviews.getItems().get(0).getAuthor().toString());
 		
 	}
 	
@@ -77,11 +77,11 @@ public class ReviewTests {
 		Review review1 = new Review(alice, "Review1 title", "Review1 content", 5);
 		Review review2 = new Review(bob, "Review2 title", "Review2 content", 4);
 		
-		rsReviews.setReviews(Arrays.asList(review1, review2));
+		rsReviews.setItems(Arrays.asList(review1, review2));
 		rsReviews.setNumberOfReviews(2);
 		rsReviews.setTotalRating(9);
 		
-		assertEquals(2, rsReviews.getReviews().size());
+		assertEquals(2, rsReviews.getItems().size());
 		assertEquals(2, rsReviews.getNumberOfReviews());
 		assertEquals(9, rsReviews.getTotalRating());
 		assertEquals(BigDecimal.valueOf(4.5), rsReviews.getRating());
