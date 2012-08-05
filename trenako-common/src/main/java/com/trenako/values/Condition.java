@@ -32,20 +32,19 @@ public enum Condition {
 	PRE_OWNED;
 	
 	/**
-	 * Returns the condition description to be stored in the database.
-	 * @return the condition value
+	 * Gets the {@code Condition} label
+	 * @return the label
 	 */
-	public String keyValue() {
-		return name().toLowerCase().replace('_', '-');
+	public String label() {
+		return LocalizedEnum.buildKey(this);
 	}
-	
+
 	/**
-	 * Parses the condition value from the database.
-	 * @param condition the condition value
-	 * @return a value from Condition enumeration
+	 * Parses the string argument as a {@code Condition}.
+	 * @param s the string to be parsed
+	 * @return a {@code Visibility} value
 	 */
-	public static Condition parse(String condition) {
-		String c = condition.toUpperCase().replace('-', '_');
-		return Condition.valueOf(c);
+	public static Condition parse(String s) {
+		return LocalizedEnum.parseString(s, Condition.class);
 	}
 }

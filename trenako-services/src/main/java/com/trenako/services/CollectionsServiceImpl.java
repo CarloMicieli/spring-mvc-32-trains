@@ -24,6 +24,7 @@ import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.CollectionsRepository;
+import com.trenako.values.Visibility;
 
 /**
  * A concrete implementation for the rolling stocks collection service.
@@ -46,42 +47,40 @@ public class CollectionsServiceImpl implements CollectionsService {
 	}
 
 	@Override
+	public Collection findBySlug(String slug) {
+		return repo.findBySlug(slug);
+	}
+
+	@Override
 	public Collection findByOwner(Account owner) {
-		return repo.findByOwnerName(owner.getSlug());
+		return repo.findByOwner(owner);
 	}
 
 	@Override
-	public Collection findByOwnerName(String ownerName) {
-		return repo.findByOwnerName(ownerName);
+	public boolean containsRollingStock(Account owner, RollingStock rollingStock) {
+		return repo.containsRollingStock(owner, rollingStock);
 	}
 
 	@Override
-	public boolean containsRollingStock(ObjectId collectionId,
-			RollingStock rollingStock) {
-		return repo.containsRollingStock(collectionId, rollingStock);
+	public void addRollingStock(Account owner, CollectionItem item) {
+		repo.addItem(owner, item);
 	}
 
 	@Override
-	public boolean containsRollingStock(String ownerName,
-			RollingStock rollingStock) {
-		return repo.containsRollingStock(ownerName, rollingStock);
+	public void removeRollingStock(Account owner, CollectionItem item) {
+		repo.removeItem(owner, item);
 	}
 
 	@Override
-	public void addItem(ObjectId collectionId, CollectionItem item) {
-		repo.addItem(collectionId, item);
+	public void changeVisibility(Account owner, Visibility visibility) {
+		repo.changeVisibility(owner, visibility);
 	}
-
-	@Override
-	public void addItem(String ownerName, CollectionItem item) {
-		repo.addItem(ownerName, item);
-	}
-
+	
 	@Override
 	public void save(Collection collection) {
 		repo.save(collection);
 	}
-
+	
 	@Override
 	public void remove(Collection collection) {
 		repo.remove(collection);

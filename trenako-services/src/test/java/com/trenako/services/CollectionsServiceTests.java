@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -40,9 +41,13 @@ import com.trenako.repositories.CollectionsRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class CollectionsServiceTests {
 	
+	private ObjectId id = new ObjectId();
 	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
 		.railway(fs())
 		.scale(scaleH0())
+		.build();
+	private Account owner = new Account.Builder("mail@mail.com")
+		.displayName("user")
 		.build();
 	
 	@Mock CollectionsRepository repo;
@@ -51,66 +56,55 @@ public class CollectionsServiceTests {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
+		
+		// mocking repository
+		Collection value = new Collection(owner);
+		when(repo.findById(eq(id))).thenReturn(value);
+		when(repo.findBySlug(eq("slug"))).thenReturn(value);
+		when(repo.findByOwner(eq(owner))).thenReturn(value);
+		when(repo.containsRollingStock(eq(owner), eq(rollingStock))).thenReturn(true);
+		
 		service = new CollectionsServiceImpl(repo);
 	}
 
 	@Test
 	public void shouldFindCollectionsById() {
-		ObjectId id = new ObjectId();
+		Collection coll = service.findById(id);
 		
-		service.findById(id);
+		assertNotNull(coll);
 		verify(repo, times(1)).findById(eq(id));
 	}
 	
 	@Test
-	public void shouldFindCollectionsByOwnerName() {
-		String owner = "user-name";
+	public void shouldFindCollectionsBySlug() {
+		String slug = "slug";
+		Collection coll = service.findBySlug(slug);
 		
-		service.findByOwnerName(owner);
-		verify(repo, times(1)).findByOwnerName(eq(owner));
+		assertNotNull(coll);
+		verify(repo, times(1)).findBySlug(eq(slug));
 	}
 	
 	@Test
 	public void shouldFindCollectionsByOwner() {
-		Account owner = new Account.Builder("mail@mail.com")
-			.displayName("user")
-			.build();
-		
-		service.findByOwner(owner);
-		verify(repo, times(1)).findByOwnerName(eq(owner.getSlug()));
-	}
+		Collection coll = service.findByOwner(owner);
 
-	@Test
-	public void shouldCheckIfCollectionContainsRollingStock() {
-		ObjectId collectionId = new ObjectId();
-		
-		service.containsRollingStock(collectionId, rollingStock);
-		verify(repo, times(1)).containsRollingStock(eq(collectionId), eq(rollingStock));
+		assertNotNull(coll);
+		verify(repo, times(1)).findByOwner(eq(owner));
 	}
 	
 	@Test
 	public void shouldCheckIfUserCollectionContainsRollingStock() {
-		String owner = "user-name";
+		boolean ret = service.containsRollingStock(owner, rollingStock);
 		
-		service.containsRollingStock(owner, rollingStock);
+		assertTrue(ret);
 		verify(repo, times(1)).containsRollingStock(eq(owner), eq(rollingStock));
 	}
 	
 	@Test
-	public void shouldAddItemsToCollection() {
-		ObjectId collectionId = new ObjectId();
-		CollectionItem item = null;
-		
-		service.addItem(collectionId, item);
-		verify(repo, times(1)).addItem(eq(collectionId), eq(item));
-	}
-	
-	@Test
 	public void shouldAddItemsToUserCollection() {
-		String owner = "user-name";
 		CollectionItem item = null;
 		
-		service.addItem(owner, item);
+		service.addRollingStock(owner, item);
 		verify(repo, times(1)).addItem(eq(owner), eq(item));
 	}
 	

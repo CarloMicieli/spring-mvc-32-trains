@@ -23,8 +23,10 @@ import javax.validation.constraints.Past;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import com.trenako.mapping.WeakDbRef;
+import com.trenako.utility.Slug;
 import com.trenako.values.Condition;
 
 /**
@@ -35,6 +37,9 @@ import com.trenako.values.Condition;
  */
 public class CollectionItem {
     
+	@Indexed
+	private String itemId;
+	
 	@NotNull(message = "item.rollingStock.required")
 	private WeakDbRef<RollingStock> rollingStock;
 
@@ -92,7 +97,7 @@ public class CollectionItem {
 		}
 
 		public Builder condition(Condition cond) {
-			condition = cond.keyValue();
+			condition = cond.label();
 			return this;
 		}
 		
@@ -122,6 +127,29 @@ public class CollectionItem {
     }
     
     /**
+     * Returns the {@code CollectionItem} id.    
+     * @return the id
+     */
+    public String getItemId() {
+		if (itemId == null) {
+			itemId = new StringBuilder()
+				.append(getRollingStock().getSlug())
+				.append("-")
+				.append(Slug.encode(getAddedAt()))
+				.toString();
+		}
+    	return itemId;
+	}
+
+    /**
+     * Sets the {@code CollectionItem} id.    
+     * @param id the id
+     */
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
+	}
+
+	/**
      * Returns the rolling stock.
      * @return the rolling stock
      */
@@ -129,6 +157,14 @@ public class CollectionItem {
 		return rollingStock;
 	}
 
+	/**
+	 * Sets the rolling stock.
+	 * @param rollingStock the rolling stock
+	 */
+	public void setRollingStock(WeakDbRef<RollingStock> rollingStock) {
+		this.rollingStock = rollingStock;
+	}
+	
 	/**
 	 * Sets the rolling stock.
 	 * @param rollingStock the rolling stock

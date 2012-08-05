@@ -16,6 +16,7 @@
 package com.trenako.values;
 
 /**
+ * The content visibility enum.
  * 
  * @author Carlo Micieli
  *
@@ -23,4 +24,21 @@ package com.trenako.values;
 public enum Visibility {
 	PUBLIC,
 	PRIVATE;
+	
+	/**
+	 * Gets the {@code Visibility} label
+	 * @return the label
+	 */
+	public String label() {
+		return LocalizedEnum.buildKey(this);
+	}
+
+	/**
+	 * Parses the string argument as a {@code Visibility}.
+	 * @param s the string to be parsed
+	 * @return a {@code Visibility} value
+	 */
+	public static Visibility parse(String s) {
+		return LocalizedEnum.parseString(s, Visibility.class);
+	}
 }

@@ -17,6 +17,8 @@ package com.trenako.utility;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -34,8 +36,8 @@ public class Slug {
 	private Slug() {}
 	
 	/**
-	 * Encodes this text to a <em>slug</em>.
-	 * @param input the string to be encoded
+	 * Encodes the provided String as {@code slug}.
+	 * @param input the String to be encoded
 	 * @return the slug
 	 */
 	public static String encode(String input) {
@@ -45,5 +47,15 @@ public class Slug {
 		String normalized = Normalizer.normalize(nowhitespace, Form.NFD);  
 		String slug = NONLATIN.matcher(normalized).replaceAll("");  
 		return slug.toLowerCase(Locale.ENGLISH); 
+	}
+	
+	/**
+	 * Encodes the provided Date as {@code slug}.
+	 * @param date the date to be encoded
+	 * @return the slug
+	 */
+	public static String encode(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return new StringBuilder(sdf.format(date)).toString();
 	}
 }

@@ -15,7 +15,10 @@
  */
 package com.trenako.repositories.mongo;
 
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -56,6 +59,24 @@ public abstract class AbstractMongoRepositoryTests {
 	
 	protected MongoTemplate mongo() {
 		return mongo;
+	}
+	
+	protected DBObject verifyFindOne(Class<?> collectionName) {
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		verify(mongo(), times(1)).findOne(arg.capture(), eq(collectionName));
+		return arg.getValue().getQueryObject();
+	}
+	
+	protected DBObject verifyFind(Class<?> collectionName) {
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		verify(mongo(), times(1)).find(arg.capture(), eq(collectionName));
+		return arg.getValue().getQueryObject();
+	}
+	
+	protected DBObject verifyCount(Class<?> collectionName) {
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		verify(mongo(), times(1)).count(arg.capture(), eq(collectionName));
+		return arg.getValue().getQueryObject();
 	}
 	
 	protected DBObject queryObject(ArgumentCaptor<Query> arg) {

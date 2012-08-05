@@ -21,6 +21,7 @@ import com.trenako.entities.Account;
 import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
+import com.trenako.values.Visibility;
 
 /**
  * The interface for the user collections service.
@@ -43,45 +44,28 @@ import com.trenako.entities.RollingStock;
 public interface CollectionsService
 {
     /**
-     * Finds the {@link Collection} with the provided id.
+     * Finds the {@code Collection} with the provided id.
      * @param id the collection id
      * @return a {@code Collection} if found; {@code null} otherwise
      */ 
     Collection findById(ObjectId id);
 
     /**
-     * Finds the {@link Collection} with the provided owner.
+     * Finds the {@code Collection} with the provided slug.
+     * @param slug the collection's slug
+     * @return a {@code Collection} if found; {@code null} otherwise
+     */
+    Collection findBySlug(String slug);
+    
+    /**
+     * Finds the {@code Collection} with the provided owner.
      * @param owner the collection's owner
      * @return a {@code Collection} if found; {@code null} otherwise
      */
     Collection findByOwner(Account owner);
     
     /**
-     * Finds the {@link Collection} with the provided owner name.
-     * @param ownerName the collection's owner name
-     * @return a {@code Collection} if found; {@code null} otherwise
-     */
-    Collection findByOwnerName(String ownerName);
-
-    /**
-     * Checks whether the {@link Collection} contains the provided {@link RollingStock}.
-     * <p>
-     * It is valid (and quite common for passenger and freight cars) to have the same {@code RollingStock}
-     * more than once in the same {@code Collection}.
-     * </p>
-     * <p>
-     * In the case the {@code Collection} contains the same {@code RollingStock} more than once
-     * this method will return {@code true}.
-     * </p>
-     * 
-     * @param collectionId the collection id
-     * @param rollingStock the {@code RollingStock} to be checked
-     * @return {@code true} if one instance is found in the collection; {@code false} otherwise
-     */
-    boolean containsRollingStock(ObjectId collectionId, RollingStock rollingStock);
-
-    /**
-     * Checks whether the collection for this owner's name contains the provided rolling stock.
+     * Checks whether the {@code Collection} for this owner's name contains the provided rolling stock.
      * <p>
      * It is valid (and quite common for passenger and freight cars) to have the same {@code RollingStock}
      * more than once in the same {@code Collection}.
@@ -95,41 +79,40 @@ public interface CollectionsService
      * @param rollingStock the rolling stock to be checked
      * @return {@code true} if one instance is found in the collection; {@code false} otherwise
      */
-    boolean containsRollingStock(String ownerName, RollingStock rollingStock);
+    boolean containsRollingStock(Account owner, RollingStock rollingStock);
 
     /**
-     * Adds a new {@link CollectionItem} to the user's collection.
+     * Adds a new item to the {@code Collection}.
      * 
-     * @param collectionId the user's collection
+     * @param owner the collection owner
      * @param item the {@code CollectionItem} to be added
      */
-    void addItem(ObjectId collectionId, CollectionItem item);
+    void addRollingStock(Account owner, CollectionItem item);
 
     /**
-     * Adds a new {@link CollectionItem} to the user's collection.
+     * Removes an item from the {@code Collection}.
      * 
-     * <p>
-     * Every user can have only one collection, so it is possible to add new items 
-     * using just the {@code Account} information.
-     * </p>
-     * 
-     * @param ownerName the collection's owner name
-     * @param item the {@code CollectionItem} to be added
+     * @param owner the collection owner
+     * @param item the {@code CollectionItem} to be removed
      */
-    void addItem(String ownerName, CollectionItem item);
+	void removeRollingStock(Account owner, CollectionItem item);
+    
+	/**
+	 * Changes the {@code Collection} visibility (either {@code public} or {@code private}).
+	 * 
+	 * @param owner the collection owner
+	 * @param visibility the new visibility
+	 */
+	void changeVisibility(Account owner, Visibility visibility);
 
 	/**
-	 * Persists the {@link Collection} changes in the data store.
-	 * <p>
-	 * This method performs a "upsert": if the {@code Collection} is not present in the data store
-	 * a new {@code Collection} is created; otherwise the method will update the existing {@code Collection}. 
-	 * </p>
+	 * Saves a {@code Collection}.
 	 * @param collection the {@code Collection} to be saved
-	 */ 
+	 */
     void save(Collection collection);
-
+	
 	/**
-	 * Removes a {@link Collection} from the data store.
+	 * Deletes a {@code Collection}.
 	 * @param collection the {@code Collection} to be removed
 	 */
     void remove(Collection collection);

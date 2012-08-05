@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
@@ -57,6 +58,15 @@ public class CollectionItemTests {
 		assertEquals("Notes text", item.getNotes());
 		assertEquals(100, item.getPrice());
 		assertEquals(2, item.getQuantity());
+	}
+	
+	@Test
+	public void shouldFillTheItemId() {
+		CollectionItem item = new CollectionItem.Builder(rollingStock)
+			.addedAt(new GregorianCalendar(2012, 0, 1).getTime())
+			.build();
+		
+		assertEquals("acme-123456-2012-01-01", item.getItemId());
 	}
 	
 	@Test

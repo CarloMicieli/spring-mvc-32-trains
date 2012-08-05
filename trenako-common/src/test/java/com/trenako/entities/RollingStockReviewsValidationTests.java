@@ -76,8 +76,8 @@ public class RollingStockReviewsValidationTests
 		
 		Map<String, String> errors = validate(rsReviews);
 		assertEquals(3, errors.size());
-		assertEquals("review.title.required", errors.get("reviews[0].title"));
-		assertEquals("review.content.required", errors.get("reviews[0].content"));
-		assertEquals("review.rating.range.notmet", errors.get("reviews[0].rating"));
+		assertEquals("review.title.required", errors.get("items[0].title"));
+		assertEquals("review.content.required", errors.get("items[0].content"));
+		assertEquals("review.rating.range.notmet", errors.get("items[0].rating"));
 	}
 }

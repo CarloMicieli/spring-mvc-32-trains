@@ -18,17 +18,25 @@ package com.trenako.repositories.mongo;
 import static org.springframework.data.mongodb.core.query.Query.*;
 import static org.springframework.data.mongodb.core.query.Criteria.*;
 
+import java.util.Date;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
+import com.trenako.entities.Account;
+import com.trenako.entities.CategoriesCount;
 import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.repositories.CollectionsRepository;
+import com.trenako.utility.Maps;
+import com.trenako.values.Visibility;
 
 /**
  * 
@@ -45,49 +53,72 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 		this.mongo = mongoTemplate;
 	}
 
+	// testing
+	private Date now = null;
+	protected void setCurrentTimestamp(Date now) {
+		this.now = now;
+	}
+	
+	protected Date now() {
+		return now;
+	}
+	
 	@Override
 	public Collection findById(ObjectId id) {
 		return mongo.findById(id, Collection.class);
 	}
 
 	@Override
-	public Collection findByOwnerName(String ownerName) {
-		Query query = query(where("ownerName").is(ownerName));
+	public Collection findBySlug(String slug) {
+		Query query = query(where("slug").is(slug));
 		return mongo.findOne(query, Collection.class);
 	}
 
 	@Override
-	public boolean containsRollingStock(ObjectId collectionId,
-			RollingStock rollingStock) {
+	public Collection findByOwner(Account owner) {
+		Query query = query(where("owner.slug").is(owner.getSlug()));
+		return mongo.findOne(query, Collection.class);
+	}
+
+	@Override
+	public boolean containsRollingStock(Account owner, RollingStock rollingStock) {
 		Query query = query(
-				where("id").is(collectionId)
-				.and("items.rsSlug").is(rollingStock.getSlug()));
+				where("owner.slug").is(owner.getSlug())
+				.and("items.rollingStock.slug").is(rollingStock.getSlug()));
 				
 		return mongo.count(query, Collection.class) > 0;
 	}
 
 	@Override
-	public boolean containsRollingStock(String ownerName,
-			RollingStock rollingStock) {
-		Query query = query(
-				where("ownerName").is(ownerName)
-				.and("items.rsSlug").is(rollingStock.getSlug()));
-				
-		return mongo.count(query, Collection.class) > 0;
+	public void addItem(Account owner, CollectionItem item) {
+		Assert.notNull(item.getCategory(), "The item category is required");
+		Assert.notNull(owner.getSlug(), "Owner slug is required");
+		
+		Update upd = new Update()
+			.set("owner", WeakDbRef.buildRef(owner))
+			.set("lastModified", now())
+			.push("items", item)
+			.inc("categories." + CategoriesCount.getKey(item.getCategory()), 1);
+		mongo.upsert(query(where("owner.slug").is(owner.getSlug())), upd, Collection.class);
 	}
 
 	@Override
-	public void addItem(ObjectId collectionId, CollectionItem item) {
-		mongo.updateFirst(query(where("id").is(collectionId)),
-				new Update().addToSet("items", item), 
-				Collection.class);
+	public void removeItem(Account owner, CollectionItem item) {
+		Assert.notNull(item.getItemId(), "The item ID is required");
+		Assert.notNull(item.getCategory(), "The item category is required");
+		Assert.notNull(owner.getSlug(), "Owner slug is required");
+		
+		Update upd = new Update()
+			.pull("items", Maps.map("itemId", item.getItemId()))
+			.inc("categories." + CategoriesCount.getKey(item.getCategory()), -1)
+			.set("lastModified", now());
+		mongo.updateFirst(query(where("owner.slug").is(owner.getSlug())), upd, Collection.class);
 	}
 
 	@Override
-	public void addItem(String ownerName, CollectionItem item) {
-		mongo.updateFirst(query(where("ownerName").is(ownerName)),
-				new Update().addToSet("items", item), 
-				Collection.class);
+	public void changeVisibility(Account owner, Visibility visibility) {
+		Update upd = new Update().set("visibility", visibility.label());
+		mongo.updateFirst(query(where("owner.slug").is(owner.getSlug())), upd, Collection.class);	
 	}
 
 	@Override
@@ -99,5 +130,4 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 	public void remove(Collection collection) {
 		mongo.remove(collection);
 	}
-
 }

@@ -15,6 +15,8 @@
  */
 package com.trenako.utility;
 
+import java.util.GregorianCalendar;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -47,6 +49,12 @@ public class SlugTests {
 	public void shouldEncodeNonLatinCharacters() {
 		String slug = Slug.encode("Timè is àn illusiòn.");
 		assertEquals("time-is-an-illusion", slug);
+	}
+
+	@Test
+	public void shouldEncodeDates() {
+		String slug = Slug.encode(new GregorianCalendar(1976, 6, 4).getTime()); // month + 1
+		assertEquals("1976-07-04", slug);
 	}
 	
 }

@@ -15,12 +15,8 @@
  */
 package com.trenako.entities;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.LinkedHashMap;
 
 import javax.validation.constraints.NotNull;
 
@@ -31,7 +27,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.trenako.mapping.WeakDbRef;
-import com.trenako.values.Category;
 import com.trenako.values.Visibility;
 
 /**
@@ -74,7 +69,7 @@ public class Collection {
 
 	private List<CollectionItem> items;
 
-	private Map<String, Integer> categories;
+	private CategoriesCount categories;
 
 	private String visibility;
 
@@ -170,46 +165,19 @@ public class Collection {
 	}
 
 	/**
-	 * Adds a new item to the user's collection.
-	 * @param category the item category
-	 * @param item the item to be added
-	 */
-	public void addItem(String category, CollectionItem item) {
-		if (items == null) {
-			items = new ArrayList<CollectionItem>();
-		}
-		items.add(item);
-		incCounter(category);
-	}
-
-	/**
-	 * Returns the number of items in the collection for the provided
-	 * category.
-	 * 
-	 * @param category the category name
-	 * @return the number of items
-	 */
-	public int count(String category) {
-		if (getCounters() != null && getCounters().containsKey(category)) {
-			return getCounters().get(category);
-		}
-		return 0;
-	}
-
-	/**
-	 * Returns an immutable map with the counters by rolling stock category.
-	 * <p>
-	 * The categories are not sorted in alphabetic order, but they are
-	 * listed as they are defined in the {@link Category} enumeration.
-	 * </p>
+	 * Returns the counters by rolling stock category.
 	 * @return the counter map
 	 */
-	public Map<String, Integer> getCategories() {
-		Map<String, Integer> m = new LinkedHashMap<String, Integer>();
-		for( Category c : Category.values() ) {
-			m.put(c.label(), count(c.label()));
-		}
-		return Collections.unmodifiableMap(m);
+	public void setCategories(CategoriesCount categories) {
+		this.categories = categories;
+	}
+	
+	/**
+	 * Returns the counters by rolling stock category.
+	 * @return the counter map
+	 */
+	public CategoriesCount getCategories() {
+		return this.categories;
 	}
 
 	/**
@@ -255,19 +223,5 @@ public class Collection {
 	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
-	}
-	
-	// helper method to set the counter for a category
-
-	private void incCounter(String category) {
-		getCounters().put(category, count(category) + 1);
-	}
-
-	// helper method to get the counter map, with lazy initialization
-	private Map<String, Integer> getCounters() {
-		if (categories == null) {
-			categories = new LinkedHashMap<String, Integer>();
-		}
-		return categories;
 	}
 }

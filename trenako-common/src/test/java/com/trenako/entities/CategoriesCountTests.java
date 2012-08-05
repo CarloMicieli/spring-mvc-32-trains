@@ -19,26 +19,30 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.trenako.values.Category;
+
 /**
  * 
  * @author Carlo Micieli
  *
  */
-public class CollectionTests {
+public class CategoriesCountTests {
 
-	private Account owner = new Account.Builder("mail@mail.com")
-		.displayName("bob")
-		.build();
-	
 	@Test
-	public void shouldCreatePublicCollections() {
-		Collection coll = new Collection(owner);
-		assertEquals(true, coll.isVisible());
+	public void shouldConvertCategoryToFieldName() {
+		String fieldName = CategoriesCount.getKey(Category.RAILCARS);
+		assertEquals("railcars", fieldName);
+		
+		String fieldName2 = CategoriesCount.getKey(Category.ELECTRIC_LOCOMOTIVES);
+		assertEquals("electricLocomotives", fieldName2);
 	}
 	
 	@Test
-	public void shouldFillTheNameFromOwner() {
-		Collection coll = new Collection(owner);
-		assertEquals("bob", coll.getOwner().getSlug());
+	public void shouldConvertCategoryLabelToFieldName() {
+		String fieldName = CategoriesCount.getKey("railcars");
+		assertEquals("railcars", fieldName);
+		
+		String fieldName2 = CategoriesCount.getKey("electric-locomotives");
+		assertEquals("electricLocomotives", fieldName2);
 	}
 }
