@@ -77,8 +77,9 @@ public class CollectionsServiceImpl implements CollectionsService {
 	}
 	
 	@Override
-	public void save(Collection collection) {
-		repo.save(collection);
+	public void createNew(Account owner) {
+		Collection collection = new Collection(owner, Visibility.PUBLIC);
+		repo.createNew(collection);
 	}
 	
 	@Override

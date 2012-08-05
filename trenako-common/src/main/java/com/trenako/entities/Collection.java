@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -80,14 +81,28 @@ public class Collection {
 	 */
 	public Collection() {
 	}
-
+	
 	/**
 	 * Creates a new {@code Collection} with the provided owner.
-	 * @param owner the user who owns this collection
+	 * @param owner the collection owner
 	 */
 	public Collection(Account owner) {
 		this.setOwner(owner);
 	}
+
+	/**
+	 * Creates a new {@code Collection} for the user with the 
+	 * provided visibility.
+	 * @param owner the collection owner
+	 * @param visibility the collection visibility
+	 */
+	public Collection(Account owner, Visibility visibility) {
+		this.setOwner(owner);
+		this.setVisibility(visibility);
+		this.slug = slug();
+		this.lastModified = new Date();
+	}
+
 	
 	/**
 	 * Returns the {@code Collection} id.
@@ -111,7 +126,7 @@ public class Collection {
 	 */
 	public String getSlug() {
 		if (slug == null) {
-			slug = getOwner().getSlug();
+			slug = slug();
 		}
 		return slug;
 	}
@@ -161,6 +176,9 @@ public class Collection {
 	 * @return the rolling stocks list
 	 */
 	public List<CollectionItem> getItems() {
+		if (items == null) {
+			items = new ArrayList<CollectionItem>();
+		}
 		return items;
 	}
 
@@ -202,6 +220,18 @@ public class Collection {
 	}
 	
 	/**
+	 * Sets the {@code Collection} visibility.
+	 * <p>
+	 * By default the collections are created {@link Visibility#PUBLIC}, only the owner
+	 * can see the collection if its visibility is set to {@link Visibility#PRIVATE}.
+	 * </p>
+	 * @param visibility the collection visibility
+	 */
+	public void setVisibility(Visibility visibility) {
+		this.visibility = visibility.label();
+	}
+	
+	/**
 	 * Returns the {@code Collection} visibility.
 	 * @return the collection visibility
 	 */
@@ -223,5 +253,31 @@ public class Collection {
 	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder()
+			.append("collection{owner: ")
+			.append(getOwner().getSlug())
+			.append(", visibility: ")
+			.append(getVisibility())
+			.append(", item(s): ")
+			.append(getItems().size())
+			.append("}")
+			.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof Collection)) return false;
+		
+		Collection other = (Collection) obj;
+		return getOwner().equals(other.getOwner());
+	}
+	
+	private String slug() {
+		return getOwner().getSlug();
 	}
 }

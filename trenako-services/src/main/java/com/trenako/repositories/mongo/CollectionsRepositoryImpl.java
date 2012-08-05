@@ -27,6 +27,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.CategoriesCount;
@@ -82,8 +83,7 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 
 	@Override
 	public boolean containsRollingStock(Account owner, RollingStock rollingStock) {
-		Query query = query(
-				where("owner.slug").is(owner.getSlug())
+		Query query = query(where("owner.slug").is(owner.getSlug())
 				.and("items.rollingStock.slug").is(rollingStock.getSlug()));
 				
 		return mongo.count(query, Collection.class) > 0;
@@ -93,6 +93,11 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 	public void addItem(Account owner, CollectionItem item) {
 		Assert.notNull(item.getCategory(), "The item category is required");
 		Assert.notNull(owner.getSlug(), "Owner slug is required");
+		
+		// force the item to calculate its id
+		if (!StringUtils.hasText(item.getItemId())) {
+			item.setItemId(item.getItemId());
+		}
 		
 		Update upd = new Update()
 			.set("owner", WeakDbRef.buildRef(owner))
@@ -118,12 +123,13 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 	@Override
 	public void changeVisibility(Account owner, Visibility visibility) {
 		Update upd = new Update()
-			.set("visibility", visibility.label());
+			.set("visibility", visibility.label())
+			.set("lastModified", now());
 		mongo.updateFirst(query(where("owner.slug").is(owner.getSlug())), upd, Collection.class);	
 	}
 
 	@Override
-	public void save(Collection collection) {
+	public void createNew(Collection collection) {
 		mongo.save(collection);
 	}
 

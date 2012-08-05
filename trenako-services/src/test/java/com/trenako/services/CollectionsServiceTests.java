@@ -23,6 +23,7 @@ import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -110,9 +111,15 @@ public class CollectionsServiceTests {
 	
 	@Test
 	public void shouldSaveCollections() {
-		Collection coll = null;
-		service.save(coll);
-		verify(repo, times(1)).save(eq(coll));
+		service.createNew(owner);
+		
+		ArgumentCaptor<Collection> arg = ArgumentCaptor.forClass(Collection.class);
+		verify(repo, times(1)).createNew(arg.capture());
+		
+		Collection c = arg.getValue();
+		assertEquals("{label=user, slug=user}", c.getOwner().toString());
+		assertEquals("public", c.getVisibility());
+		assertEquals("user", c.getSlug());
 	}
 	
 	@Test

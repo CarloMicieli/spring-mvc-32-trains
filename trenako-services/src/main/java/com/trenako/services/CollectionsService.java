@@ -106,10 +106,10 @@ public interface CollectionsService
 	void changeVisibility(Account owner, Visibility visibility);
 	
 	/**
-	 * Saves a {@code Collection}.
-	 * @param collection the {@code Collection} to be saved
+	 * Creates a new empty and public {@code Collection} for the provided owner.
+	 * @param owner the {@code Collection} owner
 	 */
-	void save(Collection collection);
+	void createNew(Account owner);
 	
 	/**
 	 * Deletes a {@code Collection}.

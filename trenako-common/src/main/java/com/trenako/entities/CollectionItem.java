@@ -21,7 +21,6 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -55,6 +54,7 @@ public class CollectionItem {
     @Range(min = 1, max = 99, message = "item.quantity.range.notmet")
     private int quantity = 1;
 
+    @NotNull(message = "item.addedAt.required")
 	@Past(message = "item.addedAt.past.notmet")
     private Date addedAt;
 
@@ -191,18 +191,16 @@ public class CollectionItem {
 	}
 
 	/**
-	 * Returns the date in which this rolling stock was added to
-	 * the collection.
-	 * @return the addition date
+	 * Returns the date in which this rolling stock was purchased.
+	 * @return the purchasing date
 	 */
 	public Date getAddedAt() {
 		return addedAt;
 	}
 
 	/**
-	 * Sets the date in which this rolling stock was added to
-	 * the collection.
-	 * @param addedAt the addition date
+	 * Sets the date in which this rolling stock was purchased.
+	 * @param addedAt the purchasing date
 	 */
 	public void setAddedAt(Date addedAt) {
 		this.addedAt = addedAt;
@@ -287,9 +285,6 @@ public class CollectionItem {
 		if (!(obj instanceof CollectionItem)) return false;
 	
 		CollectionItem other = (CollectionItem) obj;
-		return new EqualsBuilder()
-			.append(rollingStock, other.rollingStock)
-			.append(addedAt, other.addedAt)
-			.isEquals();
+		return this.getItemId().equals(other.getItemId());
 	}
 }

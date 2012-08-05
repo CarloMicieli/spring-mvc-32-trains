@@ -17,7 +17,11 @@ package com.trenako.entities;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Test;
+
+import com.trenako.values.Visibility;
 
 /**
  * 
@@ -28,6 +32,9 @@ public class CollectionTests {
 
 	private Account owner = new Account.Builder("mail@mail.com")
 		.displayName("bob")
+		.build();
+	private Account alice = new Account.Builder("mail@mail.com")
+		.displayName("alice")
 		.build();
 	
 	@Test
@@ -40,5 +47,30 @@ public class CollectionTests {
 	public void shouldFillTheNameFromOwner() {
 		Collection coll = new Collection(owner);
 		assertEquals("bob", coll.getOwner().getSlug());
+	}
+	
+	@Test
+	public void shouldCheckWhetherTwoCollectionsAreEquals() {
+		Collection x = new Collection(owner, Visibility.PRIVATE);
+		Collection y = new Collection(owner, Visibility.PRIVATE);
+		assertTrue(x.equals(x));
+		assertTrue(x.equals(y));
+	}
+	
+	@Test
+	public void shouldCheckWhetherTwoCollectionsAreDifferents() {
+		Collection x = new Collection(owner, Visibility.PRIVATE);
+		Collection y = new Collection(alice, Visibility.PRIVATE);
+		assertFalse(x.equals(y));
+	}
+	
+	@Test
+	public void shouldProduceStringRepresentations() {
+		Collection x = new Collection(owner, Visibility.PRIVATE);
+		assertEquals("collection{owner: bob, visibility: private, item(s): 0}", x.toString());
+		
+		Collection y = new Collection(owner, Visibility.PRIVATE);
+		y.setItems(Arrays.asList(new CollectionItem(), new CollectionItem()));
+		assertEquals("collection{owner: bob, visibility: private, item(s): 2}", y.toString());
 	}
 }

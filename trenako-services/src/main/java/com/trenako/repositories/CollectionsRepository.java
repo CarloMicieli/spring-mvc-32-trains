@@ -103,10 +103,10 @@ public interface CollectionsRepository {
 	void changeVisibility(Account owner, Visibility visibility);
     
     /**
-     * Saves the {@code Collection}.
-     * @param collection the collection to be saved
+     * Creates a new {@code Collection}.
+     * @param collection the collection to be created
      */ 
-    void save(Collection collection);
+    void createNew(Collection collection);
 
     /**
      * Removes the {@code Collection}.

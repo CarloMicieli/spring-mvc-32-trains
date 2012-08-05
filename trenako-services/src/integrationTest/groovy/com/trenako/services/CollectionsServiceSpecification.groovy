@@ -17,203 +17,241 @@ package com.trenako.services
 
 import spock.lang.*
 
-import org.springframework.test.context.ContextConfiguration
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Query
-
-import static org.springframework.data.mongodb.core.query.Query.*
-import static org.springframework.data.mongodb.core.query.Criteria.*
-
 import com.trenako.entities.Account
-import com.trenako.entities.Brand
-import com.trenako.entities.Railway
-import com.trenako.entities.Scale
 import com.trenako.entities.RollingStock
 import com.trenako.entities.Collection
 import com.trenako.entities.CollectionItem
+import com.trenako.mapping.WeakDbRef
+
+import com.trenako.values.Visibility
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
-class CollectionsServiceSpecification { //extends Specification {
+class CollectionsServiceSpecification extends MongoSpecification {
 
 	@Autowired CollectionsService service
 	
+	def now = new GregorianCalendar(2010, Calendar.JULY, 22, 1, 30, 00)
+	
 	def setup() {
-		def acme = new Brand(name: "ACME")
-		mongo.save acme
-		
-		def H0 = new Scale(name: "H0", ratio: 87)
-		mongo.save H0
-		
-		def DB = new Railway(name: "DB", country: 'DEU')
-		mongo.save DB
-		
-		
-		def rs1 = new RollingStock(brand: acme, itemNumber: "69501",
-			description: "Gr 685 172",
-			category: "STEAM_LOCOMOTIVES",
-			powerMethod: "DC_DCC_SOUND",
-			era: "III",
-			railway: DB,
-			tags: ['museum'],
-			scale: H0)
-		def rs2 = new RollingStock(brand: acme, itemNumber: "43858",
-			description: "Electric loco 101 0004-0",
-			category: "ELECTRIC_LOCOMOTIVES",
-			powerMethod: "AC",
-			era: "V",
-			railway: DB,
-			scale: H0)
-		def rs3 = new RollingStock(brand: acme, itemNumber: "123456",
-			description: "Electric loco 105",
-			category: "ELECTRIC_LOCOMOTIVES",
-			powerMethod: "DC",
-			era: "V",
-			railway: DB,
-			scale: H0)
-		def collection = [rs1, rs2, rs3]
-		mongo.insert collection, RollingStock.class
-		
-		def collectionItems = [
-			new CollectionItem(rollingStock: rs1, rsSlug: rs1.slug, addedAt: new Date()),
-			new CollectionItem(rollingStock: rs2, rsSlug: rs2.slug, addedAt: new Date())
-			]
-		
-		def coll = new Collection(ownerName: 'bob', 
-			items: collectionItems,
-			visible: true)
-		mongo.save coll
+		db.collections.insert(
+			slug: 'the-rocket',
+			owner: [label: 'The Rocket', slug: 'the-rocket'],
+			items: [
+				[itemId: 'acme-123456-2012-01-01', 
+					rollingStock: [label: 'ACME 123456', slug: 'acme-123456'], 
+					price: 15000, 
+					condition: 'new', 
+					notes: 'My notes', 
+					category: 'electric-locomotives', 
+					quantity: 1, 
+					addedAt: new Date()],
+				[itemId: 'acme-123457-2012-01-01', 
+					rollingStock: [label: 'ACME 123457', slug: 'acme-123457'], 
+					price: 3500, 
+					condition: 'new', 
+					notes: 'My notes', 
+					category: 'freight-cars', 
+					quantity: 1, 
+					addedAt: new Date()]],
+			categories: [electricLocomotives: 1, freightCars: 1],
+			visibility: 'public',
+			lastModified: now.time)
 	}
 	
 	def cleanup() {
-		def all = new Query()
-		mongo.remove all, Collection.class
-		mongo.remove all, RollingStock.class
-		mongo.remove all, Scale.class
-		mongo.remove all, Brand.class
-		mongo.remove all, Railway.class
-	}
-		
-	def "should find collections by owner's name"() {
-		when:
-		def coll = service.findByOwnerName "bob"
-		
-		then:
-		coll != null
-		coll.ownerName == "bob"
+		db.collections.remove([:])
 	}
 	
-	def "should fine collections by id"() {
+	def "should find the collection with the provided id"() {
 		given:
-		def c = mongo.findOne query(where("ownerName").is("bob")), Collection.class
-		assert c != null
-		def id = c.id
+		def doc = db.collections.findOne(slug: 'the-rocket')
+		def id = doc._id
 		
 		when:
-		def coll = service.findById id
+		def col = service.findById(id)
 		
 		then:
-		coll != null
-		coll.id == id
-		coll.ownerName == "bob"
-	} 
-	
-	def "should check if the collection contains a rolling stock"() {
-		given:
-		def rs = mongo.findOne query(where("slug").is("acme-69501")), RollingStock.class
-		assert rs != null
-		
-		and:
-		def c = mongo.findOne query(where("ownerName").is("bob")), Collection.class
-		assert c != null
-		def id = c.id
-		
-		when:
-		boolean ret = service.containsRollingStock id, rs
-		
-		then:
-		ret == true
+		col != null
+		col.owner.slug == 'the-rocket'
+		col.categories.electricLocomotives == 1
+		col.categories.freightCars == 1
+		col.lastModified == now.time
+		col.items.size() == 2
+		col.items.collect { it.itemId }.sort() == ['acme-123456-2012-01-01', 'acme-123457-2012-01-01']
 	}
 	
-	def "should check if the user collection contains a rolling stock"() {
+	def "should return null if no collection with the provided id exists"() {
 		given:
-		def rs = mongo.findOne query(where("slug").is("acme-69501")), RollingStock.class
-		assert rs != null
+		def id = new ObjectId()
 		
 		when:
-		boolean ret = service.containsRollingStock "bob", rs
+		def col = service.findById(id)
 		
 		then:
-		ret == true
+		col == null
 	}
 	
-	def "should add items to collection"() {
-		given:
-		def coll = mongo.findOne query(where("ownerName").is("bob")), Collection.class
-		assert coll != null
-		
-		and:
-		def rs = mongo.findOne query(where("slug").is("acme-123456")), RollingStock.class
-		assert rs != null
-		
-		and:
-		def newItem = new CollectionItem(rollingStock: rs, 
-			rsSlug: "acme-123456",
-			addedAt: new Date())
-		
+	def "should find the collection with the provided slug"() {
 		when:
-		service.addItem coll.id, newItem
+		def col = service.findBySlug('the-rocket')
 		
 		then:
-		def num = mongo.count query(where("items.rsSlug").is("acme-123456")), Collection.class
-		num == 1
+		col != null
+		col.owner.slug == 'the-rocket'
+		col.categories.electricLocomotives == 1
+		col.categories.freightCars == 1
+		col.lastModified == now.time
+		col.items.size() == 2
+		col.items.collect { it.itemId }.sort() == ['acme-123456-2012-01-01', 'acme-123457-2012-01-01']
 	}
 	
-	def "should add items to user's collection"() {
-		given:
-		def rs = mongo.findOne query(where("slug").is("acme-123456")), RollingStock.class
-		assert rs != null
-		
-		and:
-		def newItem = new CollectionItem(rollingStock: rs,
-			rsSlug: "acme-123456",
-			addedAt: new Date())
-		
+	def "should return null if no collection with the provided slug exists"() {
 		when:
-		service.addItem "bob", newItem
+		def col = service.findBySlug('not-found')
 		
 		then:
-		def num = mongo.count query(where("items.rsSlug").is("acme-123456")), Collection.class
-		num == 1
+		col == null
 	}
 	
-	def "should create new collections"() {
+	def "should find the collection with the provided owner"() {
 		given:
-		def newColl = new Collection(ownerName: "alice")
+		def owner = new Account(slug: 'the-rocket')
 		
 		when:
-		service.save newColl
-		
-		then:
-		newColl.id != null
-	}
-	
-	def "should remove collections"() {
-		given:
-		def c = mongo.findOne query(where("ownerName").is("bob")), Collection.class
-		assert c != null
-		
-		when:
-		service.remove c
-		
-		then:
-		def coll = mongo.findById c.id, Collection.class
-		coll == null
-	}
+		def col = service.findByOwner(owner)
 
+		then:
+		col != null
+		col.owner.slug == owner.slug
+	}
+	
+	def "should return null if no collection with the provided owner exists"() {
+		given:
+		def owner = new Account(slug: 'not-exists')
+		
+		when:
+		def col = service.findByOwner(owner)
+		
+		then:
+		col == null
+	}
+	
+	def "should check whether the collection contains the provided rolling stock"() {
+		given:
+		def owner = new Account(slug: 'the-rocket')
+		def rs = new RollingStock(slug: 'acme-123456')
+		
+		when:
+		def rv = service.containsRollingStock(owner, rs)
+		
+		then:
+		rv == true
+	}
+	
+	def "should check whether the collection doesn't contain the provided rolling stock"() {
+		given:
+		def owner = new Account(slug: 'the-rocket')
+		def rs = new RollingStock(slug: 'acme-999999')
+		
+		when:
+		def rv = service.containsRollingStock(owner, rs)
+		
+		then:
+		rv == false
+	}
+	
+	def "should change collections visibility"() {
+		given:
+		def owner = new Account(slug: 'the-rocket')
+		
+		when:
+		service.changeVisibility(owner, Visibility.PRIVATE)
+		
+		then:
+		def doc = db.collections.findOne(slug: 'the-rocket')
+		doc.visibility == 'private'
+		doc.lastModified != now.time
+	}
+	
+	def "should add new rolling stocks to the collection"() {
+		given:
+		def owner = new Account(slug: 'the-rocket')
+		
+		and:
+		def date = new GregorianCalendar(2010, Calendar.JULY, 22, 1, 30, 00).time
+		def rs = new WeakDbRef<RollingStock>(slug: 'acme-123457', label: 'ACME 123457')
+		def newItem = new CollectionItem(
+			rollingStock: rs, 
+			price: 7500, 
+			condition: 'new', 
+			notes: 'My notes', 
+			category: 'freight-cars', 
+			quantity: 1, 
+			addedAt: date)
+		
+		when:
+		service.addRollingStock(owner, newItem)
+		
+		then:
+		def doc = db.collections.findOne(slug: 'the-rocket')
+		doc.categories.electricLocomotives == 1
+		doc.categories.freightCars == 2
+		doc.lastModified != now.time
+		doc.items.size() == 3
+		doc.items.collect { it.itemId }.sort() == ['acme-123456-2012-01-01', 'acme-123457-2010-07-22', 'acme-123457-2012-01-01']
+	}
+	
+	def "should remove a rolling stock from the collection"() {
+		given:
+		def owner = new Account(slug: 'the-rocket')
+		def item = new CollectionItem(
+			itemId: 'acme-123456-2012-01-01', 
+			category: 'electric-locomotives')
+		
+		when:
+		service.removeRollingStock(owner, item)
+		
+		then:
+		def doc = db.collections.findOne(slug: 'the-rocket')
+		doc.categories.electricLocomotives == 0
+		doc.categories.freightCars == 1
+		doc.lastModified != now.time
+		doc.items.size() == 1
+		doc.items.collect { it.itemId } == ['acme-123457-2012-01-01']
+	}
+	
+	def "should create a public and empty collection for a user"() {
+		given:
+		def owner = new Account(displayName: 'George', slug: 'george')
+		
+		when:
+		service.createNew(owner)
+		
+		then:
+		def doc = db.collections.findOne(slug: 'george')
+		doc != null
+		doc.slug == 'george'
+		doc.visibility == 'public'
+		doc.lastModified != null
+	}
+	
+	def "should delete a user collection"() {
+		given:
+		def doc = db.collections.findOne(slug: 'the-rocket')
+		def coll = new Collection(id: doc._id)
+		
+		when:
+		service.remove(coll)
+		
+		then:
+		def notfound = db.collections.findOne(slug: 'the-rocket')
+		notfound == null
+	}
 }

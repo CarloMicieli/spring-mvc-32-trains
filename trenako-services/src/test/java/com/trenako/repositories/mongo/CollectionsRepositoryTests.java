@@ -56,6 +56,10 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 	@Override
 	void initRepository(MongoTemplate mongo) {
 		repo = new CollectionsRepositoryImpl(mongo);
+		
+		// mocking the current timestamp value
+		((CollectionsRepositoryImpl)repo).setCurrentTimestamp(
+				new GregorianCalendar(2012, 6, 1, 10, 0).getTime());
 	}
 
 	@Test
@@ -114,8 +118,6 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 	
 	@Test
 	public void shouldAddNewItemsToCollection() {
-		((CollectionsRepositoryImpl)repo).setCurrentTimestamp(new GregorianCalendar(2012, 6, 1, 10, 0).getTime());
-		
 		CollectionItem item = new CollectionItem.Builder(rollingStock)
 			.addedAt(new GregorianCalendar(2012, 0, 1).getTime())
 			.category("electric-locomotives")
@@ -132,7 +134,7 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 		
 		String expected = "{ \"$set\" : { \"owner\" : { \"slug\" : \"bob\" , \"label\" : \"Bob\"} , "+
 				"\"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}} , "+
-				"\"$push\" : { \"items\" : { \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
+				"\"$push\" : { \"items\" : { \"itemId\" : \"acme-123456-2012-01-01\" , \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
 				"\"price\" : 0 , \"condition\" : \"new\" , \"notes\" : \"My notes\" , \"category\" : \"electric-locomotives\" , "+
 				"\"quantity\" : 1 , \"addedAt\" : { \"$date\" : \"2011-12-31T23:00:00.000Z\"}}} , \"$inc\" : { \"categories.electricLocomotives\" : 1}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
@@ -140,8 +142,6 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 	
 	@Test
 	public void shouldRemoveItemsFromUserCollection() {
-		((CollectionsRepositoryImpl)repo).setCurrentTimestamp(new GregorianCalendar(2012, 6, 1, 10, 0).getTime());
-		
 		CollectionItem item = new CollectionItem.Builder(rollingStock)
 			.addedAt(new GregorianCalendar(2012, 0, 1).getTime())
 			.category("electric-locomotives")
@@ -168,13 +168,14 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
 		assertEquals("{ \"owner.slug\" : \"bob\"}", queryObject(argQuery).toString());
-		assertEquals("{ \"$set\" : { \"visibility\" : \"public\"}}", updateObject(argUpdate).toString());
+		assertEquals("{ \"$set\" : { \"visibility\" : \"public\" , \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}", 
+				updateObject(argUpdate).toString());
 	}
 	
 	@Test
-	public void shouldSaveCollections() {
+	public void shouldCreateNewCollections() {
 		Collection c = new Collection();
-		repo.save(c);
+		repo.createNew(c);
 		verify(mongo(), times(1)).save(eq(c));
 	}
 	

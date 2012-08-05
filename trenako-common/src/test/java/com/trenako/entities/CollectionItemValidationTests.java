@@ -18,6 +18,7 @@ package com.trenako.entities;
 import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.junit.Before;
@@ -44,7 +45,9 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 
 	@Test
 	public void shouldValidateValidCollectionsItem() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock).build();
+		CollectionItem item = new CollectionItem.Builder(rollingStock)
+			.addedAt(new Date())
+			.build();
 		
 		Map<String, String> errors = validate(item);
 		
@@ -57,27 +60,31 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 		
 		Map<String, String> errors = validate(item);
 		
-		assertEquals(1, errors.size());
+		assertEquals(2, errors.size());
 		assertEquals("item.rollingStock.required", errors.get("rollingStock"));
+		assertEquals("item.addedAt.required", errors.get("addedAt"));
 	}
 	
 	@Test
-	public void shouldValidateItemQuantity() {
-		Map<String, String> errors = null;
-
+	public void shouldValidateItemMinQuantity() {
 		CollectionItem item1 = new CollectionItem.Builder(rollingStock)
+			.addedAt(new Date())
 			.quantity(0)
 			.build();
 		
-		errors = validate(item1);
+		Map<String, String> errors = validate(item1);
 		assertEquals(1, errors.size());
 		assertEquals("item.quantity.range.notmet", errors.get("quantity"));
-		
-		CollectionItem item2 = new CollectionItem.Builder(rollingStock)
+	}
+	
+	@Test
+	public void shouldValidateItemMaxQuantity() {
+		CollectionItem item1 = new CollectionItem.Builder(rollingStock)
+			.addedAt(new Date())
 			.quantity(100)
 			.build();
-	
-		errors = validate(item2);
+		
+		Map<String, String> errors = validate(item1);
 		assertEquals(1, errors.size());
 		assertEquals("item.quantity.range.notmet", errors.get("quantity"));
 	}
@@ -85,6 +92,7 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 	@Test
 	public void shouldValidateItemPrice() {
 		CollectionItem item = new CollectionItem.Builder(rollingStock)
+			.addedAt(new Date())
 			.price(-1)
 			.build();
 		
