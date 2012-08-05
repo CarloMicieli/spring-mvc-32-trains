@@ -21,20 +21,8 @@ import com.trenako.entities.RollingStockReviews;
 
 /**
  * The interface for the rolling stock reviews service.
- * <p>
- * The concrete classes that implements the {@code ReviewsService} interface will provide
- * the following functionalities:
- * <ul>
- * <li>finds a {@code Review} by id;</li>
- * <li>returns the {@code Review} list by author;</li>
- * <li>returns the {@code Review} list by rolling stock;</li>
- * <li>returns the {@code Review} list;</li>
- * <li>saves/removes a {@code Review}.</li>
- * </ul>
- * </p>
  *
  * @author Carlo Micieli
- * @see com.trenako.entities.Review
  */ 
 public interface ReviewsService {
 	
@@ -62,10 +50,10 @@ public interface ReviewsService {
 	void postReview(RollingStock rs, Review review);
 	
 	/**
-	 * Deletes the review from the provided {@code RollingStock}.
+	 * Deletes a review for the provided {@code RollingStock}.
 	 *
 	 * @param rs the {@code RollingStock} under review
-	 * @param review the review to be removed	 
+	 * @param review the review to be deleted	 
 	 */
 	void deleteReview(RollingStock rs, Review review);	
 }
