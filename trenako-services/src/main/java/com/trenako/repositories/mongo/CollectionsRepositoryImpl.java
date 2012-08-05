@@ -39,7 +39,7 @@ import com.trenako.utility.Maps;
 import com.trenako.values.Visibility;
 
 /**
- * 
+ * The concrete implementation of {@code CollectionsRepository} for Mongo db.
  * @author Carlo Micieli
  *
  */
@@ -53,7 +53,7 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 		this.mongo = mongoTemplate;
 	}
 
-	// testing
+	// for testing
 	private Date now = null;
 	protected void setCurrentTimestamp(Date now) {
 		this.now = now;
@@ -117,7 +117,8 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 
 	@Override
 	public void changeVisibility(Account owner, Visibility visibility) {
-		Update upd = new Update().set("visibility", visibility.label());
+		Update upd = new Update()
+			.set("visibility", visibility.label());
 		mongo.updateFirst(query(where("owner.slug").is(owner.getSlug())), upd, Collection.class);	
 	}
 
