@@ -30,9 +30,11 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.trenako.mapping.WeakDbRef;
+import com.trenako.values.Visibility;
 import com.trenako.utility.Slug;
 
 /**
+ * It represents a rolling stocks {@code WishList}.
  *
  * @author Carlo Micieli
  * 
@@ -51,6 +53,8 @@ public class WishList {
 	@NotNull(message = "wishList.name.required")
 	@Size(max = 25, message = "wishList.name.size.notmet")
 	private String name;
+	
+	private boolean defaultList;
 
 	@NotNull(message = "wishList.owner.required")
 	@Indexed(name = "owner.slug", unique = true)
@@ -61,7 +65,7 @@ public class WishList {
 	private List<WishListItem> items;
 
 	private String visibility;
-
+	
 	private Date lastModified;
 	
 	/**
@@ -71,15 +75,17 @@ public class WishList {
 	}
 	
 	/**
-	 * Creates a new {@code WishList}
+	 * Creates a new {@code WishList} for the provided user.
+	 *
 	 * @param owner the wish list owner
 	 * @param name the name
 	 * @param visibility the visibility
 	 */
-	public WishList(Account owner, String name, String visibility) {
+	public WishList(Account owner, String name, Visibility visibility) {
 		this.setOwner(owner);
+		this.setVisibility(visibility);
 		this.name = name;
-		this.visibility = visibility;
+		this.slug = initSlug();
 	}
 
 	/**
@@ -104,12 +110,7 @@ public class WishList {
 	 */
 	public String getSlug() {
 		if (slug == null) {
-			String s = new StringBuilder()
-				.append(getOwner().getSlug())
-				.append(" ")
-				.append(getName())
-				.toString();
-			slug = Slug.encode(s);
+			slug = initSlug();
 		}
 		return slug;
 	}
@@ -136,6 +137,22 @@ public class WishList {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * Checks whether the current {@code WishList} is the default list for the user.
+	 * @return {@code true} if this is the default list; {@code false} otherwise
+	 */
+	public boolean isDefaultList() {
+		return defaultList;
+	}
+
+	/**
+	 * Checks whether the current {@code WishList} is the default list for the user.
+	 * @param isDefault {@code true} if this is the default list; {@code false} otherwise
+	 */
+	public void setDefaultList(boolean isDefault) {
+		this.defaultList = isDefault;
 	}
 
 	/**
@@ -194,10 +211,26 @@ public class WishList {
 		this.visibility = visibility;
 	}
 
+	/**
+	 * Sets the {@code WishList} visibility.
+	 * @param visibility the visibility
+	 */
+	public void setVisibility(Visibility visibility) {
+		this.visibility = visibility.label();
+	}
+	
+	/**
+	 * Returns the last modified timestamp.
+	 * @return the timestamp
+	 */
 	public Date getLastModified() {
 		return lastModified;
 	}
 
+	/**
+	 * Sets the last modified timestamp.
+	 * @param lastModified the timestamp
+	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
@@ -210,7 +243,7 @@ public class WishList {
 		WishList other = (WishList) obj;
 		
 		return new EqualsBuilder()
-			.append(this.name, other.name)
+			.append(this.slug, other.slug)
 			.append(this.owner, other.owner)
 			.isEquals();
 	}
@@ -226,5 +259,14 @@ public class WishList {
 			.append(getVisibility())
 			.append("}")
 			.toString();
-	}	
+	}
+	
+	private String initSlug() {
+		String s = new StringBuilder()
+			.append(getOwner().getSlug())
+			.append(" ")
+			.append(getName())
+			.toString();
+		return Slug.encode(s);
+	}
 }

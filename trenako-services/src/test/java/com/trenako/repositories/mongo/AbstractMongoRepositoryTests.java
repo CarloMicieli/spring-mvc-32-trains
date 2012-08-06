@@ -83,6 +83,10 @@ public abstract class AbstractMongoRepositoryTests {
 		return arg.getValue().getQueryObject();
 	}
 	
+	protected DBObject fieldsObject(ArgumentCaptor<Query> arg) {
+		return arg.getValue().getFieldsObject();
+	}
+	
 	protected DBObject updateObject(ArgumentCaptor<Update> arg) {
 		QueryMapper queryMapper = new QueryMapper(converter);
 		return queryMapper.getMappedObject(arg.getValue().getUpdateObject(), null);

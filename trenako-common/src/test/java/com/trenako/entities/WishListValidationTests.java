@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trenako.test.AbstractValidationTests;
+import com.trenako.values.Visibility;
 
 import static org.junit.Assert.*;
 
@@ -43,7 +44,7 @@ public class WishListValidationTests extends AbstractValidationTests<WishList> {
 	
 	@Test
 	public void shouldValidateWishLists() {
-		WishList wishList = new WishList(owner, "My first list", "public");
+		WishList wishList = new WishList(owner, "My first list", Visibility.PUBLIC);
 		Map<String, String> errors = validate(wishList);
 		assertEquals(0, errors.size());
 	}
@@ -59,7 +60,7 @@ public class WishListValidationTests extends AbstractValidationTests<WishList> {
 	
 	@Test
 	public void shouldValidateWishListItems() {
-		WishList wishList = new WishList(owner, "My first list", "public");
+		WishList wishList = new WishList(owner, "My first list", Visibility.PUBLIC);
 		wishList.setItems(Arrays.asList(new WishListItem()));
 		
 		Map<String, String> errors = validate(wishList);

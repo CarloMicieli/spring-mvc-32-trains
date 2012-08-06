@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.trenako.values.Visibility;
+
 /**
  * 
  * @author Carlo Micieli
@@ -32,28 +34,28 @@ public class WishListTests {
 	
 	@Test
 	public void shouldProduceSlugFromWishLists() {
-		WishList x = new WishList(bob, "My first list", "public");
+		WishList x = new WishList(bob, "My first list", Visibility.PUBLIC);
 		assertEquals("bob-my-first-list", x.getSlug());
 	}
 	
 	@Test
 	public void shouldProduceStringRepresentationFromWishLists() {
-		WishList x = new WishList(bob, "My first list", "public");
+		WishList x = new WishList(bob, "My first list", Visibility.PUBLIC);
 		assertEquals("wishList{owner: bob, name: My first list, visibility: public}", x.toString());
 	}
 	
 	@Test
 	public void shouldCheckWheterTwoWishListsAreEquals() {
-		WishList x = new WishList(bob, "My first list", "public");
-		WishList y = new WishList(bob, "My first list", "public");
+		WishList x = new WishList(bob, "My first list", Visibility.PUBLIC);
+		WishList y = new WishList(bob, "My first list", Visibility.PUBLIC);
 		assertTrue(x.equals(x));
 		assertTrue(x.equals(y));
 	}
 	
 	@Test
 	public void shouldCheckWheterTwoWishListsAreDifferent() {
-		WishList x = new WishList(bob, "My first list", "public");
-		WishList y = new WishList(bob, "My second list", "private");
+		WishList x = new WishList(bob, "My first list", Visibility.PUBLIC);
+		WishList y = new WishList(bob, "My second list", Visibility.PRIVATE);
 		assertFalse(x.equals(y));
 	}
 }
