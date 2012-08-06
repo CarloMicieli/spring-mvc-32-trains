@@ -22,13 +22,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.core.env.Environment;
 
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
@@ -39,13 +39,14 @@ import com.mongodb.WriteConcern;
  */
 @Configuration
 @ComponentScan(basePackages = "com.trenako")
-@Profile("production")
-@PropertySource("classpath:META-INF/app.properties")
+@Profile("default")
+@EnableMongoRepositories("com.trenako.repositories")
 @ImportResource(value = {"classpath:META-INF/spring/spring-data.xml", 
 		"classpath:META-INF/spring/spring-security.xml"})
 public class ApplicationConfig extends AbstractMongoConfiguration {
 	
-	private @Autowired Environment env;
+	// Autowired from 'spring-data.xml' context
+	private @Autowired SimpleMongoDbFactory mongoDbFactory;	
 	
 	/**
 	 * Return the message source for multi-language management.
@@ -58,17 +59,8 @@ public class ApplicationConfig extends AbstractMongoConfiguration {
 	}
 	
 	/**
-	 * Returns the mongodb factory for the production environment.
-	 * @return the mongodb factory bean.
-	 * @throws Exception if the mongo settings are not correct
-	 */
-	public @Bean SimpleMongoDbFactory mongoDbFactory() throws Exception {
-		return new SimpleMongoDbFactory(mongo(), getDatabaseName());
-	}
-	
-	/**
-	 * Returns the mongodb template.
-	 * @return the mongodb template bean.
+	 * Returns a {@code MongoTemplate} instance.
+	 * @return the mongodb template bean
 	 * @throws Exception
 	 */
 	public @Bean MongoTemplate mongoTemplate() throws Exception {
@@ -76,16 +68,29 @@ public class ApplicationConfig extends AbstractMongoConfiguration {
 		mongoTemplate.setWriteConcern(WriteConcern.SAFE);
 		return mongoTemplate;
 	}
-
+	
+	/**
+	 * Returns a {@code MongoTemplate} instance.
+	 * @return the mongodb template bean
+	 * @throws Exception
+	 */
+	public @Bean GridFsTemplate gridFsTemplate() throws Exception {
+		return new GridFsTemplate(mongoDbFactory(), mappingMongoConverter(), "rs");
+	}
+	
+	@Override
+	public SimpleMongoDbFactory mongoDbFactory() throws Exception {
+		return mongoDbFactory;
+	}
+	
 	@Override
 	public String getDatabaseName() {
-		return env.getProperty("mongo.databaseName");
+		return mongoDbFactory.getDb().getName();
 	}
-
+	
 	@Override
 	public Mongo mongo() throws Exception {
-		return new Mongo(env.getProperty("mongo.hostName"), 
-				env.getProperty("mongo.portNumber", Integer.class));
+		return mongoDbFactory.getDb().getMongo();
 	}
 	
 	@Override

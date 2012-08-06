@@ -30,6 +30,6 @@ public class ContextProfileInitializer
 	@Override
 	public void initialize(ConfigurableWebApplicationContext context) {
 		ConfigurableEnvironment environment = context.getEnvironment();
-		environment.setActiveProfiles("production");
+		environment.setActiveProfiles("default");
 	}
 }
