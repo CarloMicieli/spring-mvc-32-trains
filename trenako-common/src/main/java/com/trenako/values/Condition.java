@@ -42,7 +42,7 @@ public enum Condition {
 	/**
 	 * Parses the string argument as a {@code Condition}.
 	 * @param s the string to be parsed
-	 * @return a {@code Visibility} value
+	 * @return a {@code Condition} value
 	 */
 	public static Condition parse(String s) {
 		return LocalizedEnum.parseString(s, Condition.class);
