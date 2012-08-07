@@ -18,6 +18,7 @@ package com.trenako.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.RollingStock;
@@ -73,6 +74,11 @@ public class WishListsServiceImpl implements WishListsService {
 	@Override
 	public void addItem(WishList wishList, WishListItem newItem) {
 		Assert.notNull(wishList.getSlug(), "Wish list slug is required");
+		
+		if (!StringUtils.hasText(newItem.getItemId())) {
+			newItem.setItemId(newItem.getItemId());
+		}
+		
 		repo.addItem(wishList, newItem);
 	}
 
@@ -133,7 +139,6 @@ public class WishListsServiceImpl implements WishListsService {
 
     @Override
 	public void remove(WishList wishList) {
-		Assert.notNull(wishList.getSlug(), "Wish list slug is required");
 		repo.remove(wishList);
 	}
 }

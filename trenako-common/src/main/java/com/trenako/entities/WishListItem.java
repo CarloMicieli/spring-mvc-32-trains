@@ -65,7 +65,7 @@ public class WishListItem {
 	 */
 	public WishListItem(RollingStock rollingStock, String notes, String priority, Date addedAt) {
 		this.setRollingStock(rollingStock);
-		this.itemId = rollingStock.getSlug();
+		this.itemId = initItemId();
 		this.notes = notes;
 		this.priority = priority;
 		this.addedAt = addedAt;
@@ -76,6 +76,9 @@ public class WishListItem {
 	 * @return the item id
 	 */
 	public String getItemId() {
+		if (itemId == null) {
+			itemId = initItemId();
+		}
 		return this.itemId;
 	}
 	
@@ -157,5 +160,9 @@ public class WishListItem {
 	 */
 	public void setAddedAt(Date addedAt) {
 		this.addedAt = addedAt;
+	}
+	
+	private String initItemId() {
+		return rollingStock.getSlug();
 	}
 }

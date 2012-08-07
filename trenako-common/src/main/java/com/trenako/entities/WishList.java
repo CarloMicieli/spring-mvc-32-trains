@@ -57,7 +57,7 @@ public class WishList {
 	private boolean defaultList;
 
 	@NotNull(message = "wishList.owner.required")
-	@Indexed(name = "owner.slug", unique = true)
+	@Indexed(name = "owner.slug")
 	private WeakDbRef<Account> owner;
 
 	@Valid
@@ -86,6 +86,7 @@ public class WishList {
 		this.setVisibility(visibility);
 		this.name = name;
 		this.slug = initSlug();
+		this.lastModified = new Date();
 	}
 
 	/**
@@ -252,7 +253,7 @@ public class WishList {
 	public String toString() {
 		return new StringBuilder()
 			.append("wishList{owner: ")
-			.append(getOwner().getLabel())
+			.append(getOwner())
 			.append(", name: ")
 			.append(getName())
 			.append(", visibility: ")

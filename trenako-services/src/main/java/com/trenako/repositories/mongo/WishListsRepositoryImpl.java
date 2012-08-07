@@ -129,18 +129,20 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 
 	@Override
 	public void changeDefault(WishList wishList, boolean isDefault) {
+		Query query = query(where("slug").is(wishList.getSlug()));
 		Update upd = new Update()
 			.set("lastModified", now())
 			.set("defaultList", isDefault);
-		mongoTemplate.updateFirst(query(where("slug").is(wishList.getSlug())), upd, WishList.class);
+		mongoTemplate.updateFirst(query, upd, WishList.class);
 	}
 
 	@Override
 	public void resetDefault(Account owner) {
+		Query query = query(where("owner.slug").is(owner.getSlug()));
 		Update upd = new Update()
 			.set("lastModified", now())
 			.set("defaultList", false);
-		mongoTemplate.updateFirst(query(where("owner.slug").is(owner.getSlug())), upd, WishList.class);
+		mongoTemplate.updateMulti(query, upd, WishList.class);
 	}
 
 	@Override
