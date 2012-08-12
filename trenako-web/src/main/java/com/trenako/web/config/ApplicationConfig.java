@@ -27,7 +27,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.mongodb.Mongo;
@@ -67,15 +66,6 @@ public class ApplicationConfig extends AbstractMongoConfiguration {
 		MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
 		mongoTemplate.setWriteConcern(WriteConcern.SAFE);
 		return mongoTemplate;
-	}
-	
-	/**
-	 * Returns a {@code MongoTemplate} instance.
-	 * @return the mongodb template bean
-	 * @throws Exception
-	 */
-	public @Bean GridFsTemplate gridFsTemplate() throws Exception {
-		return new GridFsTemplate(mongoDbFactory(), mappingMongoConverter(), "rs");
 	}
 	
 	@Override

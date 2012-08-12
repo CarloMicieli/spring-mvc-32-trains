@@ -15,6 +15,9 @@
  */
 package com.trenako.web.config;
 
+import org.cloudfoundry.runtime.env.CloudEnvironment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
@@ -27,9 +30,24 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
 public class ContextProfileInitializer 
 	implements ApplicationContextInitializer<ConfigurableWebApplicationContext> {
 
+	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
+	
+	private CloudEnvironment cloudFoundryEnvironment;
+	
+	public ContextProfileInitializer() {
+		this.cloudFoundryEnvironment = new CloudEnvironment();
+	}
+	
 	@Override
 	public void initialize(ConfigurableWebApplicationContext context) {
 		ConfigurableEnvironment environment = context.getEnvironment();
-		environment.setActiveProfiles("default");
+
+		if (cloudFoundryEnvironment.isCloudFoundry()) {
+			environment.setActiveProfiles("cloud");
+		}
+		else {
+			log.info("Not running on Cloud Foundry, using 'default' profile");
+			environment.setActiveProfiles("default");
+		}
 	}
 }

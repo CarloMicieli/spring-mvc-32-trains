@@ -204,6 +204,9 @@ project("trenako-web") {
 		compile "javax.servlet:jstl:1.2",
 			"javax.servlet.jsp:javax.servlet.jsp-api:2.2.1"
 
+		// Cloud foundry 
+		compile "org.cloudfoundry:cloudfoundry-runtime:0.8.1"
+
 		// Spring test mvc
 		testCompile "org.springframework:spring-test-mvc:1.0.0.M1",
 			"org.hamcrest:hamcrest-core:1.2.1",
