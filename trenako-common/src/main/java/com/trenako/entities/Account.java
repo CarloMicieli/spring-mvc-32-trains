@@ -22,9 +22,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Size;
+
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -64,11 +65,10 @@ public class Account implements Serializable, DbReferenceable {
 	private String emailAddress;
 
 	@NotEmpty(message = "account.password.required")
-	@Length(min = 5, max = 25, message = "account.password.size.notmet")
 	private String password;
 
 	@NotEmpty(message = "account.displayName.required")
-	@Length(min = 3, max = 25, message = "account.displayName.size.notmet")
+	@Size(min = 3, max = 25, message = "account.displayName.size.notmet")
 	private String displayName;
 	
 	@Indexed(unique = true)

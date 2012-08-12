@@ -19,7 +19,6 @@
 	
 				<s:url var="signupUrl" value="/auth/signup" />
 				<form:form id="form" class="form-horizontal" method="POST" action="${signupUrl}" modelAttribute="account">
-				    
    					<s:bind path="account.emailAddress">
    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 						<form:label path="emailAddress" cssClass="control-label">
@@ -28,6 +27,7 @@
 						<div class="controls">
 							<form:input path="emailAddress" cssClass="input-xlarge focused" required="required"/>
 							<form:errors path="emailAddress" element="span" cssClass="help-inline"/>
+							<p class="help-block"><s:message code="account.emailAddress.help.label" /></p>
 						</div>
 					</div>
 					</s:bind>
@@ -40,6 +40,7 @@
 						<div class="controls">
 							<form:input path="displayName" cssClass="input-xlarge focused" required="required"/>
 							<form:errors path="displayName" element="span" cssClass="help-inline"/>
+							<p class="help-block"><s:message code="account.displayName.help.label" /></p>
 						</div>
 					</div>
 					</s:bind>
@@ -50,8 +51,11 @@
 							<s:message code="account.password.label" />:
 						</form:label>
 						<div class="controls">
-							<form:password path="password" cssClass="input-xlarge focused" required="required"/>
+							<form:password path="password" data-typetoggle="#show-password" cssClass="input-xlarge focused" required="required"/>
 							<form:errors path="password" element="span" cssClass="help-inline"/>
+							<label class="checkbox">
+								<input id="show-password" type="checkbox"> <s:message code="account.showPassword.label" />
+							</label>
 						</div>
 					</div>
 					</s:bind>				
@@ -71,5 +75,12 @@
 				</form:form>
 			</div>
 		</div>
+
+		<script src="<c:url value="/resources/js/jquery.showpassword.js" />" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#password').showPassword();
+			});
+		</script>
 	</body>
 </html>

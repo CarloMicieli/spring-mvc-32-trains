@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,12 +56,12 @@ public class AuthController {
 	}
 
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public String createUser(@Valid Account account, BindingResult result, ModelMap model) {
+	public String createUser(@Valid @ModelAttribute Account account, BindingResult result, ModelMap model) {
 		if (result.hasErrors()) {
 			model.addAttribute(account);
 			return "auth/signup";
 		}
-				
+
 		signupService.createAccount(account);
 		
 		// automatically sign in the new user

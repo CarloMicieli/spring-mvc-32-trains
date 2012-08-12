@@ -15,7 +15,6 @@
  */
 package com.trenako.web.security;
 
-import com.trenako.entities.Account;
 import com.trenako.security.AccountDetails;
 
 /**

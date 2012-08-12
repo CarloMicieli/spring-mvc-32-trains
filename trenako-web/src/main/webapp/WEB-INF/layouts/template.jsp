@@ -28,6 +28,15 @@
 		<!--[if lt IE 9]>
 		  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
+		
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    	<script type="text/javascript" src="<c:url value="/resources/js/bootstrap.js" />"></script>
+    	
+    	<script type="text/javascript">
+    	$(document).ready(function() {
+    		$('.menu').dropdown()
+    	});
+    	</script>
 		<decorator:head/>
 	</head>
 	<body>
@@ -118,16 +127,5 @@
 				<p>Theme based upon <strong>Twitter Bootstrap</strong> and <strong>Bootswatch.com's Amelia</strong>.</p>
 			</div>
 		</footer>
-	  	
-	  	<!-- Placed at the end of the document so the pages load faster -->
-	  	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    	<script type="text/javascript" src="<c:url value="/resources/js/bootstrap.js" />"></script>
-    	
-    	<script type="text/javascript">
-    	$(document).ready(function() {
-    		$('.menu').dropdown()
-    	}
-    	</script>
-    	
 	</body>
 </html>

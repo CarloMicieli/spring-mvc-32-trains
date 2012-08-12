@@ -30,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 import com.trenako.repositories.AccountsRepository;
+import com.trenako.security.AccountDetails;
 import com.trenako.entities.Account;
 
 /**
@@ -90,8 +91,9 @@ public class SpringSignupService implements SignupService {
 		final Collection<? extends GrantedAuthority> authorities = Collections.unmodifiableList(
 				AuthorityUtils.createAuthorityList("ROLE_USER"));
 
+		// must authenticate 'AccountDetails'
 		Authentication authentication = new UsernamePasswordAuthenticationToken(
-				account,
+				new AccountDetails(account),
 				account.getPassword(),
 				authorities);
 		getSecurityContext().setAuthentication(authentication);

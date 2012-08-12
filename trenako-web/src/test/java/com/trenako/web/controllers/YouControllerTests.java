@@ -41,8 +41,8 @@ public class YouControllerTests {
 	private @Mock UserContext secContext;
 	private YouController controller;
 	
-	private final static AccountDetails USER = new AccountDetails(
-			new Account.Builder("mail@mail.com").build());
+	private final static AccountDetails USER = 
+			new AccountDetails(new Account.Builder("mail@mail.com").build());
 	
 	@Before
 	public void setup() {
