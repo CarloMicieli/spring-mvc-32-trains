@@ -23,105 +23,78 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.imgscalr.Scalr.Mode;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.trenako.entities.UploadFile;
+import com.trenako.images.UploadFile;
 
 /**
  * A concrete implementation for the {@link ImageConverter} interface.
  * <p>
  * This class is using the functionality provided by the {@code imgscalr} image processing library.
  * </p>
+ *
  * @author Carlo Micieli
  *
  */
 @Component
-public class ImgscalrService implements ImageConverter {
+public class ImgscalrService implements ImagesConverter {
 
-	/**
-	 * The list of {@link MediaType}s allowed by the application for uploads operations.
-	 */
-	public final static List<MediaType> SUPPORTED_MEDIA_TYPES =
-			Collections.unmodifiableList(Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG));
-	
 	@Override
-	public UploadFile createThumbnail(MultipartFile file, int targetSize)
+	public UploadFile createThumbnail(MultipartFile file, Map<String, String> metadata, int targetSize)
 			throws IOException {
-		
-		validateFile(file);
 		
 		final BufferedImage image = convertToImage(file);
 		final BufferedImage thumb = pad(
 				resize(image, Method.SPEED, Mode.FIT_TO_HEIGHT, targetSize, OP_ANTIALIAS, OP_BRIGHTER), 2);
 
 		return new UploadFile(
-				convertToArray(thumb, file.getContentType()), file.getContentType());
+				inputStream(thumb, file.getContentType()), 
+				file.getContentType(), 
+				file.getOriginalFilename(),
+				metadata);
 	}
 
 	@Override
-	public UploadFile createImage(MultipartFile file) throws IOException {
-		validateFile(file);
-		return new UploadFile(file.getBytes(), file.getContentType());
+	public UploadFile createImage(MultipartFile file, Map<String, String> metadata) throws IOException {
+		return new UploadFile(inputStream(file), 
+				file.getContentType(), 
+				file.getOriginalFilename(),
+				metadata);
 	}
 
-	@Override
-	public ResponseEntity<byte[]> renderImage(UploadFile image) throws IOException {
-		if( image==null )
-			throw new IllegalArgumentException("Input stream is null");
-		
-		byte[] img = image.getContent();
-		MediaType mediaType = parse(image.getMediaType());
-		
-		InputStream in = new ByteArrayInputStream(img);
-
-	    final HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(mediaType);
-	    
-	    return new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
-	}
-	
 	// helper methods
-	
-	private MediaType parse(String mediaType) {
-		return MediaType.parseMediaType(mediaType);
-	}
-	
-	private void validateFile(MultipartFile file) throws IOException {
-		MediaType contentType = MediaType.parseMediaType(file.getContentType());
 		
-		if (!SUPPORTED_MEDIA_TYPES.contains(contentType))
-			throw new IllegalArgumentException("Invalid media type");
-	}
-
 	private BufferedImage convertToImage(MultipartFile file) throws IOException {		
 		InputStream in = new ByteArrayInputStream(file.getBytes());
 		return ImageIO.read(in);
 	}
 
-	private byte[] convertToArray(BufferedImage image, String contentType) throws IOException {
-		byte[] imageInByte;
-
-		String typeName = "jpg";
-		if (contentType.equals(MediaType.IMAGE_PNG))
-			typeName = "png";
-
+	private InputStream inputStream(MultipartFile file) throws IOException {
+		return new ByteArrayInputStream(file.getBytes());
+	}
+	
+	private InputStream inputStream(BufferedImage image, String contentType) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(image, typeName, baos);
+		ImageIO.write(image, getTypeName(contentType), baos);
 		baos.flush();
-		imageInByte = baos.toByteArray();
+		InputStream is = new ByteArrayInputStream(baos.toByteArray());
 		baos.close();
-
-		return imageInByte;
+		return is;
+	}
+	
+	private String getTypeName(String contentType) {
+		String typeName = "jpg";
+		if (contentType.equals(MediaType.IMAGE_PNG)) {
+			typeName = "png";
+		}
+		else if(contentType.equals(MediaType.IMAGE_GIF)) {
+			typeName = "gif";
+		}
+		return typeName;
 	}
 }

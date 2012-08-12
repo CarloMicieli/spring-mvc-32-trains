@@ -13,25 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.repositories;
+package com.trenako.web.images;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
-
-import com.trenako.entities.Image;
+import org.springframework.core.NestedRuntimeException;
 
 /**
- * The interface for {@code Image}s repository.
- * 
+ * It represents a not checked exception during file upload saving operations.
  * @author Carlo Micieli
  *
  */
-public interface ImagesRepository extends MongoRepository<Image, ObjectId> {
+@SuppressWarnings("serial")
+public class UploadSavingException extends NestedRuntimeException {
 
 	/**
-	 * Returns the {@link Image} for the provided parent document id.
-	 * @param parentId the parent document id
-	 * @return an {@code Image} if found; {@code null} otherwise
+	 * Creates a new {@code UploadSavingException}.
+	 * @param msg the exception message
 	 */
-	Image findByParentId(ObjectId parentId);
+	public UploadSavingException(String msg) {
+		super(msg);
+	}
+	
+	/**
+	 * Creates a new {@code UploadSavingException}.
+	 * @param msg the exception message
+	 * @param cause the nested exception
+	 */
+	public UploadSavingException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 }

@@ -13,23 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trenako.web.images;
+package com.trenako.images;
 
-import org.springframework.core.NestedRuntimeException;
+import com.trenako.images.UploadFile;
+import com.mongodb.gridfs.GridFSDBFile;
 
 /**
- * It represents a not checked exception during file upload operations.
+ * The interface for Mongo GridFs repository.
  * @author Carlo Micieli
  *
  */
-@SuppressWarnings("serial")
-public class ImageConversionException extends NestedRuntimeException {
+public interface ImagesRepository {
+	/**
+	 * Returns the file with the provided slug.
+	 * @param slug the slug
+	 * @return a {@code GridFSDBFile} if found; {@code null} otherwise
+	 */
+	GridFSDBFile findFileBySlug(String slug);
 
-	public ImageConversionException(String msg) {
-		super(msg);
-	}
-	
-	public ImageConversionException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+	/**
+	 * Stores the uploaded file.
+	 * @param file the uploaded file
+	 */
+	void store(UploadFile file);
+
+	/**
+	 * Deletes the uploaded file.
+	 * @param slug the slug
+	 */
+	void delete(String slug);
 }

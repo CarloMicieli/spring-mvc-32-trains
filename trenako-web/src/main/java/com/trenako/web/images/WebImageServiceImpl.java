@@ -15,17 +15,23 @@
  */
 package com.trenako.web.images;
 
+import java.io.InputStream;
 import java.io.IOException;
 
-import org.bson.types.ObjectId;
+import org.apache.commons.io.IOUtils;
+
+import com.mongodb.gridfs.GridFSDBFile;
+
+import org.springframework.http.MediaType;
+import org.springframework.util.Assert;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.trenako.entities.Image;
-import com.trenako.entities.UploadFile;
-import com.trenako.services.ImagesService;
+import com.trenako.images.ImagesRepository;
 import com.trenako.web.errors.NotFoundException;
 
 /**
@@ -34,8 +40,8 @@ import com.trenako.web.errors.NotFoundException;
  * 
  * <p>
  * <ul>
- * <li>{@link ImagesService}: to persist images to the database;</li>
- * <li>{@link ImageConverter} to convert images from and to {@link MultipartFile}.</li>
+ * <li>{@link ImagesRepository}: to load/store images to the database;</li>
+ * <li>{@link ImagesConverter} to convert images from and to {@link MultipartFile}.</li>
  * </ul> 
  * </p>
  * 
@@ -44,67 +50,80 @@ import com.trenako.web.errors.NotFoundException;
  */
 @Service("webImageService")
 public class WebImageServiceImpl implements WebImageService {
-	
-	private final ImagesService db;
-	private final ImageConverter converter;
-	
+
+	private final ImagesRepository repo;
+	private final ImagesConverter converter;
+
+	/**
+	 * Creates a new {@code WebImageServiceImpl}.
+	 * @param repo the images repository
+	 * @param converter the images converter
+	 */
 	@Autowired
-	public WebImageServiceImpl(ImagesService db, ImageConverter converter) {
+	public WebImageServiceImpl(ImagesRepository repo, ImagesConverter converter) {
 		this.converter = converter;
-		this.db = db;
+		this.repo = repo;
 	}
-	
+
 	@Override
-	public void saveImage(ObjectId parentId, MultipartFile file) {
+	public void saveImage(UploadRequest req) {
+		Assert.notNull(req, "Upload request must be not null");
+
 		try {
-			final UploadFile uploadFile = converter.createImage(file);
-			final Image image = new Image.Builder(parentId, uploadFile)
-				.filename(file.getOriginalFilename())
-				.build();
-			db.saveImage(image);
-		} catch (IOException ex) {
-			throw new ImageConversionException("Upload exception");
+			repo.store(converter.createImage(req.getFile(), req.asMetadata(false)));
+		}
+		catch (IOException ioEx) {
+			throw new UploadSavingException("Error occurred uploading the file.", ioEx);
 		}
 	}
 
 	@Override
-	public void saveImageWithThumb(ObjectId parentId, MultipartFile file, int size) {
+	public void saveImageWithThumb(UploadRequest req, int size) {
+		Assert.notNull(req, "Upload request must be not null");
+		Assert.isTrue(size > 0, "Thumbnail size must be positive");
+
 		try {
-			final UploadFile uploadFile = converter.createImage(file);
-			final UploadFile thumbnail = converter.createThumbnail(file, size);
-			final Image image = new Image.Builder(parentId, uploadFile)
-				.thumbnail(thumbnail)
-				.filename(file.getOriginalFilename())
-				.build();
-			db.saveImage(image);
-		} catch (IOException ex) {
-			throw new ImageConversionException("Upload exception");
-		}	
+			repo.store(converter.createImage(req.getFile(), req.asMetadata(false)));
+			repo.store(converter.createThumbnail(req.getFile(), req.asMetadata(true), size));
+		}
+		catch (IOException ioEx) {
+			throw new UploadSavingException("Error occurred uploading the file.", ioEx);
+		}
 	}
 	
 	@Override
-	public ResponseEntity<byte[]> renderImageFor(ObjectId parentId) {
-		Image img = db.getImage(parentId);
-		if (img==null)
+	public ResponseEntity<byte[]> renderImage(String imageSlug) {
+		GridFSDBFile img = repo.findFileBySlug(imageSlug);
+		if (img == null) {
 			throw new NotFoundException();
+		}
 		
+		InputStream in = img.getInputStream();
+		MediaType mediaType = parse(img.getContentType());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(mediaType);
+
 		try {
-			return converter.renderImage(img.getImage());
-		} catch (IOException ex) {
-			throw new ImageConversionException("Upload exception");
+			return new ResponseEntity<byte[]>(
+				IOUtils.toByteArray(in), 
+				headers, 
+				HttpStatus.CREATED);
+		}
+		catch (IOException ioEx) {
+			throw new UploadRenderingException("Error occurred rendering the file.", ioEx);
 		}
 	}
 
 	@Override
-	public ResponseEntity<byte[]> renderThumbnailFor(ObjectId parentId) {
-		Image img = db.getImage(parentId);
-		if (img==null)
-			throw new NotFoundException();
-		
-		try {
-			return converter.renderImage(img.getThumbnail());
-		} catch (IOException ex) {
-			throw new ImageConversionException("Upload exception");
-		}
+	public void deleteImage(ImageRequest req) {
+		repo.delete(req.getFilename());
+		repo.delete(req.getThumbFilename());
+	}
+
+	// helper methods
+
+	private MediaType parse(String mediaType) {
+		return MediaType.parseMediaType(mediaType);
 	}
 }

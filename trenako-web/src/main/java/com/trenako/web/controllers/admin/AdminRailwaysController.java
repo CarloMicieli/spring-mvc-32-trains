@@ -150,9 +150,9 @@ public class AdminRailwaysController {
 		}
 
 		service.save(railway);
-		if (!file.isEmpty()) {
-			imageService.saveImage(railway.getId(), file);
-		}
+//		if (!file.isEmpty()) {
+//			imageService.saveImage(railway.getId(), file);
+//		}
 		
 		redirectAtts.addFlashAttribute("message", "Railway created");
 		return "redirect:/admin/railways";

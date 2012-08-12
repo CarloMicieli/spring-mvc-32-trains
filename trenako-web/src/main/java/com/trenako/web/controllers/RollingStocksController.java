@@ -106,9 +106,9 @@ public class RollingStocksController {
 		}
 		
 		service.save(rs);
-		if (!file.isEmpty()) {
-			imgService.saveImage(rs.getId(), file);
-		}
+//		if (!file.isEmpty()) {
+//			imgService.saveImage(rs.getId(), file);
+//		}
 
 		redirectAtts.addFlashAttribute("message", "rolling.stock.created");
 		redirectAtts.addAttribute("slug", rs.getSlug());

@@ -18,9 +18,6 @@ package com.trenako.web.controllers;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +40,8 @@ public class ImagesControllerTests {
 	@Mock WebImageService mockService;
 	ImagesController controller;
 	
+	private final static ResponseEntity<byte[]> resp = new ResponseEntity<byte[]>(HttpStatus.CREATED);
+	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
@@ -50,15 +49,24 @@ public class ImagesControllerTests {
 	}
 	
 	@Test
-	public void shouldRenderTheBrandLogoImages() throws IOException {
-		ObjectId id = new ObjectId();
-		ResponseEntity<byte[]> value = new ResponseEntity<byte[]>(HttpStatus.CREATED);
-		when(mockService.renderImageFor(eq(id))).thenReturn(value);
-
-		ResponseEntity<byte[]> resp = controller.renderBrandLogo(id);
-
-		verify(mockService, times(1)).renderImageFor(eq(id));
-		assertNotNull(resp);
-		assertEquals(HttpStatus.CREATED, resp.getStatusCode());
+	public void shouldRenderImages() {
+		String imgSlug = "brand_ls-models";
+		when(mockService.renderImage(eq(imgSlug))).thenReturn(resp);
+		
+		ResponseEntity<byte[]> value = controller.renderImage(imgSlug);
+		
+		verify(mockService, times(1)).renderImage(eq(imgSlug));
+		assertNotNull(value);
+	}
+	
+	@Test
+	public void shouldRenderThumbs() {
+		String thumbSlug = "th_brand_ls-models";
+		when(mockService.renderImage(eq(thumbSlug))).thenReturn(resp);
+		
+		ResponseEntity<byte[]> value = controller.renderImage(thumbSlug);
+		
+		verify(mockService, times(1)).renderImage(eq(thumbSlug));
+		assertNotNull(value);
 	}
 }

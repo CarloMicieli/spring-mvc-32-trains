@@ -135,9 +135,9 @@ public class AdminBrandsController {
 		
 		// save brand
 		service.save(brand);
-		if (!file.isEmpty()) {
-			imgService.saveImage(brand.getId(), file);
-		}
+//		if (!file.isEmpty()) {
+//			imgService.saveImage(brand.getId(), file);
+//		}
 		
 		redirectAtts.addFlashAttribute("message", "Brand created");
 		return "redirect:/admin/brands";		

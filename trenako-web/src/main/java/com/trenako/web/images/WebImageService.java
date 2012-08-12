@@ -15,9 +15,7 @@
  */
 package com.trenako.web.images;
 
-import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * The interface for the upload images service for web requests.
@@ -29,36 +27,36 @@ public interface WebImageService {
 	/**
 	 * Saves the uploaded image to the database.
 	 * <p>
-	 * To create also the thumbnail the clients have to call 
-	 * the {@link WebImageService#saveImageWithThumb(ObjectId, MultipartFile, int)} method
-	 * instead. 
+	 * To create also the thumbnail the clients have to call the 
+	 * {@link WebImageService#saveImageWithThumb(UploadRequest)} 
+	 * method instead. 
 	 * </p>
 	 * 
-	 * @param parentId
-	 * @param file
+	 * @param req the file upload request
 	 */
-	void saveImage(ObjectId parentId, MultipartFile file);
+	void saveImage(UploadRequest req);
 
 	/**
-	 * 
-	 * @param parentId
-	 * @param file
-	 * @param size
+	 * Saves the uploaded image to the database creating the thumbnail too.
+	 *
+	 * @param req the file upload request
+	 * @param size the thumbnail size in pixels
 	 */
-	void saveImageWithThumb(ObjectId parentId, MultipartFile file, int size);
+	void saveImageWithThumb(UploadRequest req, int size);
 	
 	/**
-	 * Renders the original image for a web request.
+	 * Renders the image with the provided {@code ImageRequest} 
+	 * in the web response.
 	 * 
-	 * @param parentId
-	 * @return
+	 * @param imageSlug the image slug
+	 * @return a web response entity
 	 */
-	ResponseEntity<byte[]> renderImageFor(ObjectId parentId);
-	
+	ResponseEntity<byte[]> renderImage(String imageSlug);
+
 	/**
+	 * Deletes a file from the database.
 	 * 
-	 * @param parentId
-	 * @return
+	 * @param imageSlug the image slug
 	 */
-	ResponseEntity<byte[]> renderThumbnailFor(ObjectId parentId);
+	void deleteImage(ImageRequest req);
 }

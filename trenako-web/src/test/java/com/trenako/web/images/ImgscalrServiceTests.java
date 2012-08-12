@@ -21,6 +21,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.eq;
 import static org.imgscalr.Scalr.*;
+import static com.trenako.utility.Maps.*;
+
+import java.util.Map;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
@@ -37,13 +40,11 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.trenako.entities.UploadFile;
+import com.trenako.images.UploadFile;
 
 /**
  * 
@@ -66,7 +67,7 @@ public class ImgscalrServiceTests {
 		final byte[] content = "file content".getBytes();
 		MultipartFile file = mockFile(content, MediaType.APPLICATION_XML);
 		
-		imgService.createThumbnail(file, 100);
+		imgService.createThumbnail(file, null, 100);
 	}
 	
 	@Test
@@ -90,11 +91,11 @@ public class ImgscalrServiceTests {
 		MultipartFile file = mockFile(content, MediaType.IMAGE_JPEG);
 		
 		// call the method under test
-		UploadFile image = imgService.createThumbnail(file, targetSize);
+		UploadFile image = imgService.createThumbnail(file, metadata(), targetSize);
 		
 		// assert
 		assertNotNull("Byte array is empty", image.getContent());
-		assertEquals("image/jpeg", image.getMediaType());
+		assertEquals("image/jpeg", image.getContentType());
 
 		// (1) the image is resized
 		PowerMockito.verifyStatic();
@@ -114,42 +115,22 @@ public class ImgscalrServiceTests {
 		final byte[] content = "file content".getBytes();
 		MultipartFile file = mockFile(content, MediaType.IMAGE_JPEG);
 		
-		UploadFile img = imgService.createImage(file);
+		UploadFile img = imgService.createImage(file, metadata());
 		
-		assertEquals(content, img.getContent());
-		assertEquals(MediaType.IMAGE_JPEG_VALUE, img.getMediaType());
+		assertNotNull(img.getContent());
+		assertEquals(MediaType.IMAGE_JPEG_VALUE.toString(), img.getContentType());
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldValidateImageMediaTypesForConvertToBytes() throws IOException {
-		// not an image file type
-		final byte[] content = "file content".getBytes();
-		MultipartFile file = mockFile(content, MediaType.APPLICATION_XML);
-		
-		imgService.createImage(file);
-	}
+//	@Test(expected = IllegalArgumentException.class)
+//	public void shouldValidateImageMediaTypesForConvertToBytes() throws IOException {
+//		// not an image file type
+//		final byte[] content = "file content".getBytes();
+//		MultipartFile file = mockFile(content, MediaType.APPLICATION_XML);
+//		
+//		imgService.createImage(file, metadata());
+//	}
 	
-	@Test
-	public void shouldRenderImagesToHttpOutputStream() throws IOException {
-		PowerMockito.mockStatic(IOUtils.class);
-		
-		final byte[] out = "file content".getBytes();
-		final byte[] content = "file content".getBytes();
-		final UploadFile image = new UploadFile(content, MediaType.IMAGE_PNG_VALUE);
-		
-		when(IOUtils.toByteArray(isA(InputStream.class))).thenReturn(out);
-				
-		ResponseEntity<byte[]> resp = imgService.renderImage(image);
-		
-		assertNotNull("Response is null", resp);
-		assertEquals(HttpStatus.CREATED, resp.getStatusCode());
-		assertEquals(true, resp.hasBody());
-		assertEquals(out, resp.getBody());
-		assertEquals(MediaType.IMAGE_PNG, resp.getHeaders().getContentType());
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldRenderImagesThrowsAnExceptionIfInputIsNull() throws IOException {
-		imgService.renderImage(null);
+	private Map<String, String> metadata() {
+		return map("slug", "img-slug");
 	}
 }

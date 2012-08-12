@@ -15,20 +15,25 @@
  */
 package com.trenako.web.controllers;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import org.apache.log4j.Logger;
+
+import com.trenako.web.images.UploadRenderingException;
 import com.trenako.web.images.WebImageService;
 
 /**
- * It represents the controller to render images.
+ * It represents the controller used for images rendering.
  * @author Carlo Micieli
  *
  */
@@ -36,25 +41,26 @@ import com.trenako.web.images.WebImageService;
 @RequestMapping("/images")
 public class ImagesController {
 
-	private final WebImageService imagesService;
+	private static final Logger log = Logger.getLogger("com.trenako.web");
+	private final WebImageService imgService;
 
 	/**
-	 * Creates a new {@code ImagesController} to render images.
-	 * @param imagesService the service to load images from database
-	 * @param imgUtils the image processing class
+	 * Creates a new {@code ImagesController}.
+	 * @param imgService the image service
 	 */
 	@Autowired
-	public ImagesController(WebImageService imagesService) {
-		this.imagesService = imagesService;
+	public ImagesController(WebImageService imgService) {
+		this.imgService = imgService;
 	}
 
-	@RequestMapping(value = "/brand/{brandId}", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> renderBrandLogo(@PathVariable("brandId") ObjectId id) throws IOException {
-		return imagesService.renderImageFor(id);
+	@RequestMapping(value = "/{imageSlug}", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> renderImage(@PathVariable("imageSlug") String imageSlug) {
+		return imgService.renderImage(imageSlug);
 	}
 	
-	@RequestMapping(value = "/railway/{railwayId}", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> renderRailwayLogo(@PathVariable("railwayId") ObjectId id) throws IOException {
-		return imagesService.renderImageFor(id);
+	@ExceptionHandler(UploadRenderingException.class)
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	public void handleIOException(UploadRenderingException ex, HttpServletResponse response) {
+		log.error(ex.toString());
 	}
 }
