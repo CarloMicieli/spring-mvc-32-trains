@@ -18,7 +18,7 @@
 				<form:form id="form" class="form-horizontal" method="POST" action="${loginUrl}" >
 				    <div class="control-group">
 						<label for="j_username" class="control-label">
-							<s:message code="account.username.label" />:
+							<s:message code="account.emailAddress.label" />:
 						</label>
 						<div class="controls">
 							<input type="text" id="j_username" name="j_username" class="input-xlarge focused" required="required"/>
