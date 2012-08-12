@@ -25,7 +25,10 @@
 	<!-- no security checks for static content -->
 	<http pattern="/resources/**" security="none" />
 	
-	<http auto-config="true" access-decision-manager-ref="accessDecisionManager" use-expressions="true" access-denied-page="/error/denied">
+	<http auto-config="true" access-decision-manager-ref="accessDecisionManager" 
+			use-expressions="true" 
+			access-denied-page="/error/denied">
+
 		<intercept-url pattern="/auth/logout*" access="isAuthenticated()" />
 		<intercept-url pattern="/auth/**" access="permitAll" />
 		<intercept-url pattern="/images/**" access="permitAll" />
@@ -53,7 +56,6 @@
 				<beans:bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
 					<beans:property name="expressionHandler" ref="expressionHandler"/>
 				</beans:bean>			
-				<beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
 			</beans:list>
 		</beans:constructor-arg>
 	</beans:bean>
