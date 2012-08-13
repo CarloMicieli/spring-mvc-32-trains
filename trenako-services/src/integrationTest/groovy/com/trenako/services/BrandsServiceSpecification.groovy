@@ -99,7 +99,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 		then:
 		brand != null
 		brand.name == 'Roco'
-		brand.description.default == 'Roco description'
+		brand.description.getDefault() == 'Roco description'
 		
 		brand.address != null
 		brand.address.toString() == 'Plainbachstraße 4, A-5101 Bergheim, (Austria)'
@@ -121,7 +121,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 		then:
 		brand != null
 		brand.name == 'LS Models'
-		brand.description.default == 'Ls Models description'
+		brand.description.getDefault() == 'Ls Models description'
 	}
 	
 	def "should return null if no brand is found for the provided id"() {
@@ -248,7 +248,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 		given:
 		def brand = service.findBySlug('roco')
 		assert brand != null
-		assert brand.description.default != null
+		assert brand.description.getDefault() != null
 		
 		when:
 		brand.branches = [it: new Address(streetAddress: 'Via Manzoni 144', postalCode: '20811', city: 'Cesano Maderno', country: 'Italy')]

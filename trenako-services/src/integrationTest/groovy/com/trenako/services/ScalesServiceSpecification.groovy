@@ -86,7 +86,7 @@ class ScalesServiceSpecification extends MongoSpecification {
 		scale != null
 		scale.id == id
 		scale.name == 'H0'
-		scale.description.default == 'Scale H0'
+		scale.description.getDefault() == 'Scale H0'
 	}
 	
 	def "should return null if no scale has the provided name"() {

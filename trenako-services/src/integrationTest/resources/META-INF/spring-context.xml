@@ -16,7 +16,7 @@
 	<context:component-scan base-package="com.trenako"/>
 
 	<mongo host="localhost" port="27017"/>
-	<db-factory dbname="trenako-testdb" mongo-ref="mongo"/>
+	<db-factory id="mongoDbFactory" dbname="trenako-testdb" mongo-ref="mongo"/>
 
 	<!-- Register the converters -->
 	<mapping-converter base-package="com.trenako.mapping">
@@ -28,6 +28,11 @@
 
 	<!-- Register the mongodb repositories -->
 	<repositories base-package="com.trenako.repositories" />
+
+	<beans:bean id="gridTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
+  		<beans:constructor-arg ref="mongoDbFactory"/>
+  		<beans:constructor-arg ref="mappingConverter"/>
+	</beans:bean>
 
 	<beans:bean id="localizedFieldWriteConverter" 
 		class="com.trenako.mapping.LocalizedFieldWriteConverter"/>
