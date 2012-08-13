@@ -201,7 +201,7 @@ public class LocalizedTextAreaTags extends SpringTagSupport {
 		return getMessageSource().getMessage(code, 
 				new Object[] { locale.getDisplayLanguage() }, 
 				code, 
-				null);
+				getRequestContext().getLocale());
 	}
 	
 	private String errorMessage(Locale locale, List<String> errorMessages) {
@@ -211,7 +211,7 @@ public class LocalizedTextAreaTags extends SpringTagSupport {
 		
 		StringBuilder sb = new StringBuilder();
 		for (String err : errorMessages) {
-			sb.append(getMessageSource().getMessage(err, null, err, null));
+			sb.append(getMessageSource().getMessage(err, null, err, getRequestContext().getLocale()));
 		}
 		return sb.toString();
 	}

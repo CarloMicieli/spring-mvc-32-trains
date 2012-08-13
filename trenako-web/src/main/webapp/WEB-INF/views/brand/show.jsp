@@ -30,46 +30,63 @@
 				<div class="page-header">
 					<h1><s:message code="brand.show.title.label" arguments="${brand.name}" /> </h1>
 				</div>
-    			<dl>
-    				<dt><s:message code="brand.name.label" />:</dt>
-    				<dd>${brand.name}</dd>
-    				<dt><s:message code="brand.description.label" />:</dt>
-    				<dd>${brand.description}</dd>
-    				<dt><s:message code="brand.emailAddress.label" />:</dt>
-    				<dd>${brand.emailAddress}</dd>
-    				<dt><s:message code="brand.website.label" />:</dt>
-    				<dd>${brand.website}</dd>
-					<dt><s:message code="brand.industrial.label" />:</dt>
-    				<dd>${brand.industrial}</dd>
-    				<dt><s:message code="brand.logo.label" />:</dt>
-    				<dd>
-    					<s:url value="/images/brand/{id}" var="logoUrl">
+				
+				<div class="row-fluid">
+					<div class="span4">
+						<div class="thumbnail">
+							<img src="http://placehold.it/260x180" alt="">
+							<div class="caption">
+								<h5></h5>
+								<p>Logo: ${brand.name}</p>
+								<p><a href="#" class="btn btn-primary">Save</a> <a href="#" class="btn">Cancel</a></p>
+							</div>
+						</div>
+					</div>
+					<div class="span8">
+		    			<dl>
+		    				<dt><s:message code="brand.name.label" />:</dt>
+		    				<dd>${brand.name}</dd>
+		    				<dt><s:message code="brand.companyName.label" />:</dt>
+		    				<dd>${brand.companyName}</dd>		    				
+		    				<dt><s:message code="brand.emailAddress.label" />:</dt>
+		    				<dd>${brand.emailAddress}</dd>
+		    				<dt><s:message code="brand.website.label" />:</dt>
+		    				<dd>${brand.website}</dd>
+							<dt><s:message code="brand.industrial.label" />:</dt>
+		    				<dd>${brand.industrial}</dd>
+		    			</dl>
+		    			
+		    			<hr/>
+		    			
+		    			<h4><s:message code="brand.descriptions.label" /></h4>
+		    			<dl>
+		    				<c:forEach var="item" items="${brand.description}">
+		    					<dt>${item.key}:</dt><dd>${item.value}</dd>
+		    				</c:forEach>
+		    			</dl>
+		
+						<s:url value="/admin/brands/{id}" var="brandsUrl">
 							<s:param name="id" value="${brand.id}" />
 						</s:url>
-						<img src="${logoUrl}" alt="Not found"/>
-    				</dd>
-    			</dl>
-
-				<s:url value="/admin/brands/{id}" var="brandsUrl">
-					<s:param name="id" value="${brand.id}" />
-				</s:url>
-				<form:form action="${brandsUrl}" method="delete" modelAttribute="brand" >
-					<form:hidden path="id"/>
-					<div class="form-actions">
-						<s:url var="editUrl" value="/admin/brands/{id}/edit">
-				           	<s:param name="id" value="${brand.id}" />
-						</s:url>
-						<a href="${editUrl}" class="btn">
-							<i class="icon-pencil"></i>
-							<s:message code="button.edit.label" />
-						</a>
-
-						<button class="btn btn-danger" type="submit" name="_action_delete">
-							<i class="icon-trash icon-white"></i>
-							<s:message code="button.delete.label" />
-						</button>
+						<form:form action="${brandsUrl}" method="delete" modelAttribute="brand" >
+							<form:hidden path="id"/>
+							<div class="form-actions">
+								<s:url var="editUrl" value="/admin/brands/{id}/edit">
+						           	<s:param name="id" value="${brand.id}" />
+								</s:url>
+								<a href="${editUrl}" class="btn">
+									<i class="icon-pencil"></i>
+									<s:message code="button.edit.label" />
+								</a>
+		
+								<button class="btn btn-danger" type="submit" name="_action_delete">
+									<i class="icon-trash icon-white"></i>
+									<s:message code="button.delete.label" />
+								</button>
+							</div>
+						</form:form>
 					</div>
-				</form:form>
+				</div>
     		</div>
     	</div>
 	</body>

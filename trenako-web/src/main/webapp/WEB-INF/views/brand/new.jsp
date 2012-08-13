@@ -47,6 +47,18 @@
 							</div>
 						</div>
 						</s:bind>
+						
+						<s:bind path="brand.companyName">
+    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+							<form:label path="companyName" cssClass="control-label">
+								<s:message code="brand.companyName.label" />:
+							</form:label>
+							<div class="controls">
+								<form:input path="companyName" cssClass="input-xlarge focused"/>
+								<form:errors path="companyName" element="span" cssClass="help-inline"/>
+							</div>
+						</div>
+						</s:bind>
 
 						<tk:localizedTextArea path="description" rows="4"/>
 

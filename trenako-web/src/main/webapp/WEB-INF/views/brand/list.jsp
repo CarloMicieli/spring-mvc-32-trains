@@ -42,11 +42,10 @@
 					<thead>
 						<tr>
 							<th><s:message code="brand.name.label" /></th>
-							<th><s:message code="brand.description.label" /></th>
+							<th><s:message code="brand.companyName.label" /></th>
 							<th><s:message code="brand.website.label" /></th>
 							<th><s:message code="brand.emailAddress.label" /></th>
 							<th><s:message code="brand.industrial.label" /></th>
-							<th><s:message code="brand.address.label" /></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -54,11 +53,10 @@
 					<c:forEach var="brand" items="${brands.content}">
 						<tr>
 							<td>${brand.name}</td>
-							<td>${brand.description}</td>
+							<td>${brand.companyName}</td>
 							<td>${brand.website}</td>
 							<td>${brand.emailAddress}</td>
 							<td>${brand.industrial}</td>
-							<td>${brand.address}</td>
 
 							<s:url var="showUrl" value="/admin/brands/{id}">
 				            	<s:param name="id" value="${brand.id}" />
