@@ -209,7 +209,7 @@ public class RollingStock implements DbReferenceable {
 				this.description = new LocalizedField<String>(desc);
 			}
 			else {
-				this.description.putDefault(desc);
+				this.description.setDefault(desc);
 			}
 			return this;
 		}
@@ -227,7 +227,7 @@ public class RollingStock implements DbReferenceable {
 				this.details = new LocalizedField<String>(det);
 			}
 			else {
-				this.details.putDefault(det);
+				this.details.setDefault(det);
 			}
 			return this;
 		}

@@ -15,7 +15,6 @@
  */
 package com.trenako.mapping;
 
-import java.util.Locale;
 import java.util.Set;
 
 import org.springframework.core.convert.converter.Converter;
@@ -36,7 +35,7 @@ public class LocalizedFieldReadConverter<T> implements Converter<DBObject, Local
 		LocalizedField<T> field = new LocalizedField<T>();
 		Set<String> fieldNames = dbo.keySet();
 		for (String lang : fieldNames) {
-			field.put(new Locale(lang), (T) dbo.get(lang));
+			field.put(lang, (T) dbo.get(lang));
 		}
 				
 		return field;

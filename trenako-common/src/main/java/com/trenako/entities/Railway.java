@@ -159,7 +159,7 @@ public class Railway implements DbReferenceable {
 				this.description = new LocalizedField<String>(desc);
 			}
 			else {
-				this.description.putDefault(desc);
+				this.description.setDefault(desc);
 			}
 			return this;
 		}

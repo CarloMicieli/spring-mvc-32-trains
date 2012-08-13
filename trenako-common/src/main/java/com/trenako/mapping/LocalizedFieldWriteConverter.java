@@ -15,7 +15,6 @@
  */
 package com.trenako.mapping;
 
-import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.core.convert.converter.Converter;
@@ -28,16 +27,15 @@ import com.mongodb.DBObject;
  * @author Carlo Micieli
  *
  */
-public class LocalizedFieldWriteConverter implements Converter<LocalizedField<?>, DBObject> {
+public class LocalizedFieldWriteConverter<T> implements Converter<LocalizedField<T>, DBObject> {
 
 	@Override
-	public DBObject convert(LocalizedField<?> source) {
+	public DBObject convert(LocalizedField<T> source) {
 		BasicDBObject dbo = new BasicDBObject();
-		for (Map.Entry<Locale, ?> entry : source.entrySet()) {
-			dbo.append(entry.getKey().getLanguage(), entry.getValue());
+		for (Map.Entry<String, T> entry : source.entrySet()) {
+			dbo.append(entry.getKey(), entry.getValue());
 		}
 		
 		return dbo;
 	}
-
 }

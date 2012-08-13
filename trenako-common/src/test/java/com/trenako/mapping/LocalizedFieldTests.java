@@ -31,6 +31,15 @@ import org.junit.Test;
 public class LocalizedFieldTests {
 
 	@Test
+	public void shouldGetTheListOfLocalesToFill() {
+		Iterable<Locale> x = LocalizedField.locales(Locale.CHINESE);
+		assertEquals("[en, zh]", x.toString());
+		
+		Iterable<Locale> y = LocalizedField.locales(Locale.ENGLISH);
+		assertEquals("[en]", y.toString());
+	}
+	
+	@Test
 	public void shouldCreateLocalizedFieldFromMaps() {
 		Map<String, String> values = new HashMap<String, String>();
 		values.put("en", "English");
@@ -44,7 +53,7 @@ public class LocalizedFieldTests {
 	}
 	
 	@Test
-	public void shouldCreateALocalizedFieldWithDefaultValues() {
+	public void shouldCreateNewLocalizedFieldWithDefaultValues() {
 		LocalizedField<String> field = new LocalizedField<String>("default message");
 		assertEquals("default message", field.getDefault());
 		assertTrue(field.containsDefault());

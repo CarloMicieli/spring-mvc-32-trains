@@ -15,10 +15,11 @@
  */
 package com.trenako.mapping;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import com.trenako.AppGlobals;
 
@@ -30,15 +31,13 @@ import com.trenako.AppGlobals;
  *
  * @param <T>
  */
-public class LocalizedField<T> {
+@SuppressWarnings("serial")
+public class LocalizedField<T> extends LinkedHashMap<String, T> {
 
-	private Map<Locale, T> values;
-	
 	/**
 	 * Creates an empty {@code LocalizedField}.
 	 */
 	public LocalizedField() {
-		values = new HashMap<Locale, T>();
 	}
 
 	/**
@@ -48,8 +47,7 @@ public class LocalizedField<T> {
 	 * @param defaultValue the default value
 	 */
 	public LocalizedField(T defaultValue) {
-		this();
-		putDefault(defaultValue);
+		put(AppGlobals.DEFAULT_LANGUAGE, defaultValue);
 	}
 	
 	/**
@@ -77,38 +75,15 @@ public class LocalizedField<T> {
 	}
 	
 	/**
-	 * Returns the localized values as {@code Map}.
-	 * @return the map
-	 */
-	public Map<String, T> asMap() {
-		Map<String, T> v = new HashMap<String, T>();
-		
-		for (Map.Entry<Locale, T> e : values.entrySet()) {
-			v.put(e.getKey().getLanguage(), e.getValue());
-		}
-		
-		return v;
-	}
-	
-	/**
 	 * Returns the localized value for the provided {@code Locale}.
 	 * @param lang the {@code Locale}
 	 * @return the value to which the specified {@code Locale} is mapped; 
 	 * 			or {@code null} if no value is mapped with the {@code Locale}
 	 */
-	public T get(Object lang) {
-		return values.get(lang);
+	public T get(Locale lang) {
+		return get(keyFromLocale(lang));
 	}
 
-	/**
-	 * Returns a {@code Set} view of the localized values contained 
-	 * in this field.
-	 * @return a set view of the localized values
-	 */
-	public Set<Map.Entry<Locale, T>> entrySet() {
-		return values.entrySet();
-	}
-	
 	/**
 	 * Associates the provided value with the corresponding {@code Locale}.
 	 * @param lang the {@code Locale}
@@ -117,23 +92,25 @@ public class LocalizedField<T> {
 	 * 			if there was no mapping for {@code Locale}. 
  	 */
 	public T put(Locale lang, T value) {
-		return values.put(lang, value);
+		return this.put(keyFromLocale(lang), value);
 	}
 
-	/**
-	 * Associates the provided value with the default {@code Locale}.
-	 * @param value the localized value
-	 */
-	public final void putDefault(T value) {
-		values.put(AppGlobals.DEFAULT_LOCALE, value);	
-	}
-	
 	/**
 	 * Checks whether the current field has default value.
 	 * @return {@code true} if contains a default value; {@code false} otherwise
 	 */
 	public boolean containsDefault() {
-		return values.containsKey(AppGlobals.DEFAULT_LOCALE);
+		return containsKey(AppGlobals.DEFAULT_LANGUAGE);
+	}
+
+	/**
+	 * Sets the value for the default {@code Locale}.
+	 * @param defaultValue the new default value
+	 * @return the previous value associated with the default {@code Locale}; {@code null} 
+	 * 			if there was no mapping for {@code Locale}. 
+	 */
+	public T setDefault(T defaultValue) {
+		return put(AppGlobals.DEFAULT_LANGUAGE, defaultValue);
 	}
 	
 	/**
@@ -141,7 +118,7 @@ public class LocalizedField<T> {
 	 * @return the default value
 	 */
 	public T getDefault() {
-		return get(AppGlobals.DEFAULT_LOCALE);
+		return get(AppGlobals.DEFAULT_LANGUAGE);
 	}
 	
 	/**
@@ -150,25 +127,27 @@ public class LocalizedField<T> {
 	 * @return the value for the {@code Locale} if exits; {@code null} otherwise
 	 */
 	public T getValue(Locale lang) {
-		T msg = get(lang);
-		if (msg == null) {
-			msg = get(AppGlobals.DEFAULT_LOCALE);
+		T val = get(lang);
+		if (val == null) {
+			val = getDefault();
 		}
 
-		return msg;
-	}
-
-	@Override
-	public String toString() {
-		return values.toString();
+		return val;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof LocalizedField<?>)) return false;
-		
-		LocalizedField<?> other = (LocalizedField<?>) obj;
-		return this.values.equals(other.values);
+	/**
+	 * Returns the {@code Locale} list to be managed.
+	 * @param currentLocale the current user's {@code Locale}
+	 * @return the {@code Locale} list
+	 */
+	public static Iterable<Locale> locales(Locale currentLocale) {
+		if (currentLocale.equals(AppGlobals.DEFAULT_LOCALE)) {
+			return Collections.unmodifiableList(Arrays.asList(AppGlobals.DEFAULT_LOCALE));
+		}
+		return Collections.unmodifiableList(Arrays.asList(AppGlobals.DEFAULT_LOCALE, currentLocale));
+	}
+	
+	private String keyFromLocale(Locale locale) {
+		return locale.getLanguage();
 	}
 }
