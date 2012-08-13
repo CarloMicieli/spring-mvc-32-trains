@@ -7,6 +7,35 @@
 	<info>The custom tags library</info>
 
 	<tag>
+		<name>localizedTextArea</name>
+		<tagclass>com.trenako.web.tags.LocalizedTextAreaTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display localized text areas.
+		</description>
+		<attribute>
+			<name>path</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rows</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>cols</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+
+	<tag>
 		<name>categoriesList</name>
 		<tagclass>com.trenako.web.tags.CategoriesListTags</tagclass>
 		<bodycontent>empty</bodycontent>

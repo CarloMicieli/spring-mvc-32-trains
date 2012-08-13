@@ -18,6 +18,8 @@ package com.trenako.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.springframework.util.StringUtils;
+
 import com.trenako.mapping.LocalizedField;
 import com.trenako.validation.constraints.ContainsDefault;
 
@@ -29,8 +31,10 @@ import com.trenako.validation.constraints.ContainsDefault;
 public class LocalizedFieldValidator 
 	implements ConstraintValidator<ContainsDefault, LocalizedField<?>> {
 
+	Class<?>[] clazz;
 	@Override
-	public void initialize(ContainsDefault constraintAnnotation) {
+	public void initialize(ContainsDefault annotation) {
+		clazz = annotation.providedType();
 	}
 
 	@Override
@@ -38,7 +42,16 @@ public class LocalizedFieldValidator
 		if (value == null) {
 			return true;
 		}
-		return value.containsDefault();
+		
+		if (!value.containsDefault()) {
+			return false;
+		}
+		
+		if (clazz[0].equals(String.class)) {
+			return StringUtils.hasText(value.getDefault().toString());
+		}
+		
+		return true;
 	}
 
 }

@@ -45,4 +45,6 @@ public @interface ContainsDefault {
 	Class<?>[] groups() default { };
 
 	Class<? extends Payload>[] payload() default { };
+	
+	Class<?>[] providedType() default { String.class } ;
 }

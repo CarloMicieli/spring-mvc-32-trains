@@ -17,6 +17,8 @@ package com.trenako.web.controllers.admin;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -26,6 +28,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,8 +40,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.trenako.AppGlobals;
 import com.trenako.entities.Brand;
+import com.trenako.mapping.LocalizedField;
 import com.trenako.services.BrandsService;
+import com.trenako.web.editors.LocalizedFieldPropertyEditor;
+import com.trenako.web.images.MultipartFileValidator;
+import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 
 /**
@@ -49,6 +59,8 @@ import com.trenako.web.images.WebImageService;
 @RequestMapping("/admin/brands")
 public class AdminBrandsController {
 
+	private MultipartFileValidator fileValidator;
+	
 	private final BrandsService service;
 	private final WebImageService imgService;
 	
@@ -61,9 +73,19 @@ public class AdminBrandsController {
 		this.imgService = imgService;
 	}
 	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		//binder.registerCustomEditor(LocalizedField.class, new LocalizedFieldPropertyEditor());
+	}
+	
+	@Autowired(required = false) 
+	public void setMultipartFileValidator(MultipartFileValidator validator) {
+		fileValidator = validator;
+	}
+	
 	@ModelAttribute("countries")
-	public Iterable<String> countries() {
-		return Arrays.asList("Österreich", "Italia", "Germany", "USA", "China", "France", "Japan");
+	public Map<String, String> countries() {
+		return AppGlobals.countries();
 	}
 	
 	/**
@@ -127,17 +149,23 @@ public class AdminBrandsController {
 			BindingResult result, 
 			@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAtts) throws IOException {
+
+		// validate the uploaded file
+		if (fileValidator != null) {
+			fileValidator.validate(file, result);
+		}
 		
-		if( result.hasErrors() ) {
+		if (result.hasErrors()) {
 			redirectAtts.addAttribute("brand", brand);		
 			return "brand/new";		
 		}
 		
 		// save brand
 		service.save(brand);
-//		if (!file.isEmpty()) {
-//			imgService.saveImage(brand.getId(), file);
-//		}
+		if (!file.isEmpty()) {
+			UploadRequest req = new UploadRequest("brand", brand.getSlug(), file);
+			imgService.saveImageWithThumb(req, 100);
+		}
 		
 		redirectAtts.addFlashAttribute("message", "Brand created");
 		return "redirect:/admin/brands";		

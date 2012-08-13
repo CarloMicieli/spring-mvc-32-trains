@@ -102,6 +102,15 @@ public class LocalizedField<T> extends LinkedHashMap<String, T> {
 	public boolean containsDefault() {
 		return containsKey(AppGlobals.DEFAULT_LANGUAGE);
 	}
+	
+	/**
+	 * Checks whether the current field has a value for the provided {@code Locale}.
+	 * @param locale the {@code Locale}
+	 * @return {@code true} if contains a value; {@code false} otherwise
+	 */
+	public boolean containsLocale(Locale locale) {
+		return containsKey(keyFromLocale(locale));
+	}
 
 	/**
 	 * Sets the value for the default {@code Locale}.

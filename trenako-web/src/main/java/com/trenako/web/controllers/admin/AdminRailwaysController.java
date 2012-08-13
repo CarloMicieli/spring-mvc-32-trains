@@ -73,7 +73,7 @@ public class AdminRailwaysController {
 	}
 	
 	@ModelAttribute("countries")
-	public Map<String,String> countries() {
+	public Map<String, String> countries() {
 		return AppGlobals.countries();
 	}
 

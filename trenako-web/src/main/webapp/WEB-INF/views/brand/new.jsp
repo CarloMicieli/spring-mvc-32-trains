@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+
 <html>
 	<title>
 		<s:message code="brands.new.title.label" />
@@ -45,14 +47,7 @@
 						</s:bind>
 
 						<s:bind path="brand.description">
-    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="description" cssClass="control-label">
-								<s:message code="brand.description.label" />:
-							</form:label>							
-							<div class="controls">
-								<form:textarea path="description" cssClass="input-xlarge focused"/>
-							</div>
-						</div>
+							<tk:localizedTextArea path="description" rows="5" cssClass="control-group${(not empty status.errorMessage) ? ' error' : ''}"/>
 						</s:bind>
 
 						<s:bind path="brand.website">

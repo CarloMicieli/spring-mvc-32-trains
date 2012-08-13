@@ -152,6 +152,14 @@ public class HtmlBuilder {
 		return (HtmlBuilder.h3) new h3(body);
 	}
 	
+	public static textArea textArea(String body) {
+		return (HtmlBuilder.textArea) new textArea(body);
+	}
+	
+	public static label label(String body) {
+		return (HtmlBuilder.label) new label(body);
+	}
+	
 	/**
 	 * A HTML snippet; not included in any tag.
 	 * @param innerTags the list of inner tags
@@ -316,6 +324,55 @@ public class HtmlBuilder {
 		
 		public a title(String value) {
 			addAttribute("title", value);
+			return this;
+		}
+	}
+	
+	public static class textArea extends HtmlTag {
+		public textArea(String body) {
+			super("textarea", TagType.TEXT_BODY);
+			setBody(body);
+		}
+		
+		public textArea id(String value) {
+			addAttribute("id", value);
+			return this;
+		}
+		
+		public textArea name(String value) {
+			addAttribute("name", value);
+			return this;
+		}
+		
+		public textArea cols(String value) {
+			addOptionalAttribute("cols", value);
+			return this;
+		}
+		
+		public textArea rows(String value) {
+			addOptionalAttribute("rows", value);
+			return this;
+		}
+		
+		public textArea cssClass(String value) {
+			addAttribute("class", value);
+			return this;
+		}
+	}
+	
+	public static class label extends HtmlTag {
+		public label(String body) {
+			super("label", TagType.TEXT_BODY);
+			setBody(body);
+		}
+		
+		public label forId(String value) {
+			addAttribute("for", value);
+			return this;
+		}
+		
+		public label cssClass(String value) {
+			addAttribute("class", value);
 			return this;
 		}
 	}
