@@ -65,6 +65,7 @@ public class Account implements Serializable, DbReferenceable {
 	private String emailAddress;
 
 	@NotEmpty(message = "account.password.required")
+	@Size(min = 3, message = "account.password.size.notmet")
 	private String password;
 
 	@NotEmpty(message = "account.displayName.required")
