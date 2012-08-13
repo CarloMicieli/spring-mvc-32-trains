@@ -17,6 +17,7 @@ package com.trenako.web.tags;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,24 +27,27 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
-import org.springframework.beans.PropertyAccessor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.support.BindStatus;
 import org.springframework.web.servlet.support.RequestDataValueProcessor;
 import org.springframework.web.servlet.tags.NestedPathTag;
 import org.springframework.web.util.ExpressionEvaluationUtils;
 
 import com.trenako.mapping.LocalizedField;
-import static com.trenako.web.tags.html.HtmlBuilder.*;
 import com.trenako.web.tags.html.HtmlTag;
+import static com.trenako.web.tags.html.HtmlBuilder.*;
 
 /**
  * 
- * @author carlo
+ * @author Carlo Micieli
  *
  */
 @SuppressWarnings("serial")
 public class LocalizedTextAreaTags extends SpringTagSupport {
 
+	private MessageSource messageSource;
+	
 	public static final String ROWS_ATTRIBUTE = "rows";
 	public static final String COLS_ATTRIBUTE = "cols";
 
@@ -51,14 +55,22 @@ public class LocalizedTextAreaTags extends SpringTagSupport {
 	private String cols;
 	private String path;
 	private String cssClass;
-	private BindStatus bindStatus;
-	
+
 	public void setCssClass(String cssClass) {
 		this.cssClass = cssClass;
 	}
 	
 	protected String getCssClass() {
 		return this.cssClass;
+	}
+	
+	@Autowired 
+	public void setMessageSource(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+	
+	protected MessageSource getMessageSource() {
+		return this.messageSource;
 	}
 	
 	public void setPath(String path) {
@@ -120,22 +132,20 @@ public class LocalizedTextAreaTags extends SpringTagSupport {
 	}
 	
 	protected BindStatus getBindStatus() throws JspException {
-		if (this.bindStatus == null) {
-			// HTML escaping in tags is performed by the ValueFormatter class.
-			String nestedPath = getNestedPath();
-			String pathToUse = (nestedPath != null ? nestedPath + resolvePath() : resolvePath());
-			if (pathToUse.endsWith(PropertyAccessor.NESTED_PROPERTY_SEPARATOR)) {
-				pathToUse = pathToUse.substring(0, pathToUse.length() - 1);
-			}
-			this.bindStatus = new BindStatus(getRequestContext(), pathToUse, false);
+		String resolvedPath = ExpressionEvaluationUtils.evaluateString("path", getPath(), pageContext);
+		String nestedPath = (String) pageContext.getAttribute(
+				NestedPathTag.NESTED_PATH_VARIABLE_NAME, 
+				PageContext.REQUEST_SCOPE);
+
+		if (nestedPath != null && 
+				!resolvedPath.startsWith(nestedPath) &&
+				!resolvedPath.equals(nestedPath.substring(0, nestedPath.length() - 1))) {
+			resolvedPath = nestedPath + resolvedPath;
 		}
-		return this.bindStatus;
+
+		return new BindStatus(getRequestContext(), resolvedPath, isHtmlEscape());
 	}
 
-	protected String getNestedPath() {
-		return (String) this.pageContext.getAttribute(NestedPathTag.NESTED_PATH_VARIABLE_NAME, PageContext.REQUEST_SCOPE);
-	}
-	
 	protected final String processFieldValue(String name, String value, String type) {
 		RequestDataValueProcessor processor = getRequestContext().getRequestDataValueProcessor();
 		ServletRequest request = this.pageContext.getRequest();
@@ -154,16 +164,27 @@ public class LocalizedTextAreaTags extends SpringTagSupport {
 			throws JspException {
 		LocalizedField<?> value = (LocalizedField<?>) getBoundValue();
 		Locale userLocale = getRequestContext().getLocale();
-			
+
 		List<HtmlTag> tags = new ArrayList<HtmlTag>();
+		
+		List<String> errorMessages = new ArrayList<String>();
+		errorMessages.addAll(Arrays.asList(getBindStatus().getErrorMessages()));
+		
+		
+		
+		String cssClass = errorMessages.size() == 0 
+				? "control-group" : "control-group error";
+		
 		for (Locale loc : LocalizedField.locales(userLocale)) {
+			String errorMsg = errorMessage(loc, errorMessages);
 			
 			tags.add(div(
-						label("Description ("+loc.toString()+"):").forId(getName(loc)).cssClass("control-label"),
+						label(labelMessage(loc)).forId(getName(loc)).cssClass("control-label"),
 						div(
-							textArea(getValue(value, loc)).cssClass("input-xlarge").rows(getRows()).cols(getCols()).id(getName(loc)).name(getName(loc))
+							textArea(getValue(value, loc)).cssClass("input-xlarge").rows(getRows()).cols(getCols()).id(getName(loc)).name(getName(loc)),
+							span(errorMsg).cssClass("help-inline")	
 								).cssClass("controls")
-					).cssClass(getCssClass()));
+					).cssClass(cssClass));
 		}
 			
 		try {
@@ -173,5 +194,25 @@ public class LocalizedTextAreaTags extends SpringTagSupport {
 		}
 
 		return SKIP_BODY;
+	}
+	
+	private String labelMessage(Locale locale) throws JspException {
+		String code = getBindStatus().getPath() + ".label";
+		return getMessageSource().getMessage(code, 
+				new Object[] { locale.getDisplayLanguage() }, 
+				code, 
+				null);
+	}
+	
+	private String errorMessage(Locale locale, List<String> errorMessages) {
+		if (!LocalizedField.isDefaultLocale(locale)) {
+			return "";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for (String err : errorMessages) {
+			sb.append(getMessageSource().getMessage(err, null, err, null));
+		}
+		return sb.toString();
 	}
 }

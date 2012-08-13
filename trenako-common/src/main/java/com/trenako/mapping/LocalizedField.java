@@ -144,6 +144,10 @@ public class LocalizedField<T> extends LinkedHashMap<String, T> {
 		return val;
 	}
 	
+	public static boolean isDefaultLocale(Locale locale) {
+		return locale.equals(AppGlobals.DEFAULT_LOCALE);
+	}
+	
 	/**
 	 * Returns the {@code Locale} list to be managed.
 	 * @param currentLocale the current user's {@code Locale}
