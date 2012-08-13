@@ -55,7 +55,7 @@ public class MultipartFileValidator implements Validator {
 		
 		// validate content type
 		MediaType contentType = MediaType.parseMediaType(file.getContentType());
-		if (!AppGlobals.ALLOWED_MEDIA_TYPES.contains(contentType)) {
+		if (!AppGlobals.ALLOWED_MEDIA_TYPES.contains(contentType.toString())) {
 			errors.reject("uploadFile.contentType.notvalid", "Invalid media type");
 		}
 	}

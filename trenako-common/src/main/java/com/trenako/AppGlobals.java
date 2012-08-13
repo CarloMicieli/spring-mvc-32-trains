@@ -111,6 +111,6 @@ public class AppGlobals {
 	 * The allowed media types for uploaded files.
 	 */
 	public static final List<String> ALLOWED_MEDIA_TYPES =
-			Collections.unmodifiableList(Arrays.asList("images/png", "images/jpg"));
+			Collections.unmodifiableList(Arrays.asList("image/png", "image/jpg", "image/jpeg", "image/gif"));
 	
 }

@@ -22,10 +22,13 @@ import static org.springframework.data.mongodb.gridfs.GridFsCriteria.*;
 
 import com.mongodb.DBObject;
 import com.mongodb.BasicDBObject;
+import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSInputFile;
 
 import com.trenako.images.UploadFile;
 
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -38,6 +41,7 @@ import org.springframework.stereotype.Repository;
 @Repository("imagesRepository")
 public class ImagesRepositoryImpl implements ImagesRepository {
 
+	private final MongoDbFactory dbFactory;
 	private final GridFsTemplate gridFsTemplate;
 
 	/**
@@ -45,7 +49,8 @@ public class ImagesRepositoryImpl implements ImagesRepository {
 	 * @param gridFsTemplate the GridFs template
 	 */
 	@Autowired
-	public ImagesRepositoryImpl(GridFsTemplate gridFsTemplate) {
+	public ImagesRepositoryImpl(MongoDbFactory dbFactory, GridFsTemplate gridFsTemplate) {
+		this.dbFactory = dbFactory;
 		this.gridFsTemplate = gridFsTemplate;
 	}
 
@@ -58,9 +63,11 @@ public class ImagesRepositoryImpl implements ImagesRepository {
 	public void store(UploadFile file) {
 		DBObject metadata = fillMetadata(file.getMetadata());
 
-		gridFsTemplate.store(file.getContent(),
-			file.getFilename(),
-			metadata);
+		GridFSInputFile f = getGridFs().createFile(file.getContent());
+		f.setFilename(file.getFilename());
+		f.setMetaData(metadata);
+		f.setContentType(file.getContentType());
+		f.save();
 	}
 
 	@Override
@@ -68,6 +75,10 @@ public class ImagesRepositoryImpl implements ImagesRepository {
 		gridFsTemplate.delete(query(whereMetaData("slug").is(slug)));
 	}
 
+	private GridFS getGridFs() {
+		return new GridFS(dbFactory.getDb());
+	}
+	
 	private DBObject fillMetadata(Map<String, String> metadata) {
 		DBObject dbo = new BasicDBObject();
 		dbo.putAll(metadata);

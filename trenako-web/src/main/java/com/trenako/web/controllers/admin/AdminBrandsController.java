@@ -16,8 +16,6 @@
 package com.trenako.web.controllers.admin;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -28,7 +26,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,9 +39,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.AppGlobals;
 import com.trenako.entities.Brand;
-import com.trenako.mapping.LocalizedField;
 import com.trenako.services.BrandsService;
-import com.trenako.web.editors.LocalizedFieldPropertyEditor;
 import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
@@ -71,11 +66,6 @@ public class AdminBrandsController {
 	public AdminBrandsController(BrandsService service, WebImageService imgService) {
 		this.service = service;
 		this.imgService = imgService;
-	}
-	
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		//binder.registerCustomEditor(LocalizedField.class, new LocalizedFieldPropertyEditor());
 	}
 	
 	@Autowired(required = false) 

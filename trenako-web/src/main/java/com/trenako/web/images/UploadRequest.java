@@ -15,6 +15,8 @@
  */
 package com.trenako.web.images;
 
+import static com.trenako.utility.Maps.map;
+
 import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -59,8 +61,20 @@ public class UploadRequest {
 		return file;
 	}
 
-	public Map<String, String> asMetadata(boolean b) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, String> asMetadata(boolean isThumb) {
+		return map("slug", filename(isThumb));
+	}
+	
+	private String filename(boolean isThumb) {
+		StringBuilder sb = new StringBuilder();
+		
+		if (isThumb) {
+			sb.append("th_");
+		}
+		
+		return sb.append(getEntity())
+			.append("_")
+			.append(getSlug())
+			.toString();
 	}
 }
