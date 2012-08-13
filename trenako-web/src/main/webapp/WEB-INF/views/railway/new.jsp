@@ -1,10 +1,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+
 <html>
-	<title>
-		<s:message code="railways.new.title.label" />
-	</title>
+	<head>
+		<title>
+			<s:message code="railways.new.title.label" />
+		</title>
+	</head>
 	<body>
 		<div class="row-fluid">
 			<div class="span3">
@@ -59,6 +63,8 @@
 						</div>
 						</s:bind>
 						
+						<tk:localizedTextArea path="description" rows="4"/>
+
 						<s:bind path="railway.country">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="country" cssClass="control-label">

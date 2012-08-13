@@ -1,10 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+
 <html>
-	<title>
-		<s:message code="railways.edit.title.label" arguments="${railway.name}" />
-	</title>
+	<head>
+		<title>
+			<s:message code="railways.edit.title.label" arguments="${railway.name}" />
+		</title>
+	</head>
 	<body>
 		<div class="row-fluid">
 			<div class="span3">
@@ -31,12 +34,12 @@
 					<form:hidden path="id"/>
 
 					<fieldset>
-    					<c:if test="${not empty message}">
+						<c:if test="${not empty message}">
 							<div id="message" class="info">${message}</div>
 						</c:if>
- 
-    					<s:bind path="railway.name">
-    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+
+						<s:bind path="railway.name">
+						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="name" cssClass="control-label">
 								<s:message code="railway.name.label" />:
 							</form:label>

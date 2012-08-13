@@ -1,10 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+
 <html>
-	<title>
-		<s:message code="scales.new.title.label" />
-	</title>
+	<head>
+		<title><s:message code="scales.new.title.label" /></title>
+	</head>
 	<body>
 		<div class="row-fluid">
 			<div class="span3">
@@ -31,12 +33,12 @@
 				<form:form id="form" class="form-horizontal" method="POST" action="${createUrl}" modelAttribute="scale">
 					
 					<fieldset>
-    					<c:if test="${not empty message}">
+						<c:if test="${not empty message}">
 							<div id="message" class="info">${message}</div>
 						</c:if>
-    				
-    					<s:bind path="scale.name">
-    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+
+						<s:bind path="scale.name">
+						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="name" cssClass="control-label">
 								<s:message code="scale.name.label" />:
 							</form:label>
@@ -47,8 +49,10 @@
 						</div>
 						</s:bind>
 						
+						<tk:localizedTextArea path="description" rows="4"/>
+
 						<s:bind path="scale.ratio">
-    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="ratio" cssClass="control-label">
 								<s:message code="scale.ratio.label" />:
 							</form:label>
@@ -106,7 +110,6 @@
 								<i class="icon-check icon-white"></i>
 								<s:message code="button.save.label" text="Save" />
 							</form:button>
-						
 							<form:button class="btn" type="reset" name="_action_reset">
 								<i class="icon-repeat icon-black"></i>
 								<s:message code="button.reset.label" text="Reset" />
