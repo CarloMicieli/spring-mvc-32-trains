@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -51,6 +52,8 @@
 							</div>
 						</div>
 						</s:bind>
+						
+						<tk:localizedTextArea path="description" rows="4"/>
 						
 						<s:bind path="scale.ratio">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">

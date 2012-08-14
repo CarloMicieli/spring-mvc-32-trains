@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -46,6 +47,7 @@
 							<th><s:message code="scale.ratio.label" /></th>
 							<th><s:message code="scale.gauge.label" /></th>
 							<th><s:message code="scale.narrow.label" /></th>
+							<th><s:message code="scale.standards.label" />:</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -56,6 +58,7 @@
 							<td><s:eval expression="scale.ratio"/></td>
 							<td><s:eval expression="scale.gauge"/></td>
 							<td>${scale.narrow}</td>
+    						<td>${scale.standardsList}</td>
 
 							<s:url var="showUrl" value="/admin/scales/{id}">
 				            	<s:param name="id" value="${scale.id}" />
@@ -69,6 +72,8 @@
 					</c:forEach>
 					</tbody>
 				</table>
+				
+				<tk:pagination page="${scales}"/>
 			</div>
 		</div>
 	</body>

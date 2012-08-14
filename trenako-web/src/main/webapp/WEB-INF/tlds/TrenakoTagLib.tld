@@ -36,6 +36,21 @@
 	</tag>
 
 	<tag>
+		<name>pagination</name>
+		<tagclass>com.trenako.web.tags.PaginationTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display pagination for admin pages.
+		</description>
+		<attribute>
+			<name>page</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>org.springframework.data.domain.Page</type>
+		</attribute>
+	</tag>
+
+	<tag>
 		<name>categoriesList</name>
 		<tagclass>com.trenako.web.tags.CategoriesListTags</tagclass>
 		<bodycontent>empty</bodycontent>

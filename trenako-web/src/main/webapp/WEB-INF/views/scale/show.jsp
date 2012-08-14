@@ -29,21 +29,31 @@
     		<div class="span9">
 				<div class="page-header">
 					<h1><s:message code="scales.edit.title.label" arguments="${scale.name}" /></h1>
+					<small>
+					<s:message code="scale.lastModified.label" /> ${scale.lastModified}
+					</small>
 				</div>
-    			<dl>
+    			<dl class="dl-horizontal">
     				<dt><s:message code="scale.name.label" />:</dt>
-    				<dd>${scale.name} (${scale.ratioText})</dd>
+    				<dd>${scale.name}</dd>
     				<dt><s:message code="scale.ratio.label" />:</dt>
-    				<dd><s:eval expression="scale.ratio"/></dd>
+    				<dd><s:eval expression="scale.ratioText"/></dd>
     				<dt><s:message code="scale.gauge.label" />:</dt>
     				<dd><s:eval expression="scale.gauge"/></dd>
     				<dt><s:message code="scale.narrow.label" />:</dt>
     				<dd>${scale.narrow}</dd>
     				<dt><s:message code="scale.standards.label" />:</dt>
     				<dd>${scale.standardsList}</dd>
-    				<dt><s:message code="scale.lastModified.label" />:</dt>
-    				<dd>${scale.lastModified}</dd>    				
     			</dl>
+				
+				<hr />
+				
+				<h4><s:message code="scale.descriptions.label" /></h4>
+				<dl>
+					<c:forEach var="item" items="${scale.description}">
+					<dt>${item.key}:</dt><dd>${item.value}</dd>
+					</c:forEach>
+				</dl>
 				
 				<s:url value="/admin/scales/{id}" var="scalesUrl">
 					<s:param name="id" value="${scale.id}" />
