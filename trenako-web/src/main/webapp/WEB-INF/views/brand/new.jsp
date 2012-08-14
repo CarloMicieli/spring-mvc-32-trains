@@ -33,7 +33,7 @@
 
 					<fieldset>    				
     					<c:if test="${not empty message}">
-							<div id="message" class="info">${message}</div>
+							<div class="alert error">${message}</div>
 						</c:if>
 
     					<s:bind path="brand.name">

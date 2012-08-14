@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -35,7 +36,7 @@
 					
 					<fieldset>    				
     					<c:if test="${not empty message}">
-							<div id="message" class="info">${message}</div>
+							<div class="alert error">${message}</div>
 						</c:if>
     				
     					<s:bind path="brand.name">
@@ -50,16 +51,19 @@
 						</div>
 						</s:bind>
 						
-						<s:bind path="brand.description">
+	  					<s:bind path="brand.companyName">
     					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="description" cssClass="control-label">
-								<s:message code="brand.description.label" />:
-							</form:label>							
+							<form:label path="companyName" cssClass="control-label">
+								<s:message code="brand.companyName.label" />:
+							</form:label>
 							<div class="controls">
-								<form:textarea path="description" cssClass="input-xlarge focused"/>
+								<form:input path="companyName" cssClass="input-xlarge focused" required="required"/>
+								<form:errors path="companyName" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
+						
+						<tk:localizedTextArea path="description" rows="4"/>
 						
 						<s:bind path="brand.website">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
@@ -117,7 +121,7 @@
 							<s:bind path="brand.address.postalCode">
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 								<form:label path="address.postalCode" cssClass="control-label">
-									<s:message code="brand.address.streetAddress.label" />:
+									<s:message code="brand.address.postalCode.label" />:
 								</form:label>
 								<div class="controls">
 									<form:input path="address.postalCode" cssClass="input-xlarge focused"/>
