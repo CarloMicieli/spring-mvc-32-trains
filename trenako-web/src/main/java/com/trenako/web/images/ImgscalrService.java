@@ -49,8 +49,8 @@ public class ImgscalrService implements ImagesConverter {
 			throws IOException {
 		
 		final BufferedImage image = convertToImage(file);
-		final BufferedImage thumb = pad(
-				resize(image, Method.SPEED, Mode.FIT_TO_HEIGHT, targetSize, OP_ANTIALIAS, OP_BRIGHTER), 2);
+		final BufferedImage thumb = 
+				resize(image, Method.ULTRA_QUALITY, Mode.FIT_TO_HEIGHT, targetSize, OP_ANTIALIAS, OP_BRIGHTER);
 
 		return new UploadFile(
 				inputStream(thumb, file.getContentType()), 

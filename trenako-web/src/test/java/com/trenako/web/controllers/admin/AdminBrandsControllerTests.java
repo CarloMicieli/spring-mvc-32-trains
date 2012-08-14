@@ -36,10 +36,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
+import com.trenako.web.images.ImageRequest;
+import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 
 /**
@@ -74,16 +75,16 @@ public class AdminBrandsControllerTests {
 	
 	@Test
 	public void shouldShowBrands() {
-		ObjectId id = new ObjectId();
-		ModelAndView mav = controller.show(id);
+		String slug = "brand-slug";
+		ModelAndView mav = controller.show(slug);
 		
-		verify(service, times(1)).findById(eq(id));
+		verify(service, times(1)).findBySlug(eq(slug));
 		assertViewName(mav, "brand/show");
 		assertModelAttributeAvailable(mav, "brand");
 	}
 	
 	@Test
-	public void shouldCreateNewBrandForm() {
+	public void shouldRenderNewBrandForm() {
 		ModelAndView mav = controller.newForm();
 		
 		assertViewName(mav, "brand/new");
@@ -92,40 +93,114 @@ public class AdminBrandsControllerTests {
 	
 	@Test
 	public void shouldCreateBrands() throws IOException {
- 		ObjectId id = new ObjectId();
-		Brand brand = new Brand(id);
-		when(mockResult.hasErrors()).thenReturn(false);
-		RedirectAttributes redirectAtt = new RedirectAttributesModelMap();
+		Brand brand = new Brand.Builder("ACME").build();
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		UploadRequest req = new UploadRequest("brand", "acme", file);
+		when(mockResult.hasErrors()).thenReturn(false);
+		
+		String viewName = controller.create(brand, mockResult, file, mockRedirectAtts);
 
-		String redirect = controller.create(brand, mockResult, file, redirectAtt);
-
-		assertEquals("redirect:/admin/brands", redirect);
+		assertEquals("redirect:/admin/brands", viewName);
 		verify(service, times(1)).save(eq(brand));
-		//verify(imgService, times(1)).saveImage(eq(id), eq(file));
+		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(50));
 	}
 	
 	@Test
-	public void shouldFillEditBrandForm() {
-		ObjectId id = new ObjectId();
-		Brand value = new Brand();
-		when(service.findById(eq(id))).thenReturn(value);
+	public void shouldRedirectAfterValidationErrorsDuringBrandCreation() throws IOException {
+		Brand brand = new Brand.Builder("ACME").build();
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		when(mockResult.hasErrors()).thenReturn(true);
 		
-		ModelAndView mav = controller.editForm(id);
+		String viewName = controller.create(brand, mockResult, file, mockRedirectAtts);
+		
+		assertEquals("brand/new", viewName);
+		verify(service, times(0)).save(eq(brand));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq(brand));
+	}
+	
+	@Test
+	public void shouldRenderEditBrandForms() {
+		String slug = "brand-slug";
+		when(service.findBySlug(eq(slug))).thenReturn(new Brand());
+		
+		ModelAndView mav = controller.editForm(slug);
 		
 		assertViewName(mav, "brand/edit");
-		assertModelAttributeValue(mav, "brand", value);
+		assertModelAttributeAvailable(mav, "brand");
+	}
+	
+	@Test
+	public void shouldSaveBrandChanges() {
+		Brand brand = new Brand.Builder("ACME").build();
+		when(mockResult.hasErrors()).thenReturn(false);
+		
+		String viewName = controller.save(brand, mockResult, mockRedirectAtts);
+		assertEquals("redirect:/admin/brands", viewName);
+		verify(service, times(1)).save(eq(brand));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq("brand.saved.label"));
+	}
+	
+	@Test
+	public void shouldRedirectAfterValidationErrorsDuringChangeSaving() {
+		Brand brand = new Brand.Builder("ACME").build();
+		when(mockResult.hasErrors()).thenReturn(true);
+		
+		String viewName = controller.save(brand, mockResult, mockRedirectAtts);
+		assertEquals("brand/edit", viewName);
+		verify(service, times(0)).save(eq(brand));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq(brand));
 	}
 	
 	@Test
 	public void shouldDeleteBrands() {
-		ObjectId id = new ObjectId();
 		Brand value = new Brand();
-		when(service.findById(eq(id))).thenReturn(value);
 
-		controller.delete(id, mockRedirectAtts);
+		controller.delete(value, mockRedirectAtts);
 		
 		verify(service, times(1)).remove(eq(value));		
+	}
+	
+	@Test
+	public void shouldUploadNewPictures() throws IOException {
+		Brand brand = new Brand.Builder("ACME").build();
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		UploadRequest req = new UploadRequest("brand", "acme", file);
+		
+		String viewName = controller.uploadImage(brand, mockResult, file, mockRedirectAtts);
+		
+		assertEquals("redirect:/admin/brands/{slug}", viewName);
+		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(50));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("acme"));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq("brand.logo.uploaded.label"));
+	}
+	
+	@Test
+	public void shouldRedirectAfterValidationErrorsDuringFileUploads() throws IOException {
+		Brand brand = new Brand.Builder("ACME")
+			.id(new ObjectId())
+			.build();
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		
+		when(mockResult.hasErrors()).thenReturn(true);
+		when(service.findById(eq(brand.getId()))).thenReturn(new Brand());
+		
+		String viewName = controller.uploadImage(brand, mockResult, file, mockRedirectAtts);
+		
+		assertEquals("brand/show", viewName);
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("brand"), isA(Brand.class));
+	}
+	
+	@Test
+	public void shouldDeleteImages() {
+		Brand brand = new Brand.Builder("ACME").build();
+		ImageRequest req = new ImageRequest("brand", "acme");
+		
+		String viewName = controller.deleteImage(brand, mockRedirectAtts);
+		
+		assertEquals("redirect:/admin/brands/{slug}", viewName);
+		verify(imgService, times(1)).deleteImage(eq(req));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("acme"));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq("brand.logo.deleted.label"));
 	}
 	
 	private MultipartFile buildFile(MediaType mediaType) {

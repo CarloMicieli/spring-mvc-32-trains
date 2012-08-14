@@ -20,14 +20,11 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.AppGlobals;
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
+import com.trenako.web.images.ImageRequest;
 import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
@@ -95,16 +93,17 @@ public class AdminBrandsController {
 	/**
 	 * This actions shows a {@code Brand}.
 	 * <p>
-	 * Maps the request to {@code GET /admin/brands/:id}.
+	 * Maps the request to {@code GET /admin/brands/:slug}.
 	 * </p>
 	 *
-	 * @param id the {@code Brand} id
+	 * @param slug the {@code Brand} slug
 	 * @return the model and view for the {@code Brand}
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ModelAndView show(@PathVariable("id") ObjectId id) {
-		Brand b = service.findById(id);
-		return new ModelAndView("brand/show", "brand", b);
+	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
+	public ModelAndView show(@PathVariable("slug") String slug) {
+		return new ModelAndView("brand/show", 
+				"brand", 
+				service.findBySlug(slug));
 	}
 	
 	/**
@@ -146,18 +145,17 @@ public class AdminBrandsController {
 		}
 		
 		if (result.hasErrors()) {
-			redirectAtts.addAttribute("brand", brand);		
-			return "brand/new";		
+			redirectAtts.addAttribute(brand);		
+			return "brand/new";	
 		}
 		
 		// save brand
 		service.save(brand);
 		if (!file.isEmpty()) {
-			UploadRequest req = new UploadRequest("brand", brand.getSlug(), file);
-			imgService.saveImageWithThumb(req, 100);
+			imgService.saveImageWithThumb(UploadRequest.create(brand, file), 50);
 		}
 		
-		redirectAtts.addFlashAttribute("message", "Brand created");
+		redirectAtts.addFlashAttribute("message", "brand.created.label");
 		return "redirect:/admin/brands";		
 	}
 
@@ -165,16 +163,17 @@ public class AdminBrandsController {
 	 * This action renders the form to edit a {@code Brand}.
 	 *
 	 * <p>
-	 * Maps the request to {@code GET /brands/:id/edit}.
+	 * Maps the request to {@code GET /brands/:slug/edit}.
 	 * </p>
 	 *
-	 * @param brandId the {@code Brand} id
+	 * @param slug the {@code Brand} slug
 	 *
 	 */
-	@RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("id") ObjectId brandId) {
-		final Brand brand = service.findById(brandId);
-		return new ModelAndView("brand/edit", "brand", brand);
+	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
+	public ModelAndView editForm(@PathVariable("slug") String slug) {
+		return new ModelAndView("brand/edit", 
+				"brand", 
+				service.findBySlug(slug));
 	}
 	
 	/**
@@ -201,6 +200,7 @@ public class AdminBrandsController {
 	
 		try {
 			service.save(brand);
+			redirectAtts.addFlashAttribute("message", "brand.saved.label");
 			return "redirect:/admin/brands";
 		}
 		catch (DataIntegrityViolationException dae) {
@@ -217,16 +217,49 @@ public class AdminBrandsController {
 	 * Maps the request to {@code DELETE /brands/:id}.
 	 * </p>
 	 *
-	 * @param brandId the {@code Brand} id
+	 * @param brand the {@code Brand}
 	 * @param redirectAtts the redirect attributes
 	 *
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public String delete(@PathVariable("id") ObjectId brandId, RedirectAttributes redirectAtts) {
-		final Brand brand = service.findById(brandId);
+	public String delete(@ModelAttribute() Brand brand, RedirectAttributes redirectAtts) {
 		service.remove(brand);
 		
-		redirectAtts.addFlashAttribute("message", "Brand deleted");
+		redirectAtts.addFlashAttribute("message", "brand.deleted.label");
 		return "redirect:/admin/brands";
+	}
+	
+	@RequestMapping(value = "/{slug}/upload", method = RequestMethod.POST)
+	public String uploadImage(@ModelAttribute("brand") Brand brand, 
+			BindingResult result, 
+			@RequestParam("file") MultipartFile file,
+			RedirectAttributes redirectAtts) throws IOException {
+
+		// validate the uploaded file
+		if (fileValidator != null) {
+			fileValidator.validate(file, result);
+		}
+		
+		if (result.hasErrors()) {
+			redirectAtts.addAttribute("brand", service.findById(brand.getId()));
+			return "brand/show";		
+		}
+		
+		if (!file.isEmpty()) {
+			imgService.saveImageWithThumb(UploadRequest.create(brand, file), 50);
+			redirectAtts.addFlashAttribute("message", "brand.logo.uploaded.label");
+		}
+		
+		redirectAtts.addAttribute("slug", brand.getSlug());
+		return "redirect:/admin/brands/{slug}";
+	}
+	
+	@RequestMapping(value = "/{slug}/upload", method = RequestMethod.DELETE)
+	public String deleteImage(@ModelAttribute("brand") Brand brand, RedirectAttributes redirectAtts) {
+		imgService.deleteImage(new ImageRequest("brand", brand.getSlug()));
+		
+		redirectAtts.addAttribute("slug", brand.getSlug());
+		redirectAtts.addFlashAttribute("message", "brand.logo.deleted.label");
+		return "redirect:/admin/brands/{slug}";
 	}
 }

@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -59,8 +60,8 @@
 							<td>${brand.emailAddress}</td>
 							<td>${brand.industrial}</td>
 
-							<s:url var="showUrl" value="/admin/brands/{id}">
-				            	<s:param name="id" value="${brand.id}" />
+							<s:url var="showUrl" value="/admin/brands/{slug}">
+				            	<s:param name="slug" value="${brand.slug}" />
 							</s:url>
 							<td class="link">
 								<a href="${showUrl}" class="btn btn-small">
@@ -71,6 +72,8 @@
 					</c:forEach>
 					</tbody>
 				</table>
+				
+				<tk:pagination page="${brands}"/>
 			</div>
 		</div>
 	</body>

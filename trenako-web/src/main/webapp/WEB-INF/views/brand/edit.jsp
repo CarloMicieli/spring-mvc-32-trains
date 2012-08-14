@@ -31,6 +31,7 @@
 				<form:form id="form" class="form-horizontal" method="PUT" action="${editUrl}" modelAttribute="brand" >
 					
 					<form:hidden path="id"/>
+					<form:hidden path="slug"/>
 					
 					<fieldset>    				
     					<c:if test="${not empty message}">

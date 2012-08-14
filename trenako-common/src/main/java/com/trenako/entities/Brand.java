@@ -124,6 +124,8 @@ public class Brand implements DbReferenceable {
 
 	private Brand(Builder b) {
 		this.name = b.name;
+		
+		this.id = b.id;
 		this.companyName = b.companyName;
 		this.address = b.address;
 		this.website = b.website;
@@ -145,6 +147,7 @@ public class Brand implements DbReferenceable {
 		private final String name;
 		
 		// optional fields
+		private ObjectId id = null;
 		private String companyName = null;
 		private String website = null;
 		private String emailAddress = null;
@@ -157,6 +160,11 @@ public class Brand implements DbReferenceable {
 		
 		public Builder(String name) {
 			this.name = name;
+		}
+		
+		public Builder id(ObjectId id) {
+			this.id = id;
+			return this;
 		}
 		
 		public Builder companyName(String companyName) {
@@ -299,6 +307,14 @@ public class Brand implements DbReferenceable {
 			slug = Slug.encode(name);
 		}
 		return slug;
+	}
+	
+	/**
+	 * Sets the {@code Brand} slug.
+	 * @param slug the slug
+	 */
+	public void setSlug(String slug) {
+		this.slug = slug;
 	}
 	
 	/**

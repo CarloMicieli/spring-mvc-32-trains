@@ -55,7 +55,7 @@ import com.trenako.images.UploadFile;
 @PrepareForTest( {Scalr.class, ImageIO.class, IOUtils.class} )
 public class ImgscalrServiceTests {
 
-	private ImgscalrService imgService = new ImgscalrService();
+	private ImagesConverter imgConverter = new ImgscalrService();
 	
 	private MultipartFile mockFile(byte[] content, MediaType type) {
 		return new MockMultipartFile("file.jpg", "file.jpg", type.toString(), content);
@@ -67,11 +67,22 @@ public class ImgscalrServiceTests {
 		final byte[] content = "file content".getBytes();
 		MultipartFile file = mockFile(content, MediaType.APPLICATION_XML);
 		
-		imgService.createThumbnail(file, null, 100);
+		imgConverter.createThumbnail(file, null, 100);
 	}
 	
 	@Test
-	public void shouldCreateThumbnails() throws Exception {
+	public void shouldCreateImages() throws Exception {
+		final byte[] content = "file content".getBytes();
+		MultipartFile file = mockFile(content, MediaType.IMAGE_JPEG);
+		
+		UploadFile img = imgConverter.createImage(file, metadata());
+		
+		assertNotNull(img.getContent());
+		assertEquals(MediaType.IMAGE_JPEG_VALUE.toString(), img.getContentType());
+	}
+	
+	@Test
+	public void shouldCreateThumbnailImages() throws Exception {
 		PowerMockito.mockStatic(ImageIO.class);
 		PowerMockito.mockStatic(Scalr.class);
 		
@@ -80,18 +91,16 @@ public class ImgscalrServiceTests {
 		final byte[] content = "file content".getBytes();
 		
 		final BufferedImage img = new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB);
-		final BufferedImage resizedImg = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
 		final BufferedImage thumb = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
 		final BufferedImageOp[] options = new BufferedImageOp[] { OP_ANTIALIAS, OP_BRIGHTER };
 
 		when(ImageIO.read(isA(InputStream.class))).thenReturn(img);
-		when(Scalr.resize(img, Method.SPEED, Mode.FIT_TO_HEIGHT, targetSize, options)).thenReturn(resizedImg);
-		when(Scalr.pad(eq(resizedImg), eq(2))).thenReturn(thumb);
+		when(Scalr.resize(img, Method.ULTRA_QUALITY, Mode.FIT_TO_HEIGHT, targetSize, options)).thenReturn(thumb);
 
 		MultipartFile file = mockFile(content, MediaType.IMAGE_JPEG);
 		
 		// call the method under test
-		UploadFile image = imgService.createThumbnail(file, metadata(), targetSize);
+		UploadFile image = imgConverter.createThumbnail(file, metadata(), targetSize);
 		
 		// assert
 		assertNotNull("Byte array is empty", image.getContent());
@@ -99,36 +108,12 @@ public class ImgscalrServiceTests {
 
 		// (1) the image is resized
 		PowerMockito.verifyStatic();
-		Scalr.resize(img, Method.SPEED, Mode.FIT_TO_HEIGHT, targetSize, options);
-		
-		// (2) the image is padded
-		PowerMockito.verifyStatic();
-		Scalr.pad(eq(resizedImg), eq(2));
+		Scalr.resize(img, Method.ULTRA_QUALITY, Mode.FIT_TO_HEIGHT, targetSize, options);
 
-		// (3) the output stream is written
+		// (2) the output stream is written
 		PowerMockito.verifyStatic();
 		ImageIO.write(eq(thumb), eq("jpg"), isA(ByteArrayOutputStream.class));
 	}
-	
-	@Test
-	public void shouldConvertImagesToBytes() throws Exception {
-		final byte[] content = "file content".getBytes();
-		MultipartFile file = mockFile(content, MediaType.IMAGE_JPEG);
-		
-		UploadFile img = imgService.createImage(file, metadata());
-		
-		assertNotNull(img.getContent());
-		assertEquals(MediaType.IMAGE_JPEG_VALUE.toString(), img.getContentType());
-	}
-	
-//	@Test(expected = IllegalArgumentException.class)
-//	public void shouldValidateImageMediaTypesForConvertToBytes() throws IOException {
-//		// not an image file type
-//		final byte[] content = "file content".getBytes();
-//		MultipartFile file = mockFile(content, MediaType.APPLICATION_XML);
-//		
-//		imgService.createImage(file, metadata());
-//	}
 	
 	private Map<String, String> metadata() {
 		return map("slug", "img-slug");

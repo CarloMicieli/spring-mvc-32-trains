@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.trenako.mapping.DbReferenceable;
+
 /**
  * It represents a web request for a file upload.
  * @author Carlo Micieli
@@ -35,6 +37,12 @@ public class UploadRequest {
 	 * Creates an empty {@code UploadRequest}.
 	 */
 	public UploadRequest() {
+	}
+	
+	public static <E extends DbReferenceable> UploadRequest create(E obj, MultipartFile file) {
+		return new UploadRequest(obj.getClass().getSimpleName().toLowerCase(),
+				obj.getSlug(),
+				file);
 	}
 
 	/**
@@ -63,6 +71,16 @@ public class UploadRequest {
 
 	public Map<String, String> asMetadata(boolean isThumb) {
 		return map("slug", filename(isThumb));
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof UploadRequest)) return false;
+		
+		UploadRequest other = (UploadRequest) obj;
+		return this.entity.equals(other.entity) &&
+			this.slug.equals(other.slug);
 	}
 	
 	private String filename(boolean isThumb) {

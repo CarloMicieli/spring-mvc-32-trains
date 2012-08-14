@@ -58,7 +58,7 @@ public class BrandsServiceImpl implements BrandsService {
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save(Brand brand) {
-		if (brand.getAddress().isEmpty()) {
+		if (brand.getAddress() != null && brand.getAddress().isEmpty()) {
 			brand.setAddress(null);
 		}
 		
