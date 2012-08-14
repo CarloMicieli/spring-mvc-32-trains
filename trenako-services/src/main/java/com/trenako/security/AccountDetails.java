@@ -86,4 +86,13 @@ public class AccountDetails implements UserDetails {
 	public String getDisplayName() {
 		return account.getDisplayName();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof AccountDetails)) return false;
+		
+		AccountDetails other = (AccountDetails) obj;
+		return this.account.equals(other.account);
+	}
 }

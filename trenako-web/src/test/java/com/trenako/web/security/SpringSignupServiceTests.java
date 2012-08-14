@@ -34,6 +34,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 
 import com.trenako.repositories.AccountsRepository;
+import com.trenako.security.AccountDetails;
 import com.trenako.entities.Account;
 
 /**
@@ -83,15 +84,16 @@ public class SpringSignupServiceTests {
 		SecurityContext mockContext = mock(SecurityContext.class);
 		ArgumentCaptor<Authentication> arg = ArgumentCaptor.forClass(Authentication.class);
 		Account account = buildAccount();
-
+		AccountDetails accountDetails = new AccountDetails(account);
+		
 		// inject the mock security context
 		service.setSecurityContext(mockContext);
 		service.authenticate(account);
 
 		verify(mockContext, times(1)).setAuthentication(arg.capture());
 		Authentication auth = arg.getValue();
-		assertEquals(account, auth.getPrincipal());
 		assertEquals("pa$$word", auth.getCredentials());
+		assertEquals(accountDetails, auth.getPrincipal());
 		assertEquals(account.getRoles().toString(), auth.getAuthorities().toString());
 	}
 	
