@@ -35,8 +35,10 @@
 					<form:hidden path="slug"/>
 					
 					<fieldset>    				
-    					<c:if test="${not empty message}">
-							<div class="alert error">${message}</div>
+						<c:if test="${not empty message}">
+						<div class="alert alert-${message.type}">
+							<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+						</div>
 						</c:if>
     				
     					<s:bind path="brand.name">

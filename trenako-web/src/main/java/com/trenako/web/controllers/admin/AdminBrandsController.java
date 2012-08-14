@@ -37,10 +37,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.AppGlobals;
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
+import com.trenako.web.controllers.ControllerMessage;
 import com.trenako.web.images.ImageRequest;
 import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
+
+import static com.trenako.web.controllers.ControllerMessage.*;
 
 /**
  * It represents the {@code controller} to manage the {@code Brand} elements.
@@ -56,6 +59,13 @@ public class AdminBrandsController {
 	
 	private final BrandsService service;
 	private final WebImageService imgService;
+	
+	final static ControllerMessage BRAND_CREATED_MSG = success("brand.created.message");
+	final static ControllerMessage BRAND_SAVED_MSG = success("brand.saved.message");
+	final static ControllerMessage BRAND_DELETED_MSG = success("brand.delete.message");
+	final static ControllerMessage BRAND_LOGO_UPLOADED_MSG = success("brand.logo.uploaded.message");
+	final static ControllerMessage BRAND_INVALID_UPLOAD_MSG = error("brand.invalid.file.message");
+	final static ControllerMessage BRAND_LOGO_DELETED_MSG = success("brand.logo.deleted.message");
 	
 	/**
 	 * Creates a new {@code AdminBrandsController} controller.
@@ -155,7 +165,7 @@ public class AdminBrandsController {
 			imgService.saveImageWithThumb(UploadRequest.create(brand, file), 50);
 		}
 		
-		redirectAtts.addFlashAttribute("message", "brand.created.label");
+		redirectAtts.addFlashAttribute("message", BRAND_CREATED_MSG);
 		return "redirect:/admin/brands";		
 	}
 
@@ -200,7 +210,7 @@ public class AdminBrandsController {
 	
 		try {
 			service.save(brand);
-			redirectAtts.addFlashAttribute("message", "brand.saved.label");
+			redirectAtts.addFlashAttribute("message", BRAND_SAVED_MSG);
 			return "redirect:/admin/brands";
 		}
 		catch (DataIntegrityViolationException dae) {
@@ -225,7 +235,7 @@ public class AdminBrandsController {
 	public String delete(@ModelAttribute() Brand brand, RedirectAttributes redirectAtts) {
 		service.remove(brand);
 		
-		redirectAtts.addFlashAttribute("message", "brand.deleted.label");
+		redirectAtts.addFlashAttribute("message", BRAND_DELETED_MSG);
 		return "redirect:/admin/brands";
 	}
 	
@@ -235,21 +245,23 @@ public class AdminBrandsController {
 			@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAtts) throws IOException {
 
+		boolean hasErrors = (file == null || file.isEmpty());
+		
 		// validate the uploaded file
-		if (fileValidator != null) {
+		if (!hasErrors && fileValidator != null) {
 			fileValidator.validate(file, result);
+			hasErrors = result.hasErrors();
 		}
 		
-		if (result.hasErrors()) {
-			redirectAtts.addAttribute("brand", service.findById(brand.getId()));
-			return "brand/show";		
+		if (hasErrors) {
+			redirectAtts.addAttribute("slug", brand.getSlug());
+			redirectAtts.addFlashAttribute("message", BRAND_INVALID_UPLOAD_MSG);
+			return "redirect:/admin/brands/{slug}";			
 		}
 		
-		if (!file.isEmpty()) {
-			imgService.saveImageWithThumb(UploadRequest.create(brand, file), 50);
-			redirectAtts.addFlashAttribute("message", "brand.logo.uploaded.label");
-		}
+		imgService.saveImageWithThumb(UploadRequest.create(brand, file), 50);
 		
+		redirectAtts.addFlashAttribute("message", BRAND_LOGO_UPLOADED_MSG);
 		redirectAtts.addAttribute("slug", brand.getSlug());
 		return "redirect:/admin/brands/{slug}";
 	}
@@ -259,7 +271,7 @@ public class AdminBrandsController {
 		imgService.deleteImage(new ImageRequest("brand", brand.getSlug()));
 		
 		redirectAtts.addAttribute("slug", brand.getSlug());
-		redirectAtts.addFlashAttribute("message", "brand.logo.deleted.label");
+		redirectAtts.addFlashAttribute("message", BRAND_LOGO_DELETED_MSG);
 		return "redirect:/admin/brands/{slug}";
 	}
 }

@@ -40,6 +40,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
 import com.trenako.web.images.ImageRequest;
+import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 
@@ -54,12 +55,15 @@ public class AdminBrandsControllerTests {
 	@Mock WebImageService imgService;
 	@Mock BindingResult mockResult;
 	@Mock BrandsService service;
-	AdminBrandsController controller;
+	MultipartFileValidator validator = new MultipartFileValidator();
+	
+	private AdminBrandsController controller;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		controller = new AdminBrandsController(service, imgService);
+		controller.setMultipartFileValidator(validator);
 	}
 	
 	@Test
@@ -103,6 +107,7 @@ public class AdminBrandsControllerTests {
 		assertEquals("redirect:/admin/brands", viewName);
 		verify(service, times(1)).save(eq(brand));
 		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(50));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_CREATED_MSG));
 	}
 	
 	@Test
@@ -137,7 +142,7 @@ public class AdminBrandsControllerTests {
 		String viewName = controller.save(brand, mockResult, mockRedirectAtts);
 		assertEquals("redirect:/admin/brands", viewName);
 		verify(service, times(1)).save(eq(brand));
-		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq("brand.saved.label"));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_SAVED_MSG));
 	}
 	
 	@Test
@@ -155,9 +160,11 @@ public class AdminBrandsControllerTests {
 	public void shouldDeleteBrands() {
 		Brand value = new Brand();
 
-		controller.delete(value, mockRedirectAtts);
+		String viewName = controller.delete(value, mockRedirectAtts);
 		
+		assertEquals("redirect:/admin/brands", viewName);
 		verify(service, times(1)).remove(eq(value));		
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_DELETED_MSG));
 	}
 	
 	@Test
@@ -171,7 +178,7 @@ public class AdminBrandsControllerTests {
 		assertEquals("redirect:/admin/brands/{slug}", viewName);
 		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(50));
 		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("acme"));
-		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq("brand.logo.uploaded.label"));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_LOGO_UPLOADED_MSG));
 	}
 	
 	@Test
@@ -180,14 +187,28 @@ public class AdminBrandsControllerTests {
 			.id(new ObjectId())
 			.build();
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
-		
 		when(mockResult.hasErrors()).thenReturn(true);
-		when(service.findById(eq(brand.getId()))).thenReturn(new Brand());
 		
 		String viewName = controller.uploadImage(brand, mockResult, file, mockRedirectAtts);
 		
-		assertEquals("brand/show", viewName);
-		verify(mockRedirectAtts, times(1)).addAttribute(eq("brand"), isA(Brand.class));
+		assertEquals("redirect:/admin/brands/{slug}", viewName);
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(brand.getSlug()));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_INVALID_UPLOAD_MSG));
+	}
+	
+	@Test
+	public void shouldReturnValidatioErrorWhenProvidedFileIsEmpty() throws IOException {
+		Brand brand = new Brand.Builder("ACME")
+			.id(new ObjectId())
+			.build();
+		MultipartFile file = mock(MultipartFile.class);
+		when(file.isEmpty()).thenReturn(true);
+		
+		String viewName = controller.uploadImage(brand, mockResult, file, mockRedirectAtts);
+		
+		assertEquals("redirect:/admin/brands/{slug}", viewName);
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(brand.getSlug()));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_INVALID_UPLOAD_MSG));
 	}
 	
 	@Test
@@ -200,7 +221,7 @@ public class AdminBrandsControllerTests {
 		assertEquals("redirect:/admin/brands/{slug}", viewName);
 		verify(imgService, times(1)).deleteImage(eq(req));
 		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("acme"));
-		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq("brand.logo.deleted.label"));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_LOGO_DELETED_MSG));
 	}
 	
 	private MultipartFile buildFile(MediaType mediaType) {

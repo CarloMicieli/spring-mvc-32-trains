@@ -32,12 +32,17 @@
     		<div class="span9">
 				<div class="page-header">
 					<h1><s:message code="brand.show.title.label" arguments="${brand.name}" /> </h1>
+					<small>
+						<s:message code="brand.lastModified.label" /> ${brand.lastModified}
+					</small>
 				</div>
 				
 				<div class="row-fluid">
 					<div class="span12">
 						<c:if test="${not empty message}">
-						<div class="alert info"><s:message code="${message}" text="${message}"/></div>
+						<div class="alert alert-${message.type}">
+							<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+						</div>
 						</c:if>
 					</div>
 				</div>
