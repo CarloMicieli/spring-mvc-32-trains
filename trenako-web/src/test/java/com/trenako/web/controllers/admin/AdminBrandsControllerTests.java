@@ -99,7 +99,7 @@ public class AdminBrandsControllerTests {
 	public void shouldCreateBrands() throws IOException {
 		Brand brand = new Brand.Builder("ACME").build();
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
-		UploadRequest req = new UploadRequest("brand", "acme", file);
+		UploadRequest req = UploadRequest.create(brand, file);
 		when(mockResult.hasErrors()).thenReturn(false);
 		
 		String viewName = controller.create(brand, mockResult, file, mockRedirectAtts);
@@ -151,6 +151,7 @@ public class AdminBrandsControllerTests {
 		when(mockResult.hasErrors()).thenReturn(true);
 		
 		String viewName = controller.save(brand, mockResult, mockRedirectAtts);
+		
 		assertEquals("brand/edit", viewName);
 		verify(service, times(0)).save(eq(brand));
 		verify(mockRedirectAtts, times(1)).addAttribute(eq(brand));
@@ -168,10 +169,10 @@ public class AdminBrandsControllerTests {
 	}
 	
 	@Test
-	public void shouldUploadNewPictures() throws IOException {
+	public void shouldUploadNewBrandLogos() throws IOException {
 		Brand brand = new Brand.Builder("ACME").build();
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
-		UploadRequest req = new UploadRequest("brand", "acme", file);
+		UploadRequest req = UploadRequest.create(brand, file);
 		
 		String viewName = controller.uploadImage(brand, mockResult, file, mockRedirectAtts);
 		
@@ -182,7 +183,7 @@ public class AdminBrandsControllerTests {
 	}
 	
 	@Test
-	public void shouldRedirectAfterValidationErrorsDuringFileUploads() throws IOException {
+	public void shouldRedirectAfterValidationErrorsDuringBrandLogoUploads() throws IOException {
 		Brand brand = new Brand.Builder("ACME")
 			.id(new ObjectId())
 			.build();
@@ -197,7 +198,7 @@ public class AdminBrandsControllerTests {
 	}
 	
 	@Test
-	public void shouldReturnValidatioErrorWhenProvidedFileIsEmpty() throws IOException {
+	public void shouldReturnValidatioErrorWhenProvidedBrandLogoFileIsEmpty() throws IOException {
 		Brand brand = new Brand.Builder("ACME")
 			.id(new ObjectId())
 			.build();
@@ -212,9 +213,9 @@ public class AdminBrandsControllerTests {
 	}
 	
 	@Test
-	public void shouldDeleteImages() {
+	public void shouldDeleteBrandLogos() {
 		Brand brand = new Brand.Builder("ACME").build();
-		ImageRequest req = new ImageRequest("brand", "acme");
+		ImageRequest req = ImageRequest.create(brand);
 		
 		String viewName = controller.deleteImage(brand, mockRedirectAtts);
 		

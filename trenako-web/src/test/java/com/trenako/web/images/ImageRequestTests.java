@@ -30,7 +30,7 @@ public class ImageRequestTests {
 
 	@Test
 	public void shouldCreateNewImageRequests() {
-		ImageRequest req = ImageRequest.createNew(new Brand("ACME"));
+		ImageRequest req = ImageRequest.create(new Brand("ACME"));
 		assertEquals("acme", req.getSlug());
 		assertEquals("brand", req.getEntityName());
 	}

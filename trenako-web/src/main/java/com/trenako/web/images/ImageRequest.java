@@ -52,7 +52,7 @@ public class ImageRequest {
 	 * @param obj the object
 	 * @return a new {@code ImageRequest}
 	 */
-	public static <E extends DbReferenceable> ImageRequest createNew(E obj) {
+	public static <E extends DbReferenceable> ImageRequest create(E obj) {
 		return new ImageRequest(obj.getClass().getSimpleName().toLowerCase(), obj.getSlug());
 	}
 
