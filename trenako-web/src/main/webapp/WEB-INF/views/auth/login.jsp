@@ -41,6 +41,12 @@
 					</label>
 					</div>
 					
+					<c:if test="${param.login_error != null}">
+					<div class="alert alert-error">
+						<s:message code="login.error.message"></s:message>
+					</div>
+					</c:if>
+					
 					<div class="form-actions">
 						<button type="submit" class="btn btn-primary" name="_action_save">
 							<i class="icon-check icon-white"></i>
