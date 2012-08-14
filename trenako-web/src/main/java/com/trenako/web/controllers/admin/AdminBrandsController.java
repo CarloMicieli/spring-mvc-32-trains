@@ -62,7 +62,7 @@ public class AdminBrandsController {
 	
 	final static ControllerMessage BRAND_CREATED_MSG = success("brand.created.message");
 	final static ControllerMessage BRAND_SAVED_MSG = success("brand.saved.message");
-	final static ControllerMessage BRAND_DELETED_MSG = success("brand.delete.message");
+	final static ControllerMessage BRAND_DELETED_MSG = success("brand.deleted.message");
 	final static ControllerMessage BRAND_LOGO_UPLOADED_MSG = success("brand.logo.uploaded.message");
 	final static ControllerMessage BRAND_INVALID_UPLOAD_MSG = error("brand.invalid.file.message");
 	final static ControllerMessage BRAND_LOGO_DELETED_MSG = success("brand.logo.deleted.message");

@@ -35,8 +35,10 @@
 				<form:form id="form" class="form-horizontal" method="POST" action="${createUrl}" modelAttribute="railway" enctype="multipart/form-data">
 					
 					<fieldset>    				
-    					<c:if test="${not empty message}">
-							<div id="message" class="info">${message}</div>
+						<c:if test="${not empty message}">
+						<div class="alert alert-${message.type}">
+							<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+						</div>
 						</c:if>
     				
     					<s:bind path="railway.name">

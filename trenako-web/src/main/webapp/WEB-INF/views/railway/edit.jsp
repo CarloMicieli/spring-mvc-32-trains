@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -32,10 +33,13 @@
 				<form:form id="form" class="form-horizontal" method="PUT" action="${editUrl}" modelAttribute="railway">
 
 					<form:hidden path="id"/>
+					<form:hidden path="slug"/>
 
 					<fieldset>
 						<c:if test="${not empty message}">
-							<div id="message" class="info">${message}</div>
+						<div class="alert alert-${message.type}">
+							<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+						</div>
 						</c:if>
 
 						<s:bind path="railway.name">
@@ -61,6 +65,8 @@
 							</div>
 						</div>
 						</s:bind>
+						
+						<tk:localizedTextArea path="description" rows="4"/>
 						
 						<s:bind path="railway.country">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">

@@ -16,12 +16,12 @@
 package com.trenako.web.controllers.admin;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.*;
 
 import java.io.IOException;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +29,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,7 +39,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.trenako.entities.Railway;
 import com.trenako.services.RailwaysService;
-import com.trenako.web.errors.NotFoundException;
+import com.trenako.web.images.ImageRequest;
+import com.trenako.web.images.MultipartFileValidator;
+import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 
 /**
@@ -48,21 +52,23 @@ import com.trenako.web.images.WebImageService;
 @RunWith(MockitoJUnitRunner.class)
 public class AdminRailwaysControllerTests {
 	@Mock Pageable mockPaging;
-	@Mock WebImageService mockImgUtil;
+	@Mock WebImageService imgService;
 	@Mock BindingResult mockResult;
-	@Mock MultipartFile mockFile;
 	@Mock RedirectAttributes mockRedirect;
 	@Mock RailwaysService mockService;
-	AdminRailwaysController controller;
+	
+	private MultipartFileValidator validator = new MultipartFileValidator();
+	private AdminRailwaysController controller;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new AdminRailwaysController(mockService, mockImgUtil);
+		controller = new AdminRailwaysController(mockService, imgService);
+		controller.setMultipartFileValidator(validator);
 	}
 	
 	@Test
-	public void listActionShouldListAllRailways() {
+	public void shouldListAllRailwaysPaginated() {
 		ModelAndView mav = controller.list(mockPaging);
 	
 		verify(mockService, times(1)).findAll(eq(mockPaging));
@@ -71,28 +77,20 @@ public class AdminRailwaysControllerTests {
 	}
 	
 	@Test
-	public void showActionShouldShowARailway() {
-		ObjectId id = new ObjectId();
+	public void shouldShowRailways() {
+		String slug = "railway-slug";
 		Railway value = new Railway();
-		when(mockService.findById(eq(id))).thenReturn(value);
+		when(mockService.findBySlug(eq(slug))).thenReturn(value);
 		
-		ModelAndView mav = controller.show(id);
+		ModelAndView mav = controller.show(slug);
 		
-		verify(mockService, times(1)).findById(eq(id));
+		verify(mockService, times(1)).findBySlug(eq(slug));
 		assertViewName(mav, "railway/show");
 		assertModelAttributeAvailable(mav, "railway");
 	}
-	
-	@Test(expected = NotFoundException.class)
-	public void showActionShouldThrowsExceptionIfRailwayNotFound() {
-		ObjectId id = new ObjectId();
-		when(mockService.findById(eq(id))).thenReturn(null);
-		
-		controller.show(id);
-	}
 
 	@Test
-	public void newActionShouldInitCreationForm() {
+	public void shouldRenderRailwayCreationForms() {
 		ModelAndView mav = controller.newForm();
 		
 		assertViewName(mav, "railway/new");
@@ -100,12 +98,28 @@ public class AdminRailwaysControllerTests {
 	}
 	
 	@Test
-	public void createActionShouldRedirectAfterValidationErrors() throws IOException {
+	public void shouldCreateNewRailways() throws IOException {
+		Railway railway = new Railway.Builder("FS").build();
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		UploadRequest req = UploadRequest.create(railway, file);
+		when(mockResult.hasErrors()).thenReturn(false);
+		
+		String viewName = controller.create(railway, mockResult, file, mockRedirect);
+		
+		assertEquals("redirect:/admin/railways", viewName);
+		verify(mockService, times(1)).save(eq(railway));
+		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(50));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq(AdminRailwaysController.RAILWAY_CREATED_MSG));
+	}
+	
+	@Test
+	public void shouldRedirectAfterValidationErrorsDuringRailwaysCreation() throws IOException {
 		Railway railway = new Railway();
 		when(mockResult.hasErrors()).thenReturn(true);
 		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
 		
-		String viewName = controller.create(railway, mockResult, mockFile, redirectAtts);
+		String viewName = controller.create(railway, mockResult, file, redirectAtts);
 		
 		verify(mockService, times(0)).save(eq(railway));
 		assertEquals("railway/new", viewName);
@@ -113,87 +127,108 @@ public class AdminRailwaysControllerTests {
 	}
 	
 	@Test
-	public void createActionShouldCreateNewRailways() throws IOException {
-		Railway railway = new Railway();
-		when(mockResult.hasErrors()).thenReturn(false);
-		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
-		
-		String viewName = controller.create(railway, mockResult, mockFile, redirectAtts);
-		
-		verify(mockService, times(1)).save(eq(railway));
-		assertEquals("redirect:/admin/railways", viewName);
-		assertEquals(1, redirectAtts.getFlashAttributes().size());
-		assertEquals("Railway created", redirectAtts.getFlashAttributes().get("message"));
-	}
-	
-	@Test
-	public void editActionShouldInitEditingForm() {
-		ObjectId id = new ObjectId();
+	public void shouldRenderRailwaysEditingForm() {
+		String slug = "railway-slug";
 		Railway value = new Railway();
-		when(mockService.findById(eq(id))).thenReturn(value);
+		when(mockService.findBySlug(eq(slug))).thenReturn(value);
 		
-		ModelAndView mav = controller.editForm(id);
+		ModelAndView mav = controller.editForm(slug);
 		
 		assertViewName(mav, "railway/edit");
 		assertModelAttributeAvailable(mav, "railway");
-	}
-	
-	@Test(expected = NotFoundException.class)
-	public void editActionShouldThrowsExceptionIfRailwayNotFound() {
-		ObjectId id = new ObjectId();
-		when(mockService.findById(eq(id))).thenReturn(null);
-		
-		controller.editForm(id);
+		verify(mockService, times(1)).findBySlug(eq(slug));
 	}
 	
 	@Test
-	public void saveActionShouldRedirectAfterValidationErrors() throws IOException {
+	public void shouldRedirectAfterValidationErrorsSavingRailways() {
 		Railway railway = new Railway();
 		when(mockResult.hasErrors()).thenReturn(true);
-		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		String viewName = controller.save(railway, mockResult, redirectAtts);
+		String viewName = controller.save(railway, mockResult, mockRedirect);
 		
+		assertEquals("railway/edit", viewName);		
+		verify(mockRedirect, times(1)).addAttribute(eq("railway"), eq(railway));
 		verify(mockService, times(0)).save(eq(railway));
-		assertEquals("railway/edit", viewName);
-		assertEquals(true, redirectAtts.containsAttribute("railway"));
 	}
 	
 	@Test
-	public void saveActionShouldCreateNewRailways() throws IOException {
-		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
+	public void shouldSaveRailwayChanges() throws IOException {
 		Railway railway = new Railway();
 		when(mockResult.hasErrors()).thenReturn(false);
 				
-		String viewName = controller.save(railway, mockResult, redirectAtts);
+		String viewName = controller.save(railway, mockResult, mockRedirect);
 		
 		verify(mockService, times(1)).save(eq(railway));
 		assertEquals("redirect:/admin/railways", viewName);
-		assertEquals(1, redirectAtts.getFlashAttributes().size());
-		assertEquals("Railway saved", redirectAtts.getFlashAttributes().get("message"));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq(AdminRailwaysController.RAILWAY_SAVED_MSG));
 	}
 			
-	@Test(expected = NotFoundException.class)
-	public void deleteActionShouldThrowsExceptionIfRailwayNotFound() {
-		ObjectId id = new ObjectId();
-		when(mockService.findById(eq(id))).thenReturn(null);
+	@Test
+	public void shouldDeleteRailways() {
+		Railway railway = new Railway();
 		
-		controller.delete(id, mockRedirect);
+		String viewName = controller.delete(railway, mockRedirect);
+		
+		verify(mockService, times(1)).remove(eq(railway));
+		assertEquals("redirect:/admin/railways", viewName);
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq(AdminRailwaysController.RAILWAY_DELETED_MSG));
 	}
 	
 	@Test
-	public void deleteActionShouldDeleteRailways() {
-		Railway value = new Railway();
-		ObjectId id = new ObjectId();
-		when(mockService.findById(eq(id))).thenReturn(value);
+	public void shouldUploadNewRailwayLogos() throws IOException {
+		Railway railway = new Railway.Builder("FS").build();
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		UploadRequest req = UploadRequest.create(railway, file);
 		
-		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
+		String viewName = controller.uploadImage(railway, mockResult, file, mockRedirect);
 		
-		String viewName = controller.delete(id, redirectAtts);
+		assertEquals("redirect:/admin/railways/{slug}", viewName);
+		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(50));
+		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq(railway.getSlug()));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq(AdminRailwaysController.RAILWAY_LOGO_UPLOADED_MSG));
+	}
+	
+	@Test
+	public void shouldRedirectAfterValidationErrorsDuringBrandLogoUploads() throws IOException {
+		Railway railway = new Railway.Builder("FS").build();
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		when(mockResult.hasErrors()).thenReturn(true);
 		
-		verify(mockService, times(1)).remove(eq(value));
-		assertEquals("redirect:/admin/railways", viewName);
-		assertEquals(1, redirectAtts.getFlashAttributes().size());
-		assertEquals("Railway deleted", redirectAtts.getFlashAttributes().get("message"));
+		String viewName = controller.uploadImage(railway, mockResult, file, mockRedirect);
+		
+		assertEquals("redirect:/admin/railways/{slug}", viewName);
+		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq(railway.getSlug()));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq(AdminRailwaysController.RAILWAY_INVALID_UPLOAD_MSG));
+	}
+	
+	@Test
+	public void shouldReturnValidatioErrorWhenProvidedBrandLogoFileIsEmpty() throws IOException {
+		Railway railway = new Railway.Builder("FS").build();
+		MultipartFile file = mock(MultipartFile.class);
+		when(file.isEmpty()).thenReturn(true);
+		
+		String viewName = controller.uploadImage(railway, mockResult, file, mockRedirect);
+		
+		assertEquals("redirect:/admin/railways/{slug}", viewName);
+		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq(railway.getSlug()));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq(AdminRailwaysController.RAILWAY_INVALID_UPLOAD_MSG));
+	}
+	
+	@Test
+	public void shouldDeleteBrandLogos() {
+		Railway railway = new Railway.Builder("FS").build();
+		ImageRequest req = ImageRequest.create(railway);
+		
+		String viewName = controller.deleteImage(railway, mockRedirect);
+		
+		assertEquals("redirect:/admin/railways/{slug}", viewName);
+		verify(imgService, times(1)).deleteImage(eq(req));
+		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq(railway.getSlug()));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq(AdminRailwaysController.RAILWAY_LOGO_DELETED_MSG));
+	}
+	
+	private MultipartFile buildFile(MediaType mediaType) {
+		byte[] content = "file content".getBytes();
+		return new MockMultipartFile("image.jpg", "image.jpg", mediaType.toString(), content);
 	}
 }

@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -36,7 +37,9 @@
 				</div>
 				
 				<c:if test="${not empty message}">
-					<div id="message" class="info">${message}</div>
+				<div class="alert alert-${message.type}">
+					<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+				</div>
 				</c:if>
 				
 				<table class="table table-striped">
@@ -59,8 +62,8 @@
 							<td>${railway.operatingSince}</td>
 							<td>${railway.operatingUntil}</td>
 
-							<s:url var="showUrl" value="/admin/railways/{id}">
-				            	<s:param name="id" value="${railway.id}" />
+							<s:url var="showUrl" value="/admin/railways/{slug}">
+				            	<s:param name="slug" value="${railway.slug}" />
 							</s:url>
 							<td class="link">
 								<a href="${showUrl}" class="btn btn-small">
@@ -71,6 +74,8 @@
 					</c:forEach>
 					</tbody>
 				</table>
+				
+				<tk:pagination page="${railways}"/>
 			</div>
 		</div>
 	</body>

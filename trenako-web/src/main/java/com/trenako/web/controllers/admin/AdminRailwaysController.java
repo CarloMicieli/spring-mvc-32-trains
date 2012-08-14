@@ -15,6 +15,9 @@
  */
 package com.trenako.web.controllers.admin;
 
+import static com.trenako.web.controllers.ControllerMessage.error;
+import static com.trenako.web.controllers.ControllerMessage.success;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +25,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -43,7 +45,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.AppGlobals;
 import com.trenako.entities.Railway;
 import com.trenako.services.RailwaysService;
-import com.trenako.web.errors.NotFoundException;
+import com.trenako.web.controllers.ControllerMessage;
+import com.trenako.web.images.ImageRequest;
+import com.trenako.web.images.MultipartFileValidator;
+import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 
 /**
@@ -55,12 +60,26 @@ import com.trenako.web.images.WebImageService;
 @RequestMapping("/admin/railways")
 public class AdminRailwaysController {
 	private final RailwaysService service;
-	private final WebImageService imageService;
+	private final WebImageService imgService;
+	
+	private MultipartFileValidator fileValidator;
+	
+	final static ControllerMessage RAILWAY_CREATED_MSG = success("railway.created.message");
+	final static ControllerMessage RAILWAY_SAVED_MSG = success("railway.saved.message");
+	final static ControllerMessage RAILWAY_DELETED_MSG = success("railway.deleted.message");
+	final static ControllerMessage RAILWAY_LOGO_UPLOADED_MSG = success("railway.logo.uploaded.message");
+	final static ControllerMessage RAILWAY_INVALID_UPLOAD_MSG = error("railway.invalid.file.message");
+	final static ControllerMessage RAILWAY_LOGO_DELETED_MSG = success("railway.logo.deleted.message");
 	
 	@Autowired
-	public AdminRailwaysController(RailwaysService service, WebImageService imageService) {
+	public AdminRailwaysController(RailwaysService service, WebImageService imgService) {
 		this.service = service;
-		this.imageService = imageService;
+		this.imgService = imgService;
+	}
+	
+	@Autowired(required = false) 
+	public void setMultipartFileValidator(MultipartFileValidator validator) {
+		fileValidator = validator;
 	}
 	
 	@InitBinder
@@ -95,19 +114,17 @@ public class AdminRailwaysController {
 	/**
 	 * This actions shows all the {@code Railway}s.
 	 * <p>
-	 * Maps the request to {@code GET /admin/railways/:id}.
+	 * Maps the request to {@code GET /admin/railways/:slug}.
 	 * </p>
 	 *
-	 * @param id the {@code Railway} id
+	 * @param slug the {@code Railway} slug
 	 * @return the model and view for the {@code Railway}
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ModelAndView show(@PathVariable("id") ObjectId id) {
-		Railway railway = service.findById(id);
-		if (railway==null)
-			throw new NotFoundException();
-		
-		return new ModelAndView("railway/show", "railway", railway);
+	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
+	public ModelAndView show(@PathVariable("slug") String slug) {
+		return new ModelAndView("railway/show", 
+				"railway",
+				service.findBySlug(slug));
 	}
 
 	/**
@@ -144,17 +161,23 @@ public class AdminRailwaysController {
 			@RequestParam("file") MultipartFile file, 
 			RedirectAttributes redirectAtts) throws IOException {
 		
-		if (result.hasErrors()) {
-			redirectAtts.addAttribute("railway", railway);
-			return "railway/new";
+		// validate the uploaded file
+		if (fileValidator != null) {
+			fileValidator.validate(file, result);
 		}
 
+		if (result.hasErrors()) {
+			redirectAtts.addAttribute(railway);		
+			return "railway/new";	
+		}
+
+		// save brand
 		service.save(railway);
-//		if (!file.isEmpty()) {
-//			imageService.saveImage(railway.getId(), file);
-//		}
-		
-		redirectAtts.addFlashAttribute("message", "Railway created");
+		if (!file.isEmpty()) {
+			imgService.saveImageWithThumb(UploadRequest.create(railway, file), 50);
+		}
+
+		redirectAtts.addFlashAttribute("message", RAILWAY_CREATED_MSG);
 		return "redirect:/admin/railways";
 	}
 	
@@ -162,26 +185,22 @@ public class AdminRailwaysController {
 	 * This action renders the form to edit a {@code Railway}.
 	 *
 	 * <p>
-	 * Maps the request to {@code GET /admin/railways/:id/edit}.
+	 * Maps the request to {@code GET /admin/railways/:slug/edit}.
 	 * </p>
 	 *
-	 * @param railwayId the {@code Railway} id
+	 * @param slug the {@code Railway} slug
 	 *
 	 */
-	@RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("id") ObjectId railwayId) {
-		Railway railway = service.findById(railwayId);
-		if (railway==null)
-			throw new NotFoundException();
-		
-		return new ModelAndView("railway/edit", "railway", railway);
+	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
+	public ModelAndView editForm(@PathVariable("slug") String slug) {
+		return new ModelAndView("railway/edit", "railway", service.findBySlug(slug));
 	}
 
 	/**
 	 * This action saves a new {@code Railway}.
 	 *
 	 * <p>
-	 * Maps the request to {@code POST /admin/railways:id}.
+	 * Maps the request to {@code POST /admin/railways}.
 	 * </p>
 	 *
 	 * @param railway the {@code Railway} to be updated
@@ -192,7 +211,7 @@ public class AdminRailwaysController {
 	@RequestMapping(method = RequestMethod.PUT)
 	public String save(@Valid @ModelAttribute Railway railway,
 		BindingResult result,
-		RedirectAttributes redirectAtts) throws IOException {
+		RedirectAttributes redirectAtts) {
 	
 		if (result.hasErrors()) {
 			redirectAtts.addAttribute("railway", railway);
@@ -201,8 +220,7 @@ public class AdminRailwaysController {
 	
 		try {
 			service.save(railway);
-			
-			redirectAtts.addFlashAttribute("message", "Railway saved");
+			redirectAtts.addFlashAttribute("message", RAILWAY_SAVED_MSG);
 			return "redirect:/admin/railways";
 		}
 		catch (DataIntegrityViolationException dae) {
@@ -219,20 +237,51 @@ public class AdminRailwaysController {
 	 * Maps the request to {@code DELETE /admin/railways/:id}.
 	 * </p>
 	 *
-	 * @param railwayId the {@code Railway} id
+	 * @param railway the {@code Railway}
 	 * @param redirectAtts the redirect attributes
 	 * @return the view name
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public String delete(@PathVariable("id") ObjectId railwayId, RedirectAttributes redirectAtts) {
-		Railway railway = service.findById(railwayId);
-		if (railway==null)
-			throw new NotFoundException();
-		
+	public String delete(@ModelAttribute() Railway railway, RedirectAttributes redirectAtts) {
 		service.remove(railway);
 		
-		redirectAtts.addFlashAttribute("message", "Railway deleted");
+		redirectAtts.addFlashAttribute("message", RAILWAY_DELETED_MSG);
 		return "redirect:/admin/railways";
 	}
 	
+	@RequestMapping(value = "/{slug}/upload", method = RequestMethod.POST)
+	public String uploadImage(@ModelAttribute Railway railway, 
+			BindingResult result, 
+			@RequestParam("file") MultipartFile file,
+			RedirectAttributes redirectAtts) throws IOException {
+
+		boolean hasErrors = (file == null || file.isEmpty());
+		
+		// validate the uploaded file
+		if (!hasErrors && fileValidator != null) {
+			fileValidator.validate(file, result);
+			hasErrors = result.hasErrors();
+		}
+		
+		if (hasErrors) {
+			redirectAtts.addAttribute("slug", railway.getSlug());
+			redirectAtts.addFlashAttribute("message", RAILWAY_INVALID_UPLOAD_MSG);
+			return "redirect:/admin/railways/{slug}";			
+		}
+		
+		imgService.saveImageWithThumb(UploadRequest.create(railway, file), 50);
+		
+		redirectAtts.addFlashAttribute("message", RAILWAY_LOGO_UPLOADED_MSG);
+		redirectAtts.addAttribute("slug", railway.getSlug());
+		return "redirect:/admin/railways/{slug}";
+	}
+	
+	@RequestMapping(value = "/{slug}/upload", method = RequestMethod.DELETE)
+	public String deleteImage(@ModelAttribute Railway railway, RedirectAttributes redirectAtts) {
+		imgService.deleteImage(new ImageRequest("railway", railway.getSlug()));
+		
+		redirectAtts.addAttribute("slug", railway.getSlug());
+		redirectAtts.addFlashAttribute("message", RAILWAY_LOGO_DELETED_MSG);
+		return "redirect:/admin/railways/{slug}";
+	}
 }
