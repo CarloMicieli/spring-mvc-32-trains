@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -109,7 +110,9 @@
 		    				<dt><s:message code="brand.name.label" />:</dt>
 		    				<dd>${brand.name}</dd>
 		    				<dt><s:message code="brand.companyName.label" />:</dt>
-		    				<dd>${brand.companyName}</dd>		    				
+		    				<dd>${brand.companyName}</dd>
+		    				<dt><s:message code="brand.description.label" />:</dt>
+		    				<dd><tk:eval expression="${brand.description}"/></dd>		
 		    				<dt><s:message code="brand.emailAddress.label" />:</dt>
 		    				<dd>${brand.emailAddress}</dd>
 		    				<dt><s:message code="brand.website.label" />:</dt>
@@ -119,14 +122,7 @@
 		    			</dl>
 		    			
 		    			<hr/>
-		    			
-		    			<h4><s:message code="brand.descriptions.label" /></h4>
-		    			<dl>
-		    				<c:forEach var="item" items="${brand.description}">
-		    					<dt>${item.key}:</dt><dd>${item.value}</dd>
-		    				</c:forEach>
-		    			</dl>
-		
+
 						<s:url value="/admin/brands/{id}" var="deleteUrl">
 							<s:param name="id" value="${brand.id}" />
 						</s:url>

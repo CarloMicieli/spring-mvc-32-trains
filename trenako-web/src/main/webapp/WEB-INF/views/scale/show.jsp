@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -36,6 +37,8 @@
     			<dl class="dl-horizontal">
     				<dt><s:message code="scale.name.label" />:</dt>
     				<dd>${scale.name}</dd>
+    				<dt><s:message code="scale.description.label" />:</dt>
+    				<dd><tk:eval expression="${scale.description}"/></dd>				
     				<dt><s:message code="scale.ratio.label" />:</dt>
     				<dd><s:eval expression="scale.ratioText"/></dd>
     				<dt><s:message code="scale.gauge.label" />:</dt>
@@ -47,14 +50,7 @@
     			</dl>
 				
 				<hr />
-				
-				<h4><s:message code="scale.descriptions.label" /></h4>
-				<dl>
-					<c:forEach var="item" items="${scale.description}">
-					<dt>${item.key}:</dt><dd>${item.value}</dd>
-					</c:forEach>
-				</dl>
-				
+								
 				<s:url value="/admin/scales/{slug}" var="deleteUrl">
 					<s:param name="slug" value="${scale.slug}" />
 				</s:url>

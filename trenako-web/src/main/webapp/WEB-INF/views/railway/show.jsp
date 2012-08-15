@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+
 <html>
 	<head>
 		<title>
@@ -31,7 +33,7 @@
 				</div>
 			</div>
 
-    		<div class="span9">
+			<div class="span9">
 				<div class="page-header">
 					<h1><s:message code="railways.show.title.label" arguments="${railway.name}" /></h1>
 					<small>
@@ -107,28 +109,21 @@
 						</div>
 					</div>
 					<div class="span8">
-		    			<dl class="dl-horizontal">
-		    				<dt><s:message code="railway.name.label" />:</dt>
-		    				<dd>${railway.name}</dd>
-		    				<dt><s:message code="railway.companyName.label" />:</dt>
-		    				<dd>${railway.companyName}</dd>
-		    				<dt><s:message code="railway.country.label"/>:</dt>
-		    				<dd>${railway.country}</dd>
-		    				<dt><s:message code="railway.operatingSince.label" />:</dt>
-		    				<dd>${railway.operatingSince}</dd>
+						<dl class="dl-horizontal">
+							<dt><s:message code="railway.name.label" />:</dt>
+							<dd>${railway.name}</dd>
+							<dt><s:message code="railway.companyName.label" />:</dt>
+							<dd>${railway.companyName}</dd>
+							<dt><s:message code="railway.description.label" />:</dt>
+							<dd><tk:eval expression="${railway.description}" /></dd>
+							<dt><s:message code="railway.country.label"/>:</dt>
+							<dd>${railway.country}</dd>
+							<dt><s:message code="railway.operatingSince.label" />:</dt>
+							<dd>${railway.operatingSince}</dd>
 							<dt><s:message code="railway.operatingUntil.label" />:</dt>
-		    				<dd>${railway.operatingUntil}</dd>
+							<dd>${railway.operatingUntil}</dd>
 		    			</dl>
 				
-						<hr/>
-
-		    			<h4><s:message code="railway.descriptions.label" /></h4>
-		    			<dl>
-		    				<c:forEach var="item" items="${railway.description}">
-		    					<dt>${item.key}:</dt><dd>${item.value}</dd>
-		    				</c:forEach>
-		    			</dl>
-			
 						<s:url value="/admin/railways/{id}" var="deleteUrl">
 							<s:param name="id" value="${railway.id}" />
 						</s:url>

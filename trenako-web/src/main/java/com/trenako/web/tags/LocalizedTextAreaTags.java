@@ -197,7 +197,7 @@ public class LocalizedTextAreaTags extends SpringTagSupport {
 	}
 	
 	private String labelMessage(Locale locale) throws JspException {
-		String code = getBindStatus().getPath() + ".label";
+		String code = getBindStatus().getPath() + ".local.label";
 		return getMessageSource().getMessage(code, 
 				new Object[] { locale.getDisplayLanguage() }, 
 				code, 

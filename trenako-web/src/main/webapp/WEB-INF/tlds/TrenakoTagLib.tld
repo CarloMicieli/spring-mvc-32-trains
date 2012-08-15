@@ -51,6 +51,26 @@
 	</tag>
 
 	<tag>
+		<name>eval</name>
+		<tagclass>com.trenako.web.tags.EvalTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Evaluate localized fields.
+		</description>
+		<attribute>
+			<name>expression</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.trenako.mapping.LocalizedField</type>
+		</attribute>
+		<attribute>
+			<name>maxLength</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+
+	<tag>
 		<name>categoriesList</name>
 		<tagclass>com.trenako.web.tags.CategoriesListTags</tagclass>
 		<bodycontent>empty</bodycontent>
