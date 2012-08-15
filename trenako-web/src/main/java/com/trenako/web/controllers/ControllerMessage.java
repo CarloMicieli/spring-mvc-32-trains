@@ -15,6 +15,11 @@
  */
 package com.trenako.web.controllers;
 
+import java.util.Arrays;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 /**
  * It represents a message returned by a controller.
  * @author Carlo Micieli
@@ -101,27 +106,39 @@ public class ControllerMessage {
 		return args;
 	}
 	
+	/**
+	 * Appends the current message to the provided {@code RedirectAttributes} 
+	 * flash attributes map. 
+	 * @param redirectAtts the {@code RedirectAttributes} map
+	 */
+	public void appendToRedirect(RedirectAttributes redirectAtts) {
+		redirectAtts.addFlashAttribute("message", this);		
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
 		if (!(obj instanceof ControllerMessage)) return false;
 		
 		ControllerMessage other = (ControllerMessage) obj;
-		return this.type.equals(other.type) &&
-				this.message.equals(other.message) &&
-				this.args.equals(other.args);
+		return new EqualsBuilder()
+			.append(this.type, other.type)
+			.append(this.message, other.message)
+			.append(this.args, other.args)
+			.isEquals();
 	}
 	
 	@Override
 	public String toString() {
+				
 		return new StringBuilder()
 			.append("message{type: ")
 			.append(type)
 			.append(", message: ")
 			.append(message)
-			.append(", args: [")
-			.append(args)
-			.append("]")
+			.append(", args: ")
+			.append(Arrays.toString(args))
+			.append("}")
 			.toString();
 	}
 }

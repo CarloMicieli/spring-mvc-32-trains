@@ -15,6 +15,7 @@
  */
 package com.trenako.mapping;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.util.Assert;
 
@@ -96,6 +97,7 @@ public class WeakDbRef<E extends DbReferenceable> {
 	public String getLabel() {
 		return label;
 	}
+	
 	/**
 	 * Returns the {@code WeakDbRef} label.
 	 * @param label the label
@@ -120,8 +122,10 @@ public class WeakDbRef<E extends DbReferenceable> {
 		if (!(obj instanceof WeakDbRef)) return false;
 		
 		WeakDbRef<?> other = (WeakDbRef<?>) obj;
-		return this.slug.equals(other.slug) &&
-				this.label.equals(other.label);
+		return new EqualsBuilder()
+			.append(this.slug, other.slug)
+			.append(this.label, other.label)
+			.isEquals();
 	}
 	
 	@Override

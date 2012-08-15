@@ -19,6 +19,8 @@ import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.trenako.mapping.WeakDbRef;
+
 /**
  * 
  * @author Carlo Micieli
@@ -57,6 +59,21 @@ public class CommentTests {
 	}
 	
 	@Test
+	public void shouldReturnsTrueIfTwoCommentsOnlyWithSlugsAreEquals() {
+		Comment x = new Comment();
+		x.setAuthor(WeakDbRef.buildFromSlug("bob", Account.class));
+		x.setRollingStock(WeakDbRef.buildFromSlug("acme-123456", RollingStock.class));
+		x.setContent("My comment");
+		
+		Comment y = new Comment();
+		y.setAuthor(WeakDbRef.buildFromSlug("bob", Account.class));
+		y.setRollingStock(WeakDbRef.buildFromSlug("acme-123456", RollingStock.class));
+		y.setContent("My comment");
+		
+		assertTrue(x.equals(y));
+	}
+	
+	@Test
 	public void shouldReturnsFalseIfTwoCommentsAreDifferent() {
 		Account author = new Account.Builder("mail@mail.com")
 			.displayName("User Name")
@@ -75,6 +92,6 @@ public class CommentTests {
 			.build();
 
 		Comment c = new Comment(author, rs, "Comment content");
-		assertEquals("comment{author: user-name, content: 'Comment content, rs: acme-123456}", c.toString());
+		assertEquals("comment{author: user-name, content: Comment content, rs: acme-123456}", c.toString());
 	}
 }

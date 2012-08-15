@@ -20,6 +20,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
@@ -96,6 +97,14 @@ public class Comment {
 	 * Sets the {@code Comment}'s author.
 	 * @param author the author
 	 */
+	public void setAuthor(WeakDbRef<Account> author) {
+		this.author = author;
+	}
+	
+	/**
+	 * Sets the {@code Comment}'s author.
+	 * @param author the author
+	 */
 	public void setAuthor(Account author) {
 		this.author = WeakDbRef.buildRef(author);
 	}
@@ -116,6 +125,14 @@ public class Comment {
 		this.rollingStock = WeakDbRef.buildRef(rollingStock);
 	}
 
+	/**
+	 * Sets the rolling stock to be commented.
+	 * @param rollingStock the rolling stock
+	 */
+	public void setRollingStock(WeakDbRef<RollingStock> rollingStock) {
+		this.rollingStock = rollingStock;
+	}
+	
 	/**
 	 * Returns the comment's content.
 	 * @return the content
@@ -154,9 +171,11 @@ public class Comment {
 		if (!(obj instanceof Comment)) return false;
 		
 		Comment other = (Comment) obj;
-		return content.equals(other.content) &&
-				author.equals(other.author) &&
-				rollingStock.equals(other.rollingStock);
+		return new EqualsBuilder()
+			.append(this.content, other.content)
+			.append(this.author, other.author)
+			.append(this.rollingStock, other.rollingStock)
+			.isEquals();
 	}
 	
 	@Override
@@ -164,7 +183,7 @@ public class Comment {
 		return new StringBuilder()
 			.append("comment{author: ")
 			.append(getAuthor().getSlug())
-			.append(", content: '")
+			.append(", content: ")
 			.append(getContent())
 			.append(", rs: ")
 			.append(getRollingStock().getSlug())
