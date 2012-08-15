@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.*;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,11 +29,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.trenako.entities.Scale;
 import com.trenako.services.ScalesService;
-import com.trenako.web.errors.NotFoundException;
 
 /**
  * @author Carlo Micieli
@@ -43,11 +40,11 @@ import com.trenako.web.errors.NotFoundException;
 public class AdminScalesControllerTests {
 
 	@Mock Pageable mockPaging;
-	@Mock RedirectAttributes mockRedirect;
 	@Mock BindingResult mockResult;
-	@Mock RedirectAttributes mockRedirectAtts;
+	@Mock RedirectAttributes mockRedirect;
 	@Mock ScalesService mockService;
-	AdminScalesController controller;
+	
+	private AdminScalesController controller;
 
 	@Before
 	public void setup() {
@@ -56,7 +53,7 @@ public class AdminScalesControllerTests {
 	}
 	
 	@Test
-	public void listActionShouldListAllScales() {
+	public void shouldListAllScales() {
 		ModelAndView mav = controller.list(mockPaging);
 		
 		verify(mockService, times(1)).findAll(eq(mockPaging));
@@ -65,28 +62,20 @@ public class AdminScalesControllerTests {
 	}
 			
 	@Test
-	public void showActionShouldShowABrand() {
-		ObjectId id = new ObjectId();
+	public void shouldShowABrand() {
+		String slug = "scale-slug";
 		Scale value = new Scale();
-		when(mockService.findById(eq(id))).thenReturn(value);
+		when(mockService.findBySlug(eq(slug))).thenReturn(value);
 		
-		ModelAndView mav = controller.show(id);
+		ModelAndView mav = controller.show(slug);
 		
-		verify(mockService, times(1)).findById(eq(id));
+		verify(mockService, times(1)).findBySlug(eq(slug));
 		assertViewName(mav, "scale/show");
 		assertModelAttributeAvailable(mav, "scale");
 	}
 
-	@Test(expected = NotFoundException.class)
-	public void showActionShouldThrowsExceptionIfScaleNotFound() {
-		ObjectId id = new ObjectId();
-		when(mockService.findById(eq(id))).thenReturn(null);
-		
-		controller.show(id);
-	}
-
 	@Test
-	public void newActionShouldInitCreationForm() {
+	public void shouldRenderScaleCreationForms() {
 		ModelAndView mav = controller.newForm();
 		
 		assertViewName(mav, "scale/new");
@@ -94,100 +83,79 @@ public class AdminScalesControllerTests {
 	}
 
 	@Test
-	public void createActionShouldRedirectAfterValidationErrors() {
+	public void shouldRedirectAfterValidationErrorsDuringScaleCreation() {
 		Scale scale = new Scale();
 		when(mockResult.hasErrors()).thenReturn(true);
-		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		String viewName = controller.create(scale, mockResult, redirectAtts);
+		String viewName = controller.create(scale, mockResult, mockRedirect);
 		
-		verify(mockService, times(0)).save(eq(scale));
 		assertEquals("scale/new", viewName);
-		assertEquals(true, redirectAtts.containsAttribute("scale"));
+		verify(mockService, times(0)).save(eq(scale));
+		verify(mockRedirect, times(1)).addAttribute(eq(scale));
 	}
 	
 	@Test
-	public void createActionShouldCreateNewScales() {
+	public void shouldCreateNewScales() {
 		Scale scale = new Scale();
 		when(mockResult.hasErrors()).thenReturn(false);
-		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		
-		String viewName = controller.create(scale, mockResult, redirectAtts);
-		
-		verify(mockService, times(1)).save(eq(scale));
+		String viewName = controller.create(scale, mockResult, mockRedirect);
+
 		assertEquals("redirect:/admin/scales", viewName);
-		assertEquals(1, redirectAtts.getFlashAttributes().size());
-		assertEquals("Scale created", redirectAtts.getFlashAttributes().get("message"));
+		verify(mockService, times(1)).save(eq(scale));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
+				eq(AdminScalesController.SCALE_CREATED_MSG));
 	}
 	
 	@Test
-	public void editActionShouldInitEditingForm() {
-		ObjectId id = new ObjectId();
+	public void shouldRenderScaleEditingForm() {
+		String slug = "scale-slug";
 		Scale value = new Scale();
-		when(mockService.findById(eq(id))).thenReturn(value);
+		when(mockService.findBySlug(eq(slug))).thenReturn(value);
 		
-		ModelAndView mav = controller.editForm(id);
+		ModelAndView mav = controller.editForm(slug);
 		
+		verify(mockService, times(1)).findBySlug(eq(slug));
 		assertViewName(mav, "scale/edit");
 		assertModelAttributeAvailable(mav, "scale");
 	}
 	
-	@Test(expected = NotFoundException.class)
-	public void editActionShouldThrowsExceptionIfScaleNotFound() {
-		ObjectId id = new ObjectId();
-		when(mockService.findById(eq(id))).thenReturn(null);
-		
-		controller.editForm(id);
-	}
-	
 	@Test
-	public void saveActionShouldRedirectAfterValidationErrors() {
+	public void shouldRedirectAfterValidationErrorsSavingScaleChanges() {
 		Scale scale = new Scale();
-		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
 		when(mockResult.hasErrors()).thenReturn(true);
 		
-		String viewName = controller.save(scale, mockResult, redirectAtts);
-		
-		verify(mockService, times(0)).save(eq(scale));
+		String viewName = controller.save(scale, mockResult, mockRedirect);
+
 		assertEquals("scale/edit", viewName);
-		assertEquals(true, redirectAtts.containsAttribute("scale"));
+		verify(mockService, times(0)).save(eq(scale));
+		verify(mockRedirect, times(1)).addAttribute(eq(scale));
 	}
 	
 	@Test
-	public void saveActionShouldCreateNewScales() {
-		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
+	public void shouldSaveScaleChanges() {
 		Scale scale = new Scale();
 		when(mockResult.hasErrors()).thenReturn(false);
 				
-		String viewName = controller.save(scale, mockResult, redirectAtts);
+		String viewName = controller.save(scale, mockResult, mockRedirect);
 		
 		verify(mockService, times(1)).save(eq(scale));
 		assertEquals("redirect:/admin/scales", viewName);
-		assertEquals(1, redirectAtts.getFlashAttributes().size());
-		assertEquals("Scale saved", redirectAtts.getFlashAttributes().get("message"));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
+				eq(AdminScalesController.SCALE_SAVED_MSG));
 	}
 			
-	@Test(expected = NotFoundException.class)
-	public void deleteActionShouldThrowsExceptionIfScaleNotFound() {
-		ObjectId id = new ObjectId();
-		when(mockService.findById(eq(id))).thenReturn(null);
-		
-		controller.delete(id, mockRedirect);
-	}
-	
 	@Test
-	public void deleteActionShouldDeleteScales() {
+	public void shouldDeleteScales() {
+		String slug = "scale-slug";
 		Scale value = new Scale();
-		ObjectId id = new ObjectId();
-		when(mockService.findById(eq(id))).thenReturn(value);
+		when(mockService.findBySlug(eq(slug))).thenReturn(value);
 		
-		RedirectAttributes redirectAtts = new RedirectAttributesModelMap();
+		String viewName = controller.delete(slug, mockRedirect);
 		
-		String viewName = controller.delete(id, redirectAtts);
-		
-		verify(mockService, times(1)).remove(eq(value));
 		assertEquals("redirect:/admin/scales", viewName);
-		assertEquals(1, redirectAtts.getFlashAttributes().size());
-		assertEquals("Scale deleted", redirectAtts.getFlashAttributes().get("message"));
+		verify(mockService, times(1)).remove(eq(value));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
+				eq(AdminScalesController.SCALE_DELETED_MSG));
 	}
 }

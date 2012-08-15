@@ -15,9 +15,10 @@
  */
 package com.trenako.web.controllers.admin;
 
+import static com.trenako.web.controllers.ControllerMessage.success;
+
 import javax.validation.Valid;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -36,7 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.entities.Scale;
 import com.trenako.services.ScalesService;
 import com.trenako.values.Standard;
-import com.trenako.web.errors.NotFoundException;
+import com.trenako.web.controllers.ControllerMessage;
 
 /**
  * 
@@ -48,6 +49,10 @@ import com.trenako.web.errors.NotFoundException;
 public class AdminScalesController {
 
 	private final ScalesService service;
+	
+	final static ControllerMessage SCALE_CREATED_MSG = success("scale.created.message");
+	final static ControllerMessage SCALE_SAVED_MSG = success("scale.saved.message");
+	final static ControllerMessage SCALE_DELETED_MSG = success("scale.deleted.message");
 	
 	/**
 	 * Creates a new {@code AdminScalesController} controller.
@@ -86,18 +91,17 @@ public class AdminScalesController {
 	/**
 	 * This actions shows all the {@code Scale}s.
 	 * <p>
-	 * Maps the request to {@code gitGET /admin/scales/:id}.
+	 * Maps the request to {@code gitGET /admin/scales/:slug}.
 	 * </p>
 	 *
-	 * @param id the {@code Scale} id
+	 * @param slug the {@code Scale} slug
 	 * @return the model and view for the {@code Scale}
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ModelAndView show(@PathVariable("id") ObjectId id) {
-		Scale scale = service.findById(id);
-		if (scale==null)
-			throw new NotFoundException();
-		return new ModelAndView("scale/show", "scale", scale);
+	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
+	public ModelAndView show(@PathVariable("slug") String slug) {
+		return new ModelAndView("scale/show", 
+				"scale", 
+				service.findBySlug(slug));
 	}
 	
 	/**
@@ -132,12 +136,12 @@ public class AdminScalesController {
 			RedirectAttributes redirectAtts) {
 		
 		if (result.hasErrors()) {
-			redirectAtts.addAttribute("scale", scale);		
+			redirectAtts.addAttribute(scale);		
 			return "scale/new";
 		}
 		
 		service.save(scale);
-		redirectAtts.addFlashAttribute("message", "Scale created");
+		redirectAtts.addFlashAttribute("message", SCALE_CREATED_MSG);
 		return "redirect:/admin/scales";
 	}
 	
@@ -145,19 +149,17 @@ public class AdminScalesController {
 	 * This action renders the form to edit a {@code Scale}.
 	 *
 	 * <p>
-	 * Maps the request to {@code GET /admin/scales/:id/edit}.
+	 * Maps the request to {@code GET /admin/scales/:slug/edit}.
 	 * </p>
 	 *
-	 * @param scaleId the {@code Scale} id
+	 * @param slug the {@code Scale} slug
 	 *
 	 */
-	@RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("id") ObjectId scaleId) {
-		Scale scale = service.findById(scaleId);
-		if (scale==null)
-			throw new NotFoundException();
-		
-		return new ModelAndView("scale/edit", "scale", scale);
+	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
+	public ModelAndView editForm(@PathVariable("slug") String slug) {
+		return new ModelAndView("scale/edit", 
+				"scale", 
+				service.findBySlug(slug));
 	}
 
 	/**
@@ -178,14 +180,14 @@ public class AdminScalesController {
 		RedirectAttributes redirectAtts) {
 	
 		if (result.hasErrors()) {
-			redirectAtts.addAttribute("scale", scale);
+			redirectAtts.addAttribute(scale);
 			return "scale/edit";
 		}
 	
 		try {
 			service.save(scale);
 			
-			redirectAtts.addFlashAttribute("message", "Scale saved");
+			redirectAtts.addFlashAttribute("message", SCALE_SAVED_MSG);
 			return "redirect:/admin/scales";
 		}
 		catch (DataIntegrityViolationException dae) {
@@ -199,22 +201,20 @@ public class AdminScalesController {
 	 * This action deletes a {@code Scale}.
 	 *
 	 * <p>
-	 * Maps the request to {@code DELETE /admin/scales/:id}.
+	 * Maps the request to {@code DELETE /admin/scales/:slug}.
 	 * </p>
 	 *
-	 * @param scaleId the {@code Scale} id
+	 * @param slug the {@code Scale} slug
 	 * @param redirectAtts the redirect attributes
 	 * @return the view name
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public String delete(@PathVariable("id") ObjectId scaleId, RedirectAttributes redirectAtts) {
-		Scale scale = service.findById(scaleId);
-		if (scale==null)
-			throw new NotFoundException();
-		
-		service.remove(scale);
-		
-		redirectAtts.addFlashAttribute("message", "Scale deleted");
+	@RequestMapping(value = "/{slug}", method = RequestMethod.DELETE) 
+	public String delete(@PathVariable("slug") String slug, RedirectAttributes redirectAtts) {
+		Scale scale = service.findBySlug(slug);
+		if (scale != null) {
+			service.remove(scale);
+			redirectAtts.addFlashAttribute("message", SCALE_DELETED_MSG);
+		}
 		return "redirect:/admin/scales";
 	}
 }

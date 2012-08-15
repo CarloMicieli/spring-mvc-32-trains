@@ -37,7 +37,9 @@
 				</div>
 				
 				<c:if test="${not empty message}">
-					<div id="message" class="info">${message}</div>
+				<div class="alert alert-${message.type}">
+					<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+				</div>
 				</c:if>
 				
 				<table class="table table-striped">
@@ -47,7 +49,7 @@
 							<th><s:message code="scale.ratio.label" /></th>
 							<th><s:message code="scale.gauge.label" /></th>
 							<th><s:message code="scale.narrow.label" /></th>
-							<th><s:message code="scale.standards.label" />:</th>
+							<th><s:message code="scale.standards.label" /></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -60,8 +62,8 @@
 							<td>${scale.narrow}</td>
     						<td>${scale.standardsList}</td>
 
-							<s:url var="showUrl" value="/admin/scales/{id}">
-				            	<s:param name="id" value="${scale.id}" />
+							<s:url var="showUrl" value="/admin/scales/{slug}">
+				            	<s:param name="slug" value="${scale.slug}" />
 							</s:url>
 							<td class="link">
 								<a href="${showUrl}" class="btn btn-small">

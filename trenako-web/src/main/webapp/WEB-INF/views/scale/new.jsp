@@ -34,7 +34,9 @@
 					
 					<fieldset>
 						<c:if test="${not empty message}">
-							<div id="message" class="info">${message}</div>
+						<div class="alert alert-${message.type}">
+							<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+						</div>
 						</c:if>
 
 						<s:bind path="scale.name">

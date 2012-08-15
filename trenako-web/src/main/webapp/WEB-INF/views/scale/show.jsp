@@ -55,14 +55,14 @@
 					</c:forEach>
 				</dl>
 				
-				<s:url value="/admin/scales/{id}" var="scalesUrl">
-					<s:param name="id" value="${scale.id}" />
+				<s:url value="/admin/scales/{slug}" var="deleteUrl">
+					<s:param name="slug" value="${scale.slug}" />
 				</s:url>
-				<form:form action="${scalesUrl}" method="delete" modelAttribute="scale" >
+				<form:form action="${deleteUrl}" method="delete" modelAttribute="scale" >
 					<form:hidden path="id"/>
 					<div class="form-actions">
-						<s:url var="editUrl" value="/admin/scales/{id}/edit">
-				           	<s:param name="id" value="${scale.id}" />
+						<s:url var="editUrl" value="/admin/scales/{slug}/edit">
+				           	<s:param name="slug" value="${scale.slug}" />
 						</s:url>
 						<a href="${editUrl}" class="btn">
 							<i class="icon-pencil"></i>
