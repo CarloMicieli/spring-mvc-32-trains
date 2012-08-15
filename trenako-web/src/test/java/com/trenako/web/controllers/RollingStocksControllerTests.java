@@ -30,6 +30,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -47,6 +49,8 @@ import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
 import com.trenako.web.errors.NotFoundException;
+import com.trenako.web.images.MultipartFileValidator;
+import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 
 /**
@@ -77,6 +81,7 @@ public class RollingStocksControllerTests {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		controller = new RollingStocksController(service, imgService);
+		controller.setMultipartFileValidator(new MultipartFileValidator());
 		
 		when(service.brands()).thenReturn(BRANDS);
 		when(service.railways()).thenReturn(RAILWAYS);
@@ -111,8 +116,7 @@ public class RollingStocksControllerTests {
 	}
 	
 	@Test
-	public void shouldRenderNewRollingStockForms() {		
-		
+	public void shouldRenderNewRollingStockForms() {
 		ModelAndView mav = controller.createNew();
 		
 		assertViewName(mav, "rollingstock/new");
@@ -128,7 +132,8 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldRedirectAfterCreateValidationErrors() {
 		when(mockResult.hasErrors()).thenReturn(true);
-		RollingStock rs = new RollingStock.Builder(acme(), "123456").build();
+		when(mockFile.isEmpty()).thenReturn(true);
+		RollingStock rs = new RollingStock();
 		
 		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
 		
@@ -139,23 +144,32 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldCreateRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
-		when(mockFile.isEmpty()).thenReturn(false);
 		
-		RollingStock rs = build(null, acme(), db(), scaleH0());
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.scale(scaleH0())
+			.railway(fs())
+			.build();
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		UploadRequest req = UploadRequest.create(rs, file);
 		
-		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
+		String viewName = controller.create(rs, mockResult, file, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
 		verify(service, times(1)).save(eq(rs));
-		//verify(imgService, times(1)).saveImage(eq(rsId), eq(mockFile));
+		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(100));
 		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq("acme-123456"));
-		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq("rolling.stock.created"));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
+				eq(RollingStocksController.ROLLING_STOCK_CREATED_MSG));
 	}
 	
 	@Test 
 	public void shouldRenderEditRollingStockForms() {
 		String slug = "rs-slug";
-		RollingStock value = new RollingStock.Builder(acme(), "123456").build();
+		RollingStock value = new RollingStock.Builder(acme(), "123456")
+			.scale(scaleH0())
+			.railway(fs())
+			.description("desc")
+			.build();
 		when(service.findBySlug(eq(slug))).thenReturn(value);
 		
 		ModelAndView mav = controller.editForm(slug);
@@ -180,13 +194,14 @@ public class RollingStocksControllerTests {
 		String viewName = controller.save(rs, mockResult, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
-		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), eq("rolling.stock.saved"));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
+				eq(RollingStocksController.ROLLING_STOCK_SAVED_MSG));
 	}
 	
 	@Test
 	public void shouldRedirectAfterSaveValidationErrors() {
 		when(mockResult.hasErrors()).thenReturn(true);
-		RollingStock rs = new RollingStock.Builder(acme(), "123456").build();
+		RollingStock rs = new RollingStock();
 		
 		String viewName = controller.save(rs, mockResult, mockRedirect);
 		
@@ -194,22 +209,16 @@ public class RollingStocksControllerTests {
 		verify(mockRedirect, times(1)).addAttribute(eq("rollingStock"), eq(rs));
 	}
 	
-	@Test(expected = NotFoundException.class)
-	public void shouldThrowsExceptionIfRollingStockNotFoundToEdit() {
-		String slug = "rs-slug";
-		when(service.findBySlug(eq(slug))).thenReturn(null);
-		
-		controller.editForm(slug);
-	}
-	
 	@Test
 	public void shouldDeleteRollingStocks() {
-		RollingStock rs = new RollingStock.Builder(acme(), "123456").build();
+		RollingStock rs = new RollingStock();
 		
 		String viewName = controller.delete(rs, mockRedirect);
 		
 		assertEquals("redirect:/rs", viewName);
 		verify(service, times(1)).remove(eq(rs));
+		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
+				eq(RollingStocksController.ROLLING_STOCK_DELETED_MSG));
 	}
 	
 	// helper methods
@@ -222,5 +231,10 @@ public class RollingStocksControllerTests {
 		rs.setRailway(railway);
 		rs.setScale(scale);
 		return rs;
-	}	
+	}
+	
+	private MultipartFile buildFile(MediaType mediaType) {
+		byte[] content = "file content".getBytes();
+		return new MockMultipartFile("image.jpg", "image.jpg", mediaType.toString(), content);
+	}
 }

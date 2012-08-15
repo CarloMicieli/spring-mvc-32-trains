@@ -39,7 +39,11 @@ import com.trenako.values.DeliveryDate;
 import com.trenako.web.editors.WeakDbRefPropertyEditor;
 import com.trenako.web.editors.DeliveryDatePropertyEditor;
 import com.trenako.web.errors.NotFoundException;
+import com.trenako.web.images.MultipartFileValidator;
+import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
+
+import static com.trenako.web.controllers.ControllerMessage.*;
 
 /**
  * It represents the rolling stocks management controller.
@@ -50,8 +54,14 @@ import com.trenako.web.images.WebImageService;
 @RequestMapping("/rollingstocks")
 public class RollingStocksController {
 
+	private MultipartFileValidator fileValidator;
+	
 	private final RollingStocksService service;
 	private final WebImageService imgService;
+	
+	final static ControllerMessage ROLLING_STOCK_CREATED_MSG = success("rollingStock.created.message");
+	final static ControllerMessage ROLLING_STOCK_SAVED_MSG = success("rollingStock.saved.message");
+	final static ControllerMessage ROLLING_STOCK_DELETED_MSG = success("rollingStock.deleted.message");
 	
 	/**
 	 * Creates a new {@code RollingStocksController}.
@@ -63,6 +73,11 @@ public class RollingStocksController {
 			WebImageService imgService) {
 		this.service = service;
 		this.imgService = imgService;
+	}
+	
+	@Autowired(required = false) 
+	public void setMultipartFileValidator(MultipartFileValidator validator) {
+		fileValidator = validator;
 	}
 	
 	// registers the custom property editors
@@ -100,17 +115,22 @@ public class RollingStocksController {
 			@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAtts) {
 		
+		// validate the uploaded file
+		if (!file.isEmpty() && fileValidator != null) {
+			fileValidator.validate(file, bindingResult);
+		}
+		
 		if (bindingResult.hasErrors()) {
 			redirectAtts.addAttribute(rs);
 			return "rollingstock/new";
 		}
 		
 		service.save(rs);
-//		if (!file.isEmpty()) {
-//			imgService.saveImage(rs.getId(), file);
-//		}
+		if (!file.isEmpty()) {
+			imgService.saveImageWithThumb(UploadRequest.create(rs, file), 100);
+		}
 
-		redirectAtts.addFlashAttribute("message", "rolling.stock.created");
+		redirectAtts.addFlashAttribute("message", ROLLING_STOCK_CREATED_MSG);
 		redirectAtts.addAttribute("slug", rs.getSlug());
 		return "redirect:/rollingstocks/{slug}";
 	}
@@ -141,7 +161,7 @@ public class RollingStocksController {
 			return "rollingstock/edit";
 		}
 		
-		redirectAtts.addFlashAttribute("message", "rolling.stock.saved");
+		redirectAtts.addFlashAttribute("message", ROLLING_STOCK_SAVED_MSG);
 		return "redirect:/rollingstocks/{slug}";
 	}
 
@@ -150,6 +170,7 @@ public class RollingStocksController {
 			RedirectAttributes redirectAtts) {
 		
 		service.remove(rs);
+		redirectAtts.addFlashAttribute("message", ROLLING_STOCK_DELETED_MSG);
 		return "redirect:/rs";
 	}
 	

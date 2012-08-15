@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+
 <html>
 	<head>
 		<title>
@@ -21,10 +23,12 @@
 				<form:form id="form" class="form-horizontal" method="POST" action="${createUrl}" modelAttribute="rollingStock" enctype="multipart/form-data">
 					
 					<fieldset>
-    					<c:if test="${not empty message}">
-							<div id="message" class="info">${message}</div>
+						<c:if test="${not empty message}">
+						<div class="alert alert-${message.type}">
+							<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+						</div>
 						</c:if>
-    				
+
 						<s:bind path="rollingStock.brand">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 							<form:label path="brand" cssClass="control-label">
@@ -33,7 +37,7 @@
 							<div class="controls">
 							<form:select path="brand" required="required">
 								<form:option value="" label="--brands--"/>
-								<form:options items="${brands}" itemValue="id" itemLabel="name"/>
+								<form:options items="${brands}" itemValue="slug" itemLabel="name"/>
 							</form:select>
 							<form:errors path="brand" element="span" cssClass="help-inline"/>
 							</div>
@@ -60,7 +64,7 @@
 							<div class="controls">
 							<form:select path="railway" required="required">
 								<form:option value="" label="--railways--"/>
-								<form:options items="${railways}" itemValue="id" itemLabel="name" />
+								<form:options items="${railways}" itemValue="slug" itemLabel="name" />
 							</form:select>
 							<form:errors path="railway" element="span" cssClass="help-inline"/>
 							</div>
@@ -75,7 +79,7 @@
 							<div class="controls">
 							<form:select path="scale" required="required">
 								<form:option value="" label="--scales--"/>
-								<form:options items="${scales}" itemValue="id"/>
+								<form:options items="${scales}" itemValue="slug"/>
 							</form:select>
 							<form:errors path="scale" element="span" cssClass="help-inline"/>
 							</div>
@@ -130,36 +134,15 @@
 						<fieldset class="embedded description">
 							<legend>
 								<s:message code="rollingStock.descriptions.title.label" />
-								<img src="/trenako-web/resources/img/flags/32/gb.png" alt="de">
 							</legend>
 							<p>
 								This is the default description. Please, take the time to enter
 								a short description in English.
 							</p>
 								
-							<s:bind path="rollingStock.description">
-							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-								<form:label path="description" cssClass="control-label">
-									<s:message code="rollingStock.description.label" />:
-								</form:label>
-								<div class="controls">
-									<form:textarea path="description" rows="2" cssClass="input-xlarge focused" required="required" />
-									<form:errors path="description" element="span" cssClass="help-inline"/>
-								</div>
-							</div>
-							</s:bind>
-						
-							<s:bind path="rollingStock.details">
-							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-								<form:label path="details" cssClass="control-label">
-									<s:message code="rollingStock.details.label" />:
-								</form:label>
-								<div class="controls">
-									<form:textarea path="details" rows="4" cssClass="input-xlarge focused"/>
-									<form:errors path="details" element="span" cssClass="help-inline"/>
-								</div>
-							</div>
-							</s:bind>
+							<tk:localizedTextArea path="description" rows="3"/>
+							
+							<tk:localizedTextArea path="details" rows="6"/>
 						</fieldset>
 						
 						<div class="control-group">

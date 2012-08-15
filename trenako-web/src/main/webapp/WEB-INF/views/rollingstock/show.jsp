@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+
 <html>
 	<head>
 		<title>
@@ -18,13 +20,13 @@
 				<s:url value="/browse/brands/{slug}" var="brandsUrl">
 					<s:param name="slug" value="${rollingStock.brand.slug}"></s:param>
 				</s:url>
-		    	<a href="${brandsUrl}">${rollingStock.brand.name}</a> <span class="divider">/</span>
+		    	<a href="${brandsUrl}">${rollingStock.brand.label}</a> <span class="divider">/</span>
 			</li>		
 		  	<li class="active">${rollingStock.itemNumber}</li>
 		</ul>
 		<div class="row-fluid">
         	<div class="page-header">
-				<h1>${rollingStock.brand.name} ${rollingStock.itemNumber}</h1>
+				<h1>${rollingStock.brand.label} ${rollingStock.itemNumber}</h1>
 				<small>${rollingStock.category}</small>
 			</div>
 		</div>
@@ -49,33 +51,35 @@
 				</div>
 			</div>
 	    	<div class="span6">
-				<img src="http://placehold.it/550x350" alt="">
+				<s:url value="/images/rollingstock_{slug}" var="imgUrl">
+					<s:param name="slug" value="${rollingStock.slug}" />
+				</s:url>
+				<img src="${imgUrl}" alt="Not found">
             </div>
             <div class="span4">
             	<div class="tabbable">
                 	<ul class="nav nav-tabs">
-                    	<li class="active"><a href="#tab1" data-toggle="tab">Overview</a></li>
-                        <li><a href="#tab2" data-toggle="tab">Details</a></li>
-						<li><a href="#tab3" data-toggle="tab">Options</a></li>
+                    	<li class="active"><a href="#tab1" data-toggle="tab"><s:message code="rollingStock.overview.label" /></a></li>
+                        <li><a href="#tab2" data-toggle="tab"><s:message code="rollingStock.details.label" /></a></li>
+						<li><a href="#tab3" data-toggle="tab"><s:message code="rollingStock.options.label" /></a></li>
                		</ul>
                   	<div class="tab-content">
                     	<div class="tab-pane active" id="tab1">
 							<dl class="dl-horizontal">
 								<dt><s:message code="rollingStock.description.label" /></dt>
-								<dd>${rollingStock.description}</dd>
+								<dd><tk:eval expression="${rollingStock.description}"/></dd>
 								<dt><s:message code="rollingStock.scale.label" /></dt>
-								<dd>${rollingStock.scaleName} (1:87)</dd>
+								<dd>${rollingStock.scale.label}</dd>
 								<dt><s:message code="rollingStock.era.label" /></dt>
-								<dd>${rollingStock.era}</dd>										
+								<dd><s:message code="era.${rollingStock.era}.name" /></dd>
 								<dt><s:message code="rollingStock.railway.label" /></dt>
-								<dd>${rollingStock.railway.name}</dd>
-								<dd>${rollingStock.railway.companyName} (${rollingStock.country})</dd>
+								<dd>${rollingStock.railway.label}</dd>
 								<dt><s:message code="rollingStock.powerMethod.label" /></dt>
-								<dd>${rollingStock.powerMethod}</dd>
+								<dd><s:message code="powermethod.${rollingStock.powerMethod}.label" /></dd>
 							</dl>
 					    </div>
                   		<div class="tab-pane" id="tab2">
-                        	<p>${rollingStock.details}</p>
+                        	<p><tk:eval expression="${rollingStock.details}"/></p>
                			</div>
                         <div class="tab-pane" id="tab3">
                         	<p>Howdy, I'm in Section 3.</p>
