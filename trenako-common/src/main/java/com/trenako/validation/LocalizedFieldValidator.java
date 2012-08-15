@@ -32,6 +32,12 @@ public class LocalizedFieldValidator
 	implements ConstraintValidator<ContainsDefault, LocalizedField<?>> {
 
 	Class<?>[] clazz;
+	
+	// for testing
+	<T> void setProvidedType(Class<T> providedType) {
+		this.clazz = new Class<?>[] { providedType };
+	}
+	
 	@Override
 	public void initialize(ContainsDefault annotation) {
 		clazz = annotation.providedType();

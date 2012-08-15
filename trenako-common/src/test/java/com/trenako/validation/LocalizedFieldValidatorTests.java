@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import javax.validation.ConstraintValidatorContext;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -33,8 +34,14 @@ import com.trenako.mapping.LocalizedField;
  */
 public class LocalizedFieldValidatorTests {
 
-	private LocalizedFieldValidator validator = new LocalizedFieldValidator();
+	private LocalizedFieldValidator validator;
 	private ConstraintValidatorContext context = Mockito.mock(ConstraintValidatorContext.class);
+	
+	@Before
+	public void setup() {
+		validator = new LocalizedFieldValidator();
+		validator.setProvidedType(String.class);		
+	}
 	
 	@Test
 	public void shoudlValidateEmptyValue() {
