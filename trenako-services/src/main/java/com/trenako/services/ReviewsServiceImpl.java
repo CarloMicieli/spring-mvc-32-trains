@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
@@ -50,6 +51,9 @@ public class ReviewsServiceImpl implements ReviewsService {
 
 	@Override
 	public void postReview(RollingStock rs, Review review) {
+		Assert.notNull(rs.getLabel(), "Rolling stock label required");
+		Assert.notNull(rs.getSlug(), "Rolling stock slug required");
+		
 		repo.addReview(rs, review);
 	}
 

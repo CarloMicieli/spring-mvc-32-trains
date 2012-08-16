@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
@@ -213,10 +214,12 @@ public class Review {
 		if (!(obj instanceof Review)) return false;
 		
 		Review other = (Review) obj;
-		return content.equals(other.content) &&
-				author.equals(other.author) &&
-				title.equals(other.title) &&
-				rating == other.rating; 
+		return new EqualsBuilder()
+			.append(this.content, other.content)
+			.append(this.author, other.author)
+			.append(this.title, other.title)
+			.append(this.rating, other.rating)
+			.isEquals();
 	}
 	
 	/**
