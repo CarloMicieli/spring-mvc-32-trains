@@ -19,6 +19,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -32,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.RollingStocksService;
@@ -42,6 +44,7 @@ import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
+import com.trenako.web.security.UserContext;
 
 import static com.trenako.web.controllers.ControllerMessage.*;
 
@@ -54,6 +57,8 @@ import static com.trenako.web.controllers.ControllerMessage.*;
 @RequestMapping("/rollingstocks")
 public class RollingStocksController {
 
+	private UserContext secContext;
+	
 	private MultipartFileValidator fileValidator;
 	
 	private final RollingStocksService service;
@@ -80,6 +85,11 @@ public class RollingStocksController {
 		fileValidator = validator;
 	}
 	
+	@Autowired(required = false) 
+	public void setUserContext(UserContext secContext) {
+		this.secContext = secContext;
+	}
+	
 	// registers the custom property editors
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -90,8 +100,16 @@ public class RollingStocksController {
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
 	public String show(@PathVariable("slug") String slug, ModelMap model) {
 		RollingStock rs = service.findBySlug(slug);
-		if ( rs==null ) {
+		if (rs == null) {
 			throw new NotFoundException();
+		}
+		
+		// init comments form only for authenticated users
+		if (secContext != null && secContext.getCurrentUser() != null) {
+			Comment newComment = new Comment(secContext.getCurrentUser().getAccount(), 
+					rs, 
+					""); 
+			model.addAttribute("newComment", newComment);		
 		}
 		
 		model.addAttribute("rollingStock", rs);
@@ -110,7 +128,7 @@ public class RollingStocksController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)	
-	public String create(@ModelAttribute("rollingStock") @Valid RollingStock rs, 
+	public String create(@ModelAttribute @Valid RollingStock rs, 
 			BindingResult bindingResult,
 			@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAtts) {
@@ -122,6 +140,7 @@ public class RollingStocksController {
 		
 		if (bindingResult.hasErrors()) {
 			redirectAtts.addAttribute(rs);
+			appendListValues(redirectAtts);
 			return "rollingstock/new";
 		}
 		
@@ -138,7 +157,7 @@ public class RollingStocksController {
 	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
 	public ModelAndView editForm(@PathVariable("slug") String slug) {
 		RollingStock rs = service.findBySlug(slug);
-		if ( rs==null ) {
+		if (rs == null) {
 			throw new NotFoundException();
 		}
 		
@@ -152,21 +171,24 @@ public class RollingStocksController {
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
-	public String save(@ModelAttribute("rollingStock") @Valid RollingStock rs, 
+	public String save(@ModelAttribute @Valid RollingStock rollingStock, 
 			BindingResult bindingResult,
 			RedirectAttributes redirectAtts) {
 		
 		if (bindingResult.hasErrors()) {
-			redirectAtts.addAttribute("rollingStock", rs);
+			redirectAtts.addAttribute(rollingStock);
+			appendListValues(redirectAtts);
 			return "rollingstock/edit";
 		}
 		
+		service.save(rollingStock);		
 		redirectAtts.addFlashAttribute("message", ROLLING_STOCK_SAVED_MSG);
+		redirectAtts.addAttribute("slug", rollingStock.getSlug());
 		return "redirect:/rollingstocks/{slug}";
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE)
-	public String delete(@ModelAttribute("rollingStock") RollingStock rs, 
+	public String delete(@ModelAttribute RollingStock rs, 
 			RedirectAttributes redirectAtts) {
 		
 		service.remove(rs);
@@ -181,5 +203,14 @@ public class RollingStocksController {
 		mav.addObject("categories", service.categories());
 		mav.addObject("eras", service.eras());
 		mav.addObject("powerMethods", service.powerMethods());
+	}
+	
+	private void appendListValues(Model model) {
+		model.addAttribute("brands", service.brands());
+		model.addAttribute("scales", service.scales());
+		model.addAttribute("railways", service.railways());
+		model.addAttribute("categories", service.categories());
+		model.addAttribute("eras", service.eras());
+		model.addAttribute("powerMethods", service.powerMethods());
 	}
 }

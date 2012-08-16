@@ -109,11 +109,13 @@ public class WeakDbRef<E extends DbReferenceable> {
 
 	@Override
 	public String toString() {
+		return this.getSlug();
+		/*
 		return new StringBuilder()
 			.append("{label=").append(getLabel())
 			.append(", slug=").append(getSlug())
 			.append("}")
-			.toString();
+			.toString();*/
 	}
 	
 	@Override

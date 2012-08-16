@@ -37,6 +37,8 @@ import org.springframework.web.servlet.view.JstlView;
 
 import com.trenako.AppGlobals;
 import com.trenako.format.IntegerAnnotationFormatterFactory;
+import com.trenako.format.WeakDbRefFormatter;
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.web.converters.ObjectIdConverter;
 import com.trenako.web.infrastructure.RangeRequestArgumentResolver;
 import com.trenako.web.infrastructure.SearchRequestArgumentResolver;
@@ -66,6 +68,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
 		registry.addConverter(new ObjectIdConverter());
+		registry.addFormatterForFieldType(WeakDbRef.class, new WeakDbRefFormatter());
 		registry.addFormatterForFieldAnnotation(new IntegerAnnotationFormatterFactory());
 	}
 	

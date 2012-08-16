@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
@@ -95,6 +96,22 @@
 					<span class="label label-info">Tags</span>
 					<a href="#">tag1</a> <a href="#">tag1</a> <a href="#">tag1</a>
 				</p>
+        	</div>
+         	<div class="span4"></div>
+   		</div>
+   		<div class="row-fluid">
+        	<div class="span2"></div>
+           	<div class="span6">
+           		<sec:authorize access="isAuthenticated()">
+           		<form:form modelAttribute="newComment" method="POST" action="#" class="well form-inline">
+           			<form:hidden path="rollingStock"/>
+           			<form:hidden path="author"/>
+           			
+           			<form:textarea path="content" class="input-small" style="width:400px" rows="3" placeholder="New comment"/>
+           			<form:button type="submit" class="btn">Send</form:button>
+           		</form:form>
+           		<hr/>
+           		</sec:authorize>
         	</div>
          	<div class="span4"></div>
    		</div>

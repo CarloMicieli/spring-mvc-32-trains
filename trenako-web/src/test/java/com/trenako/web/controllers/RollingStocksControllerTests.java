@@ -23,7 +23,6 @@ import static org.springframework.test.web.ModelAndViewAssert.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,10 +38,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.Brand;
+import com.trenako.entities.Comment;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
+import com.trenako.security.AccountDetails;
 import com.trenako.services.RollingStocksService;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
@@ -52,6 +54,7 @@ import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
+import com.trenako.web.security.UserContext;
 
 /**
  * 
@@ -107,6 +110,25 @@ public class RollingStocksControllerTests {
 		assertEquals(value, model.get("rollingStock"));
 	}
 	
+	@Test
+	public void shouldInitNewCommentsWhenShowingRollingStocks() {
+		String slug = "rs-slug";
+		RollingStock value = rollingStock();
+		when(service.findBySlug(eq(slug))).thenReturn(value);
+		
+		ModelMap model = new ExtendedModelMap();
+		
+		controller.setUserContext(mockSecurity());
+		
+		@SuppressWarnings("unused")
+		String viewName = controller.show(slug, model);
+		
+		Comment newComment = (Comment) model.get("newComment");
+		assertNotNull("Comment is null", newComment);
+		assertEquals("acme-123456", newComment.getRollingStock().getSlug());
+		assertEquals("bob", newComment.getAuthor().getSlug());
+	}
+	
 	@Test(expected = NotFoundException.class)
 	public void shouldThrowsExceptionIfRollingStockNotFound() {
 		String slug = "rs-slug";
@@ -139,23 +161,20 @@ public class RollingStocksControllerTests {
 		
 		verify(mockRedirect, times(1)).addAttribute(eq(rs));
 		assertEquals("rollingstock/new", viewName);
+		verifyViewContainsListValues(mockRedirect);
 	}
 		
 	@Test
 	public void shouldCreateRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
 		
-		RollingStock rs = new RollingStock.Builder(acme(), "123456")
-			.scale(scaleH0())
-			.railway(fs())
-			.build();
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
-		UploadRequest req = UploadRequest.create(rs, file);
+		UploadRequest req = UploadRequest.create(rollingStock(), file);
 		
-		String viewName = controller.create(rs, mockResult, file, mockRedirect);
+		String viewName = controller.create(rollingStock(), mockResult, file, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
-		verify(service, times(1)).save(eq(rs));
+		verify(service, times(1)).save(eq(rollingStock()));
 		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(100));
 		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq("acme-123456"));
 		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
@@ -165,18 +184,13 @@ public class RollingStocksControllerTests {
 	@Test 
 	public void shouldRenderEditRollingStockForms() {
 		String slug = "rs-slug";
-		RollingStock value = new RollingStock.Builder(acme(), "123456")
-			.scale(scaleH0())
-			.railway(fs())
-			.description("desc")
-			.build();
-		when(service.findBySlug(eq(slug))).thenReturn(value);
+		when(service.findBySlug(eq(slug))).thenReturn(rollingStock());
 		
 		ModelAndView mav = controller.editForm(slug);
 		
 		verify(service, times(1)).findBySlug(slug);
 		assertViewName(mav, "rollingstock/edit");
-		assertModelAttributeValue(mav, "rollingStock", value);
+		assertModelAttributeValue(mav, "rollingStock", rollingStock());
 		assertCompareListModelAttribute(mav, "brands", BRANDS);
 		assertCompareListModelAttribute(mav, "railways", RAILWAYS);
 		assertCompareListModelAttribute(mav, "scales", SCALES);
@@ -188,12 +202,11 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldSaveRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
-		ObjectId rsId = new ObjectId();
-		RollingStock rs = build(rsId, acme(), db(), scaleH0());
 		
-		String viewName = controller.save(rs, mockResult, mockRedirect);
+		String viewName = controller.save(rollingStock(), mockResult, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
+		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq("acme-123456"));
 		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
 				eq(RollingStocksController.ROLLING_STOCK_SAVED_MSG));
 	}
@@ -201,36 +214,53 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldRedirectAfterSaveValidationErrors() {
 		when(mockResult.hasErrors()).thenReturn(true);
-		RollingStock rs = new RollingStock();
 		
-		String viewName = controller.save(rs, mockResult, mockRedirect);
+		String viewName = controller.save(rollingStock(), mockResult, mockRedirect);
 		
 		assertEquals("rollingstock/edit", viewName);
-		verify(mockRedirect, times(1)).addAttribute(eq("rollingStock"), eq(rs));
+		verify(mockRedirect, times(1)).addAttribute(eq("rollingStock"), eq(rollingStock()));
+		verifyViewContainsListValues(mockRedirect);
 	}
-	
+
 	@Test
 	public void shouldDeleteRollingStocks() {
-		RollingStock rs = new RollingStock();
-		
-		String viewName = controller.delete(rs, mockRedirect);
+		String viewName = controller.delete(rollingStock(), mockRedirect);
 		
 		assertEquals("redirect:/rs", viewName);
-		verify(service, times(1)).remove(eq(rs));
+		verify(service, times(1)).remove(eq(rollingStock()));
 		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
 				eq(RollingStocksController.ROLLING_STOCK_DELETED_MSG));
 	}
 	
 	// helper methods
+
+	private void verifyViewContainsListValues(RedirectAttributes mockRedirect) {
+		verify(mockRedirect, times(1)).addAttribute(eq("brands"), eq(BRANDS));
+		verify(mockRedirect, times(1)).addAttribute(eq("railways"), eq(RAILWAYS));
+		verify(mockRedirect, times(1)).addAttribute(eq("scales"), eq(SCALES));
+		verify(mockRedirect, times(1)).addAttribute(eq("categories"), eq(CATEGORIES));
+		verify(mockRedirect, times(1)).addAttribute(eq("eras"), eq(ERAS));
+		verify(mockRedirect, times(1)).addAttribute(eq("powerMethods"), eq(POWERMETHODS));
+	}
 	
-	RollingStock build(ObjectId rsId, Brand brand, Railway railway, Scale scale) {
-		RollingStock rs = new RollingStock();
-		rs.setId(rsId);
-		rs.setItemNumber("123456");
-		rs.setBrand(brand);
-		rs.setRailway(railway);
-		rs.setScale(scale);
-		return rs;
+	private UserContext mockSecurity() {
+		UserContext mockSecurity = mock(UserContext.class);
+		Account user = new Account.Builder("mail@mail.com")
+			.displayName("bob")
+			.build();
+		when(mockSecurity.getCurrentUser()).thenReturn(new AccountDetails(user));
+		
+		return mockSecurity;
+	}
+	
+	static final RollingStock RS = new RollingStock.Builder(acme(), "123456")
+		.scale(scaleH0())
+		.railway(fs())
+		.description("desc")
+		.build();
+
+	RollingStock rollingStock() {
+		return RS;	
 	}
 	
 	private MultipartFile buildFile(MediaType mediaType) {

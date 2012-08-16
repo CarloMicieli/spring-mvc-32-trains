@@ -59,12 +59,12 @@ public class Comment {
 	/**
 	 * Creates a new {@code Comment} for a rolling stock model.
 	 * 
-	 * @param author the comment's author
+	 * @param account the comment's author
 	 * @param rollingStock the rolling stock model under review
 	 * @param content the comment content
 	 */
-	public Comment(Account author, RollingStock rollingStock, String content) {
-		this.setAuthor(author);
+	public Comment(Account account, RollingStock rollingStock, String content) {
+		this.setAuthor(account);
 		this.setRollingStock(rollingStock);
 		this.content = content;
 	}
