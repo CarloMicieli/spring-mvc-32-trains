@@ -67,15 +67,15 @@
                   	<div class="tab-content">
                     	<div class="tab-pane active" id="tab1">
 							<dl class="dl-horizontal">
-								<dt><s:message code="rollingStock.description.label" /></dt>
+								<dt><s:message code="rollingStock.description.label"/>:</dt>
 								<dd><tk:eval expression="${rollingStock.description}"/></dd>
-								<dt><s:message code="rollingStock.scale.label" /></dt>
+								<dt><s:message code="rollingStock.scale.label"/>:</dt>
 								<dd>${rollingStock.scale.label}</dd>
-								<dt><s:message code="rollingStock.era.label" /></dt>
+								<dt><s:message code="rollingStock.era.label"/>:</dt>
 								<dd><s:message code="era.${rollingStock.era}.name" /></dd>
-								<dt><s:message code="rollingStock.railway.label" /></dt>
+								<dt><s:message code="rollingStock.railway.label"/>:</dt>
 								<dd>${rollingStock.railway.label}</dd>
-								<dt><s:message code="rollingStock.powerMethod.label" /></dt>
+								<dt><s:message code="rollingStock.powerMethod.label"/>:</dt>
 								<dd>${rollingStock.powerMethod}</dd>
 							</dl>
 					    </div>
@@ -83,7 +83,12 @@
                         	<p><tk:eval expression="${rollingStock.details}"/></p>
                			</div>
                         <div class="tab-pane" id="tab3">
-                        	<p>Howdy, I'm in Section 3.</p>
+                        	<dl class="dl-horizontal">
+								<dt><s:message code="rollingStock.upcCode.label" />:</dt>
+								<dd>${rollingStock.upcCode}</dd>
+								<dt><s:message code="rollingStock.deliveryDate.label" />:</dt>
+								<dd>${rollingStock.deliveryDate}</dd>
+							</dl>
 						</div>								
 					</div>
 				</div>
@@ -94,7 +99,12 @@
            	<div class="span6">
 				<p>
 					<span class="label label-info">Tags</span>
-					<a href="#">tag1</a> <a href="#">tag1</a> <a href="#">tag1</a>
+					<c:forEach var="tag" items="${rollingStock.tags}">
+						<s:url var="tagUrl" value="/tag/{tagName}">
+							<s:param name="tagName" value="${tag}"></s:param>
+						</s:url>
+						[<a href="${tagUrl}" title="Tag: ${tag}">${tag}</a>]
+					</c:forEach>
 				</p>
         	</div>
          	<div class="span4"></div>
@@ -102,8 +112,18 @@
    		<div class="row-fluid">
         	<div class="span2"></div>
            	<div class="span6">
+           		<sec:authorize access="isAnonymous()">
+           			<s:url value="/auth/login" var="loginUrl"/>
+           			<s:url value="/auth/signup" var="signupUrl"/>
+	           		<a href="${loginUrl}"><s:message code="auth.signin.link.label"/></a> / 
+	           		<a href="${signupUrl}"><s:message code="auth.signup.link.label"/></a> <s:message code="auth.not.authorize.comment.label"/>
+           		</sec:authorize>
+           	
            		<sec:authorize access="isAuthenticated()">
-           		<form:form modelAttribute="newComment" method="POST" action="#" class="well form-inline">
+           		<s:url value="/rollingstocks/{slug}/comments" var="commentsUrl">
+           			<s:param name="slug" value="${rollingStock.slug}"></s:param>
+				</s:url>
+           		<form:form modelAttribute="newComment" method="POST" action="${commentsUrl}" class="well form-inline">
            			<form:hidden path="rollingStock"/>
            			<form:hidden path="author"/>
            			

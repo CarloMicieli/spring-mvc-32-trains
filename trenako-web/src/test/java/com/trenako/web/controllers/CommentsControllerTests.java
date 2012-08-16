@@ -55,24 +55,26 @@ public class CommentsControllerTests {
 	@Test
 	public void shouldPostNewComments() {
 		when(mockResult.hasErrors()).thenReturn(false);
+		String slug = "rs-slug";
 		
-		String redirect = controller.postComment(comment(), mockResult, mockRedirectAtts);
+		String redirect = controller.postComment(slug, comment(), mockResult, mockRedirectAtts);
 		
 		assertEquals("redirect:/rollingstock/{slug}", redirect);
 		verify(mockService, times(1)).save(eq(comment()));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(comment().getRollingStock().getSlug()));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(slug));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(CommentsController.COMMENT_POSTED_MSG));
 	}
 	
 	@Test
 	public void shouldRedirectAfterValidationErrorsDuringCommentPosting() {
 		when(mockResult.hasErrors()).thenReturn(true);
+		String slug = "rs-slug";
 		
-		String redirect = controller.postComment(comment(), mockResult, mockRedirectAtts);
+		String redirect = controller.postComment(slug, comment(), mockResult, mockRedirectAtts);
 		
 		assertEquals("redirect:/rollingstock/{slug}", redirect);
 		verify(mockService, times(0)).save(eq(comment()));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(comment().getRollingStock().getSlug()));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(slug));
 		verify(mockRedirectAtts, times(1)).addAttribute(eq("newComment"), eq(comment()));
 	}
 	
