@@ -48,8 +48,12 @@ public class WeakDbRef<E extends DbReferenceable> {
 	}
 	
 	private WeakDbRef(E entity) {
-		this.slug = entity.getSlug();
-		this.label = entity.getLabel();
+		this(entity.getSlug(), entity.getLabel());
+	}
+	
+	private WeakDbRef(String slug, String label) {
+		this.slug = slug;
+		this.label = label;
 	}
 	
 	/**
@@ -64,13 +68,23 @@ public class WeakDbRef<E extends DbReferenceable> {
 
 	/**
 	 * Builds a new {@code WeakDbRef} for the provided slug string.
-	 * @param slug the slug string
+	 * @param slug the slug
 	 * @param entity the entity type
 	 * @return the new {@code WeakDbRef}
 	 */
 	public static <E extends DbReferenceable> WeakDbRef<E> buildFromSlug(String slug, Class<E> entity) {
 		Assert.notNull(slug, "Slug text is required.");
 		return new WeakDbRef<E>().setSlug(slug);
+	}
+	
+	/**
+	 * Creates a new {@code WeakDbRef} for the provided slug suppressing the type.
+	 * @param slug the slug
+	 * @return the new {@code WeakDbRef}
+	 */
+	@SuppressWarnings("rawtypes")
+	public static WeakDbRef<?> createNew(String slug) {
+		return new WeakDbRef(slug, "");
 	}
 	
 	/**

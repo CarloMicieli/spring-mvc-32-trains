@@ -17,9 +17,12 @@ package com.trenako.web.controllers;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -28,9 +31,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Comment;
@@ -38,14 +39,15 @@ import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.RollingStocksService;
 import com.trenako.values.DeliveryDate;
+import com.trenako.web.controllers.form.RollingStockForm;
 import com.trenako.web.editors.WeakDbRefPropertyEditor;
 import com.trenako.web.editors.DeliveryDatePropertyEditor;
 import com.trenako.web.errors.NotFoundException;
-import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 import com.trenako.web.security.UserContext;
 
+import static com.trenako.web.controllers.form.RollingStockForm.*;
 import static com.trenako.web.controllers.ControllerMessage.*;
 
 /**
@@ -57,9 +59,9 @@ import static com.trenako.web.controllers.ControllerMessage.*;
 @RequestMapping("/rollingstocks")
 public class RollingStocksController {
 
-	private UserContext secContext;
+	private final static Logger log = LoggerFactory.getLogger("com.trenako.web");
 	
-	private MultipartFileValidator fileValidator;
+	private UserContext secContext;
 	
 	private final RollingStocksService service;
 	private final WebImageService imgService;
@@ -67,6 +69,8 @@ public class RollingStocksController {
 	final static ControllerMessage ROLLING_STOCK_CREATED_MSG = success("rollingStock.created.message");
 	final static ControllerMessage ROLLING_STOCK_SAVED_MSG = success("rollingStock.saved.message");
 	final static ControllerMessage ROLLING_STOCK_DELETED_MSG = success("rollingStock.deleted.message");
+	final static ControllerMessage ROLLING_STOCK_DUPLICATED_VALUE_MSG = error("rollingStock.duplicated.value.message");
+	final static ControllerMessage ROLLING_STOCK_DATABASE_ERROR_MSG = error("rollingStock.database.error.message");
 	
 	/**
 	 * Creates a new {@code RollingStocksController}.
@@ -78,11 +82,6 @@ public class RollingStocksController {
 			WebImageService imgService) {
 		this.service = service;
 		this.imgService = imgService;
-	}
-	
-	@Autowired(required = false) 
-	public void setMultipartFileValidator(MultipartFileValidator validator) {
-		fileValidator = validator;
 	}
 	
 	@Autowired(required = false) 
@@ -109,7 +108,7 @@ public class RollingStocksController {
 			Comment newComment = new Comment(secContext.getCurrentUser().getAccount(), 
 					rs, 
 					""); 
-			model.addAttribute("newComment", newComment);		
+			model.addAttribute("newComment", newComment);
 		}
 		
 		model.addAttribute("rollingStock", rs);
@@ -117,74 +116,86 @@ public class RollingStocksController {
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public ModelAndView createNew() {
-		ModelAndView mav = new ModelAndView("rollingstock/new");
-		mav.addObject(new RollingStock());
-		
-		// fills the data for the drop down lists.
-		fillDropdownLists(mav);
-		
-		return mav;
+	public String createNew(ModelMap model) {
+		model.addAttribute(newForm(new RollingStock(), service));
+		return "rollingstock/new";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)	
-	public String create(@ModelAttribute @Valid RollingStock rs, 
+	public String create(@ModelAttribute @Valid RollingStockForm form, 
 			BindingResult bindingResult,
-			@RequestParam("file") MultipartFile file,
+			ModelMap model,
 			RedirectAttributes redirectAtts) {
 		
-		// validate the uploaded file
-		if (!file.isEmpty() && fileValidator != null) {
-			fileValidator.validate(file, bindingResult);
-		}
+		MultipartFile file = form.getFile();
+		RollingStock rs = form.getRs();
 		
 		if (bindingResult.hasErrors()) {
-			redirectAtts.addAttribute(rs);
-			appendListValues(redirectAtts);
+			model.addAttribute(newForm(rs, service));
 			return "rollingstock/new";
 		}
 		
-		service.save(rs);
-		if (!file.isEmpty()) {
-			imgService.saveImageWithThumb(UploadRequest.create(rs, file), 100);
+		try {
+			service.save(rs);
+			if (!file.isEmpty()) {
+				imgService.saveImageWithThumb(UploadRequest.create(rs, file), 100);
+			}
+	
+			redirectAtts.addFlashAttribute("message", ROLLING_STOCK_CREATED_MSG);
+			redirectAtts.addAttribute("slug", rs.getSlug());
+			return "redirect:/rollingstocks/{slug}";
 		}
-
-		redirectAtts.addFlashAttribute("message", ROLLING_STOCK_CREATED_MSG);
-		redirectAtts.addAttribute("slug", rs.getSlug());
-		return "redirect:/rollingstocks/{slug}";
+		catch (DuplicateKeyException duplEx) {
+			log.error(duplEx.toString());
+			model.addAttribute(newForm(rs, service));
+			model.addAttribute("message", ROLLING_STOCK_DUPLICATED_VALUE_MSG);
+			return "rollingstock/new";
+		}
+		catch (DataAccessException dataEx) {
+			log.error(dataEx.toString());
+			model.addAttribute(newForm(rs, service));
+			model.addAttribute("message", ROLLING_STOCK_DATABASE_ERROR_MSG);
+			return "rollingstock/new";
+		}
 	}
 
 	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("slug") String slug) {
+	public String editForm(@PathVariable("slug") String slug, ModelMap model) {
 		RollingStock rs = service.findBySlug(slug);
 		if (rs == null) {
 			throw new NotFoundException();
 		}
 		
-		ModelAndView mav = new ModelAndView("rollingstock/edit");
-		mav.addObject("rollingStock", rs);
-		
-		// fills the data for the drop down lists.
-		fillDropdownLists(mav);
-		
-		return mav;
+		model.addAttribute(newForm(rs, service));
+		return "rollingstock/edit";
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
-	public String save(@ModelAttribute @Valid RollingStock rollingStock, 
+	public String save(@ModelAttribute @Valid RollingStockForm form, 
 			BindingResult bindingResult,
+			ModelMap model,
 			RedirectAttributes redirectAtts) {
 		
+		RollingStock rs = form.getRs();
+		
 		if (bindingResult.hasErrors()) {
-			redirectAtts.addAttribute(rollingStock);
-			appendListValues(redirectAtts);
+			model.addAttribute(newForm(rs, service));
 			return "rollingstock/edit";
 		}
 		
-		service.save(rollingStock);		
-		redirectAtts.addFlashAttribute("message", ROLLING_STOCK_SAVED_MSG);
-		redirectAtts.addAttribute("slug", rollingStock.getSlug());
-		return "redirect:/rollingstocks/{slug}";
+		try {
+			service.save(rs);
+	
+			redirectAtts.addFlashAttribute("message", ROLLING_STOCK_SAVED_MSG);
+			redirectAtts.addAttribute("slug", rs.getSlug());
+			return "redirect:/rollingstocks/{slug}";
+		}
+		catch (DataAccessException dataEx) {
+			log.error(dataEx.toString());
+			model.addAttribute(newForm(rs, service));
+			model.addAttribute("message", ROLLING_STOCK_DATABASE_ERROR_MSG);
+			return "rollingstock/edit";
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE)
@@ -194,23 +205,5 @@ public class RollingStocksController {
 		service.remove(rs);
 		redirectAtts.addFlashAttribute("message", ROLLING_STOCK_DELETED_MSG);
 		return "redirect:/rs";
-	}
-	
-	private void fillDropdownLists(ModelAndView mav) {
-		mav.addObject("brands", service.brands());
-		mav.addObject("scales", service.scales());
-		mav.addObject("railways", service.railways());
-		mav.addObject("categories", service.categories());
-		mav.addObject("eras", service.eras());
-		mav.addObject("powerMethods", service.powerMethods());
-	}
-	
-	private void appendListValues(Model model) {
-		model.addAttribute("brands", service.brands());
-		model.addAttribute("scales", service.scales());
-		model.addAttribute("railways", service.railways());
-		model.addAttribute("categories", service.categories());
-		model.addAttribute("eras", service.eras());
-		model.addAttribute("powerMethods", service.powerMethods());
 	}
 }

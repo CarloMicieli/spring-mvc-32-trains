@@ -76,7 +76,7 @@
 								<dt><s:message code="rollingStock.railway.label" /></dt>
 								<dd>${rollingStock.railway.label}</dd>
 								<dt><s:message code="rollingStock.powerMethod.label" /></dt>
-								<dd><s:message code="powermethod.${rollingStock.powerMethod}.label" /></dd>
+								<dd>${rollingStock.powerMethod}</dd>
 							</dl>
 					    </div>
                   		<div class="tab-pane" id="tab2">

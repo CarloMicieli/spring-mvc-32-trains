@@ -38,7 +38,6 @@ public class WeakDbRefPropertyEditor extends PropertyEditorSupport {
 		this.allowEmpty = allowEmpty;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
 		if (allowEmpty && !StringUtils.hasText(text)) {
@@ -46,6 +45,6 @@ public class WeakDbRefPropertyEditor extends PropertyEditorSupport {
 			return;
 		}
 
-		setValue(new WeakDbRef().setSlug(text));
+		setValue(WeakDbRef.createNew(text));
 	}	
 }

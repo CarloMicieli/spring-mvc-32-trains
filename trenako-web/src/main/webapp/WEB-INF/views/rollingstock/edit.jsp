@@ -20,8 +20,7 @@
 					<h1><s:message code="rollingStock.edit.title.label" /></h1>
 				</div>
 				<s:url var="saveUrl" value="/rollingstocks" />
-				<form:form id="form" class="form-horizontal" method="PUT" action="${saveUrl}" modelAttribute="rollingStock">
-					
+				<form:form id="form" class="form-horizontal" method="PUT" action="${saveUrl}" modelAttribute="rollingStockForm">
 					<fieldset>
 						<c:if test="${not empty message}">
 						<div class="alert alert-${message.type}">
@@ -29,82 +28,87 @@
 						</div>
 						</c:if>
 						
-						<form:hidden path="id"/>
-						<form:hidden path="slug"/>
-						<form:hidden path="brand"/>
-						<form:hidden path="itemNumber"/>
+						<form:hidden path="rs.id"/>
+						<form:hidden path="rs.slug"/>
+						<form:hidden path="rs.brand"/>
+						<form:hidden path="rs.itemNumber"/>
 						
-						<s:bind path="rollingStock.railway">
+						<s:bind path="rollingStockForm.rs.railway">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="railway" cssClass="control-label">
+							<form:label path="rs.railway" cssClass="control-label">
 								<s:message code="rollingStock.railway.label" />:
 							</form:label>
 							<div class="controls">
-							<form:select path="railway" required="required">
-								<form:option value="" label="--railways--"/>
-								<form:options items="${railways}" itemValue="slug" itemLabel="name" />
+							<form:select path="rs.railway" required="required">
+								<s:message code="rollingStock.railways.list.label" var="railwaysLabel"/>
+								<form:option value="" label="${railwaysLabel}"/>
+								<form:options items="${rollingStockForm.railwaysList}" itemValue="slug" itemLabel="name" />
 							</form:select>
-							<form:errors path="railway" element="span" cssClass="help-inline"/>
+							<form:errors path="rs.railway" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
 						
-						<s:bind path="rollingStock.scale">
+						<s:bind path="rollingStockForm.rs.scale">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="scale" cssClass="control-label">
+							<form:label path="rs.scale" cssClass="control-label">
 								<s:message code="rollingStock.scale.label" />:
 							</form:label>
 							<div class="controls">
-							<form:select path="scale" required="required">
-								<form:option value="" label="--scales--"/>
-								<form:options items="${scales}" itemValue="slug"/>
+							<form:select path="rs.scale" required="required">
+								<s:message code="rollingStock.scales.list.label" var="scalesLabel"/>
+								<form:option value="" label="${scalesLabel}"/>
+								<form:options items="${rollingStockForm.scalesList}" itemValue="slug"/>
 							</form:select>
-							<form:errors path="scale" element="span" cssClass="help-inline"/>
+							<form:errors path="rs.scale" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
 						
-						<s:bind path="rollingStock.era">
+						<s:bind path="rollingStockForm.rs.era">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="era" cssClass="control-label">
+							<form:label path="rs.era" cssClass="control-label">
 								<s:message code="rollingStock.era.label" />:
 							</form:label>
 							<div class="controls">
-							<form:select path="era">
-								<form:option value="" label="--eras--"/>
-								<form:options items="${eras}" itemLabel="label" itemValue="key"/>
+							<form:select path="rs.era">
+								<s:message code="rollingStock.eras.list.label" var="erasLabel"/>
+								<form:option value="" label="${erasLabel}"/>
+								<form:options items="${rollingStockForm.erasList}" itemLabel="label" itemValue="key"/>
 							</form:select>
-							<form:errors path="era" element="span" cssClass="help-inline"/>
+							<form:errors path="rs.era" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
 						
-						<s:bind path="rollingStock.category">
+						<s:bind path="rollingStockForm.rs.category">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="category" cssClass="control-label">
+							<form:label path="rs.category" cssClass="control-label">
 								<s:message code="rollingStock.category.label" />:
 							</form:label>
 							<div class="controls">
-							<form:select path="category" required="required">
-								<form:option value="" label="--categories--"/>
-								<form:options items="${categories}" itemLabel="label" itemValue="key"/>
+							<form:select path="rs.category" required="required">
+								<s:message code="rollingStock.categories.list.label" var="categoriesLabel"/>
+								<form:option value="" label="${categoriesLabel}"/>
+								<form:options items="${rollingStockForm.categoriesList}" itemLabel="label" itemValue="key"/>
 							</form:select>
-							<form:errors path="category" element="span" cssClass="help-inline"/>
+							<form:errors path="rs.category" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
 						
-					 	<s:bind path="rollingStock.powerMethod">
+					 	<s:bind path="rollingStockForm.rs.powerMethod">
 						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="powerMethod" cssClass="control-label">
+							<form:label path="rs.powerMethod" cssClass="control-label">
 								<s:message code="rollingStock.powerMethod.label" />:
 							</form:label>
 							<div class="controls">
-							<form:select path="powerMethod">
-								<form:option value="" label="--power methods--"/>
-								<form:options items="${powerMethods}" itemLabel="label" itemValue="key"/>
+							<form:select path="rs.powerMethod">
+								<s:message code="rollingStock.powerMethods.list.label" var="powerMethodsLabel"/>
+								<form:option value="" label="${powerMethodsLabel}"/>
+								<form:options items="${rollingStockForm.powerMethodsList}" itemLabel="label" itemValue="key"/>
 							</form:select>
-							<form:errors path="powerMethod" element="span" cssClass="help-inline"/>
+							<form:errors path="rs.powerMethod" element="span" cssClass="help-inline"/>
 							</div>
 						</div>
 						</s:bind>
@@ -114,53 +118,53 @@
 								<s:message code="rollingStock.descriptions.title.label" />
 							</legend>
 							<p>
-								This is the default description. Please, take the time to enter
-								a short description in English.
+								<s:message code="rollingStock.descriptions.help.label" />
 							</p>
 								
-							<tk:localizedTextArea path="description" rows="3"/>
+							<tk:localizedTextArea path="rs.description" rows="3"/>
 							
-							<tk:localizedTextArea path="details" rows="6"/>
+							<tk:localizedTextArea path="rs.details" rows="6"/>
 						</fieldset>
-						
+					
 						<fieldset class="embedded options">
 							<legend><s:message code="rollingStock.descriptions.options.label" /></legend>
 						
-							<s:bind path="rollingStock.totalLength">
+							<s:bind path="rollingStockForm.rs.totalLength">
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-								<form:label path="totalLength" cssClass="control-label">
+								<form:label path="rs.totalLength" cssClass="control-label">
 									<s:message code="rollingStock.totalLength.label" />:
 								</form:label>
 								<div class="controls">
-									<form:input type="number" path="totalLength" cssClass="input-xlarge focused"/>
-									<form:errors path="totalLength" element="span" cssClass="help-inline"/>
+									<form:input type="number" path="rs.totalLength" cssClass="input-xlarge focused"/>
+									<form:errors path="rs.totalLength" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
 							</s:bind>
 							
-							<s:bind path="rollingStock.deliveryDate">
+							<s:bind path="rollingStockForm.rs.deliveryDate">
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-								<form:label path="deliveryDate" cssClass="control-label">
+								<form:label path="rs.deliveryDate" cssClass="control-label">
 									<s:message code="rollingStock.deliveryDate.label" />:
 								</form:label>
 								<div class="controls">
-								<form:select path="deliveryDate">
-									<form:option value="" label="--delivery date--"/>
+								<form:select path="rs.deliveryDate">
+									<s:message code="rollingStock.deliveryDates.list.label" var="deliveryDatesLabel"/>
+									<form:option value="" label="${deliveryDatesLabel}"/>								
 									<form:options items="${deliveryDates}"/>
 								</form:select>
-								<form:errors path="deliveryDate" element="span" cssClass="help-inline"/>
+								<form:errors path="rs.deliveryDate" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
 							</s:bind>
 							
-							<s:bind path="rollingStock.upcCode">
+							<s:bind path="rollingStockForm.rs.upcCode">
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-								<form:label path="upcCode" cssClass="control-label">
+								<form:label path="rs.upcCode" cssClass="control-label">
 									<s:message code="rollingStock.upcCode.label" />:
 								</form:label>
 								<div class="controls">
-									<form:input path="upcCode" cssClass="input-xlarge focused"/>
-									<form:errors path="upcCode" element="span" cssClass="help-inline"/>
+									<form:input path="rs.upcCode" cssClass="input-xlarge focused"/>
+									<form:errors path="rs.upcCode" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
 							</s:bind>

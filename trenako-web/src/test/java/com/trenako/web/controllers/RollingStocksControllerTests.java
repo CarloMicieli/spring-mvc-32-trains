@@ -18,7 +18,6 @@ package com.trenako.web.controllers;
 import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.ModelAndViewAssert.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,13 +28,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Account;
@@ -50,8 +50,8 @@ import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
+import com.trenako.web.controllers.form.RollingStockForm;
 import com.trenako.web.errors.NotFoundException;
-import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 import com.trenako.web.security.UserContext;
@@ -84,7 +84,6 @@ public class RollingStocksControllerTests {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		controller = new RollingStocksController(service, imgService);
-		controller.setMultipartFileValidator(new MultipartFileValidator());
 		
 		when(service.brands()).thenReturn(BRANDS);
 		when(service.railways()).thenReturn(RAILWAYS);
@@ -96,7 +95,7 @@ public class RollingStocksControllerTests {
 	}
 	
 	@Test
-	public void shouldShowRollingStocks() {
+	public void shouldRenderRollingStockViews() {
 		String slug = "rs-slug";
 		RollingStock value = new RollingStock();
 		when(service.findBySlug(eq(slug))).thenReturn(value);
@@ -138,40 +137,29 @@ public class RollingStocksControllerTests {
 	}
 	
 	@Test
-	public void shouldRenderNewRollingStockForms() {
-		ModelAndView mav = controller.createNew();
+	public void shouldRenderRollingStockCreationViews() {
+		ModelMap model = new ModelMap();
 		
-		assertViewName(mav, "rollingstock/new");
-		assertAndReturnModelAttributeOfType(mav, "rollingStock", RollingStock.class);
-		assertCompareListModelAttribute(mav, "brands", BRANDS);
-		assertCompareListModelAttribute(mav, "railways", RAILWAYS);
-		assertCompareListModelAttribute(mav, "scales", SCALES);
-		assertCompareListModelAttribute(mav, "categories", CATEGORIES);
-		assertCompareListModelAttribute(mav, "eras", ERAS);
-		assertCompareListModelAttribute(mav, "powerMethods", POWERMETHODS);
+		String viewName = controller.createNew(model);
+		
+		assertEquals("rollingstock/new", viewName);
+
+		RollingStockForm form = (RollingStockForm) model.get("rollingStockForm");
+		assertEquals(new RollingStock(), form.getRs());
+		verifyFormLists(form);
 	}
 	
 	@Test
-	public void shouldRedirectAfterCreateValidationErrors() {
-		when(mockResult.hasErrors()).thenReturn(true);
-		when(mockFile.isEmpty()).thenReturn(true);
-		RollingStock rs = new RollingStock();
-		
-		String viewName = controller.create(rs, mockResult, mockFile, mockRedirect);
-		
-		verify(mockRedirect, times(1)).addAttribute(eq(rs));
-		assertEquals("rollingstock/new", viewName);
-		verifyViewContainsListValues(mockRedirect);
-	}
-		
-	@Test
-	public void shouldCreateRollingStocks() {
+	public void shouldCreateNewRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
 		
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
 		UploadRequest req = UploadRequest.create(rollingStock(), file);
+		RollingStockForm form = rsForm(file);
 		
-		String viewName = controller.create(rollingStock(), mockResult, file, mockRedirect);
+		ModelMap model = new ModelMap();
+		
+		String viewName = controller.create(form, mockResult, model, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
 		verify(service, times(1)).save(eq(rollingStock()));
@@ -180,48 +168,132 @@ public class RollingStocksControllerTests {
 		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
 				eq(RollingStocksController.ROLLING_STOCK_CREATED_MSG));
 	}
+
+	@Test
+	public void shouldRedirectAfterValidationErrorsDuringRollingStocksCreation() {
+		when(mockResult.hasErrors()).thenReturn(true);
+		when(mockFile.isEmpty()).thenReturn(true);
+		RollingStockForm form = rsForm(mockFile);
+		
+		ModelMap model = new ModelMap();
+		
+		String viewName = controller.create(form, mockResult, model, mockRedirect);
+		
+		assertEquals("rollingstock/new", viewName);
+		assertNotNull("Form is null", model.get("rollingStockForm"));
+		verifyFormLists((RollingStockForm) model.get("rollingStockForm"));
+	}
 	
+	@Test
+	public void shouldShowErrorMessageAfterDuplicatedKeyErrorsDuringCreation() {
+		doThrow(new DuplicateKeyException("Duplicate key error"))
+			.when(service).save(eq(rollingStock()));
+		
+		when(mockResult.hasErrors()).thenReturn(false);
+		when(mockFile.isEmpty()).thenReturn(true);
+		RollingStockForm form = rsForm(mockFile);
+		
+		ModelMap model = new ModelMap();
+		
+		String viewName = controller.create(form, mockResult, model, mockRedirect);
+		
+		assertEquals("rollingstock/new", viewName);
+		assertNotNull("Form is null", model.get("rollingStockForm"));
+		assertEquals(RollingStocksController.ROLLING_STOCK_DUPLICATED_VALUE_MSG, 
+				(ControllerMessage) model.get("message"));
+	}
+	
+	@Test
+	public void shouldShowErrorMessageAfterDatabaseErrorsDuringCreation() {
+		doThrow(new RecoverableDataAccessException("Database error"))
+			.when(service).save(eq(rollingStock()));
+		
+		when(mockResult.hasErrors()).thenReturn(false);
+		when(mockFile.isEmpty()).thenReturn(true);
+		RollingStockForm form = rsForm(mockFile);
+		
+		ModelMap model = new ModelMap();
+		
+		String viewName = controller.create(form, mockResult, model, mockRedirect);
+		
+		assertEquals("rollingstock/new", viewName);
+		assertNotNull("Form is null", model.get("rollingStockForm"));
+		assertEquals(RollingStocksController.ROLLING_STOCK_DATABASE_ERROR_MSG, 
+				(ControllerMessage) model.get("message"));
+	}
+		
 	@Test 
-	public void shouldRenderEditRollingStockForms() {
+	public void shouldRenderRollingStockEditingViews() {
 		String slug = "rs-slug";
 		when(service.findBySlug(eq(slug))).thenReturn(rollingStock());
 		
-		ModelAndView mav = controller.editForm(slug);
+		ModelMap model = new ModelMap();
+		String viewName = controller.editForm(slug, model);
 		
 		verify(service, times(1)).findBySlug(slug);
-		assertViewName(mav, "rollingstock/edit");
-		assertModelAttributeValue(mav, "rollingStock", rollingStock());
-		assertCompareListModelAttribute(mav, "brands", BRANDS);
-		assertCompareListModelAttribute(mav, "railways", RAILWAYS);
-		assertCompareListModelAttribute(mav, "scales", SCALES);
-		assertCompareListModelAttribute(mav, "categories", CATEGORIES);
-		assertCompareListModelAttribute(mav, "eras", ERAS);
-		assertCompareListModelAttribute(mav, "powerMethods", POWERMETHODS);
+		assertEquals("rollingstock/edit", viewName);
+		
+		RollingStockForm form = (RollingStockForm) model.get("rollingStockForm");
+		assertEquals(rollingStock(), form.getRs());
+		verifyFormLists(form);
+	}
+
+	private void verifyFormLists(RollingStockForm form) {
+		assertEquals(BRANDS, form.getBrandsList());
+		assertEquals(RAILWAYS, form.getRailwaysList());
+		assertEquals(SCALES, form.getScalesList());
+		assertEquals(ERAS, form.getErasList());
+		assertEquals(POWERMETHODS, form.getPowerMethodsList());
+		assertEquals(CATEGORIES, form.getCategoriesList());
 	}
 	
 	@Test
 	public void shouldSaveRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
+		RollingStockForm form = rsForm(null);
+		ModelMap model = new ModelMap();
 		
-		String viewName = controller.save(rollingStock(), mockResult, mockRedirect);
+		String viewName = controller.save(form, mockResult, model, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
+		verify(service, times(1)).save(eq(rollingStock()));
 		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq("acme-123456"));
 		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
 				eq(RollingStocksController.ROLLING_STOCK_SAVED_MSG));
 	}
 	
 	@Test
-	public void shouldRedirectAfterSaveValidationErrors() {
+	public void shouldRedirectAfterValidationErrorsDuringSave() {
 		when(mockResult.hasErrors()).thenReturn(true);
+		RollingStockForm form = rsForm(null);
+		ModelMap model = new ModelMap();
 		
-		String viewName = controller.save(rollingStock(), mockResult, mockRedirect);
+		String viewName = controller.save(form, mockResult, model, mockRedirect);
 		
 		assertEquals("rollingstock/edit", viewName);
-		verify(mockRedirect, times(1)).addAttribute(eq("rollingStock"), eq(rollingStock()));
-		verifyViewContainsListValues(mockRedirect);
+		assertNotNull("Form is null", model.get("rollingStockForm"));
+		verifyFormLists((RollingStockForm) model.get("rollingStockForm"));
 	}
 
+	@Test
+	public void shouldShowErrorMessageAfterDatabaseErrorsDuringSave() {
+		doThrow(new RecoverableDataAccessException("Database error"))
+			.when(service).save(eq(rollingStock()));
+		
+		when(mockResult.hasErrors()).thenReturn(false);
+		when(mockFile.isEmpty()).thenReturn(true);
+		RollingStockForm form = rsForm(mockFile);
+		
+		ModelMap model = new ModelMap();
+		
+		String viewName = controller.save(form, mockResult, model, mockRedirect);
+		
+		assertEquals("rollingstock/edit", viewName);
+		assertNotNull("Form is null", model.get("rollingStockForm"));
+		assertEquals(RollingStocksController.ROLLING_STOCK_DATABASE_ERROR_MSG, 
+				(ControllerMessage) model.get("message"));
+	}
+	
 	@Test
 	public void shouldDeleteRollingStocks() {
 		String viewName = controller.delete(rollingStock(), mockRedirect);
@@ -234,13 +306,16 @@ public class RollingStocksControllerTests {
 	
 	// helper methods
 
-	private void verifyViewContainsListValues(RedirectAttributes mockRedirect) {
-		verify(mockRedirect, times(1)).addAttribute(eq("brands"), eq(BRANDS));
-		verify(mockRedirect, times(1)).addAttribute(eq("railways"), eq(RAILWAYS));
-		verify(mockRedirect, times(1)).addAttribute(eq("scales"), eq(SCALES));
-		verify(mockRedirect, times(1)).addAttribute(eq("categories"), eq(CATEGORIES));
-		verify(mockRedirect, times(1)).addAttribute(eq("eras"), eq(ERAS));
-		verify(mockRedirect, times(1)).addAttribute(eq("powerMethods"), eq(POWERMETHODS));
+	static final RollingStock RS = new RollingStock.Builder(acme(), "123456")
+		.scale(scaleH0())
+		.railway(fs())
+		.description("desc")
+		.build();
+	
+	private RollingStockForm rsForm(MultipartFile file) {
+		RollingStockForm form = RollingStockForm.newForm(rollingStock(), service);
+		form.setFile(file);
+		return form;
 	}
 	
 	private UserContext mockSecurity() {
@@ -253,13 +328,7 @@ public class RollingStocksControllerTests {
 		return mockSecurity;
 	}
 	
-	static final RollingStock RS = new RollingStock.Builder(acme(), "123456")
-		.scale(scaleH0())
-		.railway(fs())
-		.description("desc")
-		.build();
-
-	RollingStock rollingStock() {
+	private RollingStock rollingStock() {
 		return RS;	
 	}
 	

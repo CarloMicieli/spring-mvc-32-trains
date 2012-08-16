@@ -60,7 +60,7 @@
 						<h3><tk:eval expression="${rs.description}" maxLength="50" /></h3>
 						<div class="row-fluid">
 							<div class="span2"><s:message code="rollingStock.era.label" />: <br/><strong><s:message code="era.${rs.era}.name" /></strong></div>
-							<div class="span3"><s:message code="rollingStock.powerMethod.label" />: <br /><strong><s:message code="powermethod.${rs.powerMethod}.label" /></strong></div>
+							<div class="span3"><s:message code="rollingStock.powerMethod.label" />: <br /><strong>${rs.powerMethod}</strong></div>
 							<div class="span3"><s:message code="rollingStock.scale.label" />: <br /><strong>${rs.scale.label}</strong></div>
 							<div class="span4"><s:message code="rollingStock.railway.label" />: <br /><strong>${rs.railway.label}</strong></div>
 						</div>
