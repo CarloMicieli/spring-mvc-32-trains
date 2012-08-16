@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -26,8 +27,8 @@
 		<div class="row-fluid">
 			<div class="span2"></div>
 			<div class="span2">
-				<s:url value="/images/railway/{id}" var="logoUrl">
-				<s:param name="id" value="${railway.id}" />
+				<s:url value="/images/th_railway_{slug}" var="logoUrl">
+				<s:param name="slug" value="${railway.slug}" />
 				</s:url>
 				<img src="${logoUrl}" alt="Not found"/>
 			</div>
@@ -36,6 +37,8 @@
 				<dl class="dl-horizontal">
 					<dt><s:message code="railway.companyName.label" /></dt>
 					<dd>${railway.companyName}</dd>
+					<dt><s:message code="railway.description.label" /></dt>
+					<dd><tk:eval expression="${railway.description}" maxLength="250" /></dd>					
 					<dt><s:message code="railway.country.label" /></dt>
 					<dd>
 						<s:url var="flagUrl" value="/resources/img/flags/32/{iso}.png">

@@ -38,13 +38,13 @@
 			<div class="span8">
 				<div class="row-fluid">
 					<div class="span3">
-						<s:url value="/images/railway/{id}" var="logoUrl">
-							<s:param name="id" value="${railway.id}" />
+						<s:url value="/images/railway_{slug}" var="logoUrl">
+							<s:param name="slug" value="${railway.slug}" />
 						</s:url>
 						<img src="${logoUrl}" alt="Not found"/>
 					</div>
 					<div class="span9">
-						${railway.description}
+						<tk:eval expression="${railway.description}"/>
 					</div>
 				</div>
 				<hr/>

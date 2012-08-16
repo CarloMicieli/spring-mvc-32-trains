@@ -32,10 +32,13 @@
 			<div class="span9">
 				<div class="row-fluid">
 					<div class="span3">
-						<img src="http://placehold.it/250x120" alt="">
+						<s:url value="/images/brand_{slug}" var="logoUrl">
+							<s:param name="slug" value="${brand.slug}" />
+						</s:url>
+						<img src="${logoUrl}" alt="Not found"/>
 					</div>
 					<div class="span9">
-						${brand.description}
+						<tk:eval expression="${brand.description}"/>
 					</div>
 				</div>
 				<hr/>

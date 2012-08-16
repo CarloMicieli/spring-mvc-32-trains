@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -8,7 +9,6 @@
 	</head>
 
 	<body>
-	
 		<ul class="breadcrumb">
 			<li>
 				<s:url value="/browse" var="browseUrl"/>
@@ -26,8 +26,8 @@
 		<div class="row-fluid">
 			<div class="span2"></div>
 			<div class="span2">
-				<s:url value="/images/brand/{id}" var="logoUrl">
-				<s:param name="id" value="${brand.id}" />
+				<s:url value="/images/th_brand_{slug}" var="logoUrl">
+					<s:param name="slug" value="${brand.slug}" />
 				</s:url>
 				<img src="${logoUrl}" alt="Not found"/>
 			</div>
@@ -35,7 +35,7 @@
 				<h3>${brand.name}</h3>
 				<dl class="dl-horizontal">
 					<dt><s:message code="brand.description.label" /></dt>
-					<dd>${brand.description}</dd>
+					<dd><tk:eval expression="${brand.description}" maxLength="250" /></dd>
 					<dt><s:message code="brand.website.label" /></dt>
 					<dd>${brand.website}</dd>
 				</dl>
