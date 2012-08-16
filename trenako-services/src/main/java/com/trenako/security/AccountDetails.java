@@ -87,6 +87,10 @@ public class AccountDetails implements UserDetails {
 		return account.getDisplayName();
 	}
 	
+	public Account getAccount() {
+		return account;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;

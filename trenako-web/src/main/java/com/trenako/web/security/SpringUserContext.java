@@ -15,6 +15,7 @@
  */
 package com.trenako.web.security;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 
@@ -33,6 +34,11 @@ public class SpringUserContext implements UserContext {
 	@Override
     public AccountDetails getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        // throw away anonymous tokens
+        if (authentication instanceof AnonymousAuthenticationToken) {
+        	return null;
+        }
         return authentication == null ? null : (AccountDetails) authentication.getPrincipal();
     }
 }
