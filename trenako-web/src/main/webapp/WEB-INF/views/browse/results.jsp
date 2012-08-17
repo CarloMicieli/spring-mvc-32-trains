@@ -1,6 +1,6 @@
-<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
@@ -25,7 +25,26 @@
 			<tk:breadcrumb results="${results}"/>
 
 			<div class="row-fluid">
-				<tk:pagerOptions results="${results}"/>
+				<form class="well form-inline">
+					<div class="row-fluid">
+						<div class="span2">
+							<sec:authorize url="/rollingstocks/new">
+								<s:url var="createUrl" value="/rollingstocks/new" />
+								<a href="${createUrl}" class="btn btn-info"><s:message code="button.create.new.label"/></a>
+							</sec:authorize>
+						</div>
+						<div class="span10">
+							<div class="pull-right">
+								<select id="items" name="items">
+									<option value="10">10 items</option>
+									<option value="25">25 items</option>
+									<option value="50">50 items</option>
+									<option value="100">100 items</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</form>
 			</div>
 			
 			<div class="row-fluid">
