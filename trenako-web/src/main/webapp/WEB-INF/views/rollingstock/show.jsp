@@ -33,14 +33,25 @@
 		</div>
 	    <div class="row-fluid">
 	    	<div class="span2">
+	    		<sec:authorize access="isAuthenticated()">
 	    		<p>
-					<a class="btn btn-success" href="#"><i class="icon-comment icon-white"></i> Write review</a>
+					<s:url var="editUrl" value="/rollingstocks/{slug}/edit">
+						<s:param name="slug" value="${rollingStock.slug}"></s:param>
+					</s:url>
+					<a class="btn btn-primary" style="width: 110px" href="${editUrl}"><i class="icon-edit icon-white"></i> <s:message code="button.edit.label"/></a>
+				</p>
+	    		<p>
+					<a data-toggle="modal" href="#myModal" class="btn btn-success" style="width: 110px" href="#">
+						<i class="icon-comment icon-white"></i> <s:message code="button.write.review.label"/>
+					</a>
 				</p>
 				<p>
-					<a class="btn btn-danger" href="#"><i class="icon-tags icon-white"></i> Add collection</a>
+					<a class="btn btn-danger" href="#" style="width: 110px"><i class="icon-tags icon-white">
+						</i> <s:message code="button.add.collection.label"/>
+					</a>
 				</p>
 				<div class="btn-group">
-					<a class="btn btn-primary" href="#"><i class="icon-gift icon-white"></i> Add wish list</a>
+					<a class="btn btn-primary" href="#" style="width: 110px"><i class="icon-gift icon-white"></i> Add wish list</a>
 					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a href="#"><i class="icon-list-alt"></i> New stuff</a></li>
@@ -50,6 +61,7 @@
 						<li><a href="#"><i class="i"></i> New wishlist</a></li>
 					</ul>
 				</div>
+				</sec:authorize>
 			</div>
 	    	<div class="span6">
 				<s:url value="/images/rollingstock_{slug}" var="imgUrl">
@@ -124,11 +136,13 @@
            			<s:param name="slug" value="${rollingStock.slug}"></s:param>
 				</s:url>
            		<form:form modelAttribute="newComment" method="POST" action="${commentsUrl}" class="well form-inline">
-           			<form:hidden path="rollingStock"/>
-           			<form:hidden path="author"/>
+           			<form:hidden path="rollingStock.slug"/>
+           			<form:hidden path="rollingStock.label"/>
+           			<form:hidden path="author.slug"/>
+           			<form:hidden path="author.label"/>
            			
            			<form:textarea path="content" class="input-small" style="width:400px" rows="3" placeholder="New comment"/>
-           			<form:button type="submit" class="btn">Send</form:button>
+           			<form:button type="submit" class="btn"><i class="icon-envelope icon-black"></i> <s:message code="button.send.label"/></form:button>
            		</form:form>
            		<hr/>
            		</sec:authorize>
