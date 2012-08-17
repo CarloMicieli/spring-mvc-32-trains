@@ -109,7 +109,8 @@
            	</div>
 		</div>
 		<div class="row-fluid">
-        	<div class="span2"></div>
+        	<div class="span2">
+        	</div>
            	<div class="span6">
 				<p>
 					<span class="label label-info">Tags</span>

@@ -41,6 +41,8 @@ public class RollingStockForm {
 	@Valid
 	private RollingStock rs;
 	
+	private String tags;
+	
 	@Image(message = "rollingStock.image.notValid")
 	private MultipartFile file;
 	
@@ -122,7 +124,15 @@ public class RollingStockForm {
 	public void setFile(MultipartFile file) {
 		this.file = file;
 	}
-		
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
+
 	public Iterable<Brand> getBrandsList() {
 		return valuesService.brands();
 	}

@@ -9,6 +9,8 @@
 			<s:message code="rollingStock.page.new.title" />
 		</title>
 		<meta name="rs" content="active"/>
+		<script type="text/javascript" src="<c:url value="/resources/js/jquery.tagsinput.js" />"></script>
+		<link href="<c:url value="/resources/css/jquery.tagsinput.css" />" rel="stylesheet" />
 	</head>
 	<body>
 		<div class="row-fluid">
@@ -161,6 +163,18 @@
 								</p>
 							</div>
 						</div>
+
+						<s:bind path="rollingStockForm.tags">
+						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
+							<form:label path="tags" cssClass="control-label">
+								<s:message code="rollingStock.tags.label" />:
+							</form:label>
+							<div class="controls">
+								<form:input path="tags" cssClass="input-xlarge focused tags"/>
+								<form:errors path="tags" element="span" cssClass="help-inline"/>
+							</div>
+						</div>
+						</s:bind>
 					
 						<fieldset class="embedded options">
 							<legend><s:message code="rollingStock.descriptions.options.label" /></legend>
@@ -220,6 +234,12 @@
 					</fieldset>
 				</form:form>
 			</div>
-		</div>	
+		</div>
+		
+		<script type="text/javascript">
+    	$(document).ready(function() {
+    		$('#tags').tagsInput();
+    	});
+    	</script>
 	</body>
 </html>
