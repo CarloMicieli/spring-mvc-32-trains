@@ -19,8 +19,13 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockReviews;
+import com.trenako.repositories.CommentsRepository;
+import com.trenako.repositories.ReviewsRepository;
 import com.trenako.repositories.RollingStocksRepository;
+import com.trenako.services.view.RollingStockView;
 
 /**
  * A concrete implementation for the {@code RollingStocks} service.
@@ -31,14 +36,22 @@ import com.trenako.repositories.RollingStocksRepository;
 public class RollingStocksServiceImpl implements RollingStocksService {
 	
 	private final RollingStocksRepository rollingStocks;
+	private final CommentsRepository comments;
+	private final ReviewsRepository reviews;
 	
 	/**
 	 * Creates a {@code RollingStocksServiceImpl}
-	 * @param rollingStocks the {@code RollingStock} repository
+	 * @param rollingStocks the {@code RollingStock}s repository
+	 * @param comments the {@code Comment}s repository
 	 */
 	@Autowired
-	public RollingStocksServiceImpl(RollingStocksRepository rollingStocks) {
+	public RollingStocksServiceImpl(RollingStocksRepository rollingStocks,
+			CommentsRepository comments,
+			ReviewsRepository reviews) {
+		
 		this.rollingStocks = rollingStocks;
+		this.comments = comments;
+		this.reviews = reviews;
 	}
 	
 	@Override
@@ -50,7 +63,22 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	public RollingStock findBySlug(String slug) {
 		return rollingStocks.findBySlug(slug);
 	}
-			
+	
+	@Override
+	public RollingStockView findViewBySlug(String slug) {
+		RollingStock rs = rollingStocks.findBySlug(slug);
+		if (rs == null) {		
+			return null;
+		}
+		
+		Iterable<Comment> commentsList = comments.findByRollingStock(rs);
+		RollingStockReviews rsReviews = reviews.findByRollingStock(rs);
+		
+		return new RollingStockView(rs, 
+				commentsList,
+				rsReviews);		
+	}
+
 	@Override
 	public void save(RollingStock rs) {
 		rollingStocks.save(rs);

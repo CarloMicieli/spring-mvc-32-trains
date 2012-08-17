@@ -50,6 +50,7 @@ import com.trenako.mapping.WeakDbRef;
 import com.trenako.security.AccountDetails;
 import com.trenako.services.FormValuesService;
 import com.trenako.services.RollingStocksService;
+import com.trenako.services.view.RollingStockView;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
@@ -106,23 +107,23 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldRenderRollingStockViews() {
 		String slug = "rs-slug";
-		RollingStock value = new RollingStock();
-		when(service.findBySlug(eq(slug))).thenReturn(value);
+		RollingStockView value = new RollingStockView(new RollingStock(), null, null);
+		when(service.findViewBySlug(eq(slug))).thenReturn(value);
 		
 		ModelMap model = new ExtendedModelMap();
 		
 		String viewName = controller.show(slug, model);
 		
 		assertEquals("rollingstock/show", viewName);
-		assertTrue(model.containsAttribute("rollingStock"));
-		assertEquals(value, model.get("rollingStock"));
+		assertTrue(model.containsAttribute("result"));
+		assertEquals(value, model.get("result"));
 	}
 	
 	@Test
 	public void shouldInitNewCommentsWhenShowingRollingStocks() {
 		String slug = "rs-slug";
-		RollingStock value = rollingStock();
-		when(service.findBySlug(eq(slug))).thenReturn(value);
+		RollingStockView value = new RollingStockView(rollingStock(), null, null);
+		when(service.findViewBySlug(eq(slug))).thenReturn(value);
 		
 		ModelMap model = new ExtendedModelMap();
 		

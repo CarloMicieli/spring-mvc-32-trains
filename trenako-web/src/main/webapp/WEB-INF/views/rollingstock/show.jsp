@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<title>
-			<s:message code="rollingStock.page.new.title" />
+			<s:message code="rollingStock.page.show.title" />
 		</title>
 		<meta name="rs" content="active"/>
 	</head>
@@ -19,16 +19,16 @@
 			</li>
 			<li>
 				<s:url value="/browse/brands/{slug}" var="brandsUrl">
-					<s:param name="slug" value="${rollingStock.brand.slug}"></s:param>
+					<s:param name="slug" value="${result.rs.brand.slug}"></s:param>
 				</s:url>
-		    	<a href="${brandsUrl}">${rollingStock.brand.label}</a> <span class="divider">/</span>
+		    	<a href="${brandsUrl}">${result.rs.brand.label}</a> <span class="divider">/</span>
 			</li>		
-		  	<li class="active">${rollingStock.itemNumber}</li>
+		  	<li class="active">${result.rs.itemNumber}</li>
 		</ul>
 		<div class="row-fluid">
         	<div class="page-header">
-				<h1>${rollingStock.brand.label} ${rollingStock.itemNumber}</h1>
-				<small>${rollingStock.category}</small>
+				<h1>${result.rs.brand.label} ${result.rs.itemNumber}</h1>
+				<small>${result.rs.category}</small>
 			</div>
 		</div>
 	    <div class="row-fluid">
@@ -36,9 +36,11 @@
 	    		<sec:authorize access="isAuthenticated()">
 	    		<p>
 					<s:url var="editUrl" value="/rollingstocks/{slug}/edit">
-						<s:param name="slug" value="${rollingStock.slug}"></s:param>
+						<s:param name="slug" value="${result.rs.slug}"></s:param>
 					</s:url>
-					<a class="btn btn-primary" style="width: 110px" href="${editUrl}"><i class="icon-edit icon-white"></i> <s:message code="button.edit.label"/></a>
+					<a class="btn btn-primary" style="width: 110px" href="${editUrl}">
+						<i class="icon-edit icon-white"></i> <s:message code="button.edit.label"/>
+					</a>
 				</p>
 	    		<p>
 					<a data-toggle="modal" href="#myModal" class="btn btn-success" style="width: 110px" href="#">
@@ -65,7 +67,7 @@
 			</div>
 	    	<div class="span6">
 				<s:url value="/images/rollingstock_{slug}" var="imgUrl">
-					<s:param name="slug" value="${rollingStock.slug}" />
+					<s:param name="slug" value="${result.rs.slug}" />
 				</s:url>
 				<img src="${imgUrl}" alt="Not found">
             </div>
@@ -80,26 +82,26 @@
                     	<div class="tab-pane active" id="tab1">
 							<dl class="dl-horizontal">
 								<dt><s:message code="rollingStock.description.label"/>:</dt>
-								<dd><tk:eval expression="${rollingStock.description}"/></dd>
+								<dd><tk:eval expression="${result.rs.description}"/></dd>
 								<dt><s:message code="rollingStock.scale.label"/>:</dt>
-								<dd>${rollingStock.scale.label}</dd>
+								<dd>${result.rs.scale.label}</dd>
 								<dt><s:message code="rollingStock.era.label"/>:</dt>
-								<dd><s:message code="era.${rollingStock.era}.name" /></dd>
+								<dd><s:message code="era.${result.rs.era}.name" /></dd>
 								<dt><s:message code="rollingStock.railway.label"/>:</dt>
-								<dd>${rollingStock.railway.label}</dd>
+								<dd>${result.rs.railway.label}</dd>
 								<dt><s:message code="rollingStock.powerMethod.label"/>:</dt>
-								<dd>${rollingStock.powerMethod}</dd>
+								<dd>${result.rs.powerMethod}</dd>
 							</dl>
 					    </div>
                   		<div class="tab-pane" id="tab2">
-                        	<p><tk:eval expression="${rollingStock.details}"/></p>
+                        	<p><tk:eval expression="${result.rs.details}"/></p>
                			</div>
                         <div class="tab-pane" id="tab3">
                         	<dl class="dl-horizontal">
 								<dt><s:message code="rollingStock.upcCode.label" />:</dt>
-								<dd>${rollingStock.upcCode}</dd>
+								<dd>${result.rs.upcCode}</dd>
 								<dt><s:message code="rollingStock.deliveryDate.label" />:</dt>
-								<dd>${rollingStock.deliveryDate}</dd>
+								<dd>${result.rs.deliveryDate}</dd>
 							</dl>
 						</div>								
 					</div>
@@ -111,7 +113,7 @@
            	<div class="span6">
 				<p>
 					<span class="label label-info">Tags</span>
-					<c:forEach var="tag" items="${rollingStock.tags}">
+					<c:forEach var="tag" items="${result.rs.tags}">
 						<s:url var="tagUrl" value="/tag/{tagName}">
 							<s:param name="tagName" value="${tag}"></s:param>
 						</s:url>
@@ -133,7 +135,7 @@
            	
            		<sec:authorize access="isAuthenticated()">
            		<s:url value="/rollingstocks/{slug}/comments" var="commentsUrl">
-           			<s:param name="slug" value="${rollingStock.slug}"></s:param>
+           			<s:param name="slug" value="${result.rs.slug}"></s:param>
 				</s:url>
            		<form:form modelAttribute="newComment" method="POST" action="${commentsUrl}" class="well form-inline">
            			<form:hidden path="rollingStock.slug"/>
@@ -147,6 +149,27 @@
            		<hr/>
            		</sec:authorize>
         	</div>
+         	<div class="span4"></div>
+   		</div>
+   		<div class="row-fluid">
+        	<div class="span2"></div>
+           	<div class="span6">
+           		<c:forEach var="cmm" items="${result.comments}">
+           			<div class="row-fluid">
+           				<div class="span2">
+           					<img src="http://placehold.it/96x96">
+           				</div>
+           				<div class="span10">
+           					<p>
+           						${cmm.content}
+           						<br>
+           						<strong><a href="">${cmm.author.label}</a></strong> - ${cmm.postedAt}
+           					</p>
+           				</div>
+           			</div>
+           			<hr>
+           		</c:forEach>
+          	</div>
          	<div class="span4"></div>
    		</div>
 	</body>

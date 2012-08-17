@@ -39,6 +39,7 @@ import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.FormValuesService;
 import com.trenako.services.RollingStocksService;
+import com.trenako.services.view.RollingStockView;
 import com.trenako.values.DeliveryDate;
 import com.trenako.web.controllers.form.RollingStockForm;
 import com.trenako.web.editors.WeakDbRefPropertyEditor;
@@ -103,20 +104,20 @@ public class RollingStocksController {
 	
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
 	public String show(@PathVariable("slug") String slug, ModelMap model) {
-		RollingStock rs = service.findBySlug(slug);
-		if (rs == null) {
+		RollingStockView rsView = service.findViewBySlug(slug);
+		if (rsView == null) {
 			throw new NotFoundException();
 		}
 		
 		// init comments form only for authenticated users
 		if (secContext != null && secContext.getCurrentUser() != null) {
 			Comment newComment = new Comment(secContext.getCurrentUser().getAccount(), 
-					rs, 
+					rsView.getRs(), 
 					""); 
 			model.addAttribute("newComment", newComment);
 		}
 		
-		model.addAttribute("rollingStock", rs);
+		model.addAttribute("result", rsView);
 		return "rollingstock/show";
 	}
 	

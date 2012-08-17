@@ -18,6 +18,8 @@ package com.trenako.repositories.mongo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Order;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Account;
@@ -54,22 +56,16 @@ public class CommentsRepositoryImpl implements CommentsRepository {
 
 	@Override
 	public Iterable<Comment> findByAuthor(Account author) {
-		return findByAuthor(author.getSlug());
-	}
-
-	@Override
-	public Iterable<Comment> findByAuthor(String authorName) {
-		return mongo.find(query(where("authorName").is(authorName)), Comment.class);
+		Query query = query(where("author.slug").is(author.getSlug()));
+		query.sort().on("postedAt", Order.DESCENDING);
+		return mongo.find(query, Comment.class);
 	}
 
 	@Override
 	public Iterable<Comment> findByRollingStock(RollingStock rollingStock) {
-		return findByRollingStock(rollingStock.getSlug());
-	}
-
-	@Override
-	public Iterable<Comment> findByRollingStock(String rsSlug) {
-		return mongo.find(query(where("rsSlug").is(rsSlug)), Comment.class);
+		Query query = query(where("rollingStock.slug").is(rollingStock.getSlug()));
+		query.sort().on("postedAt", Order.DESCENDING);
+		return mongo.find(query, Comment.class);
 	}
 
 	@Override

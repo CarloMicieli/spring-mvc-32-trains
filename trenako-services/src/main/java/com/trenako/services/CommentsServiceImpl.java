@@ -50,18 +50,8 @@ public class CommentsServiceImpl implements CommentsService {
 	}
 
 	@Override
-	public Iterable<Comment> findByAuthor(String authorName) {
-		return repo.findByAuthor(authorName);
-	}
-
-	@Override
 	public Iterable<Comment> findByRollingStock(RollingStock rollingStock) {
 		return repo.findByRollingStock(rollingStock);
-	}
-
-	@Override
-	public Iterable<Comment> findByRollingStock(String rsSlug) {
-		return repo.findByRollingStock(rsSlug);
 	}
 
 	@Override

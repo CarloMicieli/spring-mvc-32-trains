@@ -25,6 +25,7 @@ import com.trenako.entities.Railway
 import com.trenako.entities.RollingStock
 
 import com.trenako.entities.Comment
+import com.trenako.mapping.WeakDbRef
 import com.trenako.services.CommentsService
 
 /**
@@ -32,7 +33,7 @@ import com.trenako.services.CommentsService
  * @author Carlo Micieli
  *
  */
-class CommentsServiceSpecification { //extends MongoSpecification {
+class CommentsServiceSpecification extends MongoSpecification {
 
 	@Autowired CommentsService service;
 	
@@ -101,19 +102,7 @@ class CommentsServiceSpecification { //extends MongoSpecification {
 		then:
 		results != null
 		results.size == 2
-		results.collect{ it.content }.sort() == ["Comment1", "Comment2"]
-	}
-	
-	def "should find comments by author name"() {
-		given:
-		def authorName = 'alice'
-		
-		when:
-		def results = service.findByAuthor authorName
-
-		then:
-		results != null
-		results.size == 1
+		results.collect{ it.content }.sort() == ['Comment1', 'Comment2']
 	}
 	
 	def "should find comments by rolling stock"() {
@@ -131,23 +120,17 @@ class CommentsServiceSpecification { //extends MongoSpecification {
 		results.collect{ it.content } == ['Comment1', 'Comment3']
 	}
 	
-	def "should find comments by rolling stock slug"() {
-		when:
-		def results = service.findByRollingStock "acme-69502"
-		
-		then:
-		results != null
-		results.size == 1
-		results.collect{ it.content } == ['Comment2']
-	}
-	
 	def "should save comments"() {
 		given:
-		def rs = new RollingStock(slug: 'acme-69501')
-		def author = new Account(slug: 'bob')
+		def doc = db.rollingStocks.findOne(slug: 'acme-69501')
+		def rs = new RollingStock(id: doc._id, slug: doc.slug)
+		rs.setBrand(WeakDbRef.buildFromSlug('acme', Brand.class))
+		assert rs != null
 		
 		and:
-		def newComment = new Comment(author: author, rollingStock: rs, content: "My comment")
+		def newComment = new Comment(content: 'My comment')
+		newComment.setRollingStock(rs)
+		newComment.setAuthor(new Account(emailAddress: 'bob@mail.com', displayName: 'Bob'))
 		
 		when:
 		service.save newComment
@@ -159,8 +142,8 @@ class CommentsServiceSpecification { //extends MongoSpecification {
 		def c = db.comments.findOne(_id: newComment.id)
 		
 		c != null
-		c.authorName == "bob"
-		c.rsSlug == "acme-69501"
+		c.author.slug == 'bob'
+		c.rollingStock.slug == 'acme-69501'
 		c.postedAt != null 
 	}
 	

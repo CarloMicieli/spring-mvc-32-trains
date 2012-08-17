@@ -18,6 +18,7 @@ package com.trenako.services;
 import org.bson.types.ObjectId;
 
 import com.trenako.entities.RollingStock;
+import com.trenako.services.view.RollingStockView;
 
 /**
  * The interface for the rolling stocks service.
@@ -41,14 +42,14 @@ import com.trenako.entities.RollingStock;
 public interface RollingStocksService {
 
 	/**
-	 * Finds the {@link RollingStock} with the provided id.
+	 * Finds the {@code RollingStock} with the provided id.
 	 * @param id the unique id
 	 * @return a {@code RollingStock} if found; {@code null} otherwise
 	 */
 	RollingStock findById(ObjectId id);
 
 	/**
-	 * Finds the {@link RollingStock} with the provided slug.
+	 * Finds the {@code RollingStock} with the provided slug.
 	 * @param slug the slug
 	 * @return a {@code RollingStock} if found; {@code null} otherwise
 	 * @see com.trenako.entities.RollingStock#getSlug()
@@ -56,7 +57,18 @@ public interface RollingStocksService {
 	RollingStock findBySlug(String slug);
 
 	/**
-	 * Persists a {@link RollingStock} changes in the data store.
+	 * Finds the {@code RollingStock} with the provided slug and fills its view.
+	 * <p>
+	 * A {@code RollingStock} view contains also other information for the rolling 
+	 * stock like its comments, its reviews and so on.
+	 * </p>
+	 * @param slug the {@code RollingStock} slug
+	 * @return a view if {@code RollingStock} if found; {@code null} otherwise
+	 */
+	RollingStockView findViewBySlug(String slug);
+	
+	/**
+	 * Persists a {@code RollingStock} changes in the data store.
 	 * <p>
 	 * This method performs a "upsert": if the {@code RollingStock} is not present in the data store
 	 * a new {@code RollingStock} is created; otherwise the method will update the existing {@code RollingStock}. 
@@ -66,7 +78,7 @@ public interface RollingStocksService {
 	void save(RollingStock rs);
 
 	/**
-	 * Removes a {@link RollingStock} from the data store.
+	 * Removes a {@code RollingStock} from the data store.
 	 * @param rs the {@code RollingStock} to be removed
 	 */
 	void remove(RollingStock rs);

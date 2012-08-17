@@ -40,13 +40,6 @@ public interface CommentsRepository {
 	 * @return the list of comments
 	 */
 	Iterable<Comment> findByAuthor(Account author);
-
-	/**
-	 * Finds the list of comments with the same author name.
-	 * @param authorName the comments' author name
-	 * @return the list of comments
-	 */
-	Iterable<Comment> findByAuthor(String authorName);
 	
 	/**
 	 * Finds the list of comments for a rolling stock.
@@ -58,17 +51,6 @@ public interface CommentsRepository {
 	 * @return the list of comments
 	 */	
 	Iterable<Comment> findByRollingStock(RollingStock rollingStock);
-
-	/**
-	 * Finds the list of comments for the provided rolling stock slug.
-	 * 
-	 * This method returns the comments ordered by
-	 * descending posted date. 
-	 * 
-	 * @param rsSlug the rolling stock slug
-	 * @return the list of comments
-	 */	
-	Iterable<Comment> findByRollingStock(String rsSlug);
 	
 	/**
 	 * Saves the comment.

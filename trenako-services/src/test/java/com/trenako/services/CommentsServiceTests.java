@@ -72,23 +72,9 @@ public class CommentsServiceTests {
 	}
 
 	@Test
-	public void shouldFindCommentsByAuthorName() {
-		String author = "name";
-		service.findByAuthor(author);
-		verify(repo, times(1)).findByAuthor(eq(author));
-	}
-
-	@Test
 	public void shouldFindCommentsByRollingStock() {
 		service.findByRollingStock(rollingStock);
 		verify(repo, times(1)).findByRollingStock(eq(rollingStock));
-	}
-
-	@Test
-	public void shouldFindCommentsByRollingStockSlug() {
-		String rs = "acme-123456";
-		service.findByRollingStock(rs);
-		verify(repo, times(1)).findByRollingStock(eq(rs));
 	}
 
 	@Test

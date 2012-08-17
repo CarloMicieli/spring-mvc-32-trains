@@ -26,6 +26,7 @@ import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -77,27 +78,19 @@ public class CommentsRepositoryTests {
 			.displayName("User Name")
 			.build();
 
-		List<Comment> value = 
-				Arrays.asList(newComment(), newComment(), newComment());
+		List<Comment> value = Arrays.asList(newComment(), newComment(), newComment());
 		when(mongo.find(isA(Query.class), eq(Comment.class))).thenReturn(value);
 		
 		List<Comment> results = (List<Comment>) repo.findByAuthor(author);
 		
 		assertEquals(3, results.size());
-		verify(mongo, times(1)).find(isA(Query.class), eq(Comment.class));
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		verify(mongo, times(1)).find(arg.capture(), eq(Comment.class));
+		
+		assertEquals("{ \"author.slug\" : \"user-name\"}", arg.getValue().getQueryObject().toString());
+		assertEquals("{ \"postedAt\" : -1}", arg.getValue().getSortObject().toString());
 	}
 
-	@Test
-	public void shouldFindCommentsByAuthorName() {
-		List<Comment> value = 
-				Arrays.asList(newComment(), newComment(), newComment());
-		when(mongo.find(isA(Query.class), eq(Comment.class))).thenReturn(value);
-		
-		List<Comment> results = (List<Comment>) repo.findByAuthor("author");
-		
-		assertEquals(3, results.size());
-		verify(mongo, times(1)).find(isA(Query.class), eq(Comment.class));
-	}
 
 	@Test
 	public void shouldFindCommentsByRollingStock() {
@@ -108,19 +101,10 @@ public class CommentsRepositoryTests {
 		List<Comment> results = (List<Comment>) repo.findByRollingStock(rollingStock);
 		
 		assertEquals(3, results.size());
-		verify(mongo, times(1)).find(isA(Query.class), eq(Comment.class));
-	}
-
-	@Test
-	public void shouldFindByRollingStockSlug() {
-		List<Comment> value = 
-				Arrays.asList(newComment(), newComment(), newComment());
-		when(mongo.find(isA(Query.class), eq(Comment.class))).thenReturn(value);
-		
-		List<Comment> results = (List<Comment>) repo.findByRollingStock("rslug");
-		
-		assertEquals(3, results.size());
-		verify(mongo, times(1)).find(isA(Query.class), eq(Comment.class));
+		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
+		verify(mongo, times(1)).find(arg.capture(), eq(Comment.class));
+		assertEquals("{ \"rollingStock.slug\" : \"acme-123456\"}", arg.getValue().getQueryObject().toString());
+		assertEquals("{ \"postedAt\" : -1}", arg.getValue().getSortObject().toString());
 	}
 
 	@Test

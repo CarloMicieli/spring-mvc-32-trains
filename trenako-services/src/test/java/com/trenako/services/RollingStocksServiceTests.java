@@ -18,6 +18,9 @@ package com.trenako.services;
 import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
 
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -27,9 +30,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockReviews;
+import com.trenako.repositories.CommentsRepository;
+import com.trenako.repositories.ReviewsRepository;
 import com.trenako.repositories.RollingStocksRepository;
 import com.trenako.services.RollingStocksServiceImpl;
+import com.trenako.services.view.RollingStockView;
 
 /**
  * 
@@ -39,18 +47,20 @@ import com.trenako.services.RollingStocksServiceImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStocksServiceTests {
 
-	private RollingStock rs = new RollingStock.Builder(acme(), "123456")
+	private final static RollingStock RS = new RollingStock.Builder(acme(), "123456")
 		.railway(fs())
 		.scale(scaleH0())
 		.build();
 	
 	@Mock RollingStocksRepository repo;
+	@Mock CommentsRepository commentsRepo;
+	@Mock ReviewsRepository reviewsRepo;
 	RollingStocksService service;
 	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		service = new RollingStocksServiceImpl(repo);
+		service = new RollingStocksServiceImpl(repo, commentsRepo, reviewsRepo);
 	}
 
 	@Test
@@ -65,6 +75,34 @@ public class RollingStocksServiceTests {
 		String slug = "slug";
 		service.findBySlug(slug);
 		verify(repo, times(1)).findBySlug(eq(slug));
+	}
+
+	@Test
+	public void shouldReturnNullViewsWhenRollingStocksWereNotFound() {
+		String slug = "not-found";
+		when(repo.findBySlug(eq(slug))).thenReturn(null);
+		
+		RollingStockView view = service.findViewBySlug(slug);
+		
+		assertNull("Rolling stock view is not null", view);
+	}
+	
+	@Test
+	public void shouldFillRollingStockViewsForTheProvidedSlug() {
+		RollingStockReviews reviews = new RollingStockReviews();
+		Iterable<Comment> comments = Arrays.asList(new Comment(), new Comment());
+		String slug = "acme-123456";
+
+		when(repo.findBySlug(eq(slug))).thenReturn(RS);
+		when(commentsRepo.findByRollingStock(eq(RS))).thenReturn(comments);
+		when(reviewsRepo.findByRollingStock(eq(RS))).thenReturn(reviews);
+		
+		RollingStockView view = service.findViewBySlug(slug);
+		
+		assertNotNull("Rolling stock view is null", view);
+		assertEquals(RS, view.getRs());
+		assertEquals(comments, view.getComments());
+		assertEquals(reviews, view.getReviews());
 	}
 	
 	@Test
@@ -82,7 +120,7 @@ public class RollingStocksServiceTests {
 
 	@Test
 	public void shouldRemoveRollingStocks() {
-		service.remove(rs);
-		verify(repo, times(1)).delete(eq(rs));
+		service.remove(RS);
+		verify(repo, times(1)).delete(eq(RS));
 	}
 }
