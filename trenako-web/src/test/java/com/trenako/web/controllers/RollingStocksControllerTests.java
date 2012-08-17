@@ -26,6 +26,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -165,13 +166,24 @@ public class RollingStocksControllerTests {
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
 		UploadRequest req = UploadRequest.create(rollingStock(), file);
 		RollingStockForm form = rsForm(file);
+		form.setTags("one, two");
 		
 		ModelMap model = new ModelMap();
 		
 		String viewName = controller.create(form, mockResult, model, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
-		verify(service, times(1)).save(eq(rollingStock()));
+		
+		ArgumentCaptor<RollingStock> arg = ArgumentCaptor.forClass(RollingStock.class);
+		verify(service, times(1)).save(arg.capture());
+		
+		RollingStock savedRs = arg.getValue();
+		assertEquals(rollingStock(), savedRs);
+		assertTrue("Brand not loaded", savedRs.getBrand().isLoaded());
+		assertTrue("Scale not loaded", savedRs.getRailway().isLoaded());
+		assertTrue("Scale not loaded", savedRs.getScale().isLoaded());
+		assertEquals("[one, two]", savedRs.getTags().toString());
+		
 		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(100));
 		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq("acme-123456"));
 		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
@@ -249,12 +261,22 @@ public class RollingStocksControllerTests {
 	public void shouldSaveRollingStocks() {
 		when(mockResult.hasErrors()).thenReturn(false);
 		RollingStockForm form = rsForm(null);
+		form.setTags("two, one");
 		ModelMap model = new ModelMap();
 		
 		String viewName = controller.save(form, mockResult, model, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
-		verify(service, times(1)).save(eq(rollingStock()));
+		ArgumentCaptor<RollingStock> arg = ArgumentCaptor.forClass(RollingStock.class);
+		verify(service, times(1)).save(arg.capture());
+		
+		RollingStock savedRs = arg.getValue();
+		assertEquals(rollingStock(), savedRs);
+		assertTrue("Brand not loaded", savedRs.getBrand().isLoaded());
+		assertTrue("Scale not loaded", savedRs.getRailway().isLoaded());
+		assertTrue("Scale not loaded", savedRs.getScale().isLoaded());
+		assertEquals("[one, two]", savedRs.getTags().toString());
+		
 		verify(mockRedirect, times(1)).addAttribute(eq("slug"), eq("acme-123456"));
 		verify(mockRedirect, times(1)).addFlashAttribute(eq("message"), 
 				eq(RollingStocksController.ROLLING_STOCK_SAVED_MSG));

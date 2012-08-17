@@ -63,6 +63,7 @@ public class RollingStockFormTests {
 		.scale(scaleH0())
 		.railway(fs())
 		.description("Description")
+		.tags("one", "two")
 		.build();
 	
 	@Before
@@ -74,8 +75,9 @@ public class RollingStockFormTests {
 	public void shouldCreateRollingStockForms() {
 		RollingStockForm form = RollingStockForm.newForm(RS, mockService);
 		assertEquals(RS, form.getRs());
+		assertEquals("one,two", form.getTags());
 	}
-	
+		
 	@Test
 	public void shouldFillDropDownListsForForms() {
 		when(mockService.brands()).thenReturn(BRANDS);
@@ -109,10 +111,24 @@ public class RollingStockFormTests {
 		when(mockService.getScale(eq(scaleH0().getSlug()))).thenReturn(scaleH0());
 		
 		RollingStockForm form = new RollingStockForm(RS);
+		form.setTags("one, two");
+		
 		RollingStock rs = form.getRsLoadingRefs(mockService);
 		
 		assertEquals("{slug: acme, label: ACME}", rs.getBrand().toCompleteString());
 		assertEquals("{slug: fs, label: FS (Ferrovie dello stato)}", rs.getRailway().toCompleteString());
 		assertEquals("{slug: h0, label: H0 (1:87)}", rs.getScale().toCompleteString());
+		assertEquals("[one, two]", rs.getTags().toString());
+	}
+	
+	@Test
+	public void shouldExtractTagsSet() {
+		RollingStockForm x = new RollingStockForm();
+		x.setTags(null);
+		assertNull("Tags set not null", x.getTagsSet());
+		
+		RollingStockForm y = new RollingStockForm();
+		y.setTags("one , two two, three");
+		assertEquals("[one, three, two-two]", y.getTagsSet().toString());
 	}
 }

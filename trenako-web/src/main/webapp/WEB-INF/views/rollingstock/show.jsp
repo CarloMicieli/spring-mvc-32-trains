@@ -42,8 +42,12 @@
 						<i class="icon-edit icon-white"></i> <s:message code="button.edit.label"/>
 					</a>
 				</p>
+				
 	    		<p>
-					<a data-toggle="modal" href="#myModal" class="btn btn-success" style="width: 110px" href="#">
+	    			<s:url var="postReviewUrl" value="/rollingstocks/{slug}/reviews/new">
+						<s:param name="slug" value="${result.rs.slug}"></s:param>
+					</s:url>
+	    			<a class="btn btn-success" href="${postReviewUrl}" style="width: 110px">
 						<i class="icon-comment icon-white"></i> <s:message code="button.write.review.label"/>
 					</a>
 				</p>

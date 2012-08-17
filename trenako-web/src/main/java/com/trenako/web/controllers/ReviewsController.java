@@ -19,15 +19,21 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
 import com.trenako.services.ReviewsService;
+import com.trenako.services.RollingStocksService;
+import com.trenako.web.controllers.form.ReviewForm;
+import com.trenako.web.security.UserContext;
 
 /**
  * 
@@ -35,28 +41,56 @@ import com.trenako.services.ReviewsService;
  *
  */
 @Controller
-@RequestMapping("/reviews")
+@RequestMapping("/rollingstocks/{slug}/reviews")
 public class ReviewsController {
 
+	private @Autowired UserContext userContext;
 	private final ReviewsService service;
+	private final RollingStocksService rsService;
 	
 	final static ControllerMessage REVIEW_POSTED_MSG = ControllerMessage.success("review.posted.message");
 	
 	@Autowired
-	public ReviewsController(ReviewsService service) {
+	public ReviewsController(ReviewsService service, RollingStocksService rsService) {
 		this.service = service;
+		this.rsService = rsService;
 	}
-
+	
+	void setUserContext(UserContext userContext) {
+		this.userContext = userContext;
+	}
+	
+	@RequestMapping(value = "/new", method = RequestMethod.GET)
+	public String newReview(@PathVariable("slug") String slug, ModelMap model) {
+		
+		ReviewForm newForm = new ReviewForm();
+		newForm.setAuthor(userContext.getCurrentUser().getAccount());
+		newForm.setRs(rsService.findBySlug(slug));
+		newForm.setReview(new Review());
+		
+		model.addAttribute(newForm);
+		return "review/new";
+	}
+	
 	@RequestMapping(method = RequestMethod.POST)
-	public String postReview(@ModelAttribute RollingStock rollingStock, 
-			@Valid @ModelAttribute Review review, 
+	public String postReview(@PathVariable("slug") String slug, 
+			@Valid @ModelAttribute ReviewForm reviewForm, 
 			BindingResult bindingResult,
+			ModelMap model,
 			RedirectAttributes redirectAtts) {
 
+		RollingStock rollingStock = rsService.findBySlug(slug);
+		Review review = reviewForm.getReview();
+		Account author = userContext.getCurrentUser().getAccount();
+		review.setAuthor(author);
+		
 		if (bindingResult.hasErrors()) {
-			redirectAtts.addAttribute("review", review);
-			redirectAtts.addAttribute("slug", rollingStock.getSlug());
-			return "redirect:/rollingstock/{slug}/reviews";
+			reviewForm.setAuthor(author);
+			reviewForm.setRs(rollingStock);
+			
+			model.addAttribute(reviewForm);
+			model.addAttribute("slug", rollingStock.getSlug());
+			return "review/new";
 		}
 		
 		service.postReview(rollingStock, review);
@@ -64,5 +98,4 @@ public class ReviewsController {
 		redirectAtts.addAttribute("slug", rollingStock.getSlug());
 		return "redirect:/rollingstock/{slug}/reviews";
 	}
-
 }

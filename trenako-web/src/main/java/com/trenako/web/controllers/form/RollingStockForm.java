@@ -15,8 +15,12 @@
  */
 package com.trenako.web.controllers.form;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.trenako.entities.Brand;
@@ -24,6 +28,7 @@ import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
 import com.trenako.services.FormValuesService;
+import com.trenako.utility.Slug;
 import com.trenako.values.Category;
 import com.trenako.values.DeliveryDate;
 import com.trenako.values.Era;
@@ -74,6 +79,10 @@ public class RollingStockForm {
 		this.rs = rs;
 		this.valuesService = valuesService;
 		this.file = file;
+		
+		if (rs.getTags() != null) {
+			this.tags = StringUtils.join(rs.getTags(), ",");
+		}
 	}
 	
 	/**
@@ -106,6 +115,9 @@ public class RollingStockForm {
 		getRs().setBrand(valuesService.getBrand(getRs().getBrand().getSlug()));
 		getRs().setScale(valuesService.getScale(getRs().getScale().getSlug()));
 		getRs().setRailway(valuesService.getRailway(getRs().getRailway().getSlug()));
+		
+		getRs().setTags(getTagsSet());
+		
 		return getRs();
 	}
 	
@@ -159,5 +171,18 @@ public class RollingStockForm {
 	
 	public Iterable<DeliveryDate> getDeliveryDates() {
 		return valuesService.deliveryDates();
+	}
+
+	public SortedSet<String> getTagsSet() {
+		if (StringUtils.isBlank(getTags())) {
+			return null;
+		}
+		
+		String[] tags = getTags().split(",");
+		SortedSet<String> tagsList = new TreeSet<String>();
+		for (String tag : tags) {
+			tagsList.add(Slug.encode(tag.trim()));
+		}
+		return tagsList;
 	}
 }
