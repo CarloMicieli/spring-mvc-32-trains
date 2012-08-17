@@ -108,8 +108,8 @@ public class RollingStockFormTests {
 		when(mockService.getRailway(eq(fs().getSlug()))).thenReturn(fs());
 		when(mockService.getScale(eq(scaleH0().getSlug()))).thenReturn(scaleH0());
 		
-		RollingStockForm form = RollingStockForm.newForm(RS, mockService);
-		RollingStock rs = form.getRs(true);
+		RollingStockForm form = new RollingStockForm(RS);
+		RollingStock rs = form.getRsLoadingRefs(mockService);
 		
 		assertEquals("{slug: acme, label: ACME}", rs.getBrand().toCompleteString());
 		assertEquals("{slug: fs, label: FS (Ferrovie dello stato)}", rs.getRailway().toCompleteString());

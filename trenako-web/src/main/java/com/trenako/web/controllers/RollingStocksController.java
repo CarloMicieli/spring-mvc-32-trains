@@ -133,7 +133,7 @@ public class RollingStocksController {
 			RedirectAttributes redirectAtts) {
 		
 		MultipartFile file = form.getFile();
-		RollingStock rs = form.getRs(true);
+		RollingStock rs = form.getRsLoadingRefs(valuesService);
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute(newForm(rs, valuesService));
@@ -181,7 +181,7 @@ public class RollingStocksController {
 			ModelMap model,
 			RedirectAttributes redirectAtts) {
 		
-		RollingStock rs = form.getRs(true);
+		RollingStock rs = form.getRsLoadingRefs(valuesService);
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute(newForm(rs, valuesService));

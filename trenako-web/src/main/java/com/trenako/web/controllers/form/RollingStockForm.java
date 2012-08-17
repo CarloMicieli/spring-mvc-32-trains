@@ -84,27 +84,27 @@ public class RollingStockForm {
 		return new RollingStockForm(rs, valuesService, null);
 	}	
 	
+	public FormValuesService getValuesService() {
+		return valuesService;
+	}
+
 	/**
 	 * Returns the form {@code RollingStock}.
 	 * @return the {@code RollingStock}
 	 */
 	public RollingStock getRs() {
-		return getRs(false);
-	}
-
-	public RollingStock getRs(boolean loadingRef) {
 		if (rs == null) {
 			rs = new RollingStock();
-			return rs;
-		}
-		
-		if (loadingRef) {
-			rs.setBrand(valuesService.getBrand(rs.getBrand().getSlug()));
-			rs.setScale(valuesService.getScale(rs.getScale().getSlug()));
-			rs.setRailway(valuesService.getRailway(rs.getRailway().getSlug()));
 		}
 		
 		return rs;
+	}
+
+	public RollingStock getRsLoadingRefs(FormValuesService valuesService) {
+		getRs().setBrand(valuesService.getBrand(getRs().getBrand().getSlug()));
+		getRs().setScale(valuesService.getScale(getRs().getScale().getSlug()));
+		getRs().setRailway(valuesService.getRailway(getRs().getRailway().getSlug()));
+		return getRs();
 	}
 	
 	/**

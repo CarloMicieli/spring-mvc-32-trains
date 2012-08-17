@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<title>
-			<s:message code="rollingStock.page.new.title" />
+			<s:message code="rollingStock.page.edit.title" />
 		</title>
 		<meta name="rs" content="active"/>
 	</head>
