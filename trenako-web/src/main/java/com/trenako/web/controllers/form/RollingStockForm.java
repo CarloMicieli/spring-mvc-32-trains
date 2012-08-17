@@ -23,15 +23,16 @@ import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
-import com.trenako.services.RollingStocksService;
+import com.trenako.services.FormValuesService;
 import com.trenako.values.Category;
+import com.trenako.values.DeliveryDate;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
 import com.trenako.web.images.validation.Image;
 
 /**
- * 
+ * It represent a creation/editing form for {@code RollingStock}.
  * @author Carlo Micieli
  *
  */
@@ -42,13 +43,8 @@ public class RollingStockForm {
 	
 	@Image(message = "rollingStock.image.notValid")
 	private MultipartFile file;
-
-	private Iterable<Brand> brands;
-	private Iterable<Scale> scales;
-	private Iterable<Railway> railways;
-	private Iterable<LocalizedEnum<Category>> categories;
-	private Iterable<LocalizedEnum<Era>> eras;
-	private Iterable<LocalizedEnum<PowerMethod>> powerMethods;
+	
+	private FormValuesService valuesService;
 	
 	/**
 	 * Creates a new empty {@code RollingStockForm}.
@@ -56,39 +52,65 @@ public class RollingStockForm {
 	public RollingStockForm() {
 	}
 
-	private RollingStockForm(RollingStock rs, 
-			Iterable<Brand> brands,
-			Iterable<Scale> scales,
-			Iterable<Railway> railways,
-			Iterable<LocalizedEnum<Category>> categories,
-			Iterable<LocalizedEnum<Era>> eras,
-			Iterable<LocalizedEnum<PowerMethod>> powerMethods) {
+	/**
+	 * Creates a new form for the provided {@code RollingStock}. 
+	 * @param rs the {@code RollingStock}
+	 */
+	public RollingStockForm(RollingStock rs) {
+		this(rs, null, null);
+	}
+	
+	/**
+	 * Creates a new multipart form for the provided {@code RollingStock}. 
+	 * @param rs the {@code RollingStock}
+	 * @param valuesService the service to fill the dropdown lists
+	 * @param file the {@code RollingStock} image file
+	 */
+	public RollingStockForm(RollingStock rs, 
+			FormValuesService valuesService, 
+			MultipartFile file) {
 		this.rs = rs;
-		this.brands = brands;
-		this.scales = scales;
-		this.railways = railways;
-		this.categories = categories;
-		this.eras = eras;
-		this.powerMethods = powerMethods;
+		this.valuesService = valuesService;
+		this.file = file;
 	}
 	
-	public static RollingStockForm newForm(RollingStock rs, RollingStocksService service) {
-		return new RollingStockForm(rs,
-				service.brands(),
-				service.scales(),
-				service.railways(),
-				service.categories(),
-				service.eras(),
-				service.powerMethods());
-	}
+	/**
+	 * Creates a new form for the provided {@code RollingStock}. 
+	 * @param rs the {@code RollingStock}
+	 * @param valuesService the service to fill the dropdown lists
+	 */
+	public static RollingStockForm newForm(RollingStock rs, 
+			FormValuesService valuesService) {
+		return new RollingStockForm(rs, valuesService, null);
+	}	
 	
+	/**
+	 * Returns the form {@code RollingStock}.
+	 * @return the {@code RollingStock}
+	 */
 	public RollingStock getRs() {
-		if (rs == null) {
-			rs = new RollingStock();
-		}
-		return rs;
+		return getRs(false);
 	}
 
+	public RollingStock getRs(boolean loadingRef) {
+		if (rs == null) {
+			rs = new RollingStock();
+			return rs;
+		}
+		
+		if (loadingRef) {
+			rs.setBrand(valuesService.getBrand(rs.getBrand().getSlug()));
+			rs.setScale(valuesService.getScale(rs.getScale().getSlug()));
+			rs.setRailway(valuesService.getRailway(rs.getRailway().getSlug()));
+		}
+		
+		return rs;
+	}
+	
+	/**
+	 * Sets the form {@code RollingStock}.
+	 * @param rs the {@code RollingStock}
+	 */
 	public void setRs(RollingStock rs) {
 		this.rs = rs;
 	}
@@ -102,26 +124,30 @@ public class RollingStockForm {
 	}
 		
 	public Iterable<Brand> getBrandsList() {
-		return brands;
+		return valuesService.brands();
 	}
 	
 	public Iterable<Railway> getRailwaysList() {
-		return railways;
+		return valuesService.railways();
 	}
 	
 	public Iterable<Scale> getScalesList() {
-		return scales;
+		return valuesService.scales();
 	}
 	
 	public Iterable<LocalizedEnum<Category>> getCategoriesList() {
-		return categories;
+		return valuesService.categories();
 	}
 	
 	public Iterable<LocalizedEnum<Era>> getErasList() {
-		return eras;
+		return valuesService.eras();
 	}
 	
 	public Iterable<LocalizedEnum<PowerMethod>> getPowerMethodsList() {
-		return powerMethods;
+		return valuesService.powerMethods();
+	}
+	
+	public Iterable<DeliveryDate> getDeliveryDates() {
+		return valuesService.deliveryDates();
 	}
 }

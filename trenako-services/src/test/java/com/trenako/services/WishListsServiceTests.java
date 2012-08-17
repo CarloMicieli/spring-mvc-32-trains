@@ -248,7 +248,7 @@ public class WishListsServiceTests {
 		assertEquals("My list", arg.getValue().getName());
 		assertEquals("bob-my-list", arg.getValue().getSlug());
 		assertEquals("public", arg.getValue().getVisibility());
-		assertEquals("{label=Bob, slug=bob}", arg.getValue().getOwner().toString());
+		assertEquals("{slug: bob, label: Bob}", arg.getValue().getOwner().toCompleteString());
 	}
 	
 	@Test

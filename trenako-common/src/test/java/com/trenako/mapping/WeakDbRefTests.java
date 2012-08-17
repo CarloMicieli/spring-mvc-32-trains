@@ -17,15 +17,26 @@ public class WeakDbRefTests {
 	public void shouldCreateWeakRefFromSlug() {
 		WeakDbRef<Brand> ref = WeakDbRef.buildFromSlug("acme", Brand.class);
 		assertNotNull(ref);
-		assertEquals("{label=null, slug=acme}", ref.toString());
+		assertEquals("{slug: acme, label: null}", ref.toCompleteString());
 	}
 	
+	@Test
+	public void shouldCheckWhetherWeakRefsAreFullyLoaded() {
+		WeakDbRef<?> x = WeakDbRef.buildFromSlug("slug", Brand.class);
+		assertFalse("Ref was loaded", x.isLoaded());
+
+		WeakDbRef<?> y = WeakDbRef.buildRef(entity("slug", ""));
+		assertFalse("Ref was loaded", y.isLoaded());
+		
+		WeakDbRef<?> z = WeakDbRef.buildRef(entity("slug", "label"));
+		assertTrue("Ref was not loaded", z.isLoaded());
+	}
 	
 	@Test
 	public void shouldCreateWeakRef() {
 		WeakDbRef<?> ref = WeakDbRef.buildRef(entity("slug", "label"));
 		assertNotNull(ref);
-		assertEquals("{label=label, slug=slug}", ref.toString());
+		assertEquals("{slug: slug, label: label}", ref.toCompleteString());
 	}
 	
 	@Test
@@ -44,6 +55,13 @@ public class WeakDbRefTests {
 		WeakDbRef<?> c = WeakDbRef.buildRef(entity("slug", "label"));
 		WeakDbRef<?> d = WeakDbRef.buildRef(entity("slag", "labul"));
 		assertFalse("Refs are equals", c.equals(d));
+	}
+	
+	@Test
+	public void shouldProduceStringRepresentationForWeakDbRefs() {
+		WeakDbRef<?> ref = WeakDbRef.buildRef(entity("slug", "label"));
+		assertEquals("slug", ref.toString());
+		assertEquals("{slug: slug, label: label}", ref.toCompleteString());
 	}
 		
 	private DbReferenceable entity(final String slug, final String label)  {

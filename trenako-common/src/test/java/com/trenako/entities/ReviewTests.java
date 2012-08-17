@@ -50,7 +50,7 @@ public class ReviewTests {
 	
 	@Test
 	public void shouldProduceStringRepresentations() {
-		assertEquals("review{rs: {label=ACME 123456, slug=acme-123456}, no of review(s): 0, total rating: 0}", 
+		assertEquals("review{rs: acme-123456, no of review(s): 0, total rating: 0}", 
 				rsReviews.toString());
 	}
 	
@@ -67,7 +67,7 @@ public class ReviewTests {
 
 		rsReviews.setItems(Arrays.asList(review1));
 
-		assertEquals("{label=ACME 123456, slug=acme-123456}", rsReviews.getRollingStock().toString());
+		assertEquals("{slug: acme-123456, label: ACME 123456}", rsReviews.getRollingStock().toCompleteString());
 		assertEquals("alice", rsReviews.getItems().get(0).getAuthor().toString());
 		
 	}

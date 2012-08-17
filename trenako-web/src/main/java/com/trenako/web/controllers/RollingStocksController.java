@@ -37,6 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
+import com.trenako.services.FormValuesService;
 import com.trenako.services.RollingStocksService;
 import com.trenako.values.DeliveryDate;
 import com.trenako.web.controllers.form.RollingStockForm;
@@ -64,6 +65,7 @@ public class RollingStocksController {
 	private UserContext secContext;
 	
 	private final RollingStocksService service;
+	private final FormValuesService valuesService;
 	private final WebImageService imgService;
 	
 	final static ControllerMessage ROLLING_STOCK_CREATED_MSG = success("rollingStock.created.message");
@@ -74,13 +76,16 @@ public class RollingStocksController {
 	
 	/**
 	 * Creates a new {@code RollingStocksController}.
-	 * @param service 
-	 * @param imgService the upload files service
+	 * @param service the service to manage rolling stocks
+	 * @param valuesService the service to fill the form dropdown lists
+	 * @param imgService the service for the upload files
 	 */
 	@Autowired
 	public RollingStocksController(RollingStocksService service, 
+			FormValuesService valuesService,
 			WebImageService imgService) {
 		this.service = service;
+		this.valuesService = valuesService;
 		this.imgService = imgService;
 	}
 	
@@ -117,7 +122,7 @@ public class RollingStocksController {
 	
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public String createNew(ModelMap model) {
-		model.addAttribute(newForm(new RollingStock(), service));
+		model.addAttribute(newForm(new RollingStock(), valuesService));
 		return "rollingstock/new";
 	}
 
@@ -128,10 +133,10 @@ public class RollingStocksController {
 			RedirectAttributes redirectAtts) {
 		
 		MultipartFile file = form.getFile();
-		RollingStock rs = form.getRs();
+		RollingStock rs = form.getRs(true);
 		
 		if (bindingResult.hasErrors()) {
-			model.addAttribute(newForm(rs, service));
+			model.addAttribute(newForm(rs, valuesService));
 			return "rollingstock/new";
 		}
 		
@@ -147,13 +152,13 @@ public class RollingStocksController {
 		}
 		catch (DuplicateKeyException duplEx) {
 			log.error(duplEx.toString());
-			model.addAttribute(newForm(rs, service));
+			model.addAttribute(newForm(rs, valuesService));
 			model.addAttribute("message", ROLLING_STOCK_DUPLICATED_VALUE_MSG);
 			return "rollingstock/new";
 		}
 		catch (DataAccessException dataEx) {
 			log.error(dataEx.toString());
-			model.addAttribute(newForm(rs, service));
+			model.addAttribute(newForm(rs, valuesService));
 			model.addAttribute("message", ROLLING_STOCK_DATABASE_ERROR_MSG);
 			return "rollingstock/new";
 		}
@@ -166,7 +171,7 @@ public class RollingStocksController {
 			throw new NotFoundException();
 		}
 		
-		model.addAttribute(newForm(rs, service));
+		model.addAttribute(newForm(rs, valuesService));
 		return "rollingstock/edit";
 	}
 
@@ -176,10 +181,10 @@ public class RollingStocksController {
 			ModelMap model,
 			RedirectAttributes redirectAtts) {
 		
-		RollingStock rs = form.getRs();
+		RollingStock rs = form.getRs(true);
 		
 		if (bindingResult.hasErrors()) {
-			model.addAttribute(newForm(rs, service));
+			model.addAttribute(newForm(rs, valuesService));
 			return "rollingstock/edit";
 		}
 		
@@ -192,7 +197,7 @@ public class RollingStocksController {
 		}
 		catch (DataAccessException dataEx) {
 			log.error(dataEx.toString());
-			model.addAttribute(newForm(rs, service));
+			model.addAttribute(newForm(rs, valuesService));
 			model.addAttribute("message", ROLLING_STOCK_DATABASE_ERROR_MSG);
 			return "rollingstock/edit";
 		}

@@ -139,36 +139,6 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 		rollingStock.itemNumber == '1262 256'
 	}
 	
-	def "should fill the list of brands for rolling stocks creation"() {
-		when:
-		def results = service.brands()
-		
-		then:
-		results != null
-		results.size == 3
-		results.collect { it.slug }.sort() == ['acme', 'ls-models', 'roco']
-	}
-		
-	def "should fill the list of railways for rolling stocks creation"() {
-		when:
-		def results = service.railways()
-		
-		then:
-		results != null
-		results.size == 3 
-		results.collect { it.slug }.sort() == ['db', 'fs', 'sncf']
-	}
-	
-	def "should fill the list of scales for rolling stocks creation"() {
-		when:
-		def results = service.scales()
-		
-		then:
-		results != null
-		results.size == 3
-		results.collect { it.slug }.sort() == ['1', 'h0', 'n']
-	}
-	
 	def "should throw an exception if rolling stock slug is already used"() {
 		given:
 		def newRs = new RollingStock(

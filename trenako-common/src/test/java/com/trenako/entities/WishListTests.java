@@ -41,7 +41,7 @@ public class WishListTests {
 	@Test
 	public void shouldProduceStringRepresentationFromWishLists() {
 		WishList x = new WishList(bob, "My first list", Visibility.PUBLIC);
-		assertEquals("wishList{owner: {label=bob, slug=bob}, name: My first list, visibility: public}", x.toString());
+		assertEquals("wishList{owner: bob, name: My first list, visibility: public}", x.toString());
 	}
 	
 	@Test

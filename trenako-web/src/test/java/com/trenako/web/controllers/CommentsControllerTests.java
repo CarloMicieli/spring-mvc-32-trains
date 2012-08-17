@@ -59,9 +59,8 @@ public class CommentsControllerTests {
 		
 		String redirect = controller.postComment(slug, comment(), mockResult, mockRedirectAtts);
 		
-		assertEquals("redirect:/rollingstock/{slug}", redirect);
+		assertEquals("redirect:/rollingstocks/{slug}", redirect);
 		verify(mockService, times(1)).save(eq(comment()));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(slug));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(CommentsController.COMMENT_POSTED_MSG));
 	}
 	
@@ -72,9 +71,8 @@ public class CommentsControllerTests {
 		
 		String redirect = controller.postComment(slug, comment(), mockResult, mockRedirectAtts);
 		
-		assertEquals("redirect:/rollingstock/{slug}", redirect);
+		assertEquals("redirect:/rollingstocks/{slug}", redirect);
 		verify(mockService, times(0)).save(eq(comment()));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(slug));
 		verify(mockRedirectAtts, times(1)).addAttribute(eq("newComment"), eq(comment()));
 	}
 	

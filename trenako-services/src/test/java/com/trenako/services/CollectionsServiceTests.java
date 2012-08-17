@@ -117,7 +117,7 @@ public class CollectionsServiceTests {
 		verify(repo, times(1)).createNew(arg.capture());
 		
 		Collection c = arg.getValue();
-		assertEquals("{label=user, slug=user}", c.getOwner().toString());
+		assertEquals("{slug: user, label: user}", c.getOwner().toCompleteString());
 		assertEquals("public", c.getVisibility());
 		assertEquals("user", c.getSlug());
 	}

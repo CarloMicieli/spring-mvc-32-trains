@@ -15,9 +15,11 @@
  */
 package com.trenako.mapping;
 
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * It represents a wrapper for <em>"weak"</em> database references.
@@ -62,7 +64,7 @@ public class WeakDbRef<E extends DbReferenceable> {
 	 * @return the new {@code WeakDbRef}
 	 */
 	public static <E extends DbReferenceable> WeakDbRef<E> buildRef(E entity) {
-		Assert.notNull(entity, "Entity is required.");
+		Assert.notNull(entity, "Entity obj is required.");
 		return new WeakDbRef<E>(entity);
 	}
 
@@ -85,6 +87,17 @@ public class WeakDbRef<E extends DbReferenceable> {
 	@SuppressWarnings("rawtypes")
 	public static WeakDbRef<?> createNew(String slug) {
 		return new WeakDbRef(slug, "");
+	}
+	
+	/**
+	 * Checks whether the current {@code WeakDbRef} was fully loaded.
+	 * <p>
+	 * A reference is loaded when it contains values for both {@code slug} and {@code label}.
+	 * </p>
+	 * @return {@code true} the reference was loaded; {@code false} otherwise.
+	 */
+	public boolean isLoaded() {
+		return (StringUtils.hasText(slug) && StringUtils.hasText(label));
 	}
 	
 	/**
@@ -124,12 +137,14 @@ public class WeakDbRef<E extends DbReferenceable> {
 	@Override
 	public String toString() {
 		return this.getSlug();
-		/*
+	}
+	
+	public String toCompleteString() {
 		return new StringBuilder()
-			.append("{label=").append(getLabel())
-			.append(", slug=").append(getSlug())
+			.append("{slug: ").append(getSlug())
+			.append(", label: ").append(getLabel())
 			.append("}")
-			.toString();*/
+			.toString();
 	}
 	
 	@Override

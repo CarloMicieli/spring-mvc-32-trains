@@ -52,7 +52,7 @@ public class CollectionItemTests {
 			.price(100)
 			.build();
 		
-		assertEquals("{label=ACME 123456, slug=acme-123456}", item.getRollingStock().toString());
+		assertEquals("{slug: acme-123456, label: ACME 123456}", item.getRollingStock().toCompleteString());
 		assertEquals("new", item.getCondition());
 		assertEquals(now, item.getAddedAt());
 		assertEquals("Notes text", item.getNotes());

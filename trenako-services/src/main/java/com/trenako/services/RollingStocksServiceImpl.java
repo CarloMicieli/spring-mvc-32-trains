@@ -17,23 +17,10 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.trenako.entities.Brand;
-import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
-import com.trenako.entities.Scale;
-import com.trenako.repositories.BrandsRepository;
-import com.trenako.repositories.RailwaysRepository;
 import com.trenako.repositories.RollingStocksRepository;
-import com.trenako.repositories.ScalesRepository;
-import com.trenako.values.Category;
-import com.trenako.values.Era;
-import com.trenako.values.LocalizedEnum;
-import com.trenako.values.PowerMethod;
 
 /**
  * A concrete implementation for the {@code RollingStocks} service.
@@ -43,32 +30,15 @@ import com.trenako.values.PowerMethod;
 @Service("rollingStocksService")
 public class RollingStocksServiceImpl implements RollingStocksService {
 	
-	private @Autowired(required = false) MessageSource messageSource;
-	
 	private final RollingStocksRepository rollingStocks;
-	private final BrandsRepository brands;
-	private final ScalesRepository scales;
-	private final RailwaysRepository railways;
-	
-	private final static Sort BY_NAME_SORT_ORDER = new Sort(Direction.ASC, "name");
-	private final static Sort SCALES_SORT_ORDER = new Sort(new Sort.Order(Direction.ASC, "ratio"), new Sort.Order(Direction.DESC, "gauge"));
 	
 	/**
 	 * Creates a {@code RollingStocksServiceImpl}
 	 * @param rollingStocks the {@code RollingStock} repository
-	 * @param brands the {@code Brand} repository
-	 * @param railways the {@code Railway} repository
-	 * @param scales the {@code Scale} repository
 	 */
 	@Autowired
-	public RollingStocksServiceImpl(RollingStocksRepository rollingStocks,
-			BrandsRepository brands,
-			RailwaysRepository railways,
-			ScalesRepository scales) {
+	public RollingStocksServiceImpl(RollingStocksRepository rollingStocks) {
 		this.rollingStocks = rollingStocks;
-		this.brands = brands;
-		this.scales = scales;
-		this.railways = railways;
 	}
 	
 	@Override
@@ -80,62 +50,14 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	public RollingStock findBySlug(String slug) {
 		return rollingStocks.findBySlug(slug);
 	}
-	
-	@Override
-	public Iterable<Brand> brands() {
-		return brands.findAll(BY_NAME_SORT_ORDER);
-	}
-
-	@Override
-	public Iterable<Railway> railways() {
-		return railways.findAll(BY_NAME_SORT_ORDER);
-	}
-
-	@Override
-	public Iterable<Scale> scales() {
-		return scales.findAll(SCALES_SORT_ORDER);
-	}
-
-	@Override
-	public Iterable<LocalizedEnum<Category>> categories() {
-		return LocalizedEnum.list(Category.class, messageSource, null);
-	}
-
-	@Override
-	public Iterable<LocalizedEnum<Era>> eras() {
-		return LocalizedEnum.list(Era.class, messageSource, null);
-	}
-
-	@Override
-	public Iterable<LocalizedEnum<PowerMethod>> powerMethods() {
-		return LocalizedEnum.list(PowerMethod.class, messageSource, null);
-	}
-		
+			
 	@Override
 	public void save(RollingStock rs) {
-		loadBrand(rs);
-		loadRailway(rs);
-		loadScale(rs);
 		rollingStocks.save(rs);
 	}
 
 	@Override
 	public void remove(RollingStock rs) {
 		rollingStocks.delete(rs);
-	}
-
-	private void loadBrand(RollingStock rs) {
-		String slug = rs.getBrand().getSlug();
-		rs.setBrand(brands.findBySlug(slug));
-	}
-
-	private void loadRailway(RollingStock rs) {
-		String slug = rs.getRailway().getSlug();
-		rs.setRailway(railways.findBySlug(slug));
-	}
-
-	private void loadScale(RollingStock rs) {
-		String slug = rs.getScale().getSlug();
-		rs.setScale(scales.findBySlug(slug));
 	}
 }

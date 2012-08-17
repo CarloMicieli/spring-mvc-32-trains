@@ -17,15 +17,7 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 
-import com.trenako.criteria.SearchCriteria;
-import com.trenako.entities.Brand;
-import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
-import com.trenako.entities.Scale;
-import com.trenako.values.Category;
-import com.trenako.values.Era;
-import com.trenako.values.LocalizedEnum;
-import com.trenako.values.PowerMethod;
 
 /**
  * The interface for the rolling stocks service.
@@ -34,7 +26,6 @@ import com.trenako.values.PowerMethod;
  * the following functionalities:
  * <ul>
  * <li>returns the {@code RollingStock} by id;</li>
- * <li>returns the {@code RollingStock} list by a {@link SearchCriteria};</li>
  * <li>returns the {@code RollingStock} list;</li>
  * <li>saves/removes a {@code RollingStock}.</li>
  * </ul>
@@ -79,40 +70,4 @@ public interface RollingStocksService {
 	 * @param rs the {@code RollingStock} to be removed
 	 */
 	void remove(RollingStock rs);
-	
-	/**
-	 * Returns the list of {@code Brand}s.
-	 * @return the {@code Brand} list
-	 */
-	Iterable<Brand> brands();
-
-	/**
-	 * Returns the list of {@code Railway}s.
-	 * @return the {@code Railway} list
-	 */
-	Iterable<Railway> railways();
-
-	/**
-	 * Returns the list of {@code Scale}s.
-	 * @return the {@code Scale} list
-	 */
-	Iterable<Scale> scales();
-
-	/**
-	 * Returns the list of categories.
-	 * @return the {@code Category} list
-	 */
-	Iterable<LocalizedEnum<Category>> categories();
-	
-	/**
-	 * Returns the list of eras.
-	 * @return the {@code Era} list
-	 */
-	Iterable<LocalizedEnum<Era>> eras();
-	
-	/**
-	 * Returns the list of power methods.
-	 * @return the {@code power method} list
-	 */
-	Iterable<LocalizedEnum<PowerMethod>> powerMethods();
 }

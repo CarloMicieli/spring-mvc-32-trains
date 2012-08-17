@@ -17,6 +17,7 @@ package com.trenako.web.controllers;
 
 import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
@@ -44,7 +45,10 @@ import com.trenako.entities.Comment;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
+import com.trenako.mapping.LocalizedField;
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.security.AccountDetails;
+import com.trenako.services.FormValuesService;
 import com.trenako.services.RollingStocksService;
 import com.trenako.values.Category;
 import com.trenako.values.Era;
@@ -77,21 +81,26 @@ public class RollingStocksControllerTests {
 	@Mock BindingResult mockResult;
 	@Mock WebImageService imgService;
 	@Mock RollingStocksService service;
+	@Mock FormValuesService valuesService;
 	
 	RollingStocksController controller;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new RollingStocksController(service, imgService);
+		controller = new RollingStocksController(service, valuesService, imgService);
 		
-		when(service.brands()).thenReturn(BRANDS);
-		when(service.railways()).thenReturn(RAILWAYS);
-		when(service.scales()).thenReturn(SCALES);
+		when(valuesService.brands()).thenReturn(BRANDS);
+		when(valuesService.railways()).thenReturn(RAILWAYS);
+		when(valuesService.scales()).thenReturn(SCALES);
 		
-		when(service.categories()).thenReturn(CATEGORIES);
-		when(service.eras()).thenReturn(ERAS);
-		when(service.powerMethods()).thenReturn(POWERMETHODS);
+		when(valuesService.categories()).thenReturn(CATEGORIES);
+		when(valuesService.eras()).thenReturn(ERAS);
+		when(valuesService.powerMethods()).thenReturn(POWERMETHODS);
+		
+		when(valuesService.getBrand(eq(acme().getSlug()))).thenReturn(acme());
+		when(valuesService.getRailway(eq(fs().getSlug()))).thenReturn(fs());
+		when(valuesService.getScale(eq(scaleH0().getSlug()))).thenReturn(scaleH0());
 	}
 	
 	@Test
@@ -146,7 +155,6 @@ public class RollingStocksControllerTests {
 
 		RollingStockForm form = (RollingStockForm) model.get("rollingStockForm");
 		assertEquals(new RollingStock(), form.getRs());
-		verifyFormLists(form);
 	}
 	
 	@Test
@@ -181,7 +189,6 @@ public class RollingStocksControllerTests {
 		
 		assertEquals("rollingstock/new", viewName);
 		assertNotNull("Form is null", model.get("rollingStockForm"));
-		verifyFormLists((RollingStockForm) model.get("rollingStockForm"));
 	}
 	
 	@Test
@@ -235,16 +242,6 @@ public class RollingStocksControllerTests {
 		
 		RollingStockForm form = (RollingStockForm) model.get("rollingStockForm");
 		assertEquals(rollingStock(), form.getRs());
-		verifyFormLists(form);
-	}
-
-	private void verifyFormLists(RollingStockForm form) {
-		assertEquals(BRANDS, form.getBrandsList());
-		assertEquals(RAILWAYS, form.getRailwaysList());
-		assertEquals(SCALES, form.getScalesList());
-		assertEquals(ERAS, form.getErasList());
-		assertEquals(POWERMETHODS, form.getPowerMethodsList());
-		assertEquals(CATEGORIES, form.getCategoriesList());
 	}
 	
 	@Test
@@ -272,7 +269,6 @@ public class RollingStocksControllerTests {
 		
 		assertEquals("rollingstock/edit", viewName);
 		assertNotNull("Form is null", model.get("rollingStockForm"));
-		verifyFormLists((RollingStockForm) model.get("rollingStockForm"));
 	}
 
 	@Test
@@ -313,8 +309,14 @@ public class RollingStocksControllerTests {
 		.build();
 	
 	private RollingStockForm rsForm(MultipartFile file) {
-		RollingStockForm form = RollingStockForm.newForm(rollingStock(), service);
-		form.setFile(file);
+		RollingStock in = new RollingStock();
+		in.setItemNumber("123456");
+		in.setBrand(WeakDbRef.buildFromSlug("acme", Brand.class));
+		in.setRailway(WeakDbRef.buildFromSlug("fs", Railway.class));
+		in.setScale(WeakDbRef.buildFromSlug("h0", Scale.class));
+		in.setDescription(LocalizedField.localize("desc"));
+		
+		RollingStockForm form = new RollingStockForm(in, valuesService, file);
 		return form;
 	}
 	
