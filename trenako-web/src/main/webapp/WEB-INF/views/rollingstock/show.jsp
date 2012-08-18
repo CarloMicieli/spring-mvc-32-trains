@@ -67,7 +67,17 @@
 						<li><a href="#"><i class="i"></i> New wishlist</a></li>
 					</ul>
 				</div>
+				<hr>
 				</sec:authorize>
+				<p>
+					<s:message code="rollingStock.review.info.label" arguments="${result.reviews.numberOfReviews}, ${result.reviews.rating}"/>
+					<s:url var="reviewsUrl" value="/rollingstocks/{slug}/reviews">
+						<s:param name="slug" value="${result.rs.slug}"></s:param>
+					</s:url>
+	    			<a class="btn btn-success" href="${reviewsUrl}" style="width: 110px">
+						<i class="icon-comment icon-white"></i> <s:message code="button.all.reviews.label"/>
+					</a>
+				</p>
 			</div>
 	    	<div class="span6">
 				<s:url value="/images/rollingstock_{slug}" var="imgUrl">

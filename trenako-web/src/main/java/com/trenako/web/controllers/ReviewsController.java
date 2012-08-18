@@ -30,6 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockReviews;
 import com.trenako.services.ReviewsService;
 import com.trenako.services.RollingStocksService;
 import com.trenako.web.controllers.form.ReviewForm;
@@ -58,6 +59,17 @@ public class ReviewsController {
 	
 	void setUserContext(UserContext userContext) {
 		this.userContext = userContext;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public String reviews(@PathVariable("slug") String slug, ModelMap model) {
+		
+		RollingStock rs = rsService.findBySlug(slug);
+		RollingStockReviews reviews = service.findByRollingStock(rs);
+		
+		model.addAttribute("reviews", reviews);
+		model.addAttribute("rollingStock", rs);
+		return "review/list";
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
@@ -89,13 +101,13 @@ public class ReviewsController {
 			reviewForm.setRs(rollingStock);
 			
 			model.addAttribute(reviewForm);
-			model.addAttribute("slug", rollingStock.getSlug());
+			//model.addAttribute("slug", rollingStock.getSlug());
 			return "review/new";
 		}
 		
 		service.postReview(rollingStock, review);
 		REVIEW_POSTED_MSG.appendToRedirect(redirectAtts);
-		redirectAtts.addAttribute("slug", rollingStock.getSlug());
-		return "redirect:/rollingstock/{slug}/reviews";
+		//redirectAtts.addAttribute("slug", rollingStock.getSlug());
+		return "redirect:/rollingstocks/{slug}/reviews";
 	}
 }

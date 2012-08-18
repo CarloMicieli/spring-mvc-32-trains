@@ -19,6 +19,7 @@ import java.beans.PropertyEditorSupport;
 
 import org.springframework.util.StringUtils;
 
+import com.trenako.mapping.DbReferenceable;
 import com.trenako.mapping.WeakDbRef;
 
 /**
@@ -45,6 +46,6 @@ public class WeakDbRefPropertyEditor extends PropertyEditorSupport {
 			return;
 		}
 
-		setValue(WeakDbRef.createNew(text));
+		setValue(WeakDbRef.buildFromSlug(text, DbReferenceable.class));
 	}	
 }

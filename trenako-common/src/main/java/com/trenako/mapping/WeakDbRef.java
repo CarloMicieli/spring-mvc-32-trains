@@ -80,16 +80,6 @@ public class WeakDbRef<E extends DbReferenceable> {
 	}
 	
 	/**
-	 * Creates a new {@code WeakDbRef} for the provided slug suppressing the type.
-	 * @param slug the slug
-	 * @return the new {@code WeakDbRef}
-	 */
-	@SuppressWarnings("rawtypes")
-	public static WeakDbRef<?> createNew(String slug) {
-		return new WeakDbRef(slug, "");
-	}
-	
-	/**
 	 * Checks whether the current {@code WeakDbRef} was fully loaded.
 	 * <p>
 	 * A reference is loaded when it contains values for both {@code slug} and {@code label}.

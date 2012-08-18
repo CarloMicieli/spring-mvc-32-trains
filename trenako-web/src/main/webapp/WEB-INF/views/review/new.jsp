@@ -24,7 +24,7 @@
 						<s:param name="slug" value="${reviewForm.rs.slug}" />
 					</s:url>
 					<a href="${backUrl}" class="btn btn-info" style="width: 110px">
-						<i class="icon-arrow-left icon-white"></i> Go back
+						<i class="icon-arrow-left icon-white"></i> <s:message code="button.go.back.label"/>
 					</a>
 					</p>
 					<a href="#" class="thumbnail">
@@ -55,6 +55,8 @@
 							</div>
 							</c:if>
 						</fieldset>
+						
+						<input type="hidden" id="review.author" name="review.author" value="${reviewForm.author.slug}"/>
 						
 						 <s:bind path="reviewForm.review.title">
 	    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">

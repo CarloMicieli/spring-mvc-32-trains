@@ -15,6 +15,8 @@
  */
 package com.trenako.services;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -53,6 +55,10 @@ public class ReviewsServiceImpl implements ReviewsService {
 	public void postReview(RollingStock rs, Review review) {
 		Assert.notNull(rs.getLabel(), "Rolling stock label required");
 		Assert.notNull(rs.getSlug(), "Rolling stock slug required");
+		
+		if (review.getPostedAt() == null) {
+			review.setPostedAt(new Date());
+		}
 		
 		repo.addReview(rs, review);
 	}

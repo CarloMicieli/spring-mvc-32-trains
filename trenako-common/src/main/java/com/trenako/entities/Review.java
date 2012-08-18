@@ -114,6 +114,14 @@ public class Review {
 	 * Sets the {@code Review}'s author name.
 	 * @param author the author name
 	 */
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
+	/**
+	 * Sets the {@code Review}'s author name.
+	 * @param author the author name
+	 */
 	public void setAuthor(Account author) {
 		this.author = author.getSlug();
 	}
