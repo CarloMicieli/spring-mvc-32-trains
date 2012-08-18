@@ -65,13 +65,15 @@ public class IntegerAnnotationFormatterFactory
 	
 	private Formatter<Number> getFormatter(IntegerFormat annotation) {
 		String pattern = annotation.pattern();
-		if (pattern!=null && pattern.isEmpty()==false) {
+		if (pattern != null && !pattern.isEmpty()) {
 			return new NumberFormatter(resolveEmbeddedValue(pattern));
 		}
 		else {
 			switch(annotation.style()) {
 			case SCALE_GAUGE:
 				return new GaugeFormatter();
+			case CURRENCY:
+				return new CurrencyFormatter();				
 			case SCALE_RATIO:
 				return new RatioFormatter();
 			default:

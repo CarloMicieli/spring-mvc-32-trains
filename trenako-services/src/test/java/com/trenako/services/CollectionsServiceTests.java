@@ -33,6 +33,8 @@ import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.CollectionsRepository;
+import com.trenako.values.Condition;
+import com.trenako.values.LocalizedEnum;
 
 /**
  * 
@@ -127,5 +129,11 @@ public class CollectionsServiceTests {
 		Collection coll = null;
 		service.remove(coll);
 		verify(repo, times(1)).remove(eq(coll));
+	}
+	
+	@Test
+	public void shouldReturnTheConditionsList() {
+		Iterable<LocalizedEnum<Condition>> conditions = service.conditionsList();
+		assertEquals("[(new), (pre-owned)]", conditions.toString());
 	}
 }

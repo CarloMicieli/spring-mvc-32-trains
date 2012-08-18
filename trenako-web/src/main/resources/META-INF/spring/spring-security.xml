@@ -36,6 +36,7 @@
 		<intercept-url pattern="/browse/**" access="permitAll" />
 		<intercept-url pattern="/default" access="isAuthenticated()" />
 		<intercept-url pattern="/you/**" access="isAuthenticated()" />
+		<intercept-url pattern="/collections/**" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/new*" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/{slug}/edit*" access="isAuthenticated()" />
 		<intercept-url pattern="/rollingstocks/{slug}/reviews/new*" access="isAuthenticated()" />

@@ -42,5 +42,7 @@ public @interface IntegerFormat {
 		SCALE_RATIO,
 
 		SCALE_GAUGE,
+		
+		CURRENCY,
 	}
 }

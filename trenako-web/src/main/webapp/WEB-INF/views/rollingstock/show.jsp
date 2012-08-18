@@ -52,7 +52,10 @@
 					</a>
 				</p>
 				<p>
-					<a class="btn btn-danger" href="#" style="width: 110px"><i class="icon-tags icon-white">
+	    			<s:url var="addCollUrl" value="/collections/add/{slug}">
+						<s:param name="slug" value="${result.rs.slug}"></s:param>
+					</s:url>				
+					<a class="btn btn-danger" href="${addCollUrl}" style="width: 110px"><i class="icon-tags icon-white">
 						</i> <s:message code="button.add.collection.label"/>
 					</a>
 				</p>

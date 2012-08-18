@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Account;
@@ -24,6 +25,8 @@ import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.CollectionsRepository;
+import com.trenako.values.Condition;
+import com.trenako.values.LocalizedEnum;
 import com.trenako.values.Visibility;
 
 /**
@@ -34,6 +37,7 @@ import com.trenako.values.Visibility;
 @Service("collectionsService")
 public class CollectionsServiceImpl implements CollectionsService {
 
+	private @Autowired(required = false) MessageSource messageSource;
 	private final CollectionsRepository repo;
 	
 	@Autowired
@@ -85,5 +89,10 @@ public class CollectionsServiceImpl implements CollectionsService {
 	@Override
 	public void remove(Collection collection) {
 		repo.remove(collection);
+	}
+
+	@Override
+	public Iterable<LocalizedEnum<Condition>> conditionsList() {
+		return LocalizedEnum.list(Condition.class, messageSource, null);
 	}
 }

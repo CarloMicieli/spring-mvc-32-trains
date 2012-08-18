@@ -21,6 +21,8 @@ import com.trenako.entities.Account;
 import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
+import com.trenako.values.Condition;
+import com.trenako.values.LocalizedEnum;
 import com.trenako.values.Visibility;
 
 /**
@@ -116,4 +118,10 @@ public interface CollectionsService
 	 * @param collection the {@code Collection} to be removed
 	 */
 	void remove(Collection collection);
+
+	/**
+	 * Returns the list of {@code Condition} values.
+	 * @return the conditions
+	 */
+	Iterable<LocalizedEnum<Condition>> conditionsList();
 }

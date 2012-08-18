@@ -24,6 +24,8 @@ import javax.validation.constraints.Past;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import com.trenako.format.annotations.IntegerFormat;
+import com.trenako.format.annotations.IntegerFormat.Style;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.utility.Slug;
 import com.trenako.values.Condition;
@@ -43,6 +45,7 @@ public class CollectionItem {
 	private WeakDbRef<RollingStock> rollingStock;
 
 	@Range(min = 0, max = 999900, message = "item.price.range.notmet")
+	@IntegerFormat(style = Style.CURRENCY)
 	private int price;
 
 	private String condition;
@@ -195,6 +198,9 @@ public class CollectionItem {
 	 * @return the purchasing date
 	 */
 	public Date getAddedAt() {
+		if (addedAt == null) {
+			addedAt = new Date();
+		}
 		return addedAt;
 	}
 
