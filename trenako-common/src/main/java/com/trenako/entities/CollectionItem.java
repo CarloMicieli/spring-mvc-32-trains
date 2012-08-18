@@ -35,61 +35,61 @@ import com.trenako.values.Condition;
  *
  */
 public class CollectionItem {
-    
+
 	@Indexed
 	private String itemId;
-	
+
 	@NotNull(message = "item.rollingStock.required")
 	private WeakDbRef<RollingStock> rollingStock;
 
-    @Range(min = 0, max = 999900, message = "item.price.range.notmet")
-    private int price;
+	@Range(min = 0, max = 999900, message = "item.price.range.notmet")
+	private int price;
 
-    private String condition;
+	private String condition;
 
-    private String notes;
+	private String notes;
 
 	private String category;
 
-    @Range(min = 1, max = 99, message = "item.quantity.range.notmet")
-    private int quantity = 1;
+	@Range(min = 1, max = 99, message = "item.quantity.range.notmet")
+	private int quantity = 1;
 
-    @NotNull(message = "item.addedAt.required")
+	@NotNull(message = "item.addedAt.required")
 	@Past(message = "item.addedAt.past.notmet")
-    private Date addedAt;
+	private Date addedAt;
 
-    /**
-     * Creates an empty {@code CollectionItem}.
-     */
-    public CollectionItem() {
+	/**
+	 * Creates an empty {@code CollectionItem}.
+	 */
+	public CollectionItem() {
 	}
 
-    private CollectionItem(Builder b) {
-    	setRollingStock(b.rs);
-    	
-    	this.addedAt = b.addedAt;
-    	this.price = b.price;
-    	this.condition = b.condition;
-    	this.notes = b.notes;
-    	this.quantity = b.quantity;
-    	this.category = b.category;
-    }
+	private CollectionItem(Builder b) {
+		setRollingStock(b.rs);
+		
+		this.addedAt = b.addedAt;
+		this.price = b.price;
+		this.condition = b.condition;
+		this.notes = b.notes;
+		this.quantity = b.quantity;
+		this.category = b.category;
+	}
     
-    public static class Builder {
-    	// required fields
-    	private final RollingStock rs;
-    	
-    	// optional fields
-    	private String category = null;
-    	private Date addedAt = null;
-    	private int price = 0;
-    	private String condition = null;
-    	private String notes = null;
-    	private int quantity = 1;
-    	
-    	public Builder(RollingStock rs) {
-    		this.rs = rs;
-    	}
+	public static class Builder {
+		// required fields
+		private final RollingStock rs;
+		
+		// optional fields
+		private String category = null;
+		private Date addedAt = null;
+		private int price = 0;
+		private String condition = null;
+		private String notes = null;
+		private int quantity = 1;
+		
+		public Builder(RollingStock rs) {
+			this.rs = rs;
+		}
 
 		public Builder addedAt(Date date) {
 			addedAt = date;
@@ -123,14 +123,14 @@ public class CollectionItem {
 		
 		public CollectionItem build() {
 			return new CollectionItem(this);
-		}   	
-    }
+		}
+	}
     
-    /**
-     * Returns the {@code CollectionItem} id.    
-     * @return the id
-     */
-    public String getItemId() {
+	/**
+	 * Returns the {@code CollectionItem} id.    
+	 * @return the id
+	 */
+	public String getItemId() {
 		if (itemId == null) {
 			itemId = new StringBuilder()
 				.append(getRollingStock().getSlug())
@@ -138,21 +138,21 @@ public class CollectionItem {
 				.append(Slug.encode(getAddedAt()))
 				.toString();
 		}
-    	return itemId;
+		return itemId;
 	}
 
-    /**
-     * Sets the {@code CollectionItem} id.    
-     * @param id the id
-     */
+	/**
+	 * Sets the {@code CollectionItem} id.    
+	 * @param id the id
+	 */
 	public void setItemId(String itemId) {
 		this.itemId = itemId;
 	}
 
 	/**
-     * Returns the rolling stock.
-     * @return the rolling stock
-     */
+	 * Returns the rolling stock.
+	 * @return the rolling stock
+	 */
 	public WeakDbRef<RollingStock> getRollingStock() {
 		return rollingStock;
 	}
@@ -164,7 +164,7 @@ public class CollectionItem {
 	public void setRollingStock(WeakDbRef<RollingStock> rollingStock) {
 		this.rollingStock = rollingStock;
 	}
-	
+
 	/**
 	 * Sets the rolling stock.
 	 * @param rollingStock the rolling stock
@@ -173,7 +173,7 @@ public class CollectionItem {
 		this.rollingStock = WeakDbRef.buildRef(rollingStock);
 		this.category = rollingStock.getCategory();
 	}
-	
+
 	/**
 	 * Returns the rolling stock category.
 	 * @return the category
@@ -214,7 +214,7 @@ public class CollectionItem {
 		return (new BigDecimal(getPrice()))
 				.divide(new BigDecimal(100));
 	}
-	
+
 	/**
 	 * Returns the price.
 	 * @return the price
@@ -230,7 +230,7 @@ public class CollectionItem {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	
+
 	/**
 	 * Returns the rolling stock model quantity.
 	 * @return the quantity
@@ -278,12 +278,12 @@ public class CollectionItem {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (!(obj instanceof CollectionItem)) return false;
-	
+
 		CollectionItem other = (CollectionItem) obj;
 		return this.getItemId().equals(other.getItemId());
 	}
