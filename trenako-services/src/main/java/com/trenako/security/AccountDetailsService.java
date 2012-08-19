@@ -55,9 +55,8 @@ public class AccountDetailsService implements UserDetailsService {
 			throws UsernameNotFoundException {
 
 		Account account = service.findByEmailAddress(emailAddress);
-		if( account==null ) {
-            throw new UsernameNotFoundException(
-            	String.format("Could not find user with email '%s'", emailAddress));
+		if (account == null) {
+			throw new UsernameNotFoundException("Could not find user with email " + emailAddress);
 		}
 		return new AccountDetails(account);
 	}

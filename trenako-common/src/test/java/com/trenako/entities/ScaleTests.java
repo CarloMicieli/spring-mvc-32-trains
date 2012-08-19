@@ -159,6 +159,14 @@ public class ScaleTests {
 	}
 	
 	@Test
+	public void shouldProduceStringRepresentationForScales() {
+		Scale x = new Scale.Builder("H0")
+			.ratio(valueOf(87))
+			.build();
+		assertEquals("scale{name: H0, ratio: 1:87}", x.toString());
+	}
+	
+	@Test
 	public void shouldProduceLocalizedScalesDescriptions() {
 		Scale x = new Scale("H0");
 		LocalizedField<String> desc = new LocalizedField<String>("Scale half-0");

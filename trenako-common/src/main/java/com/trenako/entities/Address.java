@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -172,15 +173,11 @@ public class Address {
 	 * @return {@code true} if empty; {@code false} otherwise
 	 */
 	public boolean isEmpty() {
-		return emptyOrNull(streetAddress) &&
-				emptyOrNull(postalCode) &&
-				emptyOrNull(city) &&
-				emptyOrNull(locality) &&
-				emptyOrNull(country);
-	}
-	
-	private boolean emptyOrNull(String s) {
-		return s==null || s.isEmpty();
+		return StringUtils.isBlank(streetAddress) &&
+				StringUtils.isBlank(postalCode) &&
+				StringUtils.isBlank(city) &&
+				StringUtils.isBlank(locality) &&
+				StringUtils.isBlank(country);
 	}
 	
 	@Override
@@ -225,15 +222,15 @@ public class Address {
 	public String toString() {
 		if (isEmpty()) return "";
 		
-		StringBuilder sb = new StringBuilder();
-		sb.append(getStreetAddress());
-		sb.append(", ");
-		sb.append(getPostalCode());
-		sb.append(" ");
-		sb.append(getCity());
-		sb.append(", (");
-		sb.append(getCountry());
-		sb.append(")");
-		return sb.toString();
+		return new StringBuilder()
+			.append(getStreetAddress())
+			.append(", ")
+			.append(getPostalCode())
+			.append(" ")
+			.append(getCity())
+			.append(", (")
+			.append(getCountry())
+			.append(")")
+			.toString();
 	}
 }

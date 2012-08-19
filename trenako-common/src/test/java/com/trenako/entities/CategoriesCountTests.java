@@ -45,4 +45,19 @@ public class CategoriesCountTests {
 		String fieldName2 = CategoriesCount.getKey("electric-locomotives");
 		assertEquals("electricLocomotives", fieldName2);
 	}
+	
+	@Test
+	public void shouldCheckWhetherTwoCategoriesCountsAreEquals() {
+		CategoriesCount x = new CategoriesCount(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		CategoriesCount y = new CategoriesCount(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		assertTrue("Categories counts are different", x.equals(x));
+		assertTrue("Categories counts are different", x.equals(y));
+	}
+	
+	@Test
+	public void shouldCheckWhetherTwoCategoriesCountsAreDifferent() {
+		CategoriesCount x = new CategoriesCount(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		CategoriesCount y = new CategoriesCount(9, 8, 7, 6, 5, 4, 3, 2, 1);
+		assertFalse("Categories counts are equals", x.equals(y));
+	}
 }

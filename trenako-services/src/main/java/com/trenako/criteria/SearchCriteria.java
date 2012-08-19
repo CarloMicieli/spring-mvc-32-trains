@@ -51,7 +51,7 @@ import com.trenako.values.PowerMethod;
  */
 public class SearchCriteria {
 	
-	private final Map<Criteria, Pair<String, String>> values;// = new HashMap<String, Pair<String, String>>();
+	private final Map<Criteria, Pair<String, String>> values;
 	
 	// Init search criteria with the builder values
 	private SearchCriteria(Map<Criteria, Pair<String, String>> values) {
@@ -405,31 +405,6 @@ public class SearchCriteria {
 	}
 
 	/**
-	 * Returns a string representation of the {@code SearchCriteria}.
-	 * @return a string representation of the {@code SearchCriteria}
-     */
-	@Override
-	public String toString() {
-		return this.values.toString();		
-	}
-	
-	/**
-	 * Indicates whether some other {@code SearchCriteria} is equal to this one.
-	 * 
-	 * @param obj the reference {@code SearchCriteria} with which to compare
-	 * @return {@code true} if this object is the same as the {@code obj} 
-	 * argument; {@code false} otherwise
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if( obj==this ) return true;
-		if( !(obj instanceof SearchCriteria) ) return false;
-		
-		SearchCriteria other = (SearchCriteria) obj;
-		return this.values.equals(other.values);
-	}
-	
-	/**
 	 * Indicates whether the current object has a criteria
 	 * for the provided key.
 	 * @param key the criteria name
@@ -486,6 +461,20 @@ public class SearchCriteria {
 	 */
 	public Iterable<Criteria> criteria() {
 		return this.values.keySet();
+	}
+	
+	@Override
+	public String toString() {
+		return this.values.toString();		
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof SearchCriteria)) return false;
+		
+		SearchCriteria other = (SearchCriteria) obj;
+		return this.values.equals(other.values);
 	}
 	
 	private String getValue(Criteria key) {

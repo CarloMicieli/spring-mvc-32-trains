@@ -42,7 +42,27 @@ public class CategoriesCount {
 	 */
 	public CategoriesCount() {
 	}
-	
+		
+	protected CategoriesCount(int steamLocomotives, 
+			int dieselLocomotives,
+			int electricLocomotives, 
+			int railcars, 
+			int electricMultipleUnit,
+			int freightCars, 
+			int passengerCars, 
+			int trainSets, 
+			int starterSets) {
+		this.steamLocomotives = steamLocomotives;
+		this.dieselLocomotives = dieselLocomotives;
+		this.electricLocomotives = electricLocomotives;
+		this.railcars = railcars;
+		this.electricMultipleUnit = electricMultipleUnit;
+		this.freightCars = freightCars;
+		this.passengerCars = passengerCars;
+		this.trainSets = trainSets;
+		this.starterSets = starterSets;
+	}
+
 	public int getSteamLocomotives() {
 		return steamLocomotives;
 	}

@@ -17,7 +17,6 @@ package com.trenako.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.trenako.entities.Account;
@@ -46,10 +45,9 @@ public class WishListsServiceImpl implements WishListsService {
 	public WishListsServiceImpl(WishListsRepository repo) {
 		this.repo = repo;
 	}
-
+	
 	@Override
 	public Iterable<WishList> findByOwner(Account owner) {
-		Assert.notNull(owner.getSlug(), "Owner slug is required");
 		return repo.findByOwner(owner, false);
 	}
 		
@@ -57,50 +55,38 @@ public class WishListsServiceImpl implements WishListsService {
 	public WishList findBySlug(String slug) {
 		return repo.findBySlug(slug);
 	}
-
+	
 	@Override
 	public WishList findDefaultListByOwner(Account owner) {
-		Assert.notNull(owner.getSlug(), "Owner slug is required");
 		return repo.findDefaultListByOwner(owner);
 	}
 	
 	@Override
 	public boolean containsRollingStock(WishList wishList, RollingStock rs) {
-		Assert.notNull(wishList.getSlug(), "Wish list slug is required");
-		Assert.notNull(rs.getSlug(), "Rolling stock slug is required");
 		return repo.containsRollingStock(wishList, rs);
 	}
 	
 	@Override
 	public void addItem(WishList wishList, WishListItem newItem) {
-		Assert.notNull(wishList.getSlug(), "Wish list slug is required");
-		
 		if (!StringUtils.hasText(newItem.getItemId())) {
 			newItem.setItemId(newItem.getItemId());
 		}
 		
 		repo.addItem(wishList, newItem);
 	}
-
+	
 	@Override
 	public void updateItem(WishList wishList, WishListItem item) {
-		Assert.notNull(wishList.getSlug(), "Wish list slug is required");
 		repo.updateItem(wishList, item);
 	}
 	
 	@Override
 	public void removeItem(WishList wishList, WishListItem item) {
-		Assert.notNull(wishList.getSlug(), "Wish list slug is required");
 		repo.removeItem(wishList, item);
 	}
 	
 	@Override
 	public void moveItem(WishList source, WishList target, WishListItem item) {
-		Assert.notNull(source.getSlug(), "Source wish list slug is required");
-		Assert.notNull(source.getOwner(), "Source wish list owner is required");
-		Assert.notNull(target.getSlug(), "Target wish list slug is required");
-		Assert.notNull(target.getOwner(), "Target wish list owner is required");
-		
 		if (source.equals(target)) {
 			// the two lists are equals. No further actions.
 			return;
@@ -116,28 +102,22 @@ public class WishListsServiceImpl implements WishListsService {
 	
 	@Override
 	public void changeVisibility(WishList wishList, Visibility visibility) {
-		Assert.notNull(wishList.getSlug(), "Wish list slug is required");
 		repo.changeVisibility(wishList, visibility);
 	}
 	
 	@Override
 	public void setAsDefault(Account owner, WishList wishList) {
-		Assert.notNull(owner.getSlug(), "Owner slug is required");
-		Assert.notNull(wishList.getSlug(), "Wish list slug is required");
-		
 		repo.resetDefault(owner);
 		repo.changeDefault(wishList, true);
 	}
 	
 	@Override
 	public void createNew(Account owner, String name) {
-		Assert.notNull(owner.getSlug(), "Owner slug is required");
-		
 		WishList newList = new WishList(owner, name, Visibility.PUBLIC);
 		repo.save(newList);
 	}
-
-    @Override
+	
+	@Override
 	public void remove(WishList wishList) {
 		repo.remove(wishList);
 	}

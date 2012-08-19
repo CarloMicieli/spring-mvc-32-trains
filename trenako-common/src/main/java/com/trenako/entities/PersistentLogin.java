@@ -30,7 +30,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "persistentLogins")
 public class PersistentLogin {
 	@Id
-	private ObjectId _id;
+	private ObjectId id;
 	
 	@Indexed(unique = true)
 	private String series;
@@ -59,11 +59,11 @@ public class PersistentLogin {
 	}
 	
 	public ObjectId getId() {
-		return _id;
+		return id;
 	}
 
 	public void setId(ObjectId id) {
-		this._id = id;
+		this.id = id;
 	}
 
 	public Date getDate() {

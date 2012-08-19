@@ -43,15 +43,7 @@ public interface WishListsRepository {
 	 * @returns a {@code WishList} if found; {@code null} otherwise
 	 */
 	WishList findBySlug(String slug);
-	
-	/**
-	 * Returns the {@code WishList} with the provided slug for a given owner.
-	 * @param owner the owner
-	 * @param slug the {@code WishList} slug
-	 * @returns a {@code WishList} if found; {@code null} otherwise
-	 */
-	//WishList findByOwnerAndSlug(Account owner, String slug);
-	
+		
 	/**
 	 * Returns the default {@code WishList} for the provided owner.
 	 * @param owner the owner
@@ -91,7 +83,7 @@ public interface WishListsRepository {
 	/**
 	 * Changes the {@code WishList} visibility (either {@code public} or {@code private}).
 	 * @param wishList the {@code WishList} to be modified
-     * @param visibility the new visibility
+	 * @param visibility the new visibility
 	 */
 	void changeVisibility(WishList wishList, Visibility visibility);
 	
@@ -109,14 +101,14 @@ public interface WishListsRepository {
 	void resetDefault(Account owner);
 	
 	/**
-     * Saves the {@code WishList}.
-     * @param wishList the {@code WishList} to be saved
-     */ 
-    void save(WishList wishList);
-
-    /**
-     * Removes the {@code WishList}.
-     * @param wishList the {@code WishList} to be removed
-     */ 
-    void remove(WishList wishList);
+	 * Saves the {@code WishList}.
+	 * @param wishList the {@code WishList} to be saved
+	 */ 
+	void save(WishList wishList);
+	
+	/**
+	 * Removes the {@code WishList}.
+	 * @param wishList the {@code WishList} to be removed
+	 */ 
+	void remove(WishList wishList);
 }

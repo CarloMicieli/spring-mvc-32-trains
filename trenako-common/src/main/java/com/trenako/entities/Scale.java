@@ -138,29 +138,15 @@ public class Scale implements DbReferenceable {
 		private int gauge = 0;
 		private boolean narrow = false;
 		
-		/**
-		 * Creates a new {@code Scale} builder.
-		 * @param name the name
-		 */
 		public Builder(String name) {
 			this.name = name;
 		}
 		
-		/**
-		 * Sets the {@code slug}.
-		 * @param slug the slug
-		 * @return a builder
-		 */
 		public Builder slug(String slug) {
 			this.slug = slug;
 			return this;
 		}
 		
-		/**
-		 * The default description.
-		 * @param desc the description
-		 * @return a {@code Brand} builder
-		 */
 		public Builder description(String desc) {
 			if (this.description == null) {
 				this.description = new LocalizedField<String>(desc);
@@ -171,12 +157,6 @@ public class Scale implements DbReferenceable {
 			return this;
 		}
 		
-		/**
-		 * The localized description.
-		 * @param lang the Locale
-		 * @param desc the description
-		 * @return a {@code Brand} builder
-		 */
 		public Builder description(Locale lang, String desc) {
 			if (this.description == null) {
 				this.description = new LocalizedField<String>();
@@ -185,100 +165,38 @@ public class Scale implements DbReferenceable {
 			return this;
 		}
 		
-		/**
-		 * Sets the {@code scale} ratio.
-		 * <p>
-		 * The ratio is internally stored as {@code Integer}; the
-		 * actual value must be multiplied by a {@code 10} factor.
-		 * </p>
-		 * <p>
-		 * For example, a ratio of {@code 32.5} must be inserted as {@code 325}.
-		 * </p>
-		 * 
-		 * @param ratio the ratio
-		 * @return a builder
-		 * @see Builder#ratio(BigDecimal)
-		 */
 		public Builder ratio(int ratio) {
 			this.ratio = ratio;
 			return this;
 		}
 		
-		/**
-		 * Sets the {@code scale} ratio in millimeters.
-		 * <p>
-		 * The clients must use this method if they provide
-		 * the exact value.
-		 * </p>
-		 * 
-		 * @param ratio the ratio
-		 * @return a builder
-		 */
 		public Builder ratio(BigDecimal ratio) {
 			this.ratio = ratio
 					.multiply(RATIO_FACTOR).intValue();
 			return this;
 		}
 		
-		/**
-		 * Sets the {@code Scale} gauge.
-		 * <p>
-		 * The gauge is internally stored as {@code Integer}; the
-		 * actual value must be multiplied by a {@code 100} factor.
-		 * </p>
-		 * <p>
-		 * For example, a gauge of {@code 16.5} must be inserted as {@code 1650}.
-		 * </p>
-		 *  
-		 * @param gauge the gauge
-		 * @return a builder
-		 * @see Builder#gauge(BigDecimal)
-		 */
 		public Builder gauge(int gauge) {
 			this.gauge = gauge;
 			return this;
 		}
 
-		/**
-		 * Sets the {@code Scale} gauge in millimeters.
-		 * <p>
-		 * The clients must use this method if they provide
-		 * the exact value.
-		 * </p>
-		 * 
-		 * @param gauge the gauge
-		 * @return a builder
-		 */
 		public Builder gauge(BigDecimal gauge) {
 			this.gauge = gauge
 					.multiply(GAUGE_FACTOR).intValue();
 			return this;
 		}
 		
-		/**
-		 * The power methods list.
-		 * @param powerMethods the power methods list
-		 * @return a builder
-		 */
 		public Builder powerMethods(String... powerMethods) {
 			this.powerMethods = new HashSet<String>(Arrays.asList(powerMethods));
 			return this;
 		}
 		
-		/**
-		 * Indicates whether a {@code Scale} is narrow or not.
-		 * @param n {@code true} for narrow scales; {@code false} otherwise
-		 * @return a builder
-		 */
 		public Builder narrow(boolean n) {
 			narrow = n;
 			return this;
 		}
 		
-		/**
-		 * Builds a new {@code Scale} object.
-		 * @return a {@code Scale}
-		 */
 		public Scale build() {
 			return new Scale(this);
 		}
@@ -532,26 +450,18 @@ public class Scale implements DbReferenceable {
 		this.lastModified = lastModified;
 	}
 	
-	/**
-	 * Returns a string representation of this object.
-	 * @return a string representation of the object.
-	 */	
 	@Override
 	public String toString() {
 		return new StringBuffer()
+			.append("scale{")
+			.append("name: ")
 			.append(getName())
-			.append(" (")
+			.append(", ratio: ")
 			.append(getRatioText())
-			.append(")")
+			.append("}")
 			.toString();
 	}
 	
-	/**
-	 * Indicates whether some other object is "equal to" this one.
-	 * @param obj the reference object with which to compare.
-	 * @return <em>true</em> if this object is the same as the obj argument; 
-	 * <em>false</em> otherwise.
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
@@ -566,10 +476,6 @@ public class Scale implements DbReferenceable {
 			.isEquals();
 	}
 	
-	/**
-	 * Returns a hash code value for the object.
-	 * @return a hash code value for this object. 
-	 */
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(15, 37)

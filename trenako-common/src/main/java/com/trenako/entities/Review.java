@@ -209,13 +209,6 @@ public class Review {
 		}
 	}
 	
-	/**
-	 * Indicates whether some other {@code Review} is equal to this one.
-	 * 
-	 * @param obj the reference {@code Account} with which to compare
-	 * @return {@code true} if this object is the same as the {@code obj} 
-	 * argument; {@code false} otherwise
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
@@ -230,18 +223,6 @@ public class Review {
 			.isEquals();
 	}
 	
-	/**
-	 * Returns a string representation of the {@code Review}.
-	 * <p>
-	 * This method returns a string equal to the value of:
-	 * <blockquote>
-	 * <pre>
-	 * getAuthorName() + ': ' + getRsSlug() + ' (' + getTitle() + ')'
-	 * </pre>
-	 * </blockquote>
-	 * </p>
-	 * @return a string representation of the {@code Review}
-	 */
 	@Override
 	public String toString() {
         return new StringBuilder()

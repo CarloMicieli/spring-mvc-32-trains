@@ -15,22 +15,20 @@
  */
 package com.trenako.web.tags;
 
-import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.buildUrlAdding;
-import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.buildUrlRemoving;
-import static com.trenako.web.tags.html.HtmlBuilder.a;
-import static com.trenako.web.tags.html.HtmlBuilder.li;
-import static com.trenako.web.tags.html.HtmlBuilder.snippet;
-import static com.trenako.web.tags.html.HtmlBuilder.tags;
+import static com.trenako.web.infrastructure.SearchCriteriaUrlBuilder.*;
+import static com.trenako.web.tags.html.HtmlBuilder.*;
 import static org.apache.commons.beanutils.BeanUtils.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 import com.trenako.criteria.Criteria;
 import com.trenako.criteria.SearchCriteria;
+import com.trenako.mapping.DbReferenceable;
 import com.trenako.results.SearchRange;
 import com.trenako.services.BrowseService;
 import com.trenako.values.LocalizedEnum;
@@ -102,14 +100,25 @@ public abstract class SearchBarItemTags extends SpringTagSupport {
 				return en.getLabel();
 			}
 		}
-		else if (label != null && !label.isEmpty()) {
-			try {
-				return getProperty(obj, label);
-			} catch (Exception e) {
-			}
+		
+		if (!StringUtils.isBlank(label)) {
+			return safeGetProperty(obj, label);
 		}
 		
+		if (DbReferenceable.class.isAssignableFrom(obj.getClass())) {
+			DbReferenceable entity = (DbReferenceable) obj;
+			return entity.getLabel();
+		}
+				
 		return obj.toString();
+	}
+	
+	protected String safeGetProperty(Object bean, String name) {
+		try {
+			return getProperty(bean, name);
+		} catch (Exception e) {
+			return bean.toString();
+		}
 	}
 	
 	protected <E> HtmlTag render(Iterable<E> items, Criteria criteria, String contextPath) {

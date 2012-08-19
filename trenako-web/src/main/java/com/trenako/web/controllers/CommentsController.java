@@ -65,7 +65,6 @@ public class CommentsController {
 			BindingResult bindingResult,
 			RedirectAttributes redirectAtts) {
 		
-		//redirectAtts.addAttribute("slug", comment.getRollingStock().getSlug());
 		if (bindingResult.hasErrors()) {
 			redirectAtts.addAttribute("newComment", comment);
 			return "redirect:/rollingstocks/{slug}";
