@@ -3,7 +3,7 @@
 
 <html>
 	<head>
-		<title><s:message code="home.explore.title" text="explore"/></title>
+		<title><s:message code="you.page.title"/></title>
 		<meta name="you" content="active"/>
 	</head>
 	
@@ -12,9 +12,9 @@
 		<ul class="breadcrumb">
 			<li>
 				<s:url value="/home" var="homeUrl"/>
-		    	<a href="${homeUrl}"><s:message code="home.title" text="Home"/></a> <span class="divider">/</span>
+		    	<a href="${homeUrl}"><s:message code="nav.home.label"/></a> <span class="divider">/</span>
 			</li>
-		  	<li class="active"><s:message code="home.explore.title" text="You"/></li>
+		  	<li class="active"><s:message code="nav.you.label"/></li>
 		</ul>
 		
 		<div class="row-fluid">
@@ -31,7 +31,7 @@
 			</div>
 			<div class="span6">
 				<div class="pull-right">
-					<a href="#" class="btn btn-info">Edit your profile</a>
+					<a href="#" class="btn btn-info"><s:message code="button.edit.profile.label"/></a>
 				</div>
 			</div>
 			<hr />
@@ -43,16 +43,44 @@
 				<hr />
 				
 				<div class="row-fluid">
-					<div class="span2"><h3>In your collection:</h3></div>
-					<div class="span1"><span style="font-size:24px; color:yellow">10</span> <p>steam locomotives</p></div>
-					<div class="span1"><span style="font-size:24px; color:yellow">10</span> <p>diesel locomotives</p></div>
-					<div class="span1"><span style="font-size:24px; color:yellow">10</span> <p>electric locomotives</p></div>
-					<div class="span1"><span style="font-size:24px; color:yellow">20</span> <p>passenger cars</p></div>
-					<div class="span1"><span style="font-size:24px; color:yellow">20</span> <p>freight cars</p></div>
-					<div class="span1"><span style="font-size:24px; color:yellow">20</span> <p>electic multiple units</p></div>
-					<div class="span1"><span style="font-size:24px; color:yellow">20</span> <p>railcars</p></div>
-					<div class="span1"><span style="font-size:24px; color:yellow">20</span> <p>starter sets</p></div>
-					<div class="span4"></div>
+					<div class="span2"><h3><s:message code="you.count.collection.title"/>:</h3></div>
+					<div class="span1">
+						<span style="font-size:24px; color:yellow">${info.categoriesCount.steamLocomotives}</span> 
+						<p><s:message code="you.count.steam.locomotives.label"/></p>
+					</div>
+					<div class="span1">
+						<span style="font-size:24px; color:yellow">${info.categoriesCount.dieselLocomotives}</span> 
+						<p><s:message code="you.count.diesel.locomotives.label"/></p>
+					</div>					
+					<div class="span1">
+						<span style="font-size:24px; color:yellow">${info.categoriesCount.electricLocomotives}</span> 
+						<p><s:message code="you.count.electric.locomotives.label"/></p>
+					</div>
+					<div class="span1">
+						<span style="font-size:24px; color:yellow">${info.categoriesCount.railcars}</span> 
+						<p><s:message code="you.count.railcars.label"/></p>
+					</div>
+					<div class="span1">
+						<span style="font-size:24px; color:yellow">${info.categoriesCount.electricMultipleUnit}</span> 
+						<p><s:message code="you.count.electric.multiple.unit.label"/></p>
+					</div>
+					<div class="span1">
+						<span style="font-size:24px; color:yellow">${info.categoriesCount.passengerCars}</span> 
+						<p><s:message code="you.count.passenger.cars.label"/></p>
+					</div>
+					<div class="span1">
+						<span style="font-size:24px; color:yellow">${info.categoriesCount.freightCars}</span> 
+						<p><s:message code="you.count.freight.cars.label"/></p>
+					</div>					
+					<div class="span1">
+						<span style="font-size:24px; color:yellow">${info.categoriesCount.trainSets}</span> 
+						<p><s:message code="you.count.train.sets.label"/></p>
+					</div>
+					<div class="span1">
+						<span style="font-size:24px; color:yellow">${info.categoriesCount.starterSets}</span> 
+						<p><s:message code="you.count.starter.sets.label"/></p>
+					</div>
+					<div class="span3"></div>
 				</div>
 			
 				<hr />				
@@ -64,28 +92,32 @@
 			<div class="span11">
 				<div class="row-fluid">
 					<div class="span4">
-						<h2>From your collection</h2>
+						<h2><s:message code="you.from.collection.title"/></h2>
 						<p>
-							Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, 
-							egestas eget quam. Vestibulum id ligula porta felis euismod semper. 
-							Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum 
-							nibh, ut fermentum massa justo sit amet risus.
+							<a href="#" class="btn btn-danger">
+								<i class="icon-tags icon-white"></i> <s:message code="you.manage.collection.button"/>
+							</a>
 						</p>
-						<p>
-							<a href="#" class="btn btn-success">View all</a>
-						</p>
+						<ul class="unstyled">
+						<c:forEach var="item" items="${info.collectionItems}">
+							<li>${item.itemSlug} ${item.itemName} ${item.addedAt}</li>
+						</c:forEach>
+						</ul>
+
 					</div>
 					<div class="span4">
-						<h2>From your wish lists</h2>
+						<h2><s:message code="you.from.wish.lists.title"/></h2>
 						<p>
-							Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, 
-							egestas eget quam. Vestibulum id ligula porta felis euismod semper. 
-							Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum 
-							nibh, ut fermentum massa justo sit amet risus.
+							<a href="#" class="btn btn-primary">
+								<i class="icon-gift icon-white"></i> <s:message code="you.manage.wish.lists.button"/>
+							</a>
 						</p>
-						<p>
-							<a href="#" class="btn btn-warning">View all</a>
-						</p>
+
+						<ul class="unstyled">
+						<c:forEach var="item" items="${info.wishListItems}">
+							<li>${item.itemSlug} ${item.itemName} ${item.addedAt}</li>
+						</c:forEach>
+						</ul>
 					</div>
 					<div class="span4">
 						<h2>Your recent activity</h2>

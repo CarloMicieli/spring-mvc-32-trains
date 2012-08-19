@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -185,6 +186,9 @@ public class WishList {
 	 * @return the rolling stocks
 	 */
 	public List<WishListItem> getItems() {
+		if (items == null) {
+			items = new ArrayList<WishListItem>();
+		}
 		return items;
 	}
 

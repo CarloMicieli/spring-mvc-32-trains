@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.trenako.security.AccountDetails;
+import com.trenako.services.ProfilesService;
 import com.trenako.web.security.UserContext;
 
 /**
@@ -32,17 +34,22 @@ import com.trenako.web.security.UserContext;
 @RequestMapping("/you")
 public class YouController {
 
+	private final ProfilesService service;
 	private final UserContext secContext;
 	
 	@Autowired
-	public YouController(UserContext secContext) {
+	public YouController(ProfilesService service, UserContext secContext) {
+		this.service = service;
 		this.secContext = secContext;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView index() {
+		AccountDetails user = secContext.getCurrentUser();
+		
 		ModelAndView mav = new ModelAndView("you/index");
-		mav.addObject("user", secContext.getCurrentUser());
+		mav.addObject("user", user);
+		mav.addObject("info", service.findProfileView(user.getAccount()));
 		return mav;
 	}
 	

@@ -15,8 +15,12 @@
  */
 package com.trenako.utility;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import org.springframework.util.Assert;
 
 /**
  * 
@@ -26,6 +30,22 @@ import java.util.List;
 public class Utils {
 
 	private Utils() {
+		throw new UnsupportedOperationException();
+	}
+	
+	/**
+	 * Creates an immutable {@code ArrayList} filled with 
+	 * the {@code Iterable} elements.
+	 * 
+	 * @param elements the elements to be added
+	 * @return the {@code ArrayList}
+	 */
+	public static <E> List<E> newList(final Iterable<E> elements) {
+		List<E> list = new ArrayList<E>();
+		for (E el : elements) {
+			list.add(el);
+		}
+		return Collections.unmodifiableList(list);
 	}
 	
 	/**
@@ -33,11 +53,11 @@ public class Utils {
 	 * @param list the original list
 	 * @return the reverse iterable
 	 */
-	public static <T> Iterable<T> reverseIterable(final List<T> list) {
-		return new Iterable<T>() {
+	public static <E> Iterable<E> reverseIterable(final List<E> list) {
+		return new Iterable<E>() {
 			@Override
-			public Iterator<T> iterator() {
-				return new Iterator<T>() {
+			public Iterator<E> iterator() {
+				return new Iterator<E>() {
 
 					private int pos = list.size() - 1;
 					
@@ -47,7 +67,7 @@ public class Utils {
 					}
 
 					@Override
-					public T next() {
+					public E next() {
 						return list.get(pos--);
 					}
 
@@ -59,5 +79,26 @@ public class Utils {
 				};
 			}
 		};
+	}
+
+	/**
+	 * Creates an immutable {@code ArrayList} with the first elements.
+	 * @param elements the elements
+	 * @param size the size of the new sublist
+	 * @return the {@code ArrayList}
+	 */
+	public static <E> List<E> newSublist(Iterable<E> elements, int size) {
+		Assert.isTrue(size > 0, "Size must be > 0");
+		
+		int i = 1;
+		List<E> list = new ArrayList<E>();
+		for (E el : elements) {
+			list.add(el);
+			if (i == size) {
+				break;
+			}
+			i++;
+		}
+		return Collections.unmodifiableList(list);
 	}
 }

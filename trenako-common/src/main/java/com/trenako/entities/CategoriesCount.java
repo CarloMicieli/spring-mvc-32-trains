@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.springframework.util.StringUtils;
 
 import com.trenako.values.Category;
@@ -142,5 +143,24 @@ public class CategoriesCount {
 	 */
 	public static String getKey(Category category) {
 		return getKey(category.label());
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof CategoriesCount)) return false;
+		
+		CategoriesCount other = (CategoriesCount) obj;
+		return new EqualsBuilder()
+			.append(this.steamLocomotives, other.steamLocomotives)
+			.append(this.dieselLocomotives, other.dieselLocomotives)
+			.append(this.electricLocomotives, other.electricLocomotives)
+			.append(this.railcars, other.railcars)
+			.append(this.electricMultipleUnit, other.electricMultipleUnit)
+			.append(this.freightCars, other.freightCars)
+			.append(this.passengerCars, other.passengerCars)
+			.append(this.trainSets, other.trainSets)
+			.append(this.starterSets, other.starterSets)
+			.isEquals();	
 	}
 }

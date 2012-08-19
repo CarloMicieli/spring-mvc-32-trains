@@ -18,6 +18,8 @@ package com.trenako.web.controllers;
 import static org.springframework.test.web.ModelAndViewAssert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +29,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Collection;
+import com.trenako.entities.WishList;
 import com.trenako.security.AccountDetails;
+import com.trenako.services.ProfilesService;
+import com.trenako.services.view.ProfileOptions;
+import com.trenako.services.view.ProfileView;
 import com.trenako.web.security.UserContext;
 
 /**
@@ -38,24 +45,29 @@ import com.trenako.web.security.UserContext;
 @RunWith(MockitoJUnitRunner.class)
 public class YouControllerTests {
 
+	private @Mock ProfilesService service;
 	private @Mock UserContext secContext;
 	private YouController controller;
 	
-	private final static AccountDetails USER = 
-			new AccountDetails(new Account.Builder("mail@mail.com").build());
+	private final static Account ACCOUNT = new Account.Builder("mail@mail.com").displayName("bob").build();
+	private final static AccountDetails USER = new AccountDetails(ACCOUNT);
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new YouController(secContext);
+		controller = new YouController(service, secContext);
 	}
 	
 	@Test
 	public void shouldRenderIndex() {
+		ProfileView value = new ProfileView(new Collection(ACCOUNT), new ArrayList<WishList>(), ProfileOptions.DEFAULT);
+		when(service.findProfileView(eq(ACCOUNT))).thenReturn(value);
 		when(secContext.getCurrentUser()).thenReturn(USER);
 		
 		ModelAndView mav = controller.index();
 		assertViewName(mav, "you/index");
 		assertModelAttributeValue(mav, "user", USER);
+		assertModelAttributeValue(mav, "info", value);
 	}
+
 }
