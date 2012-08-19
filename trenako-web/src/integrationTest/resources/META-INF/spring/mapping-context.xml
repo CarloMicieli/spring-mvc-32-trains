@@ -32,9 +32,33 @@
      <bean id="rsService" class="com.trenako.web.test.MockitoFactoryBean">
         <constructor-arg name="classToBeMocked" value="com.trenako.services.RollingStocksService" />
     </bean>
+    
+   	<bean id="reviewsService" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.services.ReviewsService" />
+    </bean>
 
-     <bean id="browseService" class="com.trenako.web.test.MockitoFactoryBean">
+     <bean id="profilesService" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.services.ProfilesService" />
+    </bean>
+    
+ 	<bean id="browseService" class="com.trenako.web.test.MockitoFactoryBean">
         <constructor-arg name="classToBeMocked" value="com.trenako.services.BrowseService" />
+    </bean>
+    
+ 	<bean id="formValuesService" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.services.FormValuesService" />
+    </bean>
+ 	
+ 	<bean id="commentsService" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.services.CommentsService" />
+    </bean>
+ 	
+ 	<bean id="collectionsService" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.services.CollectionsService" />
+    </bean>
+    
+ 	<bean id="wishListsService" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.services.WishListsService" />
     </bean>
     
    	<bean id="userContext" class="com.trenako.web.test.MockitoFactoryBean">

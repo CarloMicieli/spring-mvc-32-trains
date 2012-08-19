@@ -129,7 +129,7 @@ class WishListsServiceSpecification extends MongoSpecification {
 		results.collect { it.slug }.sort() == ['bob-my-list', 'bob-my-list-2']
 		
 		and: "the items are not loaded"
-		results.collect { it.items } == [null, null]
+		results.collect { it.items.size() } == [0, 0]
 	}
 
 	def "should return empty results when the provided user has no wish list yet"() {

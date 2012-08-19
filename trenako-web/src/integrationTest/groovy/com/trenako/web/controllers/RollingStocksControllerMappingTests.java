@@ -15,17 +15,20 @@
  */
 package com.trenako.web.controllers;
 
+import static com.trenako.test.TestDataBuilder.*;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
-import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.trenako.entities.RollingStock;
+import com.trenako.services.FormValuesService;
 import com.trenako.services.RollingStocksService;
+import com.trenako.services.view.RollingStockView;
 import com.trenako.web.test.AbstractSpringControllerTests;
 
 /**
@@ -34,17 +37,43 @@ import com.trenako.web.test.AbstractSpringControllerTests;
  *
  */
 public class RollingStocksControllerMappingTests extends AbstractSpringControllerTests {
-	
-	private ObjectId OID = new ObjectId();
-	private String ID = OID.toString();
-	
+
+	private final static String ID = "47cc67093475061e3d95369d";
 	private @Autowired RollingStocksService mockService;
+	private @Autowired FormValuesService mockValuesService;
+
+	@Override
+	protected void init() {
+		super.init();
+		
+		when(mockValuesService.getBrand(eq("acme"))).thenReturn(acme());
+		when(mockValuesService.getRailway(eq("fs"))).thenReturn(fs());
+		when(mockValuesService.getScale(eq("h0"))).thenReturn(scaleH0());
+	}
 	
 	@After
 	public void cleanUp() {
-		// TODO code smell
-		// waiting 3.2 <https://jira.springsource.org/browse/SPR-9493>
 		reset(mockService);
+		reset(mockValuesService);
+	}
+	
+	@Test
+	public void shouldShowARollingStock() throws Exception {
+		String slug = "acme-123456";
+		when(mockService.findViewBySlug(eq(slug)))
+			.thenReturn(new RollingStockView(null, null, null));
+		
+		mockMvc().perform(get("/rollingstocks/{slug}", slug))
+			.andExpect(status().isOk())	
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("result"))
+			.andExpect(forwardedUrl(view("rollingstock", "show")));
+	}
+		
+	@Test
+	public void shouldReturn404IfRollingStockNotFound() throws Exception {
+		mockMvc().perform(get("/rollingstocks/{slug}", "not-found"))
+			.andExpect(status().isNotFound());
 	}
 	
 	@Test
@@ -55,13 +84,48 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 	}
 	
 	@Test
-	public void shouldRenderEditingForm() throws Exception {
+	public void shouldCreateNewRollingStocks() throws Exception {
+		mockMvc().perform(fileUpload("/rollingstocks")
+				.file("file", new byte[]{})
+				.param("rs.brand", "acme")
+				.param("rs.railway", "fs")
+				.param("rs.scale", "h0")
+				.param("rs.era", "iv")
+				.param("rs.category", "electric-locomotives")
+				.param("rs.description['en']", "Electric locomotive")
+				.param("rs.itemNumber", "123456"))
+			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(RollingStocksController.ROLLING_STOCK_CREATED_MSG)))
+			.andExpect(redirectedUrl("/rollingstocks/acme-123456"));
+	}
+	
+	@Test
+	public void shouldRenderRollingStockEditingForms() throws Exception {
 		String slug = "rs-slug";
 		when(mockService.findBySlug(eq(slug))).thenReturn(new RollingStock());
 		
 		mockMvc().perform(get("/rollingstocks/{slug}/edit", slug))
 			.andExpect(status().isOk())
 			.andExpect(forwardedUrl(view("rollingstock", "edit")));
+	}
+	
+	@Test
+	public void shouldSaveRollingStockChanges() throws Exception {
+		mockMvc().perform(put("/rollingstocks")
+				.param("rs.id", ID)				
+				.param("rs.brand", "acme")
+				.param("rs.railway", "fs")
+				.param("rs.slug", "acme-123456")
+				.param("rs.scale", "h0")
+				.param("rs.era", "iv")
+				.param("rs.category", "electric-locomotives")
+				.param("rs.description['en']", "Electric locomotive")
+				.param("rs.itemNumber", "123456"))
+			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(RollingStocksController.ROLLING_STOCK_SAVED_MSG)))
+			.andExpect(redirectedUrl("/rollingstocks/acme-123456"));
 	}
 	
 	@Test
@@ -72,36 +136,12 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 	}
 	
 	@Test
-	public void shouldRenderRollingStocks() throws Exception {
-		String slug = "rs-slug";
-		when(mockService.findBySlug(eq(slug))).thenReturn(new RollingStock());
-		
-		mockMvc().perform(get("/rollingstocks/{slug}", slug))
-			.andExpect(status().isOk())	
-			.andExpect(model().size(1))
-			.andExpect(model().attributeExists("rollingStock"))
-			.andExpect(forwardedUrl(view("rollingstock", "show")));
+	public void shouldDeleteRollingStocks() throws Exception {
+		mockMvc().perform(delete("/rollingstocks")
+				.param("id", ID))
+		.andExpect(status().isOk())
+		.andExpect(flash().attributeCount(1))
+		.andExpect(flash().attribute("message", equalTo(RollingStocksController.ROLLING_STOCK_DELETED_MSG)))
+		.andExpect(redirectedUrl("/rs"));
 	}
-	
-	@Test
-	public void shouldCreateNewRollingStocks() throws Exception {
-		mockMvc().perform(fileUpload("/rollingstocks")
-				.file("file", new byte[]{})
-				.param("brand", ID)
-				.param("railway", ID)
-				.param("scale", ID)
-				.param("era", "IV")
-				.param("category", "locomotive")
-				.param("description", "Electric locomotive")
-				.param("itemNumber", "123456"))
-			.andExpect(status().isOk())
-			.andExpect(redirectedUrl("/rollingstocks/acme-123456"));
-	}
-	
-	@Test
-	public void shouldReturn404IfRollingStockNotFound() throws Exception {
-		mockMvc().perform(get("/rollingstocks/{slug}", "not-found"))
-			.andExpect(status().isNotFound());
-	}
-	
 }

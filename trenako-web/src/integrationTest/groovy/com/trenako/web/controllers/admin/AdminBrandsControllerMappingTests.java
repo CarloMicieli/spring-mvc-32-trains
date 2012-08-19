@@ -24,7 +24,6 @@ import java.util.Arrays;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
-import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -45,20 +44,25 @@ import com.trenako.web.test.AbstractSpringControllerTests;
  */
 public class AdminBrandsControllerMappingTests extends AbstractSpringControllerTests {
 	private @Autowired BrandsService mockService;
+	
 	private final static String ID = "47cc67093475061e3d95369d";
-	private final static ObjectId OID = new ObjectId(ID);
+	private final static String ACME = "acme";
+	private final static byte[] EMPTY_FILE = new byte[] {};
+	
+	@Override
+	protected void init() {
+		super.init();
+		when(mockService.findBySlug(eq(ACME))).thenReturn(new Brand());
+	}
 	
 	@After
 	public void cleanUp() {
-		// TODO code smell
-		// waiting 3.2 <https://jira.springsource.org/browse/SPR-9493>
 		reset(mockService);
 	}
 	
 	@Test
-	public void shouldGETBrands() throws Exception {
-		when(mockService.findById(eq(OID))).thenReturn(new Brand());
-		mockMvc().perform(get("/admin/brands/{id}", ID))
+	public void shouldShowABrand() throws Exception {
+		mockMvc().perform(get("/admin/brands/{slug}", ACME))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("brand"))
@@ -66,7 +70,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldRenderTheBrandsListView() throws Exception {
+	public void shouldShowTheBrandsList() throws Exception {
 		when(mockService.findAll(Mockito.isA(Pageable.class)))
 			.thenReturn(new PageImpl<Brand>(Arrays.asList(new Brand(), new Brand())));
 		
@@ -92,7 +96,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldProcessPagingParameters() throws Exception {
+	public void shouldProcessBrandsPagingParameters() throws Exception {
 		ArgumentCaptor<Pageable> arg = ArgumentCaptor.forClass(Pageable.class);
 		
 		mockMvc().perform(get("/admin/brands")
@@ -112,7 +116,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldRenderTheNewBrandForm() throws Exception {
+	public void shouldRenderBrandCreationForms() throws Exception {
 		mockMvc().perform(get("/admin/brands/new"))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
@@ -122,20 +126,20 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldRedirectAfterCreate() throws Exception {
+	public void shouldRedirectAfterBrandsWereCreated() throws Exception {
 		mockMvc().perform(fileUpload("/admin/brands")
 				.file("file", new byte[]{})
-				.param("name", "ACME"))
+				.param("name", "ACME")
+				.param("description['en']", "ACME description"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo("Brand created")))
+			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_CREATED_MSG)))
 			.andExpect(redirectedUrl("/admin/brands"));
 	}
 		
 	@Test
-	public void shouldRenderTheEditBrandForm() throws Exception {
-		when(mockService.findById(eq(OID))).thenReturn(new Brand());
-		mockMvc().perform(get("/admin/brands/{id}/edit", ID))
+	public void shouldRenderTheBrandEditingForms() throws Exception {
+		mockMvc().perform(get("/admin/brands/{slug}/edit", ACME))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("brand"))
@@ -145,19 +149,51 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 
 	@Test
 	public void shouldSaveBrandChanges() throws Exception {
-		mockMvc().perform(put("/admin/brands").param("name", "ACME"))
+		mockMvc().perform(put("/admin/brands")
+				.param("id", ID)
+				.param("name", "ACME")
+				.param("description['en']", "ACME description"))
 			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_SAVED_MSG)))
 			.andExpect(redirectedUrl("/admin/brands"));
 	}
 	
 	@Test
-	public void shouldDeleteABrand() throws Exception {
-		when(mockService.findById(eq(OID))).thenReturn(new Brand());
+	public void shouldDeleteBrands() throws Exception {
 		mockMvc().perform(delete("/admin/brands/{id}", ID))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo("Brand deleted")))
+			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_DELETED_MSG)))
 			.andExpect(redirectedUrl("/admin/brands"));
 	}
+	
+	@Test
+	public void shouldUploadNewBrandImages() throws Exception {
+		mockMvc().perform(fileUpload("/admin/brands/{slug}/upload", ACME)
+				.file("file", "file content".getBytes()))
+			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_LOGO_UPLOADED_MSG)))
+			.andExpect(redirectedUrl("/admin/brands/acme"));
+	}
+	
+	@Test
+	public void shouldRedirectIfBrandImagesAreNotValid() throws Exception {
+		mockMvc().perform(fileUpload("/admin/brands/{slug}/upload", ACME)
+				.file("file", EMPTY_FILE))
+			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_INVALID_UPLOAD_MSG)))
+			.andExpect(redirectedUrl("/admin/brands/acme"));
+	}
 
+	@Test
+	public void shouldDeleteBrandImages() throws Exception {
+		mockMvc().perform(delete("/admin/brands/{slug}/upload", ACME))
+			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_LOGO_DELETED_MSG)))
+			.andExpect(redirectedUrl("/admin/brands/acme"));
+	}
 }

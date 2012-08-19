@@ -24,7 +24,6 @@ import java.util.Arrays;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
-import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -45,8 +44,15 @@ import com.trenako.web.test.AbstractSpringControllerTests;
  */
 public class AdminScalesControllerMappingTests extends AbstractSpringControllerTests {
 	private @Autowired ScalesService mockService;
+	
 	private final static String ID = "47cc67093475061e3d95369d";
-	private final static ObjectId OID = new ObjectId(ID);
+	private final static String H0 = "h0";
+	
+	@Override
+	protected void init() {
+		super.init();
+		when(mockService.findBySlug(eq(H0))).thenReturn(new Scale());
+	}
 	
 	@After
 	public void cleanUp() {
@@ -54,9 +60,8 @@ public class AdminScalesControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldGETScales() throws Exception {
-		when(mockService.findById(eq(OID))).thenReturn(new Scale());
-		mockMvc().perform(get("/admin/scales/{id}", ID))
+	public void shouldShowAScales() throws Exception {
+		mockMvc().perform(get("/admin/scales/{slug}", H0))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("scale"))
@@ -64,13 +69,7 @@ public class AdminScalesControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldReturn404IfScaleNotFound() throws Exception {
-		mockMvc().perform(get("/admin/scales/{id}", ID))
-			.andExpect(status().isNotFound());		
-	}
-	
-	@Test
-	public void shouldRenderNewScalesForm() throws Exception {
+	public void shouldRenderScaleCreationForms() throws Exception {
 		mockMvc().perform(get("/admin/scales/new"))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
@@ -79,18 +78,21 @@ public class AdminScalesControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldPOSTNewScales() throws Exception {
-		mockMvc().perform(post("/admin/scales").param("name", "H0").param("ratio", "87").param("gauge", "16.5"))
+	public void shouldCreateNewScales() throws Exception {
+		mockMvc().perform(post("/admin/scales")
+				.param("name", "H0")
+				.param("ratio", "87")
+				.param("gauge", "16.5")
+				.param("description['en']", "Scale description"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo("Scale created")))
+			.andExpect(flash().attribute("message", equalTo(AdminScalesController.SCALE_CREATED_MSG)))
 			.andExpect(redirectedUrl("/admin/scales"));
 	}
 	
 	@Test
-	public void shouldRenderEditingScalesForm() throws Exception {
-		when(mockService.findById(eq(OID))).thenReturn(new Scale());
-		mockMvc().perform(get("/admin/scales/{id}/edit", ID))
+	public void shouldRenderScaleEditingForms() throws Exception {
+		mockMvc().perform(get("/admin/scales/{slug}/edit", H0))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("scale"))
@@ -98,27 +100,31 @@ public class AdminScalesControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
-	public void shouldPUTScaleChanges() throws Exception {
-		mockMvc().perform(put("/admin/scales").param("id", ID).param("name", "H0").param("ratio", "87").param("gauge", "16.5"))
+	public void shouldSaveScaleChanges() throws Exception {
+		mockMvc().perform(put("/admin/scales")
+				.param("id", ID)
+				.param("name", "H0")
+				.param("ratio", "87")
+				.param("gauge", "16.5")
+				.param("description['en']", "Scale description"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo("Scale saved")))
+			.andExpect(flash().attribute("message", equalTo(AdminScalesController.SCALE_SAVED_MSG)))
 			.andExpect(redirectedUrl("/admin/scales"));
 	}
 	
 	
 	@Test
-	public void shouldDELETEScales() throws Exception {
-		when(mockService.findById(eq(OID))).thenReturn(new Scale(OID));
-		mockMvc().perform(delete("/admin/scales/{id}", ID))
+	public void shouldDeleteScales() throws Exception {
+		mockMvc().perform(delete("/admin/scales/{slug}", H0))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo("Scale deleted")))
+			.andExpect(flash().attribute("message", equalTo(AdminScalesController.SCALE_DELETED_MSG)))
 			.andExpect(redirectedUrl("/admin/scales"));
 	}
 		
 	@Test
-	public void shouldRenderTheScalesListView() throws Exception {
+	public void shouldShowTheScalesList() throws Exception {
 		when(mockService.findAll(Mockito.isA(Pageable.class)))
 			.thenReturn(new PageImpl<Scale>(Arrays.asList(new Scale(), new Scale())));
 

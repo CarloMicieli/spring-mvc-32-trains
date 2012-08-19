@@ -24,7 +24,6 @@ import java.util.Arrays;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
-import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -45,18 +44,25 @@ import com.trenako.web.test.AbstractSpringControllerTests;
  */
 public class AdminRailwaysControllerMappingTests extends AbstractSpringControllerTests {
 	private @Autowired RailwaysService mockService;
-	private final static String ID = "47cc67093475061e3d95369d";
-	private final static ObjectId OID = new ObjectId(ID);
 	
+	private final static String ID = "47cc67093475061e3d95369d";
+	private final static String DB = "db";
+	private final static byte[] EMPTY_FILE = new byte[] {};
+	
+	@Override
+	protected void init() {
+		super.init();
+		when(mockService.findBySlug(eq(DB))).thenReturn(new Railway());
+	}
+		
 	@After
 	public void cleanUp() {
 		reset(mockService);
 	}
 	
 	@Test
-	public void shouldGETRailways() throws Exception {
-		when(mockService.findById(eq(OID))).thenReturn(new Railway());
-		mockMvc().perform(get("/admin/railways/{id}", ID))
+	public void shouldShowARailway() throws Exception {
+		mockMvc().perform(get("/admin/railways/{slug}", DB))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("railway"))
@@ -64,13 +70,7 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 	}
 	
 	@Test
-	public void shouldReturn404IfRailwayNotFound() throws Exception {
-		mockMvc().perform(get("/admin/railways/{id}", ID))
-			.andExpect(status().isNotFound());		
-	}
-	
-	@Test
-	public void shouldRenderNewRailwaysForm() throws Exception {
+	public void shouldRenderRailwayCreationForms() throws Exception {
 		mockMvc().perform(get("/admin/railways/new"))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
@@ -79,18 +79,21 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 	}
 	
 	@Test
-	public void shouldPOSTNewRailways() throws Exception {
-		mockMvc().perform(fileUpload("/admin/railways").file("file", new byte[]{}).param("name", "DB").param("country", "DE"))
+	public void shouldCreateNewRailways() throws Exception {
+		mockMvc().perform(fileUpload("/admin/railways")
+				.file("file", new byte[]{})
+				.param("name", "DB")
+				.param("country", "de")
+				.param("description['en']", "Railway description"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo("Railway created")))
+			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_CREATED_MSG)))
 			.andExpect(redirectedUrl("/admin/railways"));
 	}
 	
 	@Test
-	public void shouldRenderEditingRailwaysForm() throws Exception {
-		when(mockService.findById(eq(OID))).thenReturn(new Railway());
-		mockMvc().perform(get("/admin/railways/{id}/edit", ID))
+	public void shouldRenderRailwayEditingForms() throws Exception {
+		mockMvc().perform(get("/admin/railways/{slug}/edit", DB))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("railway"))
@@ -98,27 +101,30 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 	}
 	
 	@Test
-	public void shouldPUTRailwayChanges() throws Exception {
-		mockMvc().perform(put("/admin/railways").param("id", ID).param("name", "DB").param("country", "DE"))
+	public void shouldSaveRailwayChanges() throws Exception {
+		mockMvc().perform(put("/admin/railways")
+				.param("id", ID)
+				.param("name", "DB")
+				.param("country", "de")
+				.param("description['en']", "Railway description"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo("Railway saved")))
+			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_SAVED_MSG)))
 			.andExpect(redirectedUrl("/admin/railways"));
 	}
 	
 	
 	@Test
-	public void shouldDELETERailways() throws Exception {
-		when(mockService.findById(eq(OID))).thenReturn(new Railway(OID));
+	public void shouldDeleteRailways() throws Exception {
 		mockMvc().perform(delete("/admin/railways/{id}", ID))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo("Railway deleted")))
+			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_DELETED_MSG)))
 			.andExpect(redirectedUrl("/admin/railways"));
 	}
 		
 	@Test
-	public void shouldRenderTheRailwaysListView() throws Exception {
+	public void shouldShowTheRailwaysList() throws Exception {
 		when(mockService.findAll(Mockito.isA(Pageable.class)))
 			.thenReturn(new PageImpl<Railway>(Arrays.asList(new Railway(), new Railway())));
 
@@ -144,7 +150,7 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 	}
 
 	@Test
-	public void shouldProcessPagingParametersForRailways() throws Exception {
+	public void shouldProcessRailwaysPagingParameters() throws Exception {
 		ArgumentCaptor<Pageable> arg = ArgumentCaptor.forClass(Pageable.class);
 
 		mockMvc().perform(get("/admin/railways")
@@ -161,5 +167,34 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 		assertEquals(25, p.getPageSize());
 		assertNotNull("Sort is null", p.getSort().getOrderFor("name"));
 		assertEquals(Sort.Direction.DESC, p.getSort().getOrderFor("name").getDirection());
+	}
+	
+	@Test
+	public void shouldUploadNewRailwayImages() throws Exception {
+		mockMvc().perform(fileUpload("/admin/railways/{slug}/upload", DB)
+				.file("file", "file content".getBytes()))
+			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_LOGO_UPLOADED_MSG)))
+			.andExpect(redirectedUrl("/admin/railways/db"));
+	}
+	
+	@Test
+	public void shouldRedirectIfRailwayImagesAreNotValid() throws Exception {
+		mockMvc().perform(fileUpload("/admin/railways/{slug}/upload", DB)
+				.file("file", EMPTY_FILE))
+			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_INVALID_UPLOAD_MSG)))
+			.andExpect(redirectedUrl("/admin/railways/db"));
+	}
+	
+	@Test
+	public void shouldDeleteRailwayImages() throws Exception {
+		mockMvc().perform(delete("/admin/railways/{slug}/upload", DB))
+			.andExpect(status().isOk())
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_LOGO_DELETED_MSG)))
+			.andExpect(redirectedUrl("/admin/railways/db"));
 	}
 }
