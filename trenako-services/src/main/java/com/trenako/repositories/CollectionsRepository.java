@@ -82,6 +82,13 @@ public interface CollectionsRepository {
     void addItem(Account owner, CollectionItem item);
 
     /**
+     * Updates one of the {@code Collection} item.
+     * @param owner the collection's owner
+     * @param item the item to be updated
+     */
+	void updateItem(Account owner, CollectionItem item);
+    
+    /**
      * Removes an item from the {@code Collection}.
      * 
      * <p>

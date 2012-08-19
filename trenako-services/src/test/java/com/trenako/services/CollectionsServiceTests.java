@@ -112,6 +112,22 @@ public class CollectionsServiceTests {
 	}
 	
 	@Test
+	public void shouldUpdateItemsInUserCollection() {
+		CollectionItem item = null;
+		
+		service.updateItem(owner, item);
+		verify(repo, times(1)).updateItem(eq(owner), eq(item));
+	}
+	
+	@Test
+	public void shouldRemoveItemsFromUserCollection() {
+		CollectionItem item = null;
+		
+		service.removeRollingStock(owner, item);
+		verify(repo, times(1)).removeItem(eq(owner), eq(item));
+	}
+	
+	@Test
 	public void shouldSaveCollections() {
 		service.createNew(owner);
 		

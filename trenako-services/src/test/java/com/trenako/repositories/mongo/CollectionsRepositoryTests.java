@@ -16,6 +16,7 @@
 package com.trenako.repositories.mongo;
 
 import static com.trenako.test.TestDataBuilder.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
@@ -137,6 +138,27 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 				"\"$push\" : { \"items\" : { \"itemId\" : \"acme-123456-2012-01-01\" , \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
 				"\"price\" : 0 , \"condition\" : \"new\" , \"notes\" : \"My notes\" , \"category\" : \"electric-locomotives\" , "+
 				"\"quantity\" : 1 , \"addedAt\" : { \"$date\" : \"2011-12-31T23:00:00.000Z\"}}} , \"$inc\" : { \"categories.electricLocomotives\" : 1}}";
+		assertEquals(expected, updateObject(argUpdate).toString());
+	}
+	
+	@Test
+	public void shouldUpdateItemInTheWishLists() {
+		CollectionItem item = new CollectionItem.Builder(rollingStock)
+			.addedAt(new GregorianCalendar(2012, 0, 1).getTime())
+			.category("electric-locomotives")
+			.build();
+		
+		repo.updateItem(owner, item);
+		
+		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
+		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
+		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
+		assertEquals("{ \"owner.slug\" : \"bob\" , \"items.itemId\" : \"acme-123456-2012-01-01\"}", queryObject(argQuery).toString());
+		
+		String expected = "{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"} , " +
+			"\"items.$\" : { \"itemId\" : \"acme-123456-2012-01-01\" , " +
+			"\"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , " +
+			"\"price\" : 0 , \"category\" : \"electric-locomotives\" , \"quantity\" : 1 , \"addedAt\" : { \"$date\" : \"2011-12-31T23:00:00.000Z\"}}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
 	

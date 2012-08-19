@@ -117,7 +117,7 @@ class CommentsServiceSpecification extends MongoSpecification {
 		then:
 		results != null
 		results.size == 2
-		results.collect{ it.content } == ['Comment1', 'Comment3']
+		results.collect{ it.content }.sort() == ['Comment1', 'Comment3']
 	}
 	
 	def "should save comments"() {

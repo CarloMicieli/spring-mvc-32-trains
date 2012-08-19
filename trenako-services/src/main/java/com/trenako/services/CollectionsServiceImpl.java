@@ -70,6 +70,12 @@ public class CollectionsServiceImpl implements CollectionsService {
 		repo.addItem(owner, item);
 	}
 
+
+	@Override
+	public void updateItem(Account owner, CollectionItem item) {
+		repo.updateItem(owner, item);
+	}
+	
 	@Override
 	public void removeRollingStock(Account owner, CollectionItem item) {
 		repo.removeItem(owner, item);
@@ -95,4 +101,5 @@ public class CollectionsServiceImpl implements CollectionsService {
 	public Iterable<LocalizedEnum<Condition>> conditionsList() {
 		return LocalizedEnum.list(Condition.class, messageSource, null);
 	}
+
 }

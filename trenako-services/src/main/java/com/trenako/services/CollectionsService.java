@@ -92,6 +92,13 @@ public interface CollectionsService
 	void addRollingStock(Account owner, CollectionItem item);
 	
 	/**
+	 * Updates an item in the {@code Collection}.
+	 * @param owner the collection owner
+	 * @param item the {@code CollectionItem} to be updated
+	 */
+	void updateItem(Account owner, CollectionItem item);
+	
+	/**
 	 * Removes an item from the {@code Collection}.
 	 * 
 	 * @param owner the collection owner

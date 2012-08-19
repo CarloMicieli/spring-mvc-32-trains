@@ -61,6 +61,9 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 	}
 	
 	protected Date now() {
+		if (now == null) {
+			return new Date();
+		}
 		return now;
 	}
 	
@@ -107,6 +110,16 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 		mongo.upsert(query(where("owner.slug").is(owner.getSlug())), upd, Collection.class);
 	}
 
+	@Override
+	public void updateItem(Account owner, CollectionItem item) {
+		Query where = query(where("owner.slug").is(owner.getSlug())
+				.and("items.itemId").is(item.getItemId()));
+		Update upd = new Update()
+			.set("lastModified", now())
+			.set("items.$", item);
+		mongo.updateFirst(where, upd, Collection.class);
+	}
+	
 	@Override
 	public void removeItem(Account owner, CollectionItem item) {
 		Assert.notNull(item.getItemId(), "The item ID is required");

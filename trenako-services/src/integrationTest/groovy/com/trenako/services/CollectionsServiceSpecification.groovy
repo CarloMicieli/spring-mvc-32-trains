@@ -208,6 +208,40 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		doc.items.collect { it.itemId }.sort() == ['acme-123456-2012-01-01', 'acme-123457-2010-07-22', 'acme-123457-2012-01-01']
 	}
 	
+	def "should update the collection items"() {
+		given:
+		def owner = new Account(slug: 'the-rocket')
+		and:
+		def date = new GregorianCalendar(2010, Calendar.JULY, 22, 1, 30, 00).time
+		def rs = new WeakDbRef<RollingStock>(slug: 'acme-123456', label: 'ACME 123456')
+		def item = new CollectionItem(
+			itemId: 'acme-123456-2012-01-01',
+			category: 'electric-locomotives',
+			rollingStock: rs,
+			price: 999,
+			condition: 'pre-owned',
+			notes: 'My updated notes',
+			quantity: 1,
+			addedAt: date)
+
+		when:
+		service.updateItem(owner, item)
+		
+		then:
+		def doc = db.collections.findOne(slug: 'the-rocket')
+		
+		and: "the last modified timestamp was updated"
+		doc.lastModified != now
+		
+		and:
+		doc.items.size() == 2
+		doc.items[0].itemId == 'acme-123456-2012-01-01'
+		doc.items[0].rollingStock == [slug: 'acme-123456', label: 'ACME 123456']
+		doc.items[0].notes == 'My updated notes'
+		doc.items[0].condition == 'pre-owned'
+		doc.items[0].price == 999
+	}
+	
 	def "should remove a rolling stock from the collection"() {
 		given:
 		def owner = new Account(slug: 'the-rocket')
