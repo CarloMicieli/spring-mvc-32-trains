@@ -15,14 +15,17 @@
  */
 package com.trenako.web.controllers;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
 import org.junit.After;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.trenako.entities.Account;
 import com.trenako.web.security.SignupService;
 import com.trenako.web.test.AbstractSpringControllerTests;
 
@@ -56,10 +59,18 @@ public class AuthControllerMappingTests extends AbstractSpringControllerTests {
 	}
 	
 	@Test
-	public void shouldPOSTNewAccounts() throws Exception {
+	public void shouldCreateNewAccounts() throws Exception {
 		mockMvc().perform(post("/auth/signup")
-				.param("emailAddress", "mail@mail.com").param("password", "pa$$word").param("displayName", "User"))
+				.param("emailAddress", "mail@mail.com")
+				.param("password", "pa$$word")
+				.param("displayName", "User"))
 			.andExpect(status().isOk())
 			.andExpect(redirectedUrl("/default"));
+		
+		// should authenticate the newly created account
+		ArgumentCaptor<Account> arg = ArgumentCaptor.forClass(Account.class);
+		verify(mockService, times(1)).authenticate(arg.capture());
+		assertEquals("mail@mail.com", arg.getValue().getEmailAddress());
+		assertEquals("pa$$word", arg.getValue().getPassword());
 	}
 }

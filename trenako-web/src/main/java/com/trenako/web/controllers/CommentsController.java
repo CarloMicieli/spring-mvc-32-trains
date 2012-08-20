@@ -21,6 +21,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -61,12 +62,13 @@ public class CommentsController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String postComment(@PathVariable("slug") String slug,
-			@Valid @ModelAttribute Comment comment,
+			@ModelAttribute @Valid Comment comment,
 			BindingResult bindingResult,
+			ModelMap model,
 			RedirectAttributes redirectAtts) {
 		
 		if (bindingResult.hasErrors()) {
-			redirectAtts.addAttribute("newComment", comment);
+			model.addAttribute(comment);
 			return "redirect:/rollingstocks/{slug}";
 		}
 		

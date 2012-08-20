@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -56,8 +57,9 @@ public class CommentsControllerTests {
 	public void shouldPostNewComments() {
 		when(mockResult.hasErrors()).thenReturn(false);
 		String slug = "rs-slug";
+		ModelMap model = new ModelMap();
 		
-		String redirect = controller.postComment(slug, comment(), mockResult, mockRedirectAtts);
+		String redirect = controller.postComment(slug, comment(), mockResult, model, mockRedirectAtts);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", redirect);
 		verify(mockService, times(1)).save(eq(comment()));
@@ -68,12 +70,13 @@ public class CommentsControllerTests {
 	public void shouldRedirectAfterValidationErrorsDuringCommentPosting() {
 		when(mockResult.hasErrors()).thenReturn(true);
 		String slug = "rs-slug";
+		ModelMap model = new ModelMap();
 		
-		String redirect = controller.postComment(slug, comment(), mockResult, mockRedirectAtts);
+		String redirect = controller.postComment(slug, comment(), mockResult, model, mockRedirectAtts);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", redirect);
+		assertEquals(comment(), (Comment) model.get("comment"));
 		verify(mockService, times(0)).save(eq(comment()));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq("newComment"), eq(comment()));
 	}
 	
 	Comment comment() {
