@@ -106,6 +106,11 @@ public class WishListsServiceImpl implements WishListsService {
 	}
 	
 	@Override
+	public void changeName(WishList wishList, String newName) {
+		repo.changeName(wishList, newName);
+	}
+	
+	@Override
 	public void setAsDefault(Account owner, WishList wishList) {
 		repo.resetDefault(owner);
 		repo.changeDefault(wishList, true);
@@ -114,6 +119,11 @@ public class WishListsServiceImpl implements WishListsService {
 	@Override
 	public void createNew(Account owner, String name) {
 		WishList newList = new WishList(owner, name, Visibility.PUBLIC);
+		repo.save(newList);
+	}
+	
+	@Override
+	public void createNew(WishList newList) {
 		repo.save(newList);
 	}
 	

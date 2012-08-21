@@ -99,6 +99,13 @@ public interface WishListsService {
 	void changeVisibility(WishList wishList, Visibility visibility);
 	
 	/**
+	 * Changes the {@code WishList} name.
+	 * @param wishList the {@code WishList} to be modified
+	 * @param newName the new name
+	 */
+	void changeName(WishList wishList, String newName);
+	
+	/**
 	 * Sets the provided {@code WishList} as the default list for the user.
 	 * @param owner the owner
 	 * @param wishList the {@code WishList} to be modified
@@ -112,6 +119,12 @@ public interface WishListsService {
 	 */ 
 	void createNew(Account owner, String name);
 
+	/**
+	 * Creates a new {@code WishList}.
+	 * @param newList the {@code WishList} to be created
+	 */ 
+	void createNew(WishList newList);
+	
 	/**
 	 * Removes the {@code WishList}.
 	 * @param wishList the {@code WishList} to be removed

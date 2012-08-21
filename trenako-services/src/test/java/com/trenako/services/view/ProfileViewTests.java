@@ -18,10 +18,7 @@ package com.trenako.services.view;
 import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +31,7 @@ import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
+import com.trenako.values.Priority;
 import com.trenako.values.Visibility;
 
 /**
@@ -115,27 +113,17 @@ public class ProfileViewTests {
 		List<WishList> lists = new ArrayList<WishList>();
 		
 		WishList list1 = new WishList(bob, "My first list", Visibility.PUBLIC);
-		list1.getItems().add(new WishListItem(rollingStock("1000"), "notes", "low", date("2012/01/01")));
-		list1.getItems().add(new WishListItem(rollingStock("1001"), "notes", "low", date("2012/02/01")));
-		list1.getItems().add(new WishListItem(rollingStock("1002"), "notes", "low", date("2012/03/02")));
+		list1.getItems().add(new WishListItem(rollingStock("1000"), "notes", Priority.LOW, date("2012/01/01")));
+		list1.getItems().add(new WishListItem(rollingStock("1001"), "notes", Priority.LOW, date("2012/02/01")));
+		list1.getItems().add(new WishListItem(rollingStock("1002"), "notes", Priority.LOW, date("2012/03/02")));
 		lists.add(list1);
 		
 		WishList list2 = new WishList(bob, "My second list", Visibility.PUBLIC);
-		list2.getItems().add(new WishListItem(rollingStock("1003"), "notes", "low", date("2012/02/01")));
-		list2.getItems().add(new WishListItem(rollingStock("1004"), "notes", "low", date("2012/03/01")));
+		list2.getItems().add(new WishListItem(rollingStock("1003"), "notes", Priority.LOW, date("2012/02/01")));
+		list2.getItems().add(new WishListItem(rollingStock("1004"), "notes", Priority.LOW, date("2012/03/01")));
 		lists.add(list2);
 		
 		return lists;
-	}
-	
-	private Date date(String date) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-		try {
-			return format.parse(date);
-		}
-		catch (ParseException pe) {
-			return new Date();
-		}
 	}
 	
 	static final Account bob = new Account.Builder("bob@mail.com").displayName("Bob").build();

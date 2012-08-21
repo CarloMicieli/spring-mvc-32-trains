@@ -27,9 +27,9 @@ public enum Priority {
 	HIGH,
 	
 	/**
-	 * Priority MEDIUM.
+	 * Priority NORMAL.
 	 */
-	MEDIUM,
+	NORMAL,
 	
 	/**
 	 * Priority LOW.

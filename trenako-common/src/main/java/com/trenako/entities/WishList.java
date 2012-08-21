@@ -30,7 +30,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.trenako.mapping.WeakDbRef;
 import com.trenako.values.Visibility;
 import com.trenako.utility.Slug;
 
@@ -55,24 +54,31 @@ public class WishList {
 	@Size(max = 25, message = "wishList.name.size.notmet")
 	private String name;
 	
-	private boolean defaultList;
-
 	@NotNull(message = "wishList.owner.required")
-	@Indexed(name = "owner.slug")
-	private WeakDbRef<Account> owner;
+	@Indexed
+	private String owner;
 
 	@Valid
 	@Indexed(name = "items.rollingStock.slug", unique = true)
 	private List<WishListItem> items;
 
 	private String visibility;
-	
+	private boolean defaultList;	
 	private Date lastModified;
 	
 	/**
 	 * Creates an empty {@code WishList}.
 	 */
 	public WishList() {
+	}
+	
+	/**
+	 * Creates an empty {@code WishList} for the provided user.
+	 *
+	 * @param owner the wish list owner
+	 */
+	public WishList(Account owner) {
+		this.setOwner(owner);
 	}
 	
 	/**
@@ -86,7 +92,7 @@ public class WishList {
 		this.setOwner(owner);
 		this.setVisibility(visibility);
 		this.name = name;
-		this.slug = initSlug();
+		this.slug = buildSlug();
 		this.lastModified = new Date();
 	}
 
@@ -112,7 +118,7 @@ public class WishList {
 	 */
 	public String getSlug() {
 		if (slug == null) {
-			slug = initSlug();
+			slug = buildSlug();
 		}
 		return slug;
 	}
@@ -161,7 +167,7 @@ public class WishList {
 	 * Returns the {@code WishList} owner.
 	 * @return the owner
 	 */
-	public WeakDbRef<Account> getOwner() {
+	public String getOwner() {
 		return owner;
 	}
 
@@ -170,14 +176,14 @@ public class WishList {
 	 * @param owner the owner
 	 */
 	public void setOwner(Account owner) {
-		this.owner = WeakDbRef.buildRef(owner);
+		this.owner = owner.getSlug();
 	}
 	
 	/**
 	 * Sets the {@code WishList} owner.
 	 * @param owner the owner
 	 */
-	public void setOwner(WeakDbRef<Account> owner) {
+	public void setOwner(String owner) {
 		this.owner = owner;
 	}
 
@@ -266,12 +272,16 @@ public class WishList {
 			.toString();
 	}
 	
-	private String initSlug() {
+	public final String buildSlug(String newName) {
 		String s = new StringBuilder()
-			.append(getOwner().getSlug())
+			.append(getOwner())
 			.append(" ")
-			.append(getName())
+			.append(newName)
 			.toString();
 		return Slug.encode(s);
+	}
+	
+	public final String buildSlug() {
+		return buildSlug(getName());
 	}
 }

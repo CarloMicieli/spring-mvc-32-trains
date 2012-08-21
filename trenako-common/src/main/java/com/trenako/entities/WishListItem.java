@@ -19,16 +19,18 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import com.trenako.mapping.WeakDbRef;
+import com.trenako.values.Priority;
 
 /**
  * It represents a {@code WishList} item.
  * @author Carlo Micieli
  *
  */
-public class WishListItem {
+public class WishListItem implements Comparable<WishListItem> {
 
 	@Indexed
 	private String itemId;
@@ -63,11 +65,11 @@ public class WishListItem {
 	 * @param priority the item priority
 	 * @param addedAt the timestamp
 	 */
-	public WishListItem(RollingStock rollingStock, String notes, String priority, Date addedAt) {
+	public WishListItem(RollingStock rollingStock, String notes, Priority priority, Date addedAt) {
 		this.setRollingStock(rollingStock);
 		this.itemId = initItemId();
 		this.notes = notes;
-		this.priority = priority;
+		this.priority = priority.label();
 		this.addedAt = addedAt;
 	}
 	
@@ -130,11 +132,18 @@ public class WishListItem {
 		this.notes = notes;
 	}
 
+	public Priority priority() {
+		return Priority.parse(getPriority());
+	}
+	
 	/**
 	 * Returns the item priority in the wish list.
 	 * @return the item priority
 	 */
 	public String getPriority() {
+		if (StringUtils.isBlank(priority)) {
+			priority = Priority.NORMAL.label();
+		}
 		return priority;
 	}
 
@@ -160,6 +169,24 @@ public class WishListItem {
 	 */
 	public void setAddedAt(Date addedAt) {
 		this.addedAt = addedAt;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof WishListItem)) return false;
+
+		WishListItem other = (WishListItem) obj;
+		return this.itemId.equals(other.itemId);
+	}
+		
+	@Override
+	public int compareTo(WishListItem o) {
+		if (this.equals(o)) return 0;
+		int c1 = this.priority().compareTo(o.priority());
+		if (c1 != 0) return c1;
+		
+		return o.getAddedAt().compareTo(this.getAddedAt());
 	}
 	
 	private String initItemId() {

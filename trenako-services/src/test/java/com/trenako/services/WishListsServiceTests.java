@@ -230,6 +230,16 @@ public class WishListsServiceTests {
 	}
 	
 	@Test
+	public void shouldChangeWishListsName() {
+		WishList wishList = newWishList();
+		String newName = "New name";
+		
+		service.changeName(wishList, newName);
+		
+		verify(repo, times(1)).changeName(eq(wishList), eq(newName));
+	}
+	
+	@Test
 	public void shouldSetAWishListAsTheDefaultOne() {
 		WishList wishList = newWishList();
 		
@@ -240,7 +250,7 @@ public class WishListsServiceTests {
 	}
 
 	@Test
-	public void shouldCreateNewWishLists() {
+	public void shouldCreateNewWishListsFromOwnerAndName() {
 		service.createNew(owner, "My list");
 		
 		ArgumentCaptor<WishList> arg = ArgumentCaptor.forClass(WishList.class);
@@ -248,9 +258,18 @@ public class WishListsServiceTests {
 		assertEquals("My list", arg.getValue().getName());
 		assertEquals("bob-my-list", arg.getValue().getSlug());
 		assertEquals("public", arg.getValue().getVisibility());
-		assertEquals("{slug: bob, label: Bob}", arg.getValue().getOwner().toCompleteString());
+		assertEquals("bob", arg.getValue().getOwner());
 	}
 	
+	@Test
+	public void shouldCreateNewWishLists() {
+		WishList wishList = newWishList();
+		
+		service.createNew(wishList);
+		
+		verify(repo, times(1)).save(eq(wishList));
+	}
+		
 	@Test
 	public void shouldRemoveWishLists() {
 		WishList wishList = newWishList();

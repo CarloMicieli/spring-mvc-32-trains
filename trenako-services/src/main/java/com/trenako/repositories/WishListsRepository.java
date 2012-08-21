@@ -88,6 +88,13 @@ public interface WishListsRepository {
 	void changeVisibility(WishList wishList, Visibility visibility);
 	
 	/**
+	 * Changes the {@code WishList} name.
+	 * @param wishList the {@code WishList} to be modified
+	 * @param newName the new name
+	 */
+	void changeName(WishList wishList, String newName);
+	
+	/**
 	 * Sets the default flag for the provided {@code WishList}.
 	 * @param wishList the {@code WishList} to be modified
 	 * @param isDefault {@code true} if default; {@code false} otherwise

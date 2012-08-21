@@ -27,6 +27,7 @@ import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
 import com.trenako.repositories.WishListsRepository;
+import com.trenako.values.Priority;
 import com.trenako.values.Visibility;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -70,7 +71,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 		
 		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
 		verify(mongo(), times(1)).find(arg.capture(), eq(WishList.class));
-		assertEquals("{ \"owner.slug\" : \"bob\"}", queryObject(arg).toString());
+		assertEquals("{ \"owner\" : \"bob\"}", queryObject(arg).toString());
 		assertEquals("{ \"items\" : 0}", fieldsObject(arg).toString());
 	}
 	
@@ -81,7 +82,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 		
 		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
 		verify(mongo(), times(1)).find(arg.capture(), eq(WishList.class));
-		assertEquals("{ \"owner.slug\" : \"bob\"}", queryObject(arg).toString());
+		assertEquals("{ \"owner\" : \"bob\"}", queryObject(arg).toString());
 		assertNull(fieldsObject(arg));
 	}
 
@@ -104,7 +105,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 	
 		ArgumentCaptor<Query> arg = ArgumentCaptor.forClass(Query.class);
 		verify(mongo(), times(1)).findOne(arg.capture(), eq(WishList.class));
-		assertEquals("{ \"owner.slug\" : \"bob\" , \"defaultList\" : true}", queryObject(arg).toString());
+		assertEquals("{ \"owner\" : \"bob\" , \"defaultList\" : true}", queryObject(arg).toString());
 	}
 
 	@Test
@@ -120,7 +121,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 	@Test
 	public void shouldAddNewItemsToWishLists() {
 		WishList wishList = newWishList("My list");
-		WishListItem newItem = new WishListItem(rollingStock, "My notes", "low", now);
+		WishListItem newItem = new WishListItem(rollingStock, "My notes", Priority.LOW, now);
 		
 		repo.addItem(wishList, newItem);
 		
@@ -138,7 +139,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 	@Test
 	public void shouldUpdateItemInTheWishLists() {
 		WishList wishList = newWishList("My list");
-		WishListItem newItem = new WishListItem(rollingStock, "My notes", "low", now);
+		WishListItem newItem = new WishListItem(rollingStock, "My notes", Priority.LOW, now);
 		
 		repo.updateItem(wishList, newItem);
 		
@@ -156,7 +157,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 	@Test
 	public void shouldRemoveItemsFromWishLists() {
 		WishList wishList = newWishList("My list");
-		WishListItem newItem = new WishListItem(rollingStock, "My notes", "low", now);
+		WishListItem newItem = new WishListItem(rollingStock, "My notes", Priority.LOW, now);
 		
 		repo.removeItem(wishList, newItem);
 		
@@ -186,6 +187,20 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 	}
 	
 	@Test
+	public void shouldChangeWishListsName() {
+		WishList wishList = newWishList("My list");
+		
+		repo.changeName(wishList, "My renamed list");
+		
+		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
+		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
+		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(WishList.class));
+		assertEquals("{ \"slug\" : \"bob-my-list\"}", queryObject(argQuery).toString());
+		assertEquals("{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"} , \"name\" : \"My renamed list\" , \"slug\" : \"bob-my-renamed-list\"}}", 
+				updateObject(argUpdate).toString());
+	}
+	
+	@Test
 	public void shouldSetTheDefaultFlagForWishLists() {
 		WishList wishList = newWishList("My list");
 		
@@ -206,7 +221,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateMulti(argQuery.capture(), argUpdate.capture(), eq(WishList.class));
-		assertEquals("{ \"owner.slug\" : \"bob\"}", queryObject(argQuery).toString());
+		assertEquals("{ \"owner\" : \"bob\"}", queryObject(argQuery).toString());
 		assertEquals("{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"} , \"defaultList\" : false}}", 
 				updateObject(argUpdate).toString());
 	}

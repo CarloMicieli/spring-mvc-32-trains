@@ -50,14 +50,14 @@ class WishListsServiceSpecification extends MongoSpecification {
 	}
 	
 	def bob() {
-		new WeakDbRef(slug: 'bob', label: 'Bob')
+		'bob'
 	}
-	
+		
 	def setup() {
 		db.wishLists.insert(
 			slug: 'bob-my-list',
 			name: 'My List',
-			owner: [slug: 'bob', label: 'Bob'],
+			owner: 'bob',
 			defaultList: false,
 			items: [
 				[itemId: 'acme-123455', 
@@ -79,7 +79,7 @@ class WishListsServiceSpecification extends MongoSpecification {
 		db.wishLists.insert(
 			slug: 'bob-my-list-2',
 			name: 'My List 2',
-			owner: [slug: 'bob', label: 'Bob'],
+			owner: 'bob',
 			defaultList: true,
 			items: [
 				[itemId: 'acme-123456', 
@@ -97,7 +97,7 @@ class WishListsServiceSpecification extends MongoSpecification {
 		db.wishLists.insert(
 			slug: 'alice-my-list',
 			name: 'My List',
-			owner: [slug: 'alice', label: 'Alice'],
+			owner: 'alice',
 			items: [
 				[itemId: 'acme-123455', 
 					rollingStock: [slug: 'acme-123455', label: 'ACME 123455'], 
@@ -173,7 +173,7 @@ class WishListsServiceSpecification extends MongoSpecification {
 		then:
 		result != null
 		result.slug == 'bob-my-list-2'
-		result.owner.slug == 'bob'
+		result.owner == 'bob'
 		result.items != null
 		result.items.size() == 2
 	}
@@ -336,6 +336,26 @@ class WishListsServiceSpecification extends MongoSpecification {
 		doc.lastModified != now
 	}
 
+	def "should change wish list name"() {
+		given:
+		def wishList = new WishList(slug: 'bob-my-list-2', owner: 'bob')
+		
+		when:
+		service.changeName(wishList, 'New list name')
+		
+		then:
+		def oldDoc = db.wishLists.findOne(slug: 'bob-my-list-2')
+		oldDoc == null
+		
+		and: 
+		def doc = db.wishLists.findOne(slug: 'bob-new-list-name')
+		doc.name == 'New list name'
+		doc.slug == 'bob-new-list-name'
+				
+		and: "the last modified timestamp was updated"
+		doc.lastModified != now
+	}
+	
 	def "should set a wish list as the default one"() {
 		given:
 		def owner = new Account(slug: 'bob')
@@ -362,7 +382,7 @@ class WishListsServiceSpecification extends MongoSpecification {
 
 	def "should create a new public wish list for the user"() {
 		given:
-		def owner = new Account(slug: 'bob', displayName: 'Bob')
+		def owner = new Account(slug: 'bob')
 		
 		when:
 		service.createNew(owner, 'My list 3')
@@ -372,7 +392,7 @@ class WishListsServiceSpecification extends MongoSpecification {
 		doc != null
 		doc.slug == 'bob-my-list-3'
 		doc.name == 'My list 3'
-		doc.owner == [slug: 'bob', label: 'Bob']
+		doc.owner == 'bob'
 		doc.visibility == 'public'
 		doc.defaultList == false
 		
@@ -382,7 +402,7 @@ class WishListsServiceSpecification extends MongoSpecification {
 	
 	def "should throw exception creating a new wish list with a name already used"() {
 		given:
-		def owner = new Account(slug: 'bob', displayName: 'Bob')
+		def owner = new Account(slug: 'bob')
 		
 		when:
 		service.createNew(owner, 'My list')

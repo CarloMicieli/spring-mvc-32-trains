@@ -15,6 +15,10 @@
  */
 package com.trenako.test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
@@ -31,6 +35,20 @@ import com.trenako.values.PowerMethod;
  *
  */
 public class TestDataBuilder {
+	
+	public static Date now() {
+		return new Date();
+	}
+	
+	public static Date date(String date) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+		try {
+			return format.parse(date);
+		}
+		catch (ParseException pe) {
+			return new Date();
+		}
+	}
 	
 	private final static LocalizedEnum<Era> eraIII = new LocalizedEnum<Era>(Era.III);
 	private final static LocalizedEnum<Category> steamLocomotives = new LocalizedEnum<Category>(Category.STEAM_LOCOMOTIVES);

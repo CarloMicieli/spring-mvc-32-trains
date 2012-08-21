@@ -67,7 +67,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	
 	@Override
 	public Iterable<WishList> findByOwner(Account owner, boolean loadItems) {
-		Query query = query(where("owner.slug").is(owner.getSlug()));
+		Query query = query(where("owner").is(owner.getSlug()));
 		if (!loadItems) {
 			query.fields().exclude("items");
 		}
@@ -81,7 +81,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 
 	@Override
 	public WishList findDefaultListByOwner(Account owner) {
-		Query query = query(where("owner.slug").is(owner.getSlug()).and("defaultList").is(true));
+		Query query = query(where("owner").is(owner.getSlug()).and("defaultList").is(true));
 		return mongoTemplate.findOne(query, WishList.class);
 	}
 
@@ -120,6 +120,15 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	}
 
 	@Override
+	public void changeName(WishList wishList, String newName) {
+		Update upd = new Update()
+			.set("lastModified", now())
+			.set("name", newName)
+			.set("slug", wishList.buildSlug(newName));
+		mongoTemplate.updateFirst(query(where("slug").is(wishList.getSlug())), upd, WishList.class);
+	}
+	
+	@Override
 	public void changeVisibility(WishList wishList, Visibility visibility) {
 		Update upd = new Update()
 			.set("lastModified", now())
@@ -138,7 +147,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 
 	@Override
 	public void resetDefault(Account owner) {
-		Query query = query(where("owner.slug").is(owner.getSlug()));
+		Query query = query(where("owner").is(owner.getSlug()));
 		Update upd = new Update()
 			.set("lastModified", now())
 			.set("defaultList", false);
