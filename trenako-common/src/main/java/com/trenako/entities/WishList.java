@@ -262,12 +262,11 @@ public class WishList {
 	@Override
 	public String toString() {
 		return new StringBuilder()
-			.append("wishList{owner: ")
-			.append(getOwner())
-			.append(", name: ")
-			.append(getName())
-			.append(", visibility: ")
-			.append(getVisibility())
+			.append("wishList{")
+			.append("slug: ").append(getSlug())
+			.append(", owner: ").append(getOwner())
+			.append(", name: ").append(getName())
+			.append(", visibility: ").append(getVisibility())
 			.append("}")
 			.toString();
 	}

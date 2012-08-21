@@ -49,13 +49,18 @@ public class WeakDbRef<E extends DbReferenceable> {
 	public WeakDbRef() {
 	}
 	
-	private WeakDbRef(E entity) {
-		this(entity.getSlug(), entity.getLabel());
-	}
-	
-	private WeakDbRef(String slug, String label) {
+	/**
+	 * 
+	 * @param slug
+	 * @param label
+	 */
+	public WeakDbRef(String slug, String label) {
 		this.slug = slug;
 		this.label = label;
+	}
+	
+	private WeakDbRef(E entity) {
+		this(entity.getSlug(), entity.getLabel());
 	}
 	
 	/**
