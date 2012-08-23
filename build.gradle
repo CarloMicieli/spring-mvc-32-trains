@@ -92,6 +92,9 @@ allprojects {
 		compile "org.apache.commons:commons-lang3:3.1"
 		compile "commons-beanutils:commons-beanutils-core:1.8.3"
 
+		// joda time
+		compile "joda-time:joda-time:2.1"
+
 		// spring data mongodb
 		compile "org.springframework.data:spring-data-commons-core:${springDataVersion}"
 		compile "org.springframework.data:spring-data-mongodb:${springDataMongoVersion}"
