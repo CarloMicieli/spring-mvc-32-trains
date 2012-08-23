@@ -15,11 +15,12 @@
  */
 package com.trenako.services;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
@@ -48,17 +49,18 @@ public class WishListsServiceImpl implements WishListsService {
 	
 	@Override
 	public Iterable<WishList> findByOwner(Account owner) {
-		return repo.findByOwner(owner, false);
+		return repo.findByOwner(owner);
 	}
-		
+
+
 	@Override
-	public WishList findBySlug(String slug) {
-		return repo.findBySlug(slug);
+	public Iterable<WishList> findAllByOwner(Account owner, int maxNumberOfItems) {
+		return repo.findAllByOwner(owner, maxNumberOfItems);
 	}
 	
 	@Override
-	public WishList findDefaultListByOwner(Account owner) {
-		return repo.findDefaultListByOwner(owner);
+	public WishList findBySlug(String slug) {
+		return repo.findBySlug(slug);
 	}
 	
 	@Override
@@ -68,7 +70,7 @@ public class WishListsServiceImpl implements WishListsService {
 	
 	@Override
 	public void addItem(WishList wishList, WishListItem newItem) {
-		if (!StringUtils.hasText(newItem.getItemId())) {
+		if (StringUtils.isBlank(newItem.getItemId())) {
 			newItem.setItemId(newItem.getItemId());
 		}
 		
@@ -76,7 +78,7 @@ public class WishListsServiceImpl implements WishListsService {
 	}
 	
 	@Override
-	public void updateItem(WishList wishList, WishListItem item) {
+	public void updateItem(WishList wishList, WishListItem item, Money oldPrice) {
 		repo.updateItem(wishList, item);
 	}
 	
@@ -111,9 +113,8 @@ public class WishListsServiceImpl implements WishListsService {
 	}
 	
 	@Override
-	public void setAsDefault(Account owner, WishList wishList) {
-		repo.resetDefault(owner);
-		repo.changeDefault(wishList, true);
+	public void changeBudget(WishList wishList, Money newBudget) {
+		repo.changeBudget(wishList, newBudget);		
 	}
 	
 	@Override
@@ -121,14 +122,20 @@ public class WishListsServiceImpl implements WishListsService {
 		WishList newList = new WishList(owner, name, Visibility.PUBLIC);
 		repo.save(newList);
 	}
-	
+		
 	@Override
 	public void createNew(WishList newList) {
 		repo.save(newList);
+	}
+
+	@Override
+	public void saveChanges(WishList wishList) {
+		repo.saveChanges(wishList);
 	}
 	
 	@Override
 	public void remove(WishList wishList) {
 		repo.remove(wishList);
 	}
+
 }

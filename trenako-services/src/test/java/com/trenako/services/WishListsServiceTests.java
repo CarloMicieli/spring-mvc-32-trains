@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
@@ -63,23 +64,35 @@ public class WishListsServiceTests {
 
 	@Test
 	public void shouldFindWishListsByOwner() {
-		when(repo.findByOwner(eq(owner), eq(false)))
+		when(repo.findByOwner(eq(owner)))
 			.thenReturn(Arrays.asList(new WishList(), new WishList()));
 		
 		Iterable<WishList> results = service.findByOwner(owner);
 
 		assertNotNull("Wish lists were not found", results);
-		verify(repo, times(1)).findByOwner(eq(owner), eq(false));
+		verify(repo, times(1)).findByOwner(eq(owner));
+	}
+	
+	@Test
+	public void shouldFindWishListsByOwnerLoadingTheLatestItems() {
+		int maxNumberOfItems = 10;
+		when(repo.findAllByOwner(eq(owner), eq(maxNumberOfItems)))
+			.thenReturn(Arrays.asList(new WishList(), new WishList()));
+		
+		Iterable<WishList> results = service.findAllByOwner(owner, maxNumberOfItems);
+
+		assertNotNull("Wish lists were not found", results);
+		verify(repo, times(1)).findAllByOwner(eq(owner), eq(maxNumberOfItems));
 	}
 	
 	@Test
 	public void shouldReturnNullWhenTheProvidedOwnerHasNoWishLists() {
-		when(repo.findByOwner(eq(owner), eq(false))).thenReturn(null);
+		when(repo.findByOwner(eq(owner))).thenReturn(null);
 		
 		Iterable<WishList> results = service.findByOwner(owner);
 
 		assertNull("Wish lists were found", results);
-		verify(repo, times(1)).findByOwner(eq(owner), eq(false));
+		verify(repo, times(1)).findByOwner(eq(owner));
 	}
 	
 	@Test
@@ -104,28 +117,6 @@ public class WishListsServiceTests {
 	
 		assertNull("A wish list was found", result);
 		verify(repo, times(1)).findBySlug(eq(slug));
-	}
-	
-	@Test
-	public void shouldFindDefaultWishListByOwner() {
-		when(repo.findDefaultListByOwner(eq(owner)))
-			.thenReturn(new WishList());
-		
-		WishList result = service.findDefaultListByOwner(owner);
-		
-		assertNotNull("A default wish list was not found", result);
-		verify(repo, times(1)).findDefaultListByOwner(eq(owner));
-	}
-	
-	@Test
-	public void shouldReturnNullIfDefaultWishListIsFoundForTheProvidedOwner() {
-		when(repo.findDefaultListByOwner(eq(owner)))
-			.thenReturn(null);
-		
-		WishList result = service.findDefaultListByOwner(owner);
-		
-		assertNull("A default wish list was found", result);
-		verify(repo, times(1)).findDefaultListByOwner(eq(owner));
 	}
 
 	@Test
@@ -167,7 +158,7 @@ public class WishListsServiceTests {
 		WishList wishList = newWishList();
 		WishListItem item = newWishListItem();
 		
-		service.updateItem(wishList, item);
+		service.updateItem(wishList, item, oldPrice());
 		
 		verify(repo, times(1)).updateItem(eq(wishList), eq(item));
 	}
@@ -228,6 +219,16 @@ public class WishListsServiceTests {
 		
 		verify(repo, times(1)).changeVisibility(eq(wishList), eq(Visibility.PRIVATE));
 	}
+
+	@Test
+	public void shouldChangeWishListsBudget() {
+		Money newBudget = new Money(100, "USD");
+		WishList wishList = newWishList();
+		
+		service.changeBudget(wishList, newBudget);
+		
+		verify(repo, times(1)).changeBudget(eq(wishList), eq(newBudget));
+	}
 	
 	@Test
 	public void shouldChangeWishListsName() {
@@ -237,16 +238,6 @@ public class WishListsServiceTests {
 		service.changeName(wishList, newName);
 		
 		verify(repo, times(1)).changeName(eq(wishList), eq(newName));
-	}
-	
-	@Test
-	public void shouldSetAWishListAsTheDefaultOne() {
-		WishList wishList = newWishList();
-		
-		service.setAsDefault(owner, wishList);
-		
-		verify(repo, times(1)).resetDefault(eq(owner));
-		verify(repo, times(1)).changeDefault(eq(wishList), eq(true));
 	}
 
 	@Test
@@ -269,7 +260,16 @@ public class WishListsServiceTests {
 		
 		verify(repo, times(1)).save(eq(wishList));
 	}
+
+	@Test
+	public void shouldSaveWishListChanges() {
+		WishList wishList = newWishList();
 		
+		service.saveChanges(wishList);
+		
+		verify(repo, times(1)).saveChanges(eq(wishList));
+	}
+	
 	@Test
 	public void shouldRemoveWishLists() {
 		WishList wishList = newWishList();
@@ -277,6 +277,10 @@ public class WishListsServiceTests {
 		service.remove(wishList);
 		
 		verify(repo, times(1)).remove(eq(wishList));
+	}
+	
+	private Money oldPrice() {
+		return new Money(100, "USD");
 	}
 	
 	private WishList newWishList() {

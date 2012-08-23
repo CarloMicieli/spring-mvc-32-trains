@@ -22,11 +22,13 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
@@ -66,23 +68,24 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	}
 	
 	@Override
-	public Iterable<WishList> findByOwner(Account owner, boolean loadItems) {
+	public Iterable<WishList> findByOwner(Account owner) {
 		Query query = query(where("owner").is(owner.getSlug()));
-		if (!loadItems) {
-			query.fields().exclude("items");
-		}
+		query.fields().exclude("items");
+		query.sort().on("name", Order.ASCENDING);
 		return mongoTemplate.find(query, WishList.class);
 	}
 
 	@Override
+	public Iterable<WishList> findAllByOwner(Account owner, int maxNumberOfItems) {
+		Query query = query(where("owner").is(owner.getSlug()));
+		query.fields().slice("items", -1 * maxNumberOfItems);
+		query.sort().on("name", Order.ASCENDING);
+		return mongoTemplate.find(query, WishList.class);
+	}
+	
+	@Override
 	public WishList findBySlug(String slug) {
 		return mongoTemplate.findOne(query(where("slug").is(slug)), WishList.class);
-	}
-
-	@Override
-	public WishList findDefaultListByOwner(Account owner) {
-		Query query = query(where("owner").is(owner.getSlug()).and("defaultList").is(true));
-		return mongoTemplate.findOne(query, WishList.class);
 	}
 
 	@Override
@@ -97,6 +100,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	public void addItem(WishList wishList, WishListItem newItem) {
 		Update upd = new Update()
 			.set("lastModified", now())
+			.inc("numberOfItems", 1)
 			.push("items", newItem);
 		mongoTemplate.updateFirst(query(where("slug").is(wishList.getSlug())), upd, WishList.class);
 	}
@@ -115,6 +119,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	public void removeItem(WishList wishList, WishListItem item) {
 		Update upd = new Update()
 			.set("lastModified", now())
+			.inc("numberOfItems", -1)
 			.pull("items", item);
 		mongoTemplate.updateFirst(query(where("slug").is(wishList.getSlug())), upd, WishList.class);
 	}
@@ -124,7 +129,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 		Update upd = new Update()
 			.set("lastModified", now())
 			.set("name", newName)
-			.set("slug", wishList.buildSlug(newName));
+			.set("slug", wishList.slug(newName));
 		mongoTemplate.updateFirst(query(where("slug").is(wishList.getSlug())), upd, WishList.class);
 	}
 	
@@ -137,21 +142,11 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	}
 
 	@Override
-	public void changeDefault(WishList wishList, boolean isDefault) {
-		Query query = query(where("slug").is(wishList.getSlug()));
+	public void changeBudget(WishList wishList, Money newBudget) {
 		Update upd = new Update()
 			.set("lastModified", now())
-			.set("defaultList", isDefault);
-		mongoTemplate.updateFirst(query, upd, WishList.class);
-	}
-
-	@Override
-	public void resetDefault(Account owner) {
-		Query query = query(where("owner").is(owner.getSlug()));
-		Update upd = new Update()
-			.set("lastModified", now())
-			.set("defaultList", false);
-		mongoTemplate.updateMulti(query, upd, WishList.class);
+			.set("budget", newBudget);
+		mongoTemplate.updateFirst(query(where("slug").is(wishList.getSlug())), upd, WishList.class);
 	}
 
 	@Override
@@ -159,6 +154,17 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 		mongoTemplate.save(wishList);		
 	}
 
+	@Override
+	public void saveChanges(WishList wishList) {
+		Update upd = new Update()
+			.set("name", wishList.getName())
+			.set("slug", wishList.slug())
+			.set("budget", wishList.getBudget())
+			.set("visibility", wishList.getVisibility())
+			.set("lastModified", now());
+		mongoTemplate.updateFirst(query(where("slug").is(wishList.getSlug())), upd, WishList.class);	
+	}
+	
 	@Override
 	public void remove(WishList wishList) {
 		mongoTemplate.remove(wishList);

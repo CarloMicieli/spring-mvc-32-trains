@@ -16,6 +16,7 @@
 package com.trenako.services;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
@@ -36,9 +37,22 @@ public interface WishListsService {
 	 * </p>
 	 *
 	 * @param owner the owner
-	 * @returns a list of {@code WishList}
+	 * @return a {@code WishList} list
 	 */
 	Iterable<WishList> findByOwner(Account owner);
+	
+	/**
+	 * Returns the list of {@code WishList} for the provided owner.
+	 * <p>
+	 * This method is loading the items for the {@code WishList}; the number
+	 * of returned wish list items is limited by the {@code maxNumberOfItems} value.
+	 * </p>
+	 *
+	 * @param owner the owner
+	 * @param maxNumberOfItems the max number of returned items 
+	 * @return a {@code WishList} list
+	 */
+	Iterable<WishList> findAllByOwner(Account owner, int maxNumberOfItems);
 		
 	/**
 	 * Returns the {@code WishList} with the provided slug.
@@ -46,13 +60,6 @@ public interface WishListsService {
 	 * @returns a {@code WishList} if found; {@code null} otherwise
 	 */
 	WishList findBySlug(String slug);
-	
-	/**
-	 * Returns the default {@code WishList} for the provided owner.
-	 * @param owner the owner
-	 * @returns the default {@code WishList} if found; {@code null} otherwise
-	 */
-	WishList findDefaultListByOwner(Account owner);
 	
 	/**
 	 * Checks whether the provided {@code WishList} contains a given rolling stock.
@@ -73,8 +80,9 @@ public interface WishListsService {
 	 * Updates an item for the provided {@code WishList}.
 	 * @param wishList the {@code WishList} to be modified
 	 * @param item the item to be saved
+	 * @param oldPrice the previous estimated price
 	 */
-	void updateItem(WishList wishList, WishListItem item);
+	void updateItem(WishList wishList, WishListItem item, Money oldPrice);
 	
 	/**
 	 * Removes the new item from the provided {@code WishList}.
@@ -106,11 +114,11 @@ public interface WishListsService {
 	void changeName(WishList wishList, String newName);
 	
 	/**
-	 * Sets the provided {@code WishList} as the default list for the user.
-	 * @param owner the owner
+	 * Changes the {@code WishList} budget.
 	 * @param wishList the {@code WishList} to be modified
+	 * @param newBudget the new budget for the wish list
 	 */
-	void setAsDefault(Account owner, WishList wishList);
+	void changeBudget(WishList wishList, Money newBudget);
 	
 	/**
 	 * Creates a new public {@code WishList}.
@@ -124,6 +132,12 @@ public interface WishListsService {
 	 * @param newList the {@code WishList} to be created
 	 */ 
 	void createNew(WishList newList);
+	
+	/**
+	 * Saves the {@code WishList} changes.
+	 * @param wishList the {@code WishList} to be saved
+	 */
+	void saveChanges(WishList wishList);
 	
 	/**
 	 * Removes the {@code WishList}.

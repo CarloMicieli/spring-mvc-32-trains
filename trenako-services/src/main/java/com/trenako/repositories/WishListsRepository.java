@@ -16,6 +16,7 @@
 package com.trenako.repositories;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
@@ -30,26 +31,34 @@ public interface WishListsRepository {
 	
 	/**
 	 * Returns the list of {@code WishList} for the provided owner.
+	 * <p>
+	 * This method is loading the wish lists header only; no items information
+	 * will be available.
+	 * </p>
 	 * @param owner the owner
-	 * @param loadItems {@code true} will load the {@code WishList} items too; 
-	 * 			{@code false} otherwise
 	 * @returns a list of {@code WishList}
 	 */
-	Iterable<WishList> findByOwner(Account owner, boolean loadItems);
-		
+	Iterable<WishList> findByOwner(Account owner);
+
+	/**
+	 * Returns the list of {@code WishList} for the provided owner.
+	 * <p>
+	 * This method is loading the items for the {@code WishList}; the number
+	 * of returned wish list items is limited by the {@code maxNumberOfItems} value.
+	 * </p>
+	 *
+	 * @param owner the owner
+	 * @param maxNumberOfItems the max number of returned items 
+	 * @return a {@code WishList} list
+	 */
+	Iterable<WishList> findAllByOwner(Account owner, int maxNumberOfItems);
+	
 	/**
 	 * Returns the {@code WishList} with the provided slug.
 	 * @param slug the slug
 	 * @returns a {@code WishList} if found; {@code null} otherwise
 	 */
 	WishList findBySlug(String slug);
-		
-	/**
-	 * Returns the default {@code WishList} for the provided owner.
-	 * @param owner the owner
-	 * @returns the default {@code WishList} if found; {@code null} otherwise
-	 */
-	WishList findDefaultListByOwner(Account owner);
 	
 	/**
 	 * Checks whether the provided {@code WishList} contains a given rolling stock.
@@ -95,23 +104,23 @@ public interface WishListsRepository {
 	void changeName(WishList wishList, String newName);
 	
 	/**
-	 * Sets the default flag for the provided {@code WishList}.
+	 * Changes the {@code WishList} budget.
 	 * @param wishList the {@code WishList} to be modified
-	 * @param isDefault {@code true} if default; {@code false} otherwise
+	 * @param newBudget the new budget for the wish list
 	 */
-	void changeDefault(WishList wishList, boolean isDefault);
-	
-	/**
-	 * Sets the flag for all wish lists for the provided {@code WishList} as false.
-	 * @param owner the owner
-	 */
-	void resetDefault(Account owner);
+	void changeBudget(WishList wishList, Money newBudget);
 	
 	/**
 	 * Saves the {@code WishList}.
 	 * @param wishList the {@code WishList} to be saved
 	 */ 
 	void save(WishList wishList);
+
+	/**
+	 * Saves the {@code WishList} changes.
+	 * @param wishList the {@code WishList} to be saved
+	 */
+	void saveChanges(WishList wishList);
 	
 	/**
 	 * Removes the {@code WishList}.

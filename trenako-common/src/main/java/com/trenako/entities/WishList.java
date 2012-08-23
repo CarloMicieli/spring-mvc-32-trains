@@ -15,7 +15,7 @@
  */
 package com.trenako.entities;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.bson.types.ObjectId;
 
@@ -35,6 +36,16 @@ import com.trenako.utility.Slug;
 
 /**
  * It represents a rolling stocks {@code WishList}.
+ * 
+ * <p>
+ * Users can have more than one wish list; each one of them has
+ * a name unique for the owner (ie different users can have wish lists
+ * with the same name).
+ * </p>
+ * <p>
+ * The wish lists have a visibility flag, giving to the collection owners the option to make their 
+ * wish lists {@code private} or {@code public}. By default the wish lists are {@code public}.
+ * </p>
  *
  * @author Carlo Micieli
  * 
@@ -42,7 +53,7 @@ import com.trenako.utility.Slug;
 @Document(collection = "wishLists")
 public class WishList {
 
-	public static final String DEFAULT_LIST_NAME = "New wish list";
+	static final String DEFAULT_LIST_NAME = "New list";
 
 	@Id
 	private ObjectId id;
@@ -59,11 +70,12 @@ public class WishList {
 	private String owner;
 
 	@Valid
-	@Indexed(name = "items.rollingStock.slug", unique = true)
 	private List<WishListItem> items;
 
+	private Money totalPrice;
+	private Money budget;
+	private int numberOfItems;
 	private String visibility;
-	private boolean defaultList;	
 	private Date lastModified;
 	
 	/**
@@ -73,27 +85,58 @@ public class WishList {
 	}
 	
 	/**
-	 * Creates an empty {@code WishList} for the provided user.
+	 * Creates an empty {@code WishList} with the provided slug.
 	 *
-	 * @param owner the wish list owner
+	 * @param slug the wish list slug
 	 */
-	public WishList(Account owner) {
-		this.setOwner(owner);
+	public WishList(String slug) {
+		this.slug = slug;
 	}
 	
 	/**
-	 * Creates a new {@code WishList} for the provided user.
+	 * Creates a new public {@code WishList} for the provided user.
+	 *
+	 * @param owner the wish list owner
+	 * @param name the name
+	 */
+	public WishList(Account owner, String name) {
+		this(owner, name, defaultVisibility());
+	}
+
+	/**
+	 * Creates a new {@code WishList}.
 	 *
 	 * @param owner the wish list owner
 	 * @param name the name
 	 * @param visibility the visibility
 	 */
 	public WishList(Account owner, String name, Visibility visibility) {
-		this.setOwner(owner);
-		this.setVisibility(visibility);
+		this(owner, name, visibility, null);
+	}
+	
+	/**
+	 * Creates a new {@code WishList}.
+	 *
+	 * @param owner the wish list owner
+	 * @param name the name
+	 * @param visibility the visibility
+	 * @param budget the budget
+	 */
+	public WishList(Account owner, String name, Visibility visibility, Money budget) {
+		this.owner = owner(owner);
 		this.name = name;
-		this.slug = buildSlug();
+		this.slug = slug(this.owner, this.name);
+		this.visibility = visibility(visibility);
+		this.budget = budget;
 		this.lastModified = new Date();
+	}
+
+	/**
+	 * Creates the default {@code WishList} for the provided user.
+	 * @param owner the {@code WishList} owner
+	 */
+	public static WishList defaultList(Account owner) {
+		return new WishList(owner, DEFAULT_LIST_NAME);
 	}
 
 	/**
@@ -118,7 +161,7 @@ public class WishList {
 	 */
 	public String getSlug() {
 		if (slug == null) {
-			slug = buildSlug();
+			slug = slug(this.owner, this.name);
 		}
 		return slug;
 	}
@@ -148,22 +191,6 @@ public class WishList {
 	}
 	
 	/**
-	 * Checks whether the current {@code WishList} is the default list for the user.
-	 * @return {@code true} if this is the default list; {@code false} otherwise
-	 */
-	public boolean isDefaultList() {
-		return defaultList;
-	}
-
-	/**
-	 * Checks whether the current {@code WishList} is the default list for the user.
-	 * @param isDefault {@code true} if this is the default list; {@code false} otherwise
-	 */
-	public void setDefaultList(boolean isDefault) {
-		this.defaultList = isDefault;
-	}
-
-	/**
 	 * Returns the {@code WishList} owner.
 	 * @return the owner
 	 */
@@ -175,25 +202,20 @@ public class WishList {
 	 * Sets the {@code WishList} owner.
 	 * @param owner the owner
 	 */
-	public void setOwner(Account owner) {
-		this.owner = owner.getSlug();
-	}
-	
-	/**
-	 * Sets the {@code WishList} owner.
-	 * @param owner the owner
-	 */
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
 
 	/**
 	 * Returns the rolling stocks for the {@code WishList}.
+	 * <p>
+	 * This method returns an immutable {@code List}.
+	 * </p>
 	 * @return the rolling stocks
 	 */
 	public List<WishListItem> getItems() {
 		if (items == null) {
-			items = new ArrayList<WishListItem>();
+			items = Collections.emptyList();
 		}
 		return items;
 	}
@@ -211,7 +233,18 @@ public class WishList {
 	 * @return the visibility
 	 */
 	public String getVisibility() {
+		if (StringUtils.isBlank(visibility)) {
+			visibility = defaultVisibility().label();
+		}
 		return visibility;
+	}
+
+	/**
+	 * Returns the {@code WishList} visibility as one of {@code Visibility} value.
+	 * @return the visibility
+	 */
+	public Visibility getVisibilityValue() {
+		return Visibility.parse(getVisibility());
 	}
 
 	/**
@@ -221,15 +254,47 @@ public class WishList {
 	public void setVisibility(String visibility) {
 		this.visibility = visibility;
 	}
+	
+	public Money getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Money totalPrice) {
+		this.totalPrice = totalPrice;
+	}
 
 	/**
-	 * Sets the {@code WishList} visibility.
-	 * @param visibility the visibility
+	 * The current budget for the {@code WishList}.
+	 * @return the budget
 	 */
-	public void setVisibility(Visibility visibility) {
-		this.visibility = visibility.label();
+	public Money getBudget() {
+		return budget;
 	}
-	
+
+	/**
+	 * Sets the current budget for the {@code WishList}.
+	 * @param budget the budget
+	 */
+	public void setBudget(Money budget) {
+		this.budget = budget;
+	}
+
+	/**
+	 * Returns the number of {@code WishList} items.
+	 * @return the number of items
+	 */
+	public int getNumberOfItems() {
+		return numberOfItems;
+	}
+
+	/**
+	 * Sets the number of {@code WishList} items.
+	 * @param numberOfItems the number of items
+	 */
+	public void setNumberOfItems(int numberOfItems) {
+		this.numberOfItems = numberOfItems;
+	}
+
 	/**
 	 * Returns the last modified timestamp.
 	 * @return the timestamp
@@ -255,7 +320,6 @@ public class WishList {
 		
 		return new EqualsBuilder()
 			.append(this.slug, other.slug)
-			.append(this.owner, other.owner)
 			.isEquals();
 	}
 	
@@ -271,16 +335,42 @@ public class WishList {
 			.toString();
 	}
 	
-	public final String buildSlug(String newName) {
+	/**
+	 * Encode a new {@code WishList} slug with the values.
+	 * @return the new slug
+	 */
+	public final String slug() {
+		return slug(getOwner(), getName());
+	}
+	
+	/**
+	 * Encode a new {@code WishList} slug for the provided name.
+	 * @param newName the new name
+	 * @return the new slug
+	 */
+	public final String slug(String newName) {
+		return slug(getOwner(), newName);
+	}
+
+	private String slug(String owner, String name) {
 		String s = new StringBuilder()
-			.append(getOwner())
+			.append(owner)
 			.append(" ")
-			.append(newName)
+			.append(name)
 			.toString();
 		return Slug.encode(s);
 	}
 	
-	public final String buildSlug() {
-		return buildSlug(getName());
+	private static Visibility defaultVisibility() {
+		return Visibility.PUBLIC;
 	}
+
+	private String visibility(Visibility visibility) {
+		return visibility.label();
+	}
+
+	private String owner(Account owner) {
+		return owner.getSlug();
+	}
+
 }

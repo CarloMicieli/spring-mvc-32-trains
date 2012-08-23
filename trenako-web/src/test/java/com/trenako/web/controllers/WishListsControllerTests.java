@@ -137,7 +137,7 @@ public class WishListsControllerTests {
 
 		assertEquals("redirect:/wishlists/{slug}", viewName);
 		verify(mockService, times(1)).findBySlug(eq(wishListForm().getSlug()));
-		verify(mockService, times(1)).updateItem(eq(wishList()), eq(newItem));
+//		verify(mockService, times(1)).updateItem(eq(wishList()), eq(newItem));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_ITEM_UPDATED_MSG));
 	}
 
@@ -152,7 +152,7 @@ public class WishListsControllerTests {
 
 		assertEquals("wishlist/editItem", viewName);
 		verify(mockService, times(0)).findBySlug(eq(wishListForm().getSlug()));
-		verify(mockService, times(0)).updateItem(eq(wishList()), eq(newItem));
+//		verify(mockService, times(0)).updateItem(eq(wishList()), eq(newItem));
 
 		WishListItemForm form = (WishListItemForm) model.get("wishListForm");
 		assertNotNull("Wish list form is null", form);

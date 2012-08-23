@@ -41,6 +41,7 @@ public class WishListItem implements Comparable<WishListItem> {
 	private String notes;
 	private String priority;
 	
+	private Money price;
 	private Date addedAt;
 	
 	/**
@@ -164,6 +165,25 @@ public class WishListItem implements Comparable<WishListItem> {
 	}
 	
 	/**
+	 * Returns the estimated price for the current {@code WishListItem}.	
+	 * @return the estimated price
+	 */
+	public Money getPrice() {
+		if (price == null) {
+			return new Money();
+		}
+		return price;
+	}
+
+	/**
+	 * Sets the estimated price for the current {@code WishListItem}.	
+	 * @param price the estimated price
+	 */
+	public void setPrice(Money price) {
+		this.price = price;
+	}
+
+	/**
 	 * Returns the timestamp when this rolling stock was added to the list.
 	 * @return the timestamp
 	 */
@@ -191,6 +211,7 @@ public class WishListItem implements Comparable<WishListItem> {
 	@Override
 	public int compareTo(WishListItem o) {
 		if (this.equals(o)) return 0;
+		
 		int c1 = this.priority().compareTo(o.priority());
 		if (c1 != 0) return c1;
 		

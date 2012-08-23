@@ -54,7 +54,7 @@ public class ProfilesServiceImpl implements ProfilesService {
 			collection = new Collection(owner);
 		}
 		
-		List<WishList> lists = (List<WishList>) wishLists.findByOwner(owner, true);
+		List<WishList> lists = (List<WishList>) wishLists.findByOwner(owner);
 		if (lists == null) {
 			lists = new ArrayList<WishList>();
 		}

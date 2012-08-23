@@ -45,7 +45,7 @@ public class WishListTests {
 	}
 	
 	@Test
-	public void shouldCheckWheterTwoWishListsAreEquals() {
+	public void shouldCheckWhetherTwoWishListsAreEquals() {
 		WishList x = new WishList(bob, "My first list", Visibility.PUBLIC);
 		WishList y = new WishList(bob, "My first list", Visibility.PUBLIC);
 		assertTrue(x.equals(x));
@@ -53,9 +53,23 @@ public class WishListTests {
 	}
 	
 	@Test
-	public void shouldCheckWheterTwoWishListsAreDifferent() {
+	public void shouldCheckWhetherTwoWishListsAreDifferent() {
 		WishList x = new WishList(bob, "My first list", Visibility.PUBLIC);
 		WishList y = new WishList(bob, "My second list", Visibility.PRIVATE);
 		assertFalse(x.equals(y));
+	}
+	
+	@Test
+	public void shouldCreatePublicWishListsByDefault() {
+		WishList wl = new WishList(bob, "My first list");
+		assertEquals(Visibility.PUBLIC.label(), wl.getVisibility());
+	}
+	
+	@Test
+	public void shouldCreateTheDefaultWishListForTheUser() {
+		WishList wl = WishList.defaultList(bob);
+		assertEquals(Visibility.PUBLIC.label(), wl.getVisibility());
+		assertEquals(WishList.DEFAULT_LIST_NAME, wl.getName());
+		assertEquals("bob-new-list", wl.getSlug());
 	}
 }

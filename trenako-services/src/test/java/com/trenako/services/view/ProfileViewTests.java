@@ -19,6 +19,7 @@ import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -101,11 +102,13 @@ public class ProfileViewTests {
 	
 	private Collection collection() {
 		Collection c = new Collection(bob, Visibility.PUBLIC);
-		c.getItems().add(new CollectionItem.Builder(rollingStock("1000")).addedAt(date("2012/01/01")).build());
-		c.getItems().add(new CollectionItem.Builder(rollingStock("1001")).addedAt(date("2012/02/01")).build());
-		c.getItems().add(new CollectionItem.Builder(rollingStock("1002")).addedAt(date("2012/03/01")).build());
-		c.getItems().add(new CollectionItem.Builder(rollingStock("1003")).addedAt(date("2012/04/01")).build());
-		c.getItems().add(new CollectionItem.Builder(rollingStock("1004")).addedAt(date("2012/05/01")).build());
+		List<CollectionItem> items = Arrays.asList(
+				new CollectionItem.Builder(rollingStock("1000")).addedAt(date("2012/01/01")).build(),
+				new CollectionItem.Builder(rollingStock("1001")).addedAt(date("2012/02/01")).build(),
+				new CollectionItem.Builder(rollingStock("1002")).addedAt(date("2012/03/01")).build(),
+				new CollectionItem.Builder(rollingStock("1003")).addedAt(date("2012/04/01")).build(),
+				new CollectionItem.Builder(rollingStock("1004")).addedAt(date("2012/05/01")).build());
+		c.setItems(items);
 		return c;
 	}
 	
@@ -113,14 +116,18 @@ public class ProfileViewTests {
 		List<WishList> lists = new ArrayList<WishList>();
 		
 		WishList list1 = new WishList(bob, "My first list", Visibility.PUBLIC);
-		list1.getItems().add(new WishListItem(rollingStock("1000"), "notes", Priority.LOW, date("2012/01/01")));
-		list1.getItems().add(new WishListItem(rollingStock("1001"), "notes", Priority.LOW, date("2012/02/01")));
-		list1.getItems().add(new WishListItem(rollingStock("1002"), "notes", Priority.LOW, date("2012/03/02")));
+		List<WishListItem> items1 = Arrays.asList(
+				new WishListItem(rollingStock("1000"), "notes", Priority.LOW, date("2012/01/01")),
+				new WishListItem(rollingStock("1001"), "notes", Priority.LOW, date("2012/02/01")),
+				new WishListItem(rollingStock("1002"), "notes", Priority.LOW, date("2012/03/02")));
+		list1.setItems(items1);
 		lists.add(list1);
 		
 		WishList list2 = new WishList(bob, "My second list", Visibility.PUBLIC);
-		list2.getItems().add(new WishListItem(rollingStock("1003"), "notes", Priority.LOW, date("2012/02/01")));
-		list2.getItems().add(new WishListItem(rollingStock("1004"), "notes", Priority.LOW, date("2012/03/01")));
+		List<WishListItem> items2 = Arrays.asList(
+				new WishListItem(rollingStock("1003"), "notes", Priority.LOW, date("2012/02/01")),
+				new WishListItem(rollingStock("1004"), "notes", Priority.LOW, date("2012/03/01")));
+		list2.setItems(items2);
 		lists.add(list2);
 		
 		return lists;

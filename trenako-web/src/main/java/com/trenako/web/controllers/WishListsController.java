@@ -81,7 +81,7 @@ public class WishListsController {
 	@RequestMapping(value = "/owner/{owner}/new", method = RequestMethod.GET)
 	public String newWishList(ModelMap model) {
 		Account owner = userContext.getCurrentUser().getAccount();
-		model.addAttribute(new WishList(owner));
+		//model.addAttribute(new WishList(owner));
 		return "wishlist/new";
 	}
 
@@ -97,7 +97,7 @@ public class WishListsController {
 		}
 
 		try {
-			wishList.setOwner(userContext.getCurrentUser().getAccount());
+			//wishList.setOwner(userContext.getCurrentUser().getAccount());
 			service.createNew(wishList);
 	
 			WISH_LIST_CREATED_MSG.appendToRedirect(redirectAtts);
@@ -148,7 +148,7 @@ public class WishListsController {
 		}
 
 		WishList wishList = service.findBySlug(form.getSlug());
-		service.updateItem(wishList, form.wishListItem());
+//		service.updateItem(wishList, form.wishListItem());
 
 		WISH_LIST_ITEM_UPDATED_MSG.appendToRedirect(redirectAtts);
 		return "redirect:/wishlists/{slug}";

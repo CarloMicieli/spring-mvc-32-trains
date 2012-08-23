@@ -56,8 +56,8 @@ public class WishListItemTests {
 		WishListItem b = new WishListItem(rollingStock("123457"), "my notes", Priority.LOW, now());
 		assertTrue("HIGH < LOW", a.compareTo(b) < 0);
 		
-		WishListItem c = new WishListItem(rollingStock("123456"), "my notes", Priority.NORMAL, now());
-		WishListItem d = new WishListItem(rollingStock("123457"), "my notes", Priority.NORMAL, now());
+		WishListItem c = new WishListItem(rollingStock("123456"), "my notes", Priority.NORMAL, date("2012/1/1"));
+		WishListItem d = new WishListItem(rollingStock("123457"), "my notes", Priority.NORMAL, date("2012/1/1"));
 		assertTrue("NORMAL != NORMAL", c.compareTo(d) == 0);
 		
 		WishListItem e = new WishListItem(rollingStock("123456"), "my notes", Priority.LOW, now());

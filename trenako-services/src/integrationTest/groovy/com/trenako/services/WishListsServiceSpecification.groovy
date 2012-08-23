@@ -23,6 +23,7 @@ import org.springframework.dao.DuplicateKeyException
 
 import com.trenako.entities.Account
 import com.trenako.entities.Brand
+import com.trenako.entities.Money
 import com.trenako.entities.RollingStock
 import com.trenako.entities.WishList
 import com.trenako.entities.WishListItem
@@ -58,7 +59,8 @@ class WishListsServiceSpecification extends MongoSpecification {
 			slug: 'bob-my-list',
 			name: 'My List',
 			owner: 'bob',
-			defaultList: false,
+			numberOfItems: 3,
+			budget: [val: 100, cur: 'USD'],
 			items: [
 				[itemId: 'acme-123455', 
 					rollingStock: [slug: 'acme-123455', label: 'ACME 123455'], 
@@ -80,7 +82,8 @@ class WishListsServiceSpecification extends MongoSpecification {
 			slug: 'bob-my-list-2',
 			name: 'My List 2',
 			owner: 'bob',
-			defaultList: true,
+			numberOfItems: 2,
+			budget: [val: 140, cur: 'USD'],
 			items: [
 				[itemId: 'acme-123456', 
 					rollingStock: [slug: 'acme-123456', label: 'ACME 123456'], 
@@ -98,6 +101,8 @@ class WishListsServiceSpecification extends MongoSpecification {
 			slug: 'alice-my-list',
 			name: 'My List',
 			owner: 'alice',
+			numberOfItems: 2,
+			budget: [val: 40, cur: 'USD'],
 			items: [
 				[itemId: 'acme-123455', 
 					rollingStock: [slug: 'acme-123455', label: 'ACME 123455'], 
@@ -142,6 +147,27 @@ class WishListsServiceSpecification extends MongoSpecification {
 		then:
 		results.size() == 0
 	}
+	
+	def "should find wish lists loading the latest items"() {
+		given:
+		def owner = new Account(slug: 'bob')
+		
+		when:
+		def results = service.findAllByOwner(owner, 2)
+		
+		then:
+		results != null
+		results.size() == 2
+		
+		and:
+		results[0].items.size() == 2
+		results[0].items.collect { it.itemId }.sort() == ['acme-123456', 'acme-123457']
+		
+		and:
+		results[1].items.size() == 2
+		results[1].items.collect { it.itemId }.sort() == ['acme-123456', 'acme-123458']
+		
+	}
 
 	def "should find wish lists for the provided slug"() {
 		when:
@@ -162,33 +188,7 @@ class WishListsServiceSpecification extends MongoSpecification {
 		then:
 		result == null
 	}
-	
-	def "should find the default wish list for the provided user"() {
-		given:
-		def owner = new Account(slug: 'bob')
-	
-		when:
-		def result = service.findDefaultListByOwner(owner)
-		
-		then:
-		result != null
-		result.slug == 'bob-my-list-2'
-		result.owner == 'bob'
-		result.items != null
-		result.items.size() == 2
-	}
 
-	def "should return null if the user has no default wish list yet"() {
-		given:
-		def owner = new Account(slug: 'alice')
-	
-		when:
-		def results = service.findDefaultListByOwner(owner)
-		
-		then:
-		results == null
-	}
-	
 	def "should check whether the wish list contains the provided rolling stock"() {
 		given:
 		def wishList = new WishList(slug: 'bob-my-list-2')
@@ -267,8 +267,8 @@ class WishListsServiceSpecification extends MongoSpecification {
 	
 	def "should move items between wish lists of the same user"() {
 		given: "two wish lists"
-		def sourceList = new WishList(slug: 'bob-my-list', owner: bob())
-		def targetList = new WishList(slug: 'bob-my-list-2', owner: bob())
+		def sourceList = new WishList(slug: 'bob-my-list', owner: 'bob')
+		def targetList = new WishList(slug: 'bob-my-list-2', owner: 'bob')
 		
 		and: "an item available in the source list"
 		def item = new WishListItem(itemId: 'acme-123457')
@@ -298,6 +298,9 @@ class WishListsServiceSpecification extends MongoSpecification {
 		def wishList = new WishList(slug: 'bob-my-list-2')
 		
 		and:
+		def oldPrice = new Money(100, "USD")
+		
+		and:
 		def rs = new WeakDbRef<RollingStock>(slug: 'acme-123458', label: 'ACME 123458')
 		def item = new WishListItem(itemId: 'acme-123458', 
 			rollingStock: rs,
@@ -305,7 +308,7 @@ class WishListsServiceSpecification extends MongoSpecification {
 			priority: 'low')
 		
 		when:
-		service.updateItem(wishList, item)
+		service.updateItem(wishList, item, oldPrice)
 		
 		then:
 		def doc = db.wishLists.findOne(slug: 'bob-my-list-2')
@@ -355,31 +358,47 @@ class WishListsServiceSpecification extends MongoSpecification {
 		and: "the last modified timestamp was updated"
 		doc.lastModified != now
 	}
-	
-	def "should set a wish list as the default one"() {
+
+	def "should change wish list budget"() {
 		given:
-		def owner = new Account(slug: 'bob')
-	
+		def wishList = new WishList(slug: 'bob-my-list-2', owner: 'bob')
+		
 		and:
-		def wishList = new WishList(slug: 'bob-my-list', owner: bob())
+		def newBudget = new Money(500, 'USD')
 		
 		when:
-		service.setAsDefault(owner, wishList)
+		service.changeBudget(wishList, newBudget)
 		
 		then:
-		def defList = db.wishLists.findOne(slug: 'bob-my-list')
-		defList.defaultList == true
-		
+		def doc = db.wishLists.findOne(slug: 'bob-my-list-2')
+		doc.budget == [val: 500, cur: 'USD']
+				
 		and: "the last modified timestamp was updated"
-		defList.lastModified != now
-		
-		def otherList = db.wishLists.findOne(slug: 'bob-my-list-2')
-		otherList.defaultList == false
-		
-		and: "the last modified timestamp was updated"
-		otherList.lastModified != now
+		doc.lastModified != now
 	}
-
+	
+	def "should save wish list changes"() {
+		given:
+		def wishList = new WishList(
+			slug: 'bob-my-list-2', 
+			owner: 'bob',
+			name: 'New list name', 
+			visibility: 'private', 
+			budget: new Money(123, 'USD'))
+		
+		when:
+		service.saveChanges(wishList)
+		
+		then:
+		def doc = db.wishLists.findOne(slug: 'bob-new-list-name')
+		doc.budget == [val: 123, cur: 'USD']
+		doc.visibility == 'private'
+		doc.name == 'New list name'
+				
+		and: "the last modified timestamp was updated"
+		doc.lastModified != now
+	}
+	
 	def "should create a new public wish list for the user"() {
 		given:
 		def owner = new Account(slug: 'bob')
@@ -394,7 +413,28 @@ class WishListsServiceSpecification extends MongoSpecification {
 		doc.name == 'My list 3'
 		doc.owner == 'bob'
 		doc.visibility == 'public'
-		doc.defaultList == false
+		
+		and: "the last modified timestamp was set"
+		doc.lastModified != null
+	}
+	
+	def "should create a new wish list"() {
+		given:
+		def owner = new Account(slug: 'bob')
+		
+		and:
+		def newList = WishList.defaultList(owner)
+		
+		when:
+		service.createNew(newList)
+		
+		then:
+		def doc = db.wishLists.findOne(slug: 'bob-new-list')
+		doc != null
+		doc.slug == 'bob-new-list'
+		doc.name == 'New list'
+		doc.owner == 'bob'
+		doc.visibility == 'public'
 		
 		and: "the last modified timestamp was set"
 		doc.lastModified != null

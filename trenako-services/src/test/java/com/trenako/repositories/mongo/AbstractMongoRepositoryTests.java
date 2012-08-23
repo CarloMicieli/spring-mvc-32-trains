@@ -83,6 +83,10 @@ public abstract class AbstractMongoRepositoryTests {
 		return arg.getValue().getQueryObject();
 	}
 	
+	protected DBObject sortObject(ArgumentCaptor<Query> arg) {
+		return arg.getValue().getSortObject();
+	}
+	
 	protected DBObject fieldsObject(ArgumentCaptor<Query> arg) {
 		return arg.getValue().getFieldsObject();
 	}
