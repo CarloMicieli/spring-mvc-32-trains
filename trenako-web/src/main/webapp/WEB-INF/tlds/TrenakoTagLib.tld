@@ -51,6 +51,21 @@
 	</tag>
 
 	<tag>
+		<name>period</name>
+		<tagclass>com.trenako.web.tags.PeriodTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display period info.
+		</description>
+		<attribute>
+			<name>since</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Date</type>
+		</attribute>
+	</tag>
+
+	<tag>
 		<name>eval</name>
 		<tagclass>com.trenako.web.tags.EvalTags</tagclass>
 		<bodycontent>empty</bodycontent>
@@ -66,6 +81,25 @@
 		<attribute>
 			<name>maxLength</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+	
+	<tag>
+		<name>evalValue</name>
+		<tagclass>com.trenako.web.tags.EvalValueTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Evaluate localized value fields.
+		</description>
+		<attribute>
+			<name>expression</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>type</name>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>		
 	</tag>

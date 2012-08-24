@@ -69,7 +69,9 @@ public class EvalTags extends SpringTagSupport {
 				jspWriter.append(out.substring(0, getMaxLength()) + "...");
 			}
 			else {
-				jspWriter.append(out);
+				jspWriter.append("<p>");
+				jspWriter.append(out.replaceAll(System.getProperty("line.separator"), "</p><p>"));
+				jspWriter.append("</p>");
 			}
 		} 
 		catch (IOException ex) {
