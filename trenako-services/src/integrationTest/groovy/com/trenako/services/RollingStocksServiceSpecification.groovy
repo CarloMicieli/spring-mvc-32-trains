@@ -154,7 +154,7 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 		newRs.setRailway(new Railway(name: 'DB', country: 'de'))
 		
 		when:
-		service.save newRs
+		service.createNew newRs
 
 		then:
 		thrown(DuplicateKeyException)
@@ -177,7 +177,7 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 		newRs.setRailway(new Railway(name: 'DB', country: 'de'))
 		
 		when:
-		service.save newRs
+		service.createNew newRs
 
 		then:
 		newRs.id != null

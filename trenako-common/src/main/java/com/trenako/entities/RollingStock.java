@@ -117,6 +117,9 @@ public class RollingStock implements DbReferenceable {
 	
 	private DeliveryDate deliveryDate;
 	
+	private ObjectId createdBy;
+	private ObjectId updatedBy;
+		
 	private Date lastModified;
 	
 	/**
@@ -724,6 +727,38 @@ public class RollingStock implements DbReferenceable {
 	 */
 	public void setOptions(Map<String, String> options) {
 		this.options = options;
+	}
+	
+	/**
+	 * Returns the id for the user who created this {@code RollingStock}.
+	 * @return the user id
+	 */
+	public ObjectId getCreatedBy() {
+		return createdBy;
+	}
+
+	/**
+	 * Sets the id for the user who created this {@code RollingStock}.
+	 * @param createdBy the user id
+	 */
+	public void setCreatedBy(ObjectId createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	/**
+	 * Returns the id for the user who updated this {@code RollingStock}.
+	 * @return the user id
+	 */
+	public ObjectId getUpdatedBy() {
+		return updatedBy;
+	}
+
+	/**
+	 * Sets the id for the user who updated this {@code RollingStock}.
+	 * @param updatedBy the user id
+	 */
+	public void setUpdatedBy(ObjectId updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 
 	/**

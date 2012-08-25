@@ -18,6 +18,7 @@ package com.trenako.services;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
@@ -80,7 +81,13 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	}
 
 	@Override
+	public void createNew(RollingStock rs) {
+		rollingStocks.save(rs);
+	}
+	
+	@Override
 	public void save(RollingStock rs) {
+		Assert.notNull(rs.getId(), "Rolling stock id is required during update");
 		rollingStocks.save(rs);
 	}
 

@@ -68,17 +68,22 @@ public interface RollingStocksService {
 	RollingStockView findViewBySlug(String slug);
 	
 	/**
-	 * Persists a {@code RollingStock} changes in the data store.
+	 * Creates a new {@code RollingStock}.
+	 * @param rs the  {@code RollingStock} to be created
+	 */
+	void createNew(RollingStock rs);
+	
+	/**
+	 * Saves the {@code RollingStock} changes.
 	 * <p>
-	 * This method performs a "upsert": if the {@code RollingStock} is not present in the data store
-	 * a new {@code RollingStock} is created; otherwise the method will update the existing {@code RollingStock}. 
-	 * </p>	 
+	 * The provided {@code RollingStock} must have a value for the id.
+	 * </p>
 	 * @param rs the {@code RollingStock} to be saved
 	 */
 	void save(RollingStock rs);
 
 	/**
-	 * Removes a {@code RollingStock} from the data store.
+	 * Delete the {@code RollingStock}.
 	 * @param rs the {@code RollingStock} to be removed
 	 */
 	void remove(RollingStock rs);

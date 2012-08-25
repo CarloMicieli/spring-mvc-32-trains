@@ -104,10 +104,24 @@ public class RollingStocksServiceTests {
 		assertEquals(comments, view.getComments());
 		assertEquals(reviews, view.getReviews());
 	}
+
+	@Test
+	public void shouldCreateNewRollingStocks() {
+		RollingStock newRs = new RollingStock.Builder(acme(), "123456")
+			.railway(fs())
+			.scale(scaleH0())
+			.description("Description")
+			.build();
+	
+		service.createNew(newRs);
+		
+		verify(repo, times(1)).save(eq(newRs));
+	}
 	
 	@Test
 	public void shouldSaveRollingStocks() {
 		RollingStock newRs = new RollingStock.Builder(acme(), "123456")
+			.id(new ObjectId())
 			.railway(fs())
 			.scale(scaleH0())
 			.description("Description")
