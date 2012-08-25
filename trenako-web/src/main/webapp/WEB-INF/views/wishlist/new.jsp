@@ -18,6 +18,15 @@
 		</div>
 		<div class="row-fluid">
 			<div class="span2">
+				<p>
+					<s:url var="backUrl" value="/wishlists/owner/{slug}">
+						<s:param name="slug" value="${wishList.owner}" />
+					</s:url>
+					<a href="${backUrl}" class="btn btn-info" style="width: 110px">
+						<i class="icon-arrow-left icon-white"></i> <s:message code="button.go.back.label"/>
+					</a>
+				</p>
+			
 				<h4><s:message code="wishlist.why.title.label"/></h4>
 				<p>
 					<s:message code="wishlist.why.text"/>

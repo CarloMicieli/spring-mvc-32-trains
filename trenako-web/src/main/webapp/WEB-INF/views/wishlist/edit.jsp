@@ -6,21 +6,25 @@
 <html>
 	<head>
 		<title>
-			<s:message code="wishlist.page.new.title"/>
+			<s:message code="wishlist.page.edit.title"/>
 		</title>
 		<meta name="you" content="active"/>
 	</head>
 	<body>
 		<div class="row-fluid">
 			<div class="page-header">
-				<h1><s:message code="wishlist.new.title.label"/></h1>
+				<h1><s:message code="wishlist.edit.title.label"/></h1>
 			</div>
 		</div>
 		<div class="row-fluid">
 			<div class="span2">
-				<h4><s:message code="wishlist.why.title.label"/></h4>
 				<p>
-					<s:message code="wishlist.why.text"/>
+					<s:url var="backUrl" value="/wishlists/owner/{slug}">
+						<s:param name="slug" value="${editForm.wishList.owner}" />
+					</s:url>
+					<a href="${backUrl}" class="btn btn-info" style="width: 110px">
+						<i class="icon-arrow-left icon-white"></i> <s:message code="button.go.back.label"/>
+					</a>
 				</p>
 			</div>
 			<div class="span10">

@@ -77,7 +77,7 @@ public class WishListsControllerTests {
 		assertNotNull(form);
 		assertNotNull("Visibility list is empty", form.getVisibilities());
 		assertEquals(new WishList(), form.getWishList());
-		assertEquals(BigDecimal.valueOf(0), form.getBudget());
+		assertEquals(BigDecimal.valueOf(0.0), form.getBudget());
 	}
 	
 	@Test
@@ -140,6 +140,18 @@ public class WishListsControllerTests {
 		Iterable<WishList> results = (Iterable<WishList>) model.get("results");
 		assertNotNull("Wish lists result is null", results);
 		assertEquals(2, ((List<WishList>) results).size());
+	}
+	
+	@Test
+	public void shouldDeleteWishLists() {
+		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
+		
+		String viewName = controller.removeWishList(wishList(), mockRedirectAtts);
+
+		assertEquals("redirect:/wishlists/owner/{owner}", viewName);
+		verify(mockService, times(1)).remove(eq(wishList()));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("owner"), eq("bob"));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_REMOVED_MSG));
 	}
 	
 	
@@ -277,14 +289,7 @@ public class WishListsControllerTests {
 		assertEquals(wishList(), wl);
 	}
 
-	@Test
-	public void shouldDeleteWishLists() {
-		String viewName = controller.removeWishList(wishList(), mockRedirectAtts);
 
-		assertEquals("redirect:/wishlists/owner/{owner}", viewName);
-		verify(mockService, times(1)).remove(eq(wishList()));
-		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_REMOVED_MSG));
-	}
 	*/
 	
 	WishListForm form() {

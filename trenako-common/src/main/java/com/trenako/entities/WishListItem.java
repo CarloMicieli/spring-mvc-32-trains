@@ -50,6 +50,10 @@ public class WishListItem implements Comparable<WishListItem> {
 	public WishListItem() {
 	}
 	
+	public WishListItem(String itemId) {
+		this.itemId = itemId;
+	}
+	
 	/**
 	 * Creates a new {@code WishListItem} for the provided rolling stock.
 	 * @param rollingStock the rolling stock
@@ -74,14 +78,23 @@ public class WishListItem implements Comparable<WishListItem> {
 		this.addedAt = addedAt;
 	}
 	
-	public WishListItem(WeakDbRef<RollingStock> rollingStock, String notes, Priority priority, Date addedAt) {
+	public WishListItem(String itemId, WeakDbRef<RollingStock> rollingStock, String notes, Priority priority, Date addedAt) {
+		this.itemId = itemId(itemId);
 		this.rollingStock = rollingStock;
-		this.itemId = initItemId();
 		this.notes = notes;
 		this.priority = priority.label();
 		this.addedAt = addedAt;
 	}
 
+	private String itemId(String id) {
+		if (StringUtils.isBlank(id)) {
+			return initItemId();
+		}
+		else {
+			return id;
+		}
+	}
+	
 	/**
 	 * Returns the item id.
 	 * @return the item id

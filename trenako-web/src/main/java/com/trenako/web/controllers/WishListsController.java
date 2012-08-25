@@ -15,8 +15,6 @@
  */
 package com.trenako.web.controllers;
 
-import java.util.Locale;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -37,7 +35,6 @@ import com.trenako.entities.Account;
 import com.trenako.entities.WishList;
 import com.trenako.services.AccountsService;
 import com.trenako.services.WishListsService;
-import com.trenako.values.Visibility;
 import com.trenako.web.controllers.form.WishListForm;
 import com.trenako.web.controllers.form.WishListItemForm;
 import com.trenako.web.security.UserContext;
@@ -168,26 +165,17 @@ public class WishListsController {
 		}
 	}
 	
-	/*
-	
-
-	
-
-
-
-
-
-	
-
-	@RequestMapping(value = "/{slug}", method = RequestMethod.DELETE)
+	@RequestMapping(method = RequestMethod.DELETE)
 	public String removeWishList(@ModelAttribute WishList wishList, RedirectAttributes redirectAtts) {
 		service.remove(wishList);
 
 		WISH_LIST_REMOVED_MSG.appendToRedirect(redirectAtts);
+		
+		redirectAtts.addAttribute("owner", userContext.getCurrentUser().getAccount().getSlug());
 		return "redirect:/wishlists/owner/{owner}";
 	}
-
-	@RequestMapping(value = "/{slug}/items", method = RequestMethod.POST)
+	
+	@RequestMapping(value = "/items", method = RequestMethod.POST)
 	public String addItem(@ModelAttribute @Valid WishListItemForm form, 
 		BindingResult bindingResult, 
 		ModelMap model, 
@@ -198,13 +186,26 @@ public class WishListsController {
 			return "wishlist/addItem";
 		}
 
-		WishList wishList = service.findBySlug(form.getSlug());
-		service.addItem(wishList, form.wishListItem());
+		WishList wishList = new WishList(form.getSlug());
+		service.addItem(wishList, form.newItem());
 
 		WISH_LIST_ITEM_ADDED_MSG.appendToRedirect(redirectAtts);
+		redirectAtts.addAttribute("slug", wishList.getSlug());
 		return "redirect:/wishlists/{slug}";
 	}
+	
+	@RequestMapping(value = "/items", method = RequestMethod.DELETE)
+	public String removeItem(@ModelAttribute @Valid WishListItemForm form, 
+		RedirectAttributes redirectAtts) {
 
+		WishList wishList = service.findBySlug(form.getSlug());
+		service.removeItem(wishList, form.deletedItem());
+
+		WISH_LIST_ITEM_DELETED_MSG.appendToRedirect(redirectAtts);
+		redirectAtts.addAttribute("slug", wishList.getSlug());
+		return "redirect:/wishlists/{slug}";
+	}
+	
 	@RequestMapping(value = "/{slug}/items", method = RequestMethod.PUT)
 	public String updateItem(@ModelAttribute @Valid WishListItemForm form, 
 		BindingResult bindingResult, 
@@ -212,48 +213,14 @@ public class WishListsController {
 		RedirectAttributes redirectAtts) {
 
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("wishListForm", form);
-			return "wishlist/editItem";
+			
 		}
 
 		WishList wishList = service.findBySlug(form.getSlug());
-//		service.updateItem(wishList, form.wishListItem());
+		service.updateItem(wishList, form.newItem(), form.previousPrice());
 
 		WISH_LIST_ITEM_UPDATED_MSG.appendToRedirect(redirectAtts);
+		redirectAtts.addAttribute("slug", wishList.getSlug());
 		return "redirect:/wishlists/{slug}";
 	}
-
-	@RequestMapping(value = "/{slug}/items", method = RequestMethod.DELETE)
-	public String removeItem(@ModelAttribute @Valid WishListItemForm form, 
-		RedirectAttributes redirectAtts) {
-
-		WishList wishList = service.findBySlug(form.getSlug());
-		service.removeItem(wishList, form.wishListItem());
-
-		WISH_LIST_ITEM_DELETED_MSG.appendToRedirect(redirectAtts);
-		return "redirect:/wishlists/{slug}";
-	}
-
-	@RequestMapping(value = "/{slug}/visibility", method = RequestMethod.PUT)
-	public String updateVisibility(@ModelAttribute WishList wishList, 
-		RedirectAttributes redirectAtts) {
-
-		Visibility visibility = Visibility.parse(wishList.getVisibility());
-
-		service.changeVisibility(wishList, visibility);
-		
-		WISH_LIST_VISIBILITY_CHANGED_MSG.appendToRedirect(redirectAtts);
-		return "redirect:/wishlists/{slug}"; 
-	}
-
-	@RequestMapping(value = "/{slug}/name", method = RequestMethod.PUT)
-	public String updateName(@ModelAttribute WishList wishList, 
-		RedirectAttributes redirectAtts) {
-
-		service.changeName(wishList, wishList.getName());
-		
-		WISH_LIST_NAME_CHANGED_MSG.appendToRedirect(redirectAtts);
-		return "redirect:/wishlists/{slug}"; 
-	}
-	*/
 }

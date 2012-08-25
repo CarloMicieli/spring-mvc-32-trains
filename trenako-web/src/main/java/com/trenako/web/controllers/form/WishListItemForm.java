@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishListItem;
 import com.trenako.mapping.WeakDbRef;
@@ -37,9 +38,8 @@ public class WishListItemForm {
 	private String slug;
 	@NotNull
 	private String rsSlug;
-	@NotNull
 	private String rsLabel;
-
+	
 	private String itemId;
 	private String notes;
 	private String priority;
@@ -48,18 +48,22 @@ public class WishListItemForm {
 	public WishListItemForm() {
 	}
 
-	public WishListItemForm(String slug, String rsSlug, String rsLabel) {
+	public WishListItemForm(String slug, String rsSlug) {
 		this.slug = slug;
-		this.rsLabel = rsLabel;
 		this.rsSlug = rsSlug;
 	}
 
-	public WishListItem wishListItem() {
+	public WishListItem newItem() {
 		return new WishListItem(
+			getItemId(),	
 			new WeakDbRef<RollingStock>(getRsSlug(), getRsLabel()), 
 			getNotes(), 
 			Priority.parse(getPriority()), 
 			getAddedAt());
+	}
+	
+	public WishListItem deletedItem() {
+		return new WishListItem(getItemId());
 	}
 
 	public String getSlug() {
@@ -77,7 +81,7 @@ public class WishListItemForm {
 	public void setRsSlug(String rsSlug) {
 		this.rsSlug = rsSlug;
 	}
-
+	
 	public String getRsLabel() {
 		return rsLabel;
 	}
@@ -130,8 +134,12 @@ public class WishListItemForm {
 		return new EqualsBuilder()
 			.append(this.slug, other.slug)
 			.append(this.rsSlug, other.rsSlug)
-			.append(this.rsLabel, other.rsLabel)
 			.append(this.itemId, other.itemId)
 			.isEquals();
+	}
+
+	public Money previousPrice() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

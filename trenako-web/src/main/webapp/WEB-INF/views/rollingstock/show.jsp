@@ -65,13 +65,30 @@
 					<a class="btn btn-primary" href="#" style="width: 110px"><i class="icon-gift icon-white"></i> Add wish list</a>
 					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a href="#"><i class="icon-list-alt"></i> New stuff</a></li>
-						<li><a href="#"><i class="icon-list-alt"></i> Old stuff</a></li>
-						<li><a href="#"><i class="icon-list-alt"></i> New</a></li>
+						<li><a class="addWishList" href="george-stephenson-my-list"><i class="icon-list-alt"></i> My list</a></li>
+						<li><a class="addWishList" href="george-stephenson-novegro-2012"><i class="icon-list-alt"></i> Novegro 2012</a></li>
 						<li class="divider"></li>
 						<li><a href="#"><i class="i"></i> New wishlist</a></li>
 					</ul>
+					
+					<s:url var="wishListsUrl" value="/wishlists/items"/>
+					<form method="POST" id="wish-list-form" action="${wishListsUrl}">
+						<input type="hidden" id="rsSlug" name="rsSlug" value="${result.rs.slug}"/>
+						<input type="hidden" id="rsLabel" name="rsLabel" value="${result.rs.label}"/>
+					</form>
+					<script type="text/javascript">
+						$(document).ready(function(){
+							$('.addWishList').bind('click', function() {
+								var name = $(this).attr("href");
+								var input = $("<input>").attr("type", "hidden").attr("name", "slug").val(name);
+								$('#wish-list-form').append($(input))
+								$('#wish-list-form').submit();
+								event.preventDefault();
+							});
+						});
+					</script>
 				</div>
+
 				<hr>
 				</sec:authorize>
 				<p>

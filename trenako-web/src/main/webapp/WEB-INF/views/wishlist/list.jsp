@@ -28,7 +28,7 @@
         </div>
 		<div class="row-fluid">
 			<div class="span2">
-				<tk:avatar user="${owner}"/>
+				<tk:avatar user="${owner}" size="64"/>
 			</div>
 			<div class="span10">
 				<c:if test="${not empty message}">
