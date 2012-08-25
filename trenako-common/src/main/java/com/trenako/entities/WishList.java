@@ -68,6 +68,9 @@ public class WishList {
 	@NotNull(message = "wishList.owner.required")
 	@Indexed
 	private String owner;
+	
+	@Size(max = 250, message = "wishList.name.size.notmet")
+	private String notes;
 
 	@Valid
 	private List<WishListItem> items;
@@ -293,6 +296,14 @@ public class WishList {
 	 */
 	public void setNumberOfItems(int numberOfItems) {
 		this.numberOfItems = numberOfItems;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	/**

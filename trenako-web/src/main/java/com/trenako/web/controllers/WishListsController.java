@@ -15,9 +15,12 @@
  */
 package com.trenako.web.controllers;
 
+import java.util.Locale;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,6 +34,7 @@ import com.trenako.entities.Account;
 import com.trenako.entities.WishList;
 import com.trenako.services.WishListsService;
 import com.trenako.values.Visibility;
+import com.trenako.web.controllers.form.WishListForm;
 import com.trenako.web.controllers.form.WishListItemForm;
 import com.trenako.web.security.UserContext;
 
@@ -53,6 +57,8 @@ public class WishListsController {
 	
 	private final UserContext userContext;
 	private final WishListsService service;
+	
+	private @Autowired(required = false) MessageSource messageSource;
 
 	/**
 	 * Creates a new {@code WishListsController}.
@@ -65,50 +71,61 @@ public class WishListsController {
 		this.userContext = userContext;
 	}
 	
+	@RequestMapping(value = "/new", method = RequestMethod.GET)
+	public String newWishList(ModelMap model) {
+		model.addAttribute("newForm", WishListForm.newForm(new WishList(), messageSource));
+		return "wishlist/new";
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String createWishList(@ModelAttribute @Valid WishListForm form,
+			BindingResult bindingResults, 
+			ModelMap model, 
+			RedirectAttributes redirectAtts) {
+
+		if (bindingResults.hasErrors()) {
+			model.addAttribute("newForm", form);
+			return "wishlist/new";
+		}
+
+		try {
+			WishList wishList = form.build(userContext.getCurrentUser().getAccount());
+			service.createNew(wishList);
+	
+			WISH_LIST_CREATED_MSG.appendToRedirect(redirectAtts);
+			
+			redirectAtts.addAttribute("slug", wishList.getSlug());
+			return "redirect:/wishlists/{slug}";
+		}
+		catch (DuplicateKeyException ex) {
+			model.addAttribute("message", WISH_LIST_DUPLICATED_KEY_MSG);
+			model.addAttribute("newForm", form);
+			return "wishlist/new";
+		}
+	}
+	
+	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
+	public String showWishList(@ModelAttribute WishList wishList, ModelMap model) {
+		model.addAttribute("wishList", service.findBySlug(wishList.getSlug()));
+		return "wishlist/show";
+	}
+
 	@RequestMapping(value = "/owner/{slug}", method = RequestMethod.GET)
 	public String showOwnerWishLists(@ModelAttribute Account owner, ModelMap model) {
 		model.addAttribute("results", service.findByOwner(owner));
 		return "wishlist/list";
 	}
 	
-	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
-	public String showWishList(@ModelAttribute WishList wishList, ModelMap model) {
-		model.addAttribute(service.findBySlug(wishList.getSlug()));
-		return "wishlist/show";
-	}
-
-
-	@RequestMapping(value = "/owner/{owner}/new", method = RequestMethod.GET)
-	public String newWishList(ModelMap model) {
-		Account owner = userContext.getCurrentUser().getAccount();
-		//model.addAttribute(new WishList(owner));
-		return "wishlist/new";
-	}
-
-	@RequestMapping(value = "/owner/{owner}", method = RequestMethod.POST)
-	public String createWishList(@ModelAttribute @Valid WishList wishList,
-			BindingResult bindingResults, 
-			ModelMap model, 
-			RedirectAttributes redirectAtts) {
-
-		if (bindingResults.hasErrors()) {
-			model.addAttribute(wishList);
-			return "wishlist/new";
-		}
-
-		try {
-			//wishList.setOwner(userContext.getCurrentUser().getAccount());
-			service.createNew(wishList);
+	/*
 	
-			WISH_LIST_CREATED_MSG.appendToRedirect(redirectAtts);
-			return "redirect:/wishlists/{slug}";
-		}
-		catch (DuplicateKeyException ex) {
-			model.addAttribute("message", WISH_LIST_DUPLICATED_KEY_MSG);
-			model.addAttribute(wishList);
-			return "wishlist/new";
-		}
-	}
+
+	
+
+
+
+
+
+	
 
 	@RequestMapping(value = "/{slug}", method = RequestMethod.DELETE)
 	public String removeWishList(@ModelAttribute WishList wishList, RedirectAttributes redirectAtts) {
@@ -186,4 +203,5 @@ public class WishListsController {
 		WISH_LIST_NAME_CHANGED_MSG.appendToRedirect(redirectAtts);
 		return "redirect:/wishlists/{slug}"; 
 	}
+	*/
 }

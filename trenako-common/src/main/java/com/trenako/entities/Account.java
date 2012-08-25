@@ -267,6 +267,14 @@ public class Account implements Serializable, DbReferenceable {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+	
+	/**
+	 * Sets the {@code Account} slug.
+	 * @param slug the slug
+	 */
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
 
 	/**
 	 * Returns the {@code Account} slug.

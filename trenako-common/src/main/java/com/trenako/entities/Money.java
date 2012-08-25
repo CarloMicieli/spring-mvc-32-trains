@@ -70,6 +70,18 @@ public class Money {
 		this(value, Currency.getInstance(locale).getCurrencyCode());
 	}
 	
+	public Money(BigDecimal value, String currency) {
+		this(intValue(value), currency);
+	}
+	
+	public Money(BigDecimal value, Locale locale) {
+		this(intValue(value), Currency.getInstance(locale).getCurrencyCode());
+	}
+	
+	private static int intValue(BigDecimal d) {
+		return d.multiply(BigDecimal.valueOf(100)).intValue();
+	}
+	
 	/**
 	 * Returns the {@code Money} value.
 	 * @return the {@code Money} value
