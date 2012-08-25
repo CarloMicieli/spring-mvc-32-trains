@@ -38,6 +38,8 @@ class RailwaysServiceSpecification extends MongoSpecification {
 	@Autowired RailwaysService service
 	
 	def setup() {
+		cleanup()
+		
 		def year1994 = new GregorianCalendar(1994, Calendar.JANUARY, 1).time
 		def year1905 = new GregorianCalendar(1905, Calendar.JANUARY, 1).time
 		def year1938 = new GregorianCalendar(1938, Calendar.JANUARY, 1).time

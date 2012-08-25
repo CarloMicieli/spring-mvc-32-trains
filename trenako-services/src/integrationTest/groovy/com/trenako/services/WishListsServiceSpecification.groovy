@@ -55,6 +55,8 @@ class WishListsServiceSpecification extends MongoSpecification {
 	}
 		
 	def setup() {
+		cleanup()
+		
 		db.wishLists.insert(
 			slug: 'bob-my-list',
 			name: 'My List',

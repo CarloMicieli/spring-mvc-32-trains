@@ -41,6 +41,7 @@ class FormValuesServiceSpecification  extends MongoSpecification {
 	@Autowired FormValuesService service
 	
 	def setup() {
+		cleanup()
 		
 		db.brands << [[name: 'ACME', slug: 'acme'], 
 			[name: 'LS Models', slug: 'ls-models'], 

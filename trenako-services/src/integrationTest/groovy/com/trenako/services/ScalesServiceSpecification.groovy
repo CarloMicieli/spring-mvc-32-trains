@@ -36,11 +36,41 @@ class ScalesServiceSpecification extends MongoSpecification {
 	@Autowired ScalesService service
 	
 	def setup() {
+		cleanup()
+		
 		db.scales << [
-				[name: '1', slug: '1', description: [en: 'Scale 1'], standards: ['NEM'], powerMethods: ['dc'], ratio: 320, gauge: 4445, narrow: false],
-				[name: 'H0', slug: 'h0', description: [en: 'Scale H0'], standards: ['NEM'], powerMethods: ['ac', 'dc'], ratio: 870, gauge: 1650, narrow: false],
-				[name: '0', slug: '0', description: [en: 'Scale 0'], standards: ['NEM'], powerMethods: ['dc'], ratio: 435, gauge: 3200, narrow: false],
-				[name: 'N', slug: 'n', description: [en: 'Scale N'], standards: ['NEM'], powerMethods: ['dc'], ratio: 160, gauge: 900, narrow: false]
+				[name: '1', 
+					slug: '1', 
+					description: [en: 'Scale 1'], 
+					standards: ['NEM'], 
+					powerMethods: ['dc'], 
+					ratio: 320,
+					gauge: 4445, 
+					narrow: false],
+				[name: 'H0', 
+					slug: 'h0', 
+					description: [en: 'Scale H0'], 
+					standards: ['NEM'], 
+					powerMethods: ['ac', 'dc'], 
+					ratio: 870, 
+					gauge: 1650, 
+					narrow: false],
+				[name: '0', 
+					slug: '0', 
+					description: [en: 'Scale 0'], 
+					standards: ['NEM'], 
+					powerMethods: ['dc'], 
+					ratio: 435, 
+					gauge: 3200, 
+					narrow: false],
+				[name: 'N', 
+					slug: 'n', 
+					description: [en: 'Scale N'], 
+					standards: ['NEM'], 
+					powerMethods: ['dc'], 
+					ratio: 160, 
+					gauge: 900, 
+					narrow: false]
 			]
 	}
 	

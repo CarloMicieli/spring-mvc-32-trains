@@ -37,6 +37,8 @@ class BrandsServiceSpecification extends MongoSpecification {
 	@Autowired BrandsService service
 	
 	def setup() {
+		cleanup()
+		
 		db.brands << [
 			[name: 'ACME', 
 				slug: 'acme', 

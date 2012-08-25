@@ -38,6 +38,8 @@ class CommentsServiceSpecification extends MongoSpecification {
 	@Autowired CommentsService service;
 	
 	def setup() {
+		cleanup()
+		
 		db.rollingStocks.insert(
 			brand: [label: 'ACME', slug: 'acme'],
 			slug: 'acme-69501',

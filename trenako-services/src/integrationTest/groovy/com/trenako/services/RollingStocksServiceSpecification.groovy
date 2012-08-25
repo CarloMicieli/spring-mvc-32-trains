@@ -41,6 +41,7 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 	@Autowired RollingStocksService service
 	
 	def setup() {
+		cleanup();
 		
 		db.brands << [[name: 'ACME', slug: 'acme'], 
 			[name: 'LS Models', slug: 'ls-models'], 
@@ -197,6 +198,50 @@ class RollingStocksServiceSpecification  extends MongoSpecification {
 		and:
 		rsDoc.slug == "acme-123456"
 		rsDoc.lastModified != null
+	}
+	
+	def "should save rolling stock changes"() {
+		given:
+		def doc = db.rollingStocks.findOne(slug: 'roco-62193')
+		def oldLastModified = doc.lastModified	
+		
+		def rs = new RollingStock(
+			id: doc._id,
+			itemNumber: "62193",
+			description: LocalizedField.localize([en: 'Steam locomotive BR 10 002 updated']),
+			details: LocalizedField.localize([en: 'The model additionally features a smoke generator']),
+			category: 'steam-locomotives',
+			era: 'iv',
+			country: 'de',
+			powerMethod: 'ac',
+			totalLength: 310,
+			deliveryDate: new DeliveryDate(2012, 1)
+			)
+		rs.setBrand(new Brand(name: 'Roco'))
+		rs.setScale(new Scale(name: 'H0', ratio: 870))
+		rs.setRailway(new Railway(name: 'DB', country: 'de'))
+		
+		when:
+		service.save rs
+
+		then:
+		def rsDoc = db.rollingStocks.findOne(slug: 'roco-62193')
+		rsDoc != null
+		rsDoc.itemNumber == '62193'
+		rsDoc.brand == [slug: 'roco', label: 'Roco']
+		rsDoc.scale == [slug: 'h0', label: 'H0 (1:87)']
+		rsDoc.railway == [slug: 'db', label: 'DB']
+		rsDoc.description == [en: 'Steam locomotive BR 10 002 updated']
+		rsDoc.details == [en: 'The model additionally features a smoke generator']
+		rsDoc.category == 'steam-locomotives'
+		rsDoc.era == 'iv'
+		rsDoc.country == 'de'
+		rsDoc.powerMethod == 'ac'
+		rsDoc.totalLength == 310
+		rsDoc.deliveryDate == [year: 2012, quarter: 1]
+		
+		and:
+		rsDoc.lastModified != oldLastModified
 	}
 	
 	def "should remove rolling stocks"() {

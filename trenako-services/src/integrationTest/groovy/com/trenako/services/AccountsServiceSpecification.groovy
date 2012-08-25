@@ -32,6 +32,8 @@ class AccountsServiceSpecification extends MongoSpecification {
 	@Autowired AccountsService service
 	
 	def setup() {
+		cleanup()
+		
 		db.accounts << [
 				[slug: 'the-rocket', emailAddress: 'george@stephenson.com', password: 'secret', displayName: 'The rocket'],
 				[slug: 'john-doe', emailAddress: 'john@doe.com', password: 'pa$$word', displayName: 'John Doe']

@@ -45,7 +45,8 @@ class BrowseServiceSpecification extends MongoSpecification {
 
 	@Autowired BrowseService service
 
-def setup() {
+	def setup() {
+		cleanup()
 
 		db.brands << [[name: 'ACME', slug: 'acme'], 
 			[name: 'Bemo', slug: 'bemo'],

@@ -40,6 +40,8 @@ class CollectionsServiceSpecification extends MongoSpecification {
 	def now = new GregorianCalendar(2010, Calendar.JULY, 22, 1, 30, 00)
 	
 	def setup() {
+		cleanup()
+		
 		db.collections.insert(
 			slug: 'the-rocket',
 			owner: [label: 'The Rocket', slug: 'the-rocket'],

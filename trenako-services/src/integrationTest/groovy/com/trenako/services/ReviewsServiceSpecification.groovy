@@ -43,6 +43,8 @@ class ReviewsServiceSpecification extends MongoSpecification {
 	@Autowired ReviewsService service;
 	
 	def setup() {
+		cleanup()
+		
 		db.reviews.insert(
 			slug: 'acme-69501',
 			rollingStock: [slug: 'acme-69501', label: 'ACME 69501'],

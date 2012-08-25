@@ -23,6 +23,8 @@
 		<custom-converters>
     		<converter ref="localizedFieldWriteConverter"/>
     		<converter ref="localizedFieldReadConverter"/>
+    		<converter ref="weakDbRefReadConverter"/>
+    		<converter ref="weakDbRefWriteConverter"/>
     	</custom-converters>    	
 	</mapping-converter>
 
@@ -38,6 +40,10 @@
 		class="com.trenako.mapping.LocalizedFieldWriteConverter"/>
 	<beans:bean id="localizedFieldReadConverter" 
 		class="com.trenako.mapping.LocalizedFieldReadConverter"/>
+	<beans:bean id="weakDbRefReadConverter" 
+		class="com.trenako.mapping.WeakDbRefReadConverter"/>
+	<beans:bean id="weakDbRefWriteConverter" 
+		class="com.trenako.mapping.WeakDbRefWriteConverter"/>		
 
 	<beans:bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
   		<beans:constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
