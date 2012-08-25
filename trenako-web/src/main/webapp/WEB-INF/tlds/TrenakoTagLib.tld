@@ -7,6 +7,31 @@
 	<info>The custom tags library</info>
 
 	<tag>
+		<name>avatar</name>
+		<tagclass>com.trenako.web.tags.AvatarTags</tagclass>
+		<bodycontent>empty</bodycontent>
+		<description>
+			Display the user avatar.
+		</description>
+		<attribute>
+			<name>user</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.trenako.entities.Account</type>
+		</attribute>
+		<attribute>
+			<name>size</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>onlyPicture</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
 		<name>localizedTextArea</name>
 		<tagclass>com.trenako.web.tags.LocalizedTextAreaTags</tagclass>
 		<bodycontent>empty</bodycontent>

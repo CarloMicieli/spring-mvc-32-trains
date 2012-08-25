@@ -13,6 +13,8 @@
 		<title><decorator:title default="Trenako"/></title>	
 		<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 		<link href="<c:url value="/resources/css/bootstrap.css" />" rel="stylesheet" />
+		<link href="<c:url value="/resources/css/bootstrap-responsive.css" />" rel="stylesheet" />
+		
 		<style>
       	body {
         	padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -21,8 +23,12 @@
       		color: orange;
       		font: normal normal normal 24px/24px Lobster,Georgia,Times,'Times New Roman',serif;
       	}
+      	.footer {
+     		border-top: 1px solid #E5E5E5;
+			background-color: whiteSmoke;
+		}
     	</style>
-		<link href="<c:url value="/resources/css/bootstrap-responsive.css" />" rel="stylesheet" />
+		
 		
 		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
@@ -121,10 +127,13 @@
 				<p></p>
 				<p class="pull-right"><a href="#top"><s:message code="footer.back.top.label"/></a></p>
 				<p>
+					<a href="#">About us</a> | <a href="#">Developers</a> 
+					<br/>
 					<s:message code="footer.designed.built.label"/> <a href="https://twitter.com/#!/chuckmiskyes" target="_blank">@chuckmiskyes</a>.
 					<s:message code="footer.source.code.label"/> <a href="https://github.com/CarloMicieli/trenako" target="_blank">GitHub</a>.
+					<br>
+					Theme based upon <strong>Twitter Bootstrap</strong>.
 				</p>
-				<p>Theme based upon <strong>Twitter Bootstrap</strong> and <strong>Bootswatch.com's Amelia</strong>.</p>
 			</div>
 		</footer>
 	</body>

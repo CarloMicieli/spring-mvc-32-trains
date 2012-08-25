@@ -55,7 +55,10 @@
 				</dl>
 			</div>
 			<div class="span4">
-				<a href="#" class="btn btn-warning">Edit</a>
+				<s:url var="editUrl" value="/wishlists/{slug}/edit">
+					<s:param name="slug" value="${wishList.slug}"/>
+				</s:url>
+				<a href="${editUrl}" class="btn btn-warning">Edit</a>
 				<a href="#" class="btn btn-danger">Delete</a>
 			</div>
 		</div>

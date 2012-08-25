@@ -6,15 +6,17 @@
 <html>
 	<head>
 		<title>
-			<s:message code="review.page.new.title" />
+			<s:message code="review.page.list.title" />
 		</title>
 		<meta name="rs" content="active"/>
 	</head>
 	<body>
 		<div class="row-fluid">
 			<div class="page-header">
-				<h1><s:message code="review.new.title.label" /></h1>
-				<small><s:message code="review.new.subtitle.label" /></small>
+				<h1>
+					<s:message code="review.list.title.label" arguments="${rollingStock.label}"/>
+					<small><s:message code="review.list.subtitle.label" /></small>
+				</h1>
 			</div>
 		
 			<div class="row-fluid">
@@ -44,18 +46,24 @@
 				</div>
 				
 				<div class="span9">
+					<div class="well">
+						<s:message code="review.info.label" arguments="${reviews.numberOfReviews}, ${reviews.rating}"/>
+					</div>
+				
 					<c:forEach var="rev" items="${reviews.items}">
            			<div class="row-fluid">
            				<div class="span2">
            					<img src="http://placehold.it/96x96">
            				</div>
            				<div class="span10">
-           					<h4>${rev.title}</h4>
-           					<small>(${rev.rating}/5)</small>
+           					<h4>
+           						${rev.title}
+           						<small>(<s:message code="review.rating.out.of.label" arguments="${rev.rating}"/>)</small>
+           					</h4>
            					<p>
            						${rev.content}
            						<br>
-           						<strong><a href="">${rev.author}</a></strong> - ${rev.postedAt}
+           						<strong><a href="">${rev.author}</a></strong> - <tk:period since="${rev.postedAt}"/> 
            					</p>
            				</div>
            			</div>

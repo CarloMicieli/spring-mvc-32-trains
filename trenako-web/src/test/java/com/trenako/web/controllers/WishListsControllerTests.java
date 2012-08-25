@@ -37,6 +37,7 @@ import com.trenako.entities.Account;
 import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
 import com.trenako.security.AccountDetails;
+import com.trenako.services.AccountsService;
 import com.trenako.services.WishListsService;
 import com.trenako.values.Visibility;
 import com.trenako.web.controllers.form.WishListForm;
@@ -53,6 +54,7 @@ public class WishListsControllerTests {
 	@Mock UserContext mockUserContext;
 	@Mock RedirectAttributes mockRedirectAtts;
 	@Mock WishListsService mockService;
+	@Mock AccountsService mockUsersService;
 	@Mock BindingResult mockResults;
 	
 	private WishListsController controller;
@@ -60,7 +62,7 @@ public class WishListsControllerTests {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new WishListsController(mockService, mockUserContext);
+		controller = new WishListsController(mockService, mockUsersService, mockUserContext);
 	}
 	
 	@Test
@@ -123,15 +125,16 @@ public class WishListsControllerTests {
 
 	@Test
 	public void shouldShowWishListsForTheProvidedOwner() {
+		when(mockUsersService.findBySlug(eq("bob"))).thenReturn(owner());
 		when(mockService.findByOwner(eq(owner()))).thenReturn(Arrays.asList(new WishList(), new WishList()));
 		ModelMap model = new ModelMap();
 
-		String viewName = controller.showOwnerWishLists(owner(), model);
+		String viewName = controller.showOwnerWishLists("bob", model);
 
 		assertEquals("wishlist/list", viewName);
 
-//		Account owner = (Account) model.get("owner");
-//		assertNotNull("Owner is null", owner);
+		Account owner = (Account) model.get("owner");
+		assertEquals(owner(), owner);
 		
 		@SuppressWarnings("unchecked")
 		Iterable<WishList> results = (Iterable<WishList>) model.get("results");

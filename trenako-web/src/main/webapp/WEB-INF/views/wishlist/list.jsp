@@ -24,21 +24,40 @@
 		</ul>
 		
 		<div class="page-header">
-        	<h1>Wish lists <small>${slug}</small></h1>
+        	<h1>Wish lists <small>(${owner.displayName})</small></h1>
         </div>
 		<div class="row-fluid">
 			<div class="span2">
-				<s:url var="createUrl" value="/wishlists/new"/>
-				<a href="${createUrl}" class="btn btn-info">Create new</a>
+				<tk:avatar user="${owner}"/>
 			</div>
 			<div class="span10">
+				<c:if test="${not empty message}">
+				<div class="alert alert-${message.type}">
+					<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+				</div>
+				</c:if>
+			
+				<p>
+					<s:url var="createUrl" value="/wishlists/new"/>
+					<a href="${createUrl}" class="btn btn-info">New wish list</a>
+				</p>
+				
+				<hr/>
+
 				<ul class="unstyled">
 				<c:forEach var="wishList" items="${results}">
 					<li>
-						[<tk:evalValue type="Visibility" expression="${wishList.visibility}"/>] <strong>${wishList.name}</strong>
-						<span class="badge badge-info">${wishList.numberOfItems} items</span>
-						<br/> 
-						<em><small>updated <tk:period since="${wishList.lastModified}"/></small></em>
+						<p>
+							<span class="badge badge-info">${wishList.numberOfItems} items</span>
+							[<tk:evalValue type="Visibility" expression="${wishList.visibility}"/>] 
+							
+							<s:url var="viewUrl" value="/wishlists/{slug}">
+								<s:param name="slug" value="${wishList.slug}"></s:param>
+							</s:url>
+							<strong><a href="${viewUrl}">${wishList.name}</a></strong>
+							<br/> 
+							<em><small>updated <tk:period since="${wishList.lastModified}"/></small></em>
+						</p>
 					</li>
 				</c:forEach>
 				</ul>

@@ -27,8 +27,10 @@
 		</ul>
 		<div class="row-fluid">
         	<div class="page-header">
-				<h1>${result.rs.brand.label} ${result.rs.itemNumber}</h1>
-				<small>${result.rs.category}</small>
+				<h1>
+					${result.rs.brand.label} ${result.rs.itemNumber}
+					<small><tk:evalValue type="Category" expression="${result.rs.category}"/></small>
+				</h1>
 			</div>
 		</div>
 	    <div class="row-fluid">
@@ -83,10 +85,64 @@
 				</p>
 			</div>
 	    	<div class="span6">
-				<s:url value="/images/rollingstock_{slug}" var="imgUrl">
-					<s:param name="slug" value="${result.rs.slug}" />
-				</s:url>
-				<img src="${imgUrl}" alt="Not found">
+	    		<div class="row-fluid">
+					<s:url value="/images/rollingstock_{slug}" var="imgUrl">
+						<s:param name="slug" value="${result.rs.slug}" />
+					</s:url>
+					<img src="${imgUrl}" alt="Not found">
+				</div>				
+				<div class="row-fluid">
+					<p>
+						<span class="label label-info">Tags</span>
+						<c:forEach var="tag" items="${result.rs.tags}">
+							<s:url var="tagUrl" value="/tag/{tagName}">
+								<s:param name="tagName" value="${tag}"></s:param>
+							</s:url>
+							[<a href="${tagUrl}" title="Tag: ${tag}">${tag}</a>]
+						</c:forEach>
+					</p>
+		   		</div>
+		   		
+		   		<div class="row-fluid">
+	        		<sec:authorize access="isAnonymous()">
+	           			<s:url value="/auth/login" var="loginUrl"/>
+	           			<s:url value="/auth/signup" var="signupUrl"/>
+		           		<a href="${loginUrl}"><s:message code="auth.signin.link.label"/></a> / 
+		           		<a href="${signupUrl}"><s:message code="auth.signup.link.label"/></a> <s:message code="auth.not.authorize.comment.label"/>
+	           		</sec:authorize>
+	           	
+	           		<sec:authorize access="isAuthenticated()">
+	           		<s:url value="/rollingstocks/{slug}/comments" var="commentsUrl">
+	           			<s:param name="slug" value="${result.rs.slug}"></s:param>
+					</s:url>
+	           		<form:form modelAttribute="newComment" method="POST" action="${commentsUrl}" class="well form-inline">
+	           			<form:hidden path="rollingStock.slug"/>
+	           			<form:hidden path="rollingStock.label"/>
+	           			<form:hidden path="author.slug"/>
+	           			<form:hidden path="author.label"/>
+	           			
+	           			<form:textarea path="content" class="input-small" style="width:400px" rows="3" placeholder="New comment"/>
+	           			<form:button type="submit" class="btn btn-primary"><i class="icon-envelope icon-white"></i> <s:message code="button.send.label"/></form:button>
+	           		</form:form>
+	           		<hr/>
+	           		</sec:authorize>
+	        	</div>
+		   		<div class="row-fluid">
+	           		<c:forEach var="cmm" items="${result.comments}">
+           			<div class="row-fluid">
+           				<div class="span2">
+           				</div>
+           				<div class="span10">
+           					<p>
+           						${cmm.content}
+           						<br>
+           						<strong><a href="">${cmm.author.label}</a></strong> - <tk:period since="${cmm.postedAt}"/>
+           					</p>
+           				</div>
+           			</div>
+           			<hr>
+    	       		</c:forEach>
+        	  	</div>
             </div>
             <div class="span4">
             	<div class="tabbable">
@@ -103,11 +159,11 @@
 								<dt><s:message code="rollingStock.scale.label"/>:</dt>
 								<dd>${result.rs.scale.label}</dd>
 								<dt><s:message code="rollingStock.era.label"/>:</dt>
-								<dd><s:message code="era.${result.rs.era}.name" /></dd>
+								<dd><tk:evalValue type="Era" expression="${result.rs.era}"/></dd>
 								<dt><s:message code="rollingStock.railway.label"/>:</dt>
 								<dd>${result.rs.railway.label}</dd>
 								<dt><s:message code="rollingStock.powerMethod.label"/>:</dt>
-								<dd>${result.rs.powerMethod}</dd>
+								<dd><tk:evalValue type="PowerMethod" expression="${result.rs.powerMethod}"/></dd>
 							</dl>
 					    </div>
                   		<div class="tab-pane" id="tab2">
@@ -115,6 +171,8 @@
                			</div>
                         <div class="tab-pane" id="tab3">
                         	<dl class="dl-horizontal">
+                        		<dt><s:message code="rollingStock.totalLength.label" />:</dt>
+								<dd>${result.rs.totalLength} mm</dd>
 								<dt><s:message code="rollingStock.upcCode.label" />:</dt>
 								<dd>${result.rs.upcCode}</dd>
 								<dt><s:message code="rollingStock.deliveryDate.label" />:</dt>
@@ -125,70 +183,5 @@
 				</div>
            	</div>
 		</div>
-		<div class="row-fluid">
-        	<div class="span2">
-        	</div>
-           	<div class="span6">
-				<p>
-					<span class="label label-info">Tags</span>
-					<c:forEach var="tag" items="${result.rs.tags}">
-						<s:url var="tagUrl" value="/tag/{tagName}">
-							<s:param name="tagName" value="${tag}"></s:param>
-						</s:url>
-						[<a href="${tagUrl}" title="Tag: ${tag}">${tag}</a>]
-					</c:forEach>
-				</p>
-        	</div>
-         	<div class="span4"></div>
-   		</div>
-   		<div class="row-fluid">
-        	<div class="span2"></div>
-           	<div class="span6">
-           		<sec:authorize access="isAnonymous()">
-           			<s:url value="/auth/login" var="loginUrl"/>
-           			<s:url value="/auth/signup" var="signupUrl"/>
-	           		<a href="${loginUrl}"><s:message code="auth.signin.link.label"/></a> / 
-	           		<a href="${signupUrl}"><s:message code="auth.signup.link.label"/></a> <s:message code="auth.not.authorize.comment.label"/>
-           		</sec:authorize>
-           	
-           		<sec:authorize access="isAuthenticated()">
-           		<s:url value="/rollingstocks/{slug}/comments" var="commentsUrl">
-           			<s:param name="slug" value="${result.rs.slug}"></s:param>
-				</s:url>
-           		<form:form modelAttribute="newComment" method="POST" action="${commentsUrl}" class="well form-inline">
-           			<form:hidden path="rollingStock.slug"/>
-           			<form:hidden path="rollingStock.label"/>
-           			<form:hidden path="author.slug"/>
-           			<form:hidden path="author.label"/>
-           			
-           			<form:textarea path="content" class="input-small" style="width:400px" rows="3" placeholder="New comment"/>
-           			<form:button type="submit" class="btn"><i class="icon-envelope icon-black"></i> <s:message code="button.send.label"/></form:button>
-           		</form:form>
-           		<hr/>
-           		</sec:authorize>
-        	</div>
-         	<div class="span4"></div>
-   		</div>
-   		<div class="row-fluid">
-        	<div class="span2"></div>
-           	<div class="span6">
-           		<c:forEach var="cmm" items="${result.comments}">
-           			<div class="row-fluid">
-           				<div class="span2">
-           					<img src="http://placehold.it/96x96">
-           				</div>
-           				<div class="span10">
-           					<p>
-           						${cmm.content}
-           						<br>
-           						<strong><a href="">${cmm.author.label}</a></strong> - ${cmm.postedAt}
-           					</p>
-           				</div>
-           			</div>
-           			<hr>
-           		</c:forEach>
-          	</div>
-         	<div class="span4"></div>
-   		</div>
 	</body>
 </html>

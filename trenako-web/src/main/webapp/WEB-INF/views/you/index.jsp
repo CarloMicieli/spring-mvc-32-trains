@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -18,18 +19,13 @@
 		</ul>
 		
 		<div class="row-fluid">
-			<div class="span1">
-				<a href="http://gravatar.com/emails/">
-					<img height="64" width="64" src="https://secure.gravatar.com/avatar/540b91c4528151f2bc8c3c0f5e16e889?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png">
-				</a>
-			</div>
-			<div class="span5">
+			<div class="span9">
+				<tk:avatar user="${user.account}" size="64" onlyPicture="true"/>
 				<div class="page-header">
-					<h1>${user.username}</h1>
-					<small style="color:silver">(${user.displayName})</small>
+					<h1>${user.username} <small>(${user.displayName})</small></h1>
 				</div>
 			</div>
-			<div class="span6">
+			<div class="span3">
 				<div class="pull-right">
 					<a href="#" class="btn btn-info"><s:message code="button.edit.profile.label"/></a>
 				</div>
@@ -40,50 +36,63 @@
 		<div class="row-fluid">
 			<div class="span1"></div>
 			<div class="span11">
-				<hr />
 				
 				<div class="row-fluid">
-					<div class="span2"><h3><s:message code="you.count.collection.title"/>:</h3></div>
+					<div class="span2">
+					</div>
+					<div class="span10">
+						<h3><s:message code="you.count.collection.title"/>:</h3>
+						<hr>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span2"></div>
 					<div class="span1">
-						<span style="font-size:24px; color:yellow">${info.categoriesCount.steamLocomotives}</span> 
+						<span style="font-size:24px;">${info.categoriesCount.steamLocomotives}</span> 
 						<p><s:message code="you.count.steam.locomotives.label"/></p>
 					</div>
 					<div class="span1">
-						<span style="font-size:24px; color:yellow">${info.categoriesCount.dieselLocomotives}</span> 
+						<span style="font-size:24px;">${info.categoriesCount.dieselLocomotives}</span> 
 						<p><s:message code="you.count.diesel.locomotives.label"/></p>
 					</div>					
 					<div class="span1">
-						<span style="font-size:24px; color:yellow">${info.categoriesCount.electricLocomotives}</span> 
+						<span style="font-size:24px;">${info.categoriesCount.electricLocomotives}</span> 
 						<p><s:message code="you.count.electric.locomotives.label"/></p>
 					</div>
 					<div class="span1">
-						<span style="font-size:24px; color:yellow">${info.categoriesCount.railcars}</span> 
+						<span style="font-size:24px;">${info.categoriesCount.railcars}</span> 
 						<p><s:message code="you.count.railcars.label"/></p>
 					</div>
 					<div class="span1">
-						<span style="font-size:24px; color:yellow">${info.categoriesCount.electricMultipleUnit}</span> 
+						<span style="font-size:24px;">${info.categoriesCount.electricMultipleUnit}</span> 
 						<p><s:message code="you.count.electric.multiple.unit.label"/></p>
 					</div>
 					<div class="span1">
-						<span style="font-size:24px; color:yellow">${info.categoriesCount.passengerCars}</span> 
+						<span style="font-size:24px;">${info.categoriesCount.passengerCars}</span> 
 						<p><s:message code="you.count.passenger.cars.label"/></p>
 					</div>
 					<div class="span1">
-						<span style="font-size:24px; color:yellow">${info.categoriesCount.freightCars}</span> 
+						<span style="font-size:24px;">${info.categoriesCount.freightCars}</span> 
 						<p><s:message code="you.count.freight.cars.label"/></p>
 					</div>					
 					<div class="span1">
-						<span style="font-size:24px; color:yellow">${info.categoriesCount.trainSets}</span> 
+						<span style="font-size:24px;">${info.categoriesCount.trainSets}</span> 
 						<p><s:message code="you.count.train.sets.label"/></p>
 					</div>
 					<div class="span1">
-						<span style="font-size:24px; color:yellow">${info.categoriesCount.starterSets}</span> 
+						<span style="font-size:24px;">${info.categoriesCount.starterSets}</span> 
 						<p><s:message code="you.count.starter.sets.label"/></p>
 					</div>
 					<div class="span3"></div>
 				</div>
-			
-				<hr />				
+				<div class="row-fluid">
+					<div class="span2">
+					</div>
+					<div class="span10">
+						<hr>
+					</div>
+				</div>			
+							
 			</div>
 		</div>
 		
@@ -108,7 +117,10 @@
 					<div class="span4">
 						<h2><s:message code="you.from.wish.lists.title"/></h2>
 						<p>
-							<a href="#" class="btn btn-primary">
+							<s:url var="wishListsUrl" value="/wishlists/owner/{slug}">
+								<s:param name="slug" value="${user.account.slug}"/>
+							</s:url>
+							<a href="${wishListsUrl}" class="btn btn-primary">
 								<i class="icon-gift icon-white"></i> <s:message code="you.manage.wish.lists.button"/>
 							</a>
 						</p>

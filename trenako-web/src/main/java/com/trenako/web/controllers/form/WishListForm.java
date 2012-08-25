@@ -53,8 +53,13 @@ public class WishListForm {
 	}
 	
 	public static WishListForm newForm(WishList wishList, MessageSource ms) {
+		int budget = 0;
+		Money m = wishList.getBudget();
+		if (m != null) {
+			budget = m.getValue();
+		}
 		return new WishListForm(wishList,
-				BigDecimal.valueOf(0),
+				BigDecimal.valueOf(budget / 100.0),
 				LocalizedEnum.list(Visibility.class, ms, null));
 	}
 	

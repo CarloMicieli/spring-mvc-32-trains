@@ -62,7 +62,7 @@
 					<s:param name="slug" value="${rs.slug}" />
 				</s:url>
         	
-				<div class="row-fluid" style="border-bottom: 1pt solid silver;">
+				<div class="row-fluid">
 					<div class="span1">
 						<strong>${rs.brand.label}</strong><br/>
 						${rs.itemNumber}
@@ -75,21 +75,35 @@
 							<img src="${imgUrl}" alt="Not found">
 					    </a>
 					</div>
-					<div class="span6">
-						<h3><tk:eval expression="${rs.description}" maxLength="50" /></h3>
+					<div class="span8">
+						<h4><tk:eval expression="${rs.description}" maxLength="50" /></h4>
 						<div class="row-fluid">
-							<div class="span2"><s:message code="rollingStock.era.label" />: <br/><strong><s:message code="era.${rs.era}.name" /></strong></div>
-							<div class="span3"><s:message code="rollingStock.powerMethod.label" />: <br /><strong>${rs.powerMethod}</strong></div>
-							<div class="span3"><s:message code="rollingStock.scale.label" />: <br /><strong>${rs.scale.label}</strong></div>
-							<div class="span4"><s:message code="rollingStock.railway.label" />: <br /><strong>${rs.railway.label}</strong></div>
+							<div class="span2">
+								<s:message code="rollingStock.era.label" />: 
+								<br/><strong><tk:evalValue type="Era" expression="${rs.era}"/></strong>
+							</div>
+							<div class="span3">
+								<s:message code="rollingStock.powerMethod.label" />: 
+								<br/><strong><tk:evalValue type="PowerMethod" expression="${rs.powerMethod}"/></strong>
+							</div>
+							<div class="span2">
+								<s:message code="rollingStock.scale.label" />: 
+								<br /><strong>${rs.scale.label}</strong>
+							</div>
+							<div class="span5">
+								<s:message code="rollingStock.railway.label" />: 
+								<br /><strong>${rs.railway.label}</strong>
+							</div>
+						</div>
+						<div class="row-fluid">
+							<a href="${showUrl}">
+								<s:message code="button.details.label"/>
+							</a> - 
+							<em><tk:period since="${rs.lastModified}"/></em> 
 						</div>
 					</div>
-					<div class="span2">
-						<a href="${showUrl}">
-							<s:message code="button.details.label" text="Show details" />
-						</a>
-					</div>
 				</div>
+				<hr/>
         	</c:forEach>
         	
         	<div class="row-fluid">
