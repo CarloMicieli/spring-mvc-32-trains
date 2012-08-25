@@ -48,9 +48,11 @@ public class WishListItemForm {
 	public WishListItemForm() {
 	}
 
-	public WishListItemForm(String slug, String rsSlug) {
+	public WishListItemForm(String slug, String rsSlug, String rsLabel) {
+		this.itemId = "";
 		this.slug = slug;
 		this.rsSlug = rsSlug;
+		this.rsLabel = rsLabel;
 	}
 
 	public WishListItem newItem() {

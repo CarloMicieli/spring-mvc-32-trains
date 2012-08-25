@@ -35,7 +35,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.WishList;
-import com.trenako.entities.WishListItem;
 import com.trenako.security.AccountDetails;
 import com.trenako.services.AccountsService;
 import com.trenako.services.WishListsService;
@@ -109,6 +108,25 @@ public class WishListsControllerTests {
 	}
 
 	@Test
+	public void shouldRedirectAfterDuplicatedKeyErrorsDuringWishListsCreation() {
+		ModelMap model = new ModelMap();
+
+		doThrow(new DuplicateKeyException("Duplicate key error"))
+			.when(mockService).createNew(eq(form().build(owner())));
+
+		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
+		when(mockResults.hasErrors()).thenReturn(false);
+
+		String viewName = controller.createWishList(form(), mockResults, model, mockRedirectAtts);
+
+		assertEquals("wishlist/new", viewName);
+		assertEquals(WishListsController.WISH_LIST_DUPLICATED_KEY_MSG, (ControllerMessage) model.get("message"));
+
+		WishListForm form = (WishListForm) model.get("newForm");
+		assertNotNull("Wish list form is null", form);
+	}
+
+	@Test
 	public void shouldShowAWishList() {
 		when(mockService.findBySlug(eq(wishList().getSlug()))).thenReturn(wishList());
 
@@ -154,149 +172,57 @@ public class WishListsControllerTests {
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_REMOVED_MSG));
 	}
 	
-	
-	/*
-
-	
-
-	
 	@Test 
 	public void shouldAddNewItemsToWishLists() {
-		WishListItem newItem = wishListForm().wishListItem();
 		ModelMap model = new ModelMap();
-
+		
 		when(mockResults.hasErrors()).thenReturn(false);
-		when(mockService.findBySlug(eq(wishListForm().getSlug()))).thenReturn(wishList());
+		when(mockService.findBySlug(eq("my-list"))).thenReturn(wishList());
 
-		String viewName = controller.addItem(wishListForm(), mockResults, model, mockRedirectAtts);
+		String viewName = controller.addItem(itemForm(), mockResults, model, mockRedirectAtts);
 
 		assertEquals("redirect:/wishlists/{slug}", viewName);
-		verify(mockService, times(1)).findBySlug(eq(wishListForm().getSlug()));
-		verify(mockService, times(1)).addItem(eq(wishList()), eq(newItem));
+		verify(mockService, times(1)).findBySlug(eq(itemForm().getSlug()));
+		verify(mockService, times(1)).addItem(eq(wishList()), eq(itemForm().newItem()));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_ITEM_ADDED_MSG));
 	}
-
-	@Test
-	public void shouldRedirectAfterFormValidationErrorsAddingItemsToWishLists() {
-		WishListItem newItem = wishListForm().wishListItem();
-		ModelMap model = new ModelMap();
-
-		when(mockResults.hasErrors()).thenReturn(true);
-
-		String viewName = controller.addItem(wishListForm(), mockResults, model, mockRedirectAtts);
-
-		assertEquals("wishlist/addItem", viewName);
-		verify(mockService, times(0)).findBySlug(eq(wishListForm().getSlug()));
-		verify(mockService, times(0)).addItem(eq(wishList()), eq(newItem));
-
-		WishListItemForm form = (WishListItemForm) model.get("wishListForm");
-		assertNotNull("Wish list form is null", form);
-		assertEquals(wishListForm(), form);
-	}
-
+	
 	@Test 
 	public void shouldUpdateItemsInTheWishLists() {
-		WishListItem newItem = wishListForm().wishListItem();
 		ModelMap model = new ModelMap();
 
 		when(mockResults.hasErrors()).thenReturn(false);
-		when(mockService.findBySlug(eq(wishListForm().getSlug()))).thenReturn(wishList());
+		when(mockService.findBySlug(eq(itemForm().getSlug()))).thenReturn(wishList());
 
-		String viewName = controller.updateItem(wishListForm(), mockResults, model, mockRedirectAtts);
+		String viewName = controller.updateItem(itemForm(), mockResults, model, mockRedirectAtts);
 
 		assertEquals("redirect:/wishlists/{slug}", viewName);
-		verify(mockService, times(1)).findBySlug(eq(wishListForm().getSlug()));
-//		verify(mockService, times(1)).updateItem(eq(wishList()), eq(newItem));
+		verify(mockService, times(1)).findBySlug(eq(itemForm().getSlug()));
+		verify(mockService, times(1)).updateItem(eq(wishList()), eq(itemForm().newItem()), eq(itemForm().previousPrice()));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_ITEM_UPDATED_MSG));
 	}
-
-	@Test
-	public void shouldRedirectAfterFormValidationErrorsUpdatingItemsToWishLists() {
-		WishListItem newItem = wishListForm().wishListItem();
-		ModelMap model = new ModelMap();
-
-		when(mockResults.hasErrors()).thenReturn(true);
-
-		String viewName = controller.updateItem(wishListForm(), mockResults, model, mockRedirectAtts);
-
-		assertEquals("wishlist/editItem", viewName);
-		verify(mockService, times(0)).findBySlug(eq(wishListForm().getSlug()));
-//		verify(mockService, times(0)).updateItem(eq(wishList()), eq(newItem));
-
-		WishListItemForm form = (WishListItemForm) model.get("wishListForm");
-		assertNotNull("Wish list form is null", form);
-		assertEquals(wishListForm(), form);
-	}
-
+	
 	@Test 
 	public void shouldRemoveItemsFromTheWishLists() {
-		WishListItem newItem = wishListForm().wishListItem();
-
 		when(mockResults.hasErrors()).thenReturn(false);
-		when(mockService.findBySlug(eq(wishListForm().getSlug()))).thenReturn(wishList());
+		when(mockService.findBySlug(eq(itemForm().getSlug()))).thenReturn(wishList());
 
-		String viewName = controller.removeItem(wishListForm(), mockRedirectAtts);
+		String viewName = controller.removeItem(itemForm(), mockRedirectAtts);
 
 		assertEquals("redirect:/wishlists/{slug}", viewName);
-		verify(mockService, times(1)).findBySlug(eq(wishListForm().getSlug()));
-		verify(mockService, times(1)).removeItem(eq(wishList()), eq(newItem));
+		verify(mockService, times(1)).findBySlug(eq(itemForm().getSlug()));
+		verify(mockService, times(1)).removeItem(eq(wishList()), eq(itemForm().deletedItem()));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_ITEM_DELETED_MSG));
 	}
 
-	@Test
-	public void shouldUpdateWishListsVisibility() {
-
-		String viewName = controller.updateVisibility(wishList(), mockRedirectAtts);
-
-		assertEquals("redirect:/wishlists/{slug}", viewName);
-		verify(mockService, times(1)).changeVisibility(eq(wishList()), eq(Visibility.PUBLIC));
-		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_VISIBILITY_CHANGED_MSG));
-	}
-
-	@Test
-	public void shouldUpdateWishListsName() {
-
-		String viewName = controller.updateName(wishList(), mockRedirectAtts);
-
-		assertEquals("redirect:/wishlists/{slug}", viewName);
-		verify(mockService, times(1)).changeName(eq(wishList()), eq("My list"));
-		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_NAME_CHANGED_MSG));
-	}
-
-
-
-
-
-
-	@Test
-	public void shouldRedirectAfterDuplicatedKeyErrorsDuringWishListsCreation() {
-		ModelMap model = new ModelMap();
-
-		doThrow(new DuplicateKeyException("Duplicate key error"))
-			.when(mockService).createNew(eq(wishList()));
-
-		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
-		when(mockResults.hasErrors()).thenReturn(false);
-
-		String viewName = controller.createWishList(wishList(), mockResults, model, mockRedirectAtts);
-
-		assertEquals("wishlist/new", viewName);
-		assertEquals(WishListsController.WISH_LIST_DUPLICATED_KEY_MSG, (ControllerMessage) model.get("message"));
-		verify(mockService, times(0)).createNew(eq(wishList()));
-
-		WishList wl = (WishList) model.get("wishList");
-		assertNotNull("Wish list is null", wl);
-		assertEquals(wishList(), wl);
-	}
-
-
-	*/
-	
 	WishListForm form() {
 		return new WishListForm(wishList(), BigDecimal.valueOf(100), null);
 	}
 	
-	WishListItemForm wishListitemForm() {
+	WishListItemForm itemForm() {
 		return new WishListItemForm("my-list", "acme-123456", "ACME 123456");
 	}
 

@@ -79,11 +79,11 @@ public class WishListItem implements Comparable<WishListItem> {
 	}
 	
 	public WishListItem(String itemId, WeakDbRef<RollingStock> rollingStock, String notes, Priority priority, Date addedAt) {
-		this.itemId = itemId(itemId);
 		this.rollingStock = rollingStock;
 		this.notes = notes;
 		this.priority = priority.label();
 		this.addedAt = addedAt;
+		this.itemId = itemId(itemId);
 	}
 
 	private String itemId(String id) {

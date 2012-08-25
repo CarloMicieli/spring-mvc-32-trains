@@ -186,7 +186,7 @@ public class WishListsController {
 			return "wishlist/addItem";
 		}
 
-		WishList wishList = new WishList(form.getSlug());
+		WishList wishList = service.findBySlug(form.getSlug());
 		service.addItem(wishList, form.newItem());
 
 		WISH_LIST_ITEM_ADDED_MSG.appendToRedirect(redirectAtts);
