@@ -50,8 +50,9 @@ public class WishListItem implements Comparable<WishListItem> {
 	public WishListItem() {
 	}
 	
-	public WishListItem(String itemId) {
+	public WishListItem(String itemId, Money price) {
 		this.itemId = itemId;
+		this.price = price;
 	}
 	
 	/**
@@ -71,24 +72,37 @@ public class WishListItem implements Comparable<WishListItem> {
 	 * @param addedAt the timestamp
 	 */
 	public WishListItem(RollingStock rollingStock, String notes, Priority priority, Date addedAt) {
-		this.setRollingStock(rollingStock);
-		this.itemId = initItemId();
-		this.notes = notes;
-		this.priority = priority.label();
-		this.addedAt = addedAt;
+		this(null, WeakDbRef.buildRef(rollingStock), notes, priority, addedAt, null);
 	}
 	
-	public WishListItem(String itemId, WeakDbRef<RollingStock> rollingStock, String notes, Priority priority, Date addedAt) {
+	/**
+	 * Creates a new {@code WishListItem}.
+	 * @param itemId the item id
+	 * @param rollingStock the rolling stock
+	 * @param notes the item notes
+	 * @param priority the item priority
+	 * @param addedAt the timestamp
+	 * @param price the item estimated price 
+	 */
+	public WishListItem(String itemId, 
+			WeakDbRef<RollingStock> rollingStock, 
+			String notes, 
+			Priority priority, 
+			Date addedAt,
+			Money price) {
+		
 		this.rollingStock = rollingStock;
 		this.notes = notes;
 		this.priority = priority.label();
 		this.addedAt = addedAt;
-		this.itemId = itemId(itemId);
+		this.price = price;
+		
+		this.itemId = itemId(itemId, rollingStock);
 	}
 
-	private String itemId(String id) {
+	private String itemId(String id, WeakDbRef<RollingStock> rs) {
 		if (StringUtils.isBlank(id)) {
-			return initItemId();
+			return rs.getSlug();
 		}
 		else {
 			return id;
@@ -100,9 +114,6 @@ public class WishListItem implements Comparable<WishListItem> {
 	 * @return the item id
 	 */
 	public String getItemId() {
-		if (itemId == null) {
-			itemId = initItemId();
-		}
 		return this.itemId;
 	}
 	
@@ -164,7 +175,7 @@ public class WishListItem implements Comparable<WishListItem> {
 	 */
 	public String getPriority() {
 		if (StringUtils.isBlank(priority)) {
-			priority = Priority.NORMAL.label();
+			priority = defaultPriority().label();
 		}
 		return priority;
 	}
@@ -212,6 +223,14 @@ public class WishListItem implements Comparable<WishListItem> {
 		this.addedAt = addedAt;
 	}
 	
+	/**
+	 * Returns the default {@code WishListItem} priority.
+	 * @return the default priority.
+	 */
+	public static Priority defaultPriority() {
+		return Priority.NORMAL;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
@@ -229,9 +248,5 @@ public class WishListItem implements Comparable<WishListItem> {
 		if (c1 != 0) return c1;
 		
 		return o.getAddedAt().compareTo(this.getAddedAt());
-	}
-	
-	private String initItemId() {
-		return rollingStock.getSlug();
 	}
 }

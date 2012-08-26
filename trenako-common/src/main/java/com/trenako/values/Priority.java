@@ -15,6 +15,8 @@
  */
 package com.trenako.values;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * It represents the list of {@code Priority} values.
  * @author Carlo Micieli
@@ -51,5 +53,18 @@ public enum Priority {
 	 */
 	public static Priority parse(String s) {
 		return LocalizedEnum.parseString(s, Priority.class);
+	}
+	
+	/**
+	 * Parses the string argument as a {@code Priority}.
+	 * @param prio the string to be parsed
+	 * @param defaultPrio the default {@code Priority} value 
+	 * @return a {@code Priority} value
+	 */
+	public static Priority parse(String prio, Priority defaultPrio) {
+		if (StringUtils.isBlank(prio)) {
+			return defaultPrio;
+		}
+		return LocalizedEnum.parseString(prio, Priority.class);
 	}
 }

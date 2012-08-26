@@ -15,17 +15,22 @@
  */
 package com.trenako.web.controllers.form;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.hibernate.validator.constraints.Range;
+import org.springframework.context.MessageSource;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
 import com.trenako.mapping.WeakDbRef;
+import com.trenako.values.LocalizedEnum;
 import com.trenako.values.Priority;
 
 /**
@@ -36,38 +41,73 @@ import com.trenako.values.Priority;
 public class WishListItemForm {
 	@NotNull
 	private String slug;
+	
 	@NotNull
 	private String rsSlug;
 	private String rsLabel;
 	
-	private String itemId;
-	private String notes;
-	private String priority;
-	private Date addedAt;
-
+	@Range(min = 0, max = 9999, message = "wishListItem.price.range.notmet")
+	private BigDecimal price;
+	
+	private BigDecimal previousPrice;
+	
+	private WishListItem item;
+	
+	private Iterable<LocalizedEnum<Priority>> priorities;
+	
 	public WishListItemForm() {
 	}
-
-	public WishListItemForm(String slug, String rsSlug, String rsLabel) {
-		this.itemId = "";
+	
+	private WishListItemForm(String slug, 
+			String rsSlug, 
+			String rsLabel, 
+			WishListItem item, 
+			BigDecimal price, 
+			BigDecimal previousPrice, 
+			Iterable<LocalizedEnum<Priority>> priorities) {
+		
 		this.slug = slug;
-		this.rsSlug = rsSlug;
 		this.rsLabel = rsLabel;
-	}
-
-	public WishListItem newItem() {
-		return new WishListItem(
-			getItemId(),	
-			new WeakDbRef<RollingStock>(getRsSlug(), getRsLabel()), 
-			getNotes(), 
-			Priority.parse(getPriority()), 
-			getAddedAt());
+		this.rsSlug = rsSlug;
+		this.item = item;
+		this.price = price;
+		this.previousPrice = previousPrice;
+		this.priorities = priorities;		
 	}
 	
-	public WishListItem deletedItem() {
-		return new WishListItem(getItemId());
+	public static WishListItemForm newForm(WishList wishList, 
+			RollingStock rs, 
+			WishListItem item, 
+			MessageSource messageSource) {
+		
+		return new WishListItemForm(
+				wishList.getSlug(),
+				rs.getSlug(),
+				rs.getLabel(),
+				item,
+				priceValue(item.getPrice()),
+				priceValue(item.getPrice()),
+				LocalizedEnum.list(Priority.class, messageSource, null));
+	}
+		
+	public WishListItem newItem(Account owner) {
+		return new WishListItem(
+				getItem().getItemId(),
+				rollingStock(getRsSlug(), getRsLabel()), 
+				getItem().getNotes(), 
+				priority(getItem().getPriority()), 
+				addedAt(getItem().getAddedAt()),
+				price(owner, getPrice()));
+	}
+	
+	public WishListItem deletedItem(Account owner) {
+		return new WishListItem(item.getItemId(), price(owner, getPrice()));
 	}
 
+	public Money previousPrice(Account owner) {
+		return price(owner, getPreviousPrice());
+	}
+	
 	public String getSlug() {
 		return slug;
 	}
@@ -91,40 +131,33 @@ public class WishListItemForm {
 	public void setRsLabel(String rsLabel) {
 		this.rsLabel = rsLabel;
 	}
-
-	public String getItemId() {
-		return itemId;
+	
+	public BigDecimal getPrice() {
+		return price;
 	}
 
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
 
-	public String getNotes() {
-		return notes;
+	public BigDecimal getPreviousPrice() {
+		return previousPrice;
 	}
 
-	public void setNotes(String notes) {
-		this.notes = notes;
+	public void setPreviousPrice(BigDecimal previousPrice) {
+		this.previousPrice = previousPrice;
 	}
 
-	public String getPriority() {
-		if (StringUtils.isBlank(priority)) {
-			priority = "normal";
-		}
-		return priority;
+	public WishListItem getItem() {
+		return item;
 	}
 
-	public void setPriority(String priority) {
-		this.priority = priority;
+	public void setItem(WishListItem item) {
+		this.item = item;
 	}
 
-	public Date getAddedAt() {
-		return addedAt;
-	}
-
-	public void setAddedAt(Date addedAt) {
-		this.addedAt = addedAt;
+	public Iterable<LocalizedEnum<Priority>> getPriorities() {
+		return priorities;
 	}
 	
 	@Override
@@ -136,12 +169,31 @@ public class WishListItemForm {
 		return new EqualsBuilder()
 			.append(this.slug, other.slug)
 			.append(this.rsSlug, other.rsSlug)
-			.append(this.itemId, other.itemId)
+			.append(this.item, other.item)
 			.isEquals();
 	}
+	
+	private static Date addedAt(Date date) {
+		if (date == null) {
+			return new Date();
+		}
+		return date;
+	}
+	
+	private static Priority priority(String prio) {
+		return Priority.parse(prio, WishListItem.defaultPriority());
+	}
+	
+	private static WeakDbRef<RollingStock> rollingStock(String rsSlug, String rsLabel) {
+		return new WeakDbRef<RollingStock>(rsSlug, rsLabel); 
+	}
+	
+	private static BigDecimal priceValue(Money money) {
+		int budget = (money != null) ? money.getValue() : 0;
+		return 	BigDecimal.valueOf(budget).divide(Money.MONEY_VALUE_FACTOR);
+	}
 
-	public Money previousPrice() {
-		// TODO Auto-generated method stub
-		return null;
+	private static Money price(Account owner, BigDecimal val) {
+		return new Money(val, owner.getProfile().getCurrency());
 	}
 }

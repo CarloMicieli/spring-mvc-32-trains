@@ -15,6 +15,9 @@
  */
 package com.trenako.web.controllers;
 
+import static com.trenako.test.TestDataBuilder.acme;
+import static com.trenako.test.TestDataBuilder.fs;
+import static com.trenako.test.TestDataBuilder.scaleH0;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -34,7 +37,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Money;
+import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishList;
+import com.trenako.entities.WishListItem;
 import com.trenako.security.AccountDetails;
 import com.trenako.services.AccountsService;
 import com.trenako.services.WishListsService;
@@ -127,7 +133,7 @@ public class WishListsControllerTests {
 	}
 
 	@Test
-	public void shouldShowAWishList() {
+	public void shouldShowWishLists() {
 		when(mockService.findBySlug(eq(wishList().getSlug()))).thenReturn(wishList());
 
 		ModelMap model = new ModelMap();
@@ -175,15 +181,17 @@ public class WishListsControllerTests {
 	@Test 
 	public void shouldAddNewItemsToWishLists() {
 		ModelMap model = new ModelMap();
+		WishListItem item = itemForm().newItem(owner());
 		
+		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
 		when(mockResults.hasErrors()).thenReturn(false);
-		when(mockService.findBySlug(eq("my-list"))).thenReturn(wishList());
-
+		when(mockService.findBySlug(eq(itemForm().getSlug()))).thenReturn(wishList());
+		
 		String viewName = controller.addItem(itemForm(), mockResults, model, mockRedirectAtts);
 
 		assertEquals("redirect:/wishlists/{slug}", viewName);
 		verify(mockService, times(1)).findBySlug(eq(itemForm().getSlug()));
-		verify(mockService, times(1)).addItem(eq(wishList()), eq(itemForm().newItem()));
+		verify(mockService, times(1)).addItem(eq(wishList()), eq(item));
 		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_ITEM_ADDED_MSG));
 	}
@@ -191,7 +199,9 @@ public class WishListsControllerTests {
 	@Test 
 	public void shouldUpdateItemsInTheWishLists() {
 		ModelMap model = new ModelMap();
-
+		WishListItem item = itemForm().newItem(owner());
+		
+		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
 		when(mockResults.hasErrors()).thenReturn(false);
 		when(mockService.findBySlug(eq(itemForm().getSlug()))).thenReturn(wishList());
 
@@ -199,31 +209,47 @@ public class WishListsControllerTests {
 
 		assertEquals("redirect:/wishlists/{slug}", viewName);
 		verify(mockService, times(1)).findBySlug(eq(itemForm().getSlug()));
-		verify(mockService, times(1)).updateItem(eq(wishList()), eq(itemForm().newItem()), eq(itemForm().previousPrice()));
+		verify(mockService, times(1)).updateItem(eq(wishList()), eq(item), eq(new Money(0, "EUR")));
 		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_ITEM_UPDATED_MSG));
 	}
 	
 	@Test 
 	public void shouldRemoveItemsFromTheWishLists() {
+		WishListItem deletedItem = deleteItemForm().deletedItem(owner());
+		
+		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
 		when(mockResults.hasErrors()).thenReturn(false);
 		when(mockService.findBySlug(eq(itemForm().getSlug()))).thenReturn(wishList());
 
-		String viewName = controller.removeItem(itemForm(), mockRedirectAtts);
+		String viewName = controller.removeItem(deleteItemForm(), mockResults, mockRedirectAtts);
 
 		assertEquals("redirect:/wishlists/{slug}", viewName);
-		verify(mockService, times(1)).findBySlug(eq(itemForm().getSlug()));
-		verify(mockService, times(1)).removeItem(eq(wishList()), eq(itemForm().deletedItem()));
+		verify(mockService, times(1)).findBySlug(eq(deleteItemForm().getSlug()));
+		verify(mockService, times(1)).removeItem(eq(wishList()), eq(deletedItem));
 		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_ITEM_DELETED_MSG));
 	}
 
+	RollingStock rollingStock() {
+		return new RollingStock.Builder(acme(), "123456")
+			.scale(scaleH0())
+			.railway(fs())
+			.description("desc")
+			.build();
+	}
+	
 	WishListForm form() {
 		return WishListForm.newForm(wishList(), BigDecimal.valueOf(100), null);
 	}
 	
 	WishListItemForm itemForm() {
-		return new WishListItemForm("my-list", "acme-123456", "ACME 123456");
+		return WishListItemForm.newForm(wishList(), rollingStock(), new WishListItem(), null);
+	}
+	
+	WishListItemForm deleteItemForm() {
+		WishListItem item = new WishListItem("item-id", new Money(0, "EUR"));
+		return WishListItemForm.newForm(wishList(), rollingStock(), item, null);
 	}
 
 	WishList wishList() {

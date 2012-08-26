@@ -226,7 +226,8 @@ class WishListsServiceSpecification extends MongoSpecification {
 		and:
 		def newItem = new WishListItem(rollingStock: rollingStock('acme', '123459'), 
 			notes: 'My new notes',
-			priority: 'high')
+			priority: 'high',
+			itemId: 'acme-123459')
 		
 		when:
 		service.addItem(wishList, newItem)

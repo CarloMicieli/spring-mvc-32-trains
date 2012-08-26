@@ -186,8 +186,9 @@ public class WishListsController {
 			return "wishlist/addItem";
 		}
 
+		Account owner = userContext.getCurrentUser().getAccount();
 		WishList wishList = service.findBySlug(form.getSlug());
-		service.addItem(wishList, form.newItem());
+		service.addItem(wishList, form.newItem(owner));
 
 		WISH_LIST_ITEM_ADDED_MSG.appendToRedirect(redirectAtts);
 		redirectAtts.addAttribute("slug", wishList.getSlug());
@@ -196,10 +197,18 @@ public class WishListsController {
 	
 	@RequestMapping(value = "/items", method = RequestMethod.DELETE)
 	public String removeItem(@ModelAttribute @Valid WishListItemForm form, 
+		BindingResult bindingResult, 
 		RedirectAttributes redirectAtts) {
 
+		if (bindingResult.hasErrors()) {
+			redirectAtts.addAttribute("slug", form.getSlug());
+			return "redirect:/wishlists/{slug}";
+		}
+		
 		WishList wishList = service.findBySlug(form.getSlug());
-		service.removeItem(wishList, form.deletedItem());
+		
+		Account owner = userContext.getCurrentUser().getAccount();
+		service.removeItem(wishList, form.deletedItem(owner));
 
 		WISH_LIST_ITEM_DELETED_MSG.appendToRedirect(redirectAtts);
 		redirectAtts.addAttribute("slug", wishList.getSlug());
@@ -213,11 +222,13 @@ public class WishListsController {
 		RedirectAttributes redirectAtts) {
 
 		if (bindingResult.hasErrors()) {
-			
+			redirectAtts.addAttribute("slug", form.getSlug());
+			return "redirect:/wishlists/{slug}";
 		}
 
+		Account owner = userContext.getCurrentUser().getAccount();
 		WishList wishList = service.findBySlug(form.getSlug());
-		service.updateItem(wishList, form.newItem(), form.previousPrice());
+		service.updateItem(wishList, form.newItem(owner), form.previousPrice(owner));
 
 		WISH_LIST_ITEM_UPDATED_MSG.appendToRedirect(redirectAtts);
 		redirectAtts.addAttribute("slug", wishList.getSlug());
