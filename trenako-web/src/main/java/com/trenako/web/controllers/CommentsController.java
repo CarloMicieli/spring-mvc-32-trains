@@ -15,8 +15,6 @@
  */
 package com.trenako.web.controllers;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +30,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Comment;
+import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.CommentsService;
+import com.trenako.services.RollingStocksService;
 import com.trenako.web.editors.WeakDbRefPropertyEditor;
 
 /**
@@ -46,12 +46,14 @@ import com.trenako.web.editors.WeakDbRefPropertyEditor;
 public class CommentsController {
 
 	private final CommentsService service;
+	private final RollingStocksService rsService;
 	
 	final static ControllerMessage COMMENT_POSTED_MSG = ControllerMessage.success("comment.posted.message");
 	
 	@Autowired
-	public CommentsController(CommentsService service) {
+	public CommentsController(CommentsService service, RollingStocksService rsService) {
 		this.service = service;
+		this.rsService = rsService;
 	}
 	
 	// registers the custom property editors
@@ -72,8 +74,8 @@ public class CommentsController {
 			return "redirect:/rollingstocks/{slug}";
 		}
 		
-		comment.setPostedAt(new Date());
-		service.save(comment);
+		RollingStock rs = rsService.findBySlug(slug);
+		service.postComment(rs, comment);
 		
 		COMMENT_POSTED_MSG.appendToRedirect(redirectAtts);
 		return "redirect:/rollingstocks/{slug}";

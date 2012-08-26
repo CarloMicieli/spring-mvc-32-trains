@@ -96,6 +96,7 @@ public class Account implements Serializable, DbReferenceable {
 		this.enabled = b.enabled;
 		this.locked = b.locked;
 		this.roles = b.roles;
+		this.id = b.id;
 	}
 	
 	/**
@@ -106,6 +107,7 @@ public class Account implements Serializable, DbReferenceable {
 	public static class Builder {
 		private final String emailAddress;
 		
+		private ObjectId id = null;
 		private String password = null;
 		private String displayName = null;
 		private boolean expired = false;
@@ -113,82 +115,51 @@ public class Account implements Serializable, DbReferenceable {
 		private boolean locked = false;
 		
 		private List<String> roles = null;
-		/**
-		 * Creates a new {@code Builder} with the provided email address.
-		 * @param emailAddress the user email address
-		 */
+
 		public Builder(String emailAddress) {
 			this.emailAddress = emailAddress;
+		}		
+
+		public Builder id(ObjectId userid) {
+			this.id = userid;
+			return this;
 		}
 
-		/**
-		 * Sets the password.
-		 * @param password the password
-		 * @return an {@code Account} builder
-		 */
 		public Builder password(String password) {
 			this.password = password;
 			return this;
 		}
 
-		/**
-		 * Sets the user display name.
-		 * @param displayName the user display name
-		 * @return an {@code Account} builder
-		 */
 		public Builder displayName(String displayName) {
 			this.displayName = displayName;
 			return this;
 		}
 
-		/**
-		 * Indicates whether the account's credentials (password) has expired.
-		 * @param expired {@code true} if the account is expired; {@code false} otherwise
-		 * @return an {@code Account} builder
-		 */		
 		public Builder expired(boolean expired) {
 			this.expired = expired;
 			return this;
 		}
 
-		/**
-		 * Indicates whether the user is enabled or disabled.
-		 * @param enabled {@code true} if the account is enabled; {@code false} otherwise
-		 * @return an {@code Account} builder
-		 */
 		public Builder enabled(boolean enabled) {
 			this.enabled = enabled;
 			return this;
 		}
 
-		/**
-		 * Indicates whether the user is locked or unlocked.
-		 * @param locked {@code true} if the account is locked; {@code false} otherwise
-		 * @return an {@code Account} builder
-		 */
 		public Builder locked(boolean locked) {
 			this.locked = locked;
 			return this;
 		}
 
-		/**
-		 * Adds roles to the {@code Account}.
-		 * @param roles the roles to be added
-		 * @return an {@code Account} builder
-		 */
 		public Builder roles(String... roles) {
 			this.roles = Collections.unmodifiableList(
 					Arrays.asList(roles));
 			return this;
 		}
 		
-		/**
-		 * Builds an {@code Account} object using the values for this builder.
-		 * @return the {@code Account} object
-		 */
 		public Account build() {
 			return new Account(this);
 		}
+
 	}
 
 	/**

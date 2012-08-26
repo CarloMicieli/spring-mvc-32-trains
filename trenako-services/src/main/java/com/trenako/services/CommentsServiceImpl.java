@@ -15,13 +15,12 @@
  */
 package com.trenako.services;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockComments;
 import com.trenako.repositories.CommentsRepository;
 
 /**
@@ -38,30 +37,30 @@ public class CommentsServiceImpl implements CommentsService {
 	public CommentsServiceImpl(CommentsRepository repo) {
 		this.repo = repo;
 	}
-	
-	@Override
-	public Comment findById(ObjectId id) {
-		return repo.findById(id);
-	}
 
 	@Override
-	public Iterable<Comment> findByAuthor(Account author) {
-		return repo.findByAuthor(author);
-	}
-
-	@Override
-	public Iterable<Comment> findByRollingStock(RollingStock rollingStock) {
+	public RollingStockComments findByRollingStock(RollingStock rollingStock) {
 		return repo.findByRollingStock(rollingStock);
 	}
 
 	@Override
-	public void save(Comment comment) {
-		repo.save(comment);
+	public void postComment(RollingStock rs, Comment comment) {
+		repo.createNew(rs, comment);
 	}
 
 	@Override
-	public void remove(Comment comment) {
-		repo.remove(comment);
+	public void postAnswer(RollingStock rs, Comment parent, Comment answer) {
+		repo.createAnswer(rs, parent, answer);
+	}
+
+	@Override
+	public void deleteComment(RollingStock rs, Comment comment) {
+		repo.remove(rs, comment);		
+	}
+
+	@Override
+	public void deleteAnswer(RollingStock rs, Comment parent, Comment answer) {
+		repo.removeAnswer(rs, parent, answer);		
 	}
 
 }

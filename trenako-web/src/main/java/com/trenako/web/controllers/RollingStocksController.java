@@ -111,9 +111,7 @@ public class RollingStocksController {
 		
 		// init comments form only for authenticated users
 		if (secContext != null && secContext.getCurrentUser() != null) {
-			Comment newComment = new Comment(secContext.getCurrentUser().getAccount(), 
-					rsView.getRs(), 
-					""); 
+			Comment newComment = new Comment(secContext.getCurrentUser().getAccount(), ""); 
 			model.addAttribute("newComment", newComment);
 		}
 		

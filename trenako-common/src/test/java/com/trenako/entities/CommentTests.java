@@ -17,9 +17,9 @@ package com.trenako.entities;
 
 import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
-import org.junit.Test;
 
-import com.trenako.mapping.WeakDbRef;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
 /**
  * 
@@ -28,70 +28,42 @@ import com.trenako.mapping.WeakDbRef;
  */
 public class CommentTests {
 	
-	private RollingStock rs = new RollingStock.Builder(acme(), "123456")
-		.scale(scaleH0())
-		.railway(db())
-		.build();
+	private static final ObjectId USERID = new ObjectId("5039258b84ae08ae6de15da2");
 	
-	
-	@Test
-	public void shouldReturnsAuthorAndRollingStockSlugs() {
-		Account author = new Account.Builder("mail@mail.com")
-			.displayName("User Name")
+	private final Account author() {
+		return new Account.Builder("mail@mail.com")
+			.id(USERID)
+			.displayName("Bob")
 			.build();
-		
-		Comment c = new Comment(author, rs, "Comment content");
-		
-		assertEquals("user-name", c.getAuthor().getSlug());
-		assertEquals("acme-123456", c.getRollingStock().getSlug());
 	}
 	
 	@Test
-	public void shouldReturnsTrueIfTwoCommentsAreEquals() {
-		Account author = new Account.Builder("mail@mail.com")
-			.displayName("User Name")
-			.build();
-
-		Comment x = new Comment(author, rs, "Comment content");
-		Comment y = new Comment(author, rs, "Comment content");
+	public void shouldCheckWhetherTwoUserCommentsAreEquals() {
+		Comment x = new Comment(USERID, "Comment content", date("2012/1/1"));
+		Comment y = new Comment(USERID, "Comment content", date("2012/1/1"));
 		
 		assertTrue(x.equals(y));
 	}
 	
 	@Test
-	public void shouldReturnsTrueIfTwoCommentsOnlyWithSlugsAreEquals() {
-		Comment x = new Comment();
-		x.setAuthor(WeakDbRef.buildFromSlug("bob", Account.class));
-		x.setRollingStock(WeakDbRef.buildFromSlug("acme-123456", RollingStock.class));
-		x.setContent("My comment");
-		
-		Comment y = new Comment();
-		y.setAuthor(WeakDbRef.buildFromSlug("bob", Account.class));
-		y.setRollingStock(WeakDbRef.buildFromSlug("acme-123456", RollingStock.class));
-		y.setContent("My comment");
-		
-		assertTrue(x.equals(y));
-	}
-	
-	@Test
-	public void shouldReturnsFalseIfTwoCommentsAreDifferent() {
-		Account author = new Account.Builder("mail@mail.com")
-			.displayName("User Name")
-			.build();
-
-		Comment x = new Comment(author, rs, "Comment content 1");
-		Comment y = new Comment(author, rs, "Comment content 2");
-		
+	public void shouldCheckWhetherTwoUserCommentsAreDifferent() {
+		Comment x = new Comment(author(), "Comment content 1");
+		Comment y = new Comment(author(), "Comment content 2");
 		assertFalse(x.equals(y));
+		
+		Comment z = new Comment(USERID, "Comment content 1", date("2012/1/1"));
+		assertFalse(x.equals(z));
 	}
 	
 	@Test
-	public void shouldReturnAStringForComments() {
-		Account author = new Account.Builder("mail@mail.com")
-			.displayName("User Name")
-			.build();
-
-		Comment c = new Comment(author, rs, "Comment content");
-		assertEquals("comment{author: user-name, content: Comment content, rs: acme-123456}", c.toString());
+	public void shouldProduceCommentIds() {
+		Comment x = new Comment(USERID, "Comment content 1", fulldate("2012/06/01 10:30:00.500"));
+		assertEquals("010612103000500", x.getCommentId());
+	}
+	
+	@Test
+	public void shouldProduceStringRepresentationFromComments() {
+		Comment c = new Comment(USERID, "Comment content", date("2012/1/1"));
+		assertEquals("comment{authorId: 5039258b84ae08ae6de15da2, content: Comment content, postedAt: Sun Jan 01 00:00:00 CET 2012}", c.toString());
 	}
 }

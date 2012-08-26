@@ -15,14 +15,16 @@
  */
 package com.trenako.entities;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.trenako.test.AbstractValidationTests;
 
-import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 /**
@@ -31,10 +33,8 @@ import static org.junit.Assert.*;
  *
  */
 public class CommentValidationTests extends AbstractValidationTests<Comment> {
-	
-	private RollingStock rs = new RollingStock.Builder(acme(), "123456")
-		.scale(scaleH0())
-		.railway(db())
+	Account author = new Account.Builder("mail@mailcom")
+		.id(new ObjectId())
 		.build();
 	
 	@Before
@@ -44,11 +44,7 @@ public class CommentValidationTests extends AbstractValidationTests<Comment> {
 
 	@Test
 	public void shouldValidateValidComments() {
-		Account author = new Account.Builder("mail@mailcom")
-			.displayName("user")
-			.build();
-		
-		Comment c = new Comment(author, rs, "Comment content");
+		Comment c = new Comment(author, "Comment content");
 		Map<String, String> errors = validate(c);
 		
 		assertEquals(0, errors.size());
@@ -59,9 +55,21 @@ public class CommentValidationTests extends AbstractValidationTests<Comment> {
 		Comment c = new Comment();
 		Map<String, String> errors = validate(c);
 		
-		assertEquals(3, errors.size());
-		assertEquals("comment.author.required", errors.get("author"));
-		assertEquals("comment.rollingStock.required", errors.get("rollingStock"));
+		assertEquals(2, errors.size());
+		assertEquals("comment.author.required", errors.get("authorId"));
 		assertEquals("comment.content.required", errors.get("content"));
+	}
+	
+	@Test
+	public void shouldValidateCommentAnswers() {
+		Comment c = new Comment(author, "Comment content");
+		List<Comment> answers = Arrays.asList(
+				new Comment(author, "my first comment"),
+				new Comment(author, "my second comment"));
+		c.setAnswers(answers);
+		
+		Map<String, String> errors = validate(c);
+		
+		assertEquals(0, errors.size());
 	}
 }

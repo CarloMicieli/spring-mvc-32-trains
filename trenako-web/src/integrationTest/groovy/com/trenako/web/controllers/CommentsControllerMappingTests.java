@@ -15,6 +15,9 @@
  */
 package com.trenako.web.controllers;
 
+import static com.trenako.test.TestDataBuilder.acme;
+import static com.trenako.test.TestDataBuilder.fs;
+import static com.trenako.test.TestDataBuilder.scaleH0;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
@@ -24,7 +27,9 @@ import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.trenako.entities.RollingStock;
 import com.trenako.services.CommentsService;
+import com.trenako.services.RollingStocksService;
 import com.trenako.web.test.AbstractSpringControllerTests;
 
 /**
@@ -36,19 +41,19 @@ public class CommentsControllerMappingTests extends AbstractSpringControllerTest
 	
 	private final static String SLUG = "acme-123456";
 	private @Autowired CommentsService service;
+	private @Autowired RollingStocksService rsService;
 	
 	@After
 	public void cleanup() {
 		reset(service);
+		reset(rsService);
 	}
 	
 	@Test
 	public void shouldPostNewComments() throws Exception {
+		when(rsService.findBySlug(eq(SLUG))).thenReturn(rollingStock());
 		mockMvc().perform(post("/rollingstocks/{slug}/comments", SLUG)
-				.param("author.slug", "bob")
-				.param("author.label", "Bob")
-				.param("rollingStock.slug", "acme-123456")
-				.param("rollingStock.label", "ACME 123456")
+				.param("authorId", "47cc67093475061e3d95369d")
 				.param("content", "My comment"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
@@ -68,4 +73,12 @@ public class CommentsControllerMappingTests extends AbstractSpringControllerTest
 //			.andExpect(model().attributeExists("comment"))
 //			.andExpect(redirectedUrl("/rollingstocks/acme-123456"));
 //	}
+	
+	RollingStock rollingStock() {
+		return new RollingStock.Builder(acme(), "123456")
+			.railway(fs())
+			.scale(scaleH0())
+			.description("Desc")
+			.build();
+	}
 }

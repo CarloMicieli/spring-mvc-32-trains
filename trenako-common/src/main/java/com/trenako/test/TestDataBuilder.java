@@ -49,6 +49,16 @@ public class TestDataBuilder {
 			return new Date();
 		}
 	}
+
+	public static Date fulldate(String date) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+		try {
+			return format.parse(date);
+		}
+		catch (ParseException pe) {
+			return new Date();
+		}
+	}
 	
 	private final static LocalizedEnum<Era> eraIII = new LocalizedEnum<Era>(Era.III);
 	private final static LocalizedEnum<Category> steamLocomotives = new LocalizedEnum<Category>(Category.STEAM_LOCOMOTIVES);

@@ -15,39 +15,40 @@
  */
 package com.trenako.entities;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.trenako.mapping.WeakDbRef;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
  * It represents a user comment to a rolling stock.
  *
  * @author Carlo Micieli 
  */
-@Document(collection = "comments")
 public class Comment {
-	@Id
-	private ObjectId id;
-
+	
+	@Indexed
+	private String commentId;
+	
 	@NotNull(message = "comment.author.required")
-	private WeakDbRef<Account> author;
-
-	@NotNull(message = "comment.rollingStock.required")
-	private WeakDbRef<RollingStock> rollingStock;
+	private ObjectId authorId;
 
 	@NotBlank(message = "comment.content.required")
 	@Size(max = 150, message = "comment.content.size.notmet")
 	private String content;
 
+	@Valid
+	private List<Comment> answers;
+	
 	private Date postedAt;
 
 	/**
@@ -57,82 +58,62 @@ public class Comment {
 	}
 	
 	/**
-	 * Creates a new {@code Comment} for a rolling stock model.
-	 * 
-	 * @param account the comment's author
-	 * @param rollingStock the rolling stock model under review
-	 * @param content the comment content
+	 * Creates an empty {@code Comment} with the provided id.
+	 * @param commentId the comment id
 	 */
-	public Comment(Account account, RollingStock rollingStock, String content) {
-		this.setAuthor(account);
-		this.setRollingStock(rollingStock);
-		this.content = content;
+	public Comment(String commentId) {
+		this.commentId = commentId;
 	}
 	
 	/**
-	 * Returns the {@code Comment} unique id.
-	 * @return the id
+	 * Creates a new {@code Comment} for a rolling stock model.
+	 * 
+	 * @param account the comment's author
+	 * @param content the comment content
 	 */
-	public ObjectId getId() {
-		return id;
+	public Comment(Account account, String content) {
+		this(author(account), content, new Date());
+	}
+	
+	/**
+	 * Creates a new {@code Comment} for a rolling stock model.
+	 * 
+	 * @param authorId the comment's author id
+	 * @param content the comment content
+	 * @param postedAt the posting date
+	 */
+	public Comment(ObjectId authorId, String content, Date postedAt) {
+		this.authorId = authorId;
+		this.content = content;
+		this.postedAt = postedAt;
+		
+		this.commentId = commentId(this.postedAt);
+	}
+	
+	public String getCommentId() {
+		return commentId;
 	}
 
-	/**
-	 * Sets the {@code Comment} unique id.
-	 * @param id the id
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
+	public void setCommentId(String commentId) {
+		this.commentId = commentId;
 	}
 
 	/**
 	 * Returns the {@code Comment}'s author.
 	 * @return the author
 	 */
-	public WeakDbRef<Account> getAuthor() {
-		return author;
+	public ObjectId getAuthorId() {
+		return authorId;
 	}
 
 	/**
 	 * Sets the {@code Comment}'s author.
-	 * @param author the author
+	 * @param authorId the author
 	 */
-	public void setAuthor(WeakDbRef<Account> author) {
-		this.author = author;
+	public void setAuthorId(ObjectId authorId) {
+		this.authorId = authorId;
 	}
-	
-	/**
-	 * Sets the {@code Comment}'s author.
-	 * @param author the author
-	 */
-	public void setAuthor(Account author) {
-		this.author = WeakDbRef.buildRef(author);
-	}
-
-	/**
-	 * Returns the rolling stock to be commented.
-	 * @return the rolling stock
-	 */
-	public WeakDbRef<RollingStock> getRollingStock() {
-		return rollingStock;
-	}
-
-	/**
-	 * Sets the rolling stock to be commented.
-	 * @param rollingStock the rolling stock
-	 */
-	public void setRollingStock(RollingStock rollingStock) {
-		this.rollingStock = WeakDbRef.buildRef(rollingStock);
-	}
-
-	/**
-	 * Sets the rolling stock to be commented.
-	 * @param rollingStock the rolling stock
-	 */
-	public void setRollingStock(WeakDbRef<RollingStock> rollingStock) {
-		this.rollingStock = rollingStock;
-	}
-	
+		
 	/**
 	 * Returns the comment's content.
 	 * @return the content
@@ -147,6 +128,22 @@ public class Comment {
 	 */
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	/**
+	 * Returns the answers list to this comment.
+	 * @return the answers list
+	 */
+	public List<Comment> getAnswers() {
+		return answers;
+	}
+
+	/**
+	 * Sets the answers list to this comment.
+	 * @param answers the answers list
+	 */
+	public void setAnswers(List<Comment> answers) {
+		this.answers = answers;
 	}
 
 	/**
@@ -173,21 +170,30 @@ public class Comment {
 		Comment other = (Comment) obj;
 		return new EqualsBuilder()
 			.append(this.content, other.content)
-			.append(this.author, other.author)
-			.append(this.rollingStock, other.rollingStock)
+			.append(this.authorId, other.authorId)
+			.append(this.postedAt, other.postedAt)
 			.isEquals();
 	}
 	
 	@Override
 	public String toString() {
 		return new StringBuilder()
-			.append("comment{author: ")
-			.append(getAuthor().getSlug())
+			.append("comment{authorId: ")
+			.append(getAuthorId())
 			.append(", content: ")
 			.append(getContent())
-			.append(", rs: ")
-			.append(getRollingStock().getSlug())
+			.append(", postedAt: ")
+			.append(getPostedAt())
 			.append("}")
 			.toString();	
+	}
+	
+	private static ObjectId author(Account account) {
+		return account.getId();
+	}
+	
+	private String commentId(Date postedAt) {
+		DateFormat df = new SimpleDateFormat("ddMMyyHHmmssSSS");
+		return df.format(postedAt);
 	}
 }

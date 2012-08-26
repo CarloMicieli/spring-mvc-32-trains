@@ -72,7 +72,7 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 			return null;
 		}
 		
-		Iterable<Comment> commentsList = comments.findByRollingStock(rs);
+		Iterable<Comment> commentsList = comments.findByRollingStock(rs).getItems();
 		RollingStockReviews rsReviews = reviews.findByRollingStock(rs);
 		
 		return new RollingStockView(rs, 

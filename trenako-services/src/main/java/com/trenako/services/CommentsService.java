@@ -15,76 +15,52 @@
  */
 package com.trenako.services;
 
-import org.bson.types.ObjectId;
-
-import com.trenako.AppGlobals;
-import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockComments;
 
 /**
  * The interface for the rolling stock comments service.
- * <p>
- * The concrete classes that implements the {@code CommentsService} interface will provide
- * the following functionalities:
- * <ul>
- * <li>finds a {@code Comment} by id;</li>
- * <li>returns the {@code Comment} list by author;</li>
- * <li>returns the {@code Comment} list by rolling stock;</li>
- * <li>returns the last posted {@code Comment} list;</li>
- * <li>saves/removes a {@code Comment}.</li>
- * </ul>
- * </p>
  *
  * @author Carlo Micieli
- * @see com.trenako.entities.Comment
  */
 public interface CommentsService {
 	
 	/**
-	 * Finds the {@link Comment} with the provided id.
-	 * @param id the unique id
-	 * @return a {@code Comment} if found; {@code null} otherwise
-	 */	
-	Comment findById(ObjectId id);
-	
-	/**
-	 * Returns the list of {@link Comment} with the same author id.
-	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
-	 * the results are sort by descending posted date. 
-	 * </p>
-	 *
-	 * @param author the comments' author
-	 * @return a {@code Comment} list
-	 */	 
-	Iterable<Comment> findByAuthor(Account author);
-
-	/**
 	 * Returns the list of {@link Comment} for the same rolling stock id.
-	 * <p>
-	 * This method returns at most a number of items from {@link AppGlobals#MAX_RESULT_SET_SIZE}; 
-	 * the results are sort by descending posted date. 
-	 * </p>
 	 *
 	 * @param rollingStock the rolling stock
 	 * @return the list of comments
 	 */	
-	Iterable<Comment> findByRollingStock(RollingStock rollingStock);
+	RollingStockComments findByRollingStock(RollingStock rollingStock);
 
 	/**
-	 * Persists the {@link Comment} changes in the data store.
-	 * <p>
-	 * This method performs a "upsert": if the {@code Comment} is not present in the data store
-	 * a new {@code Comment} is created; otherwise the method will update the existing {@code Comment}. 
-	 * </p>	 
+	 * Posts a new {@code Comment} for the provided rolling stock.
+	 * @param rs the {@code RollingStock} to be commented
 	 * @param comment the {@code Comment} to be saved
 	 */
-	void save(Comment comment);
+	void postComment(RollingStock rs, Comment comment);
 	
 	/**
-	 * Removes a {@link Comment} from the data store.
-	 * @param comment the {@code Comment} to be removed
+	 * Post an answer to a rolling stock {@code Comment}.
+	 * @param rs the {@code RollingStock} to be commented
+	 * @param parent the parent {@code Comment} 
+	 * @param answer the answer to be saved
 	 */
-	void remove(Comment comment);
+	void postAnswer(RollingStock rs, Comment parent, Comment answer);
+	
+	/**
+	 * Posts a new {@code Comment} for the provided rolling stock.
+	 * @param rs the {@code RollingStock} to be commented
+	 * @param comment the {@code Comment} to be saved
+	 */
+	void deleteComment(RollingStock rs, Comment comment);
+	
+	/**
+	 * Post an answer to a rolling stock {@code Comment}.
+	 * @param rs the {@code RollingStock} to be commented
+	 * @param parent the parent {@code Comment} 
+	 * @param answer the answer to be saved
+	 */
+	void deleteAnswer(RollingStock rs, Comment parent, Comment answer);
 }

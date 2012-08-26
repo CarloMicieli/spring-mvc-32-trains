@@ -15,16 +15,16 @@
 */
 package com.trenako.services
 
+import static com.trenako.test.TestDataBuilder.*
+
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 
 import com.trenako.entities.Account
-import com.trenako.entities.Brand
-import com.trenako.entities.Scale
-import com.trenako.entities.Railway
+import com.trenako.entities.Comment
+import com.trenako.entities.RollingStockComments
 import com.trenako.entities.RollingStock
 
-import com.trenako.entities.Comment
 import com.trenako.mapping.WeakDbRef
 import com.trenako.services.CommentsService
 
@@ -40,40 +40,44 @@ class CommentsServiceSpecification extends MongoSpecification {
 	def setup() {
 		cleanup()
 		
-		db.rollingStocks.insert(
-			brand: [label: 'ACME', slug: 'acme'],
+		db.comments.insert(
 			slug: 'acme-69501',
-			itemNumber: '69501',
-			description: [en: 'Gr 685 172'],
-			category: 'steam-locomotives',
-			powerMethod: "dc",
-			era: "iii",
-			railway: [label: 'FS', slug: 'fs'],
-			scale: [label: 'H0', slug: 'h0'])
-		db.rollingStocks.insert(
-			brand: [name: 'ACME', slug: 'acme'],
-			slug: 'acme-69502',
-			itemNumber: '69502',
-			description: [en: 'Gr 685 196'],
-			category: 'steam-locomotives',
-			powerMethod: "dc",
-			era: "iii",
-			railway: [label: 'FS', slug: 'fs'],
-			scale: [label: 'H0', slug: 'h0'])
+			rollingStock: [slug: 'acme-69501', label: 'ACME 69501'],
+			numberOfComments: 2,
+			items: [
+				[commentId: '20120101', 
+					author: new ObjectId('47cc67093475061e3d95369e'), 
+					content: 'Comment 1', 
+					postedAt: new Date()],
+				[commentId: '20120102', 
+					author: new ObjectId('47cc67093475061e3d95369f'), 
+					content: 'Comment 2', 
+					postedAt: new Date()]
+				]
+			)
 		
-		db.comments << [ 
-			[author: [slug: 'bob', label: 'Bob'], 
-				rollingStock: [slug: 'acme-69501', label: 'ACME 69501'], 
-				content: 'Comment1',
-				postedAt: new Date()],
-			[author: [slug: 'bob', label: 'Bob'], 
-				rollingStock: [slug: 'acme-69502', label: 'ACME 69502'], 
-				content: 'Comment2',
-				postedAt: new Date()],
-			[author: [slug: 'alice', label: 'Alice'],
-				rollingStock: [slug: 'acme-69501', label: 'ACME 69501'],
-				content: 'Comment3',
-				postedAt: new Date()]]
+		db.comments.insert(
+			slug: 'acme-69502',
+			rollingStock: [slug: 'acme-69502', label: 'ACME 69502'],
+			numberOfComments: 3,
+			items: [
+				[commentId: '20120101',
+					author: new ObjectId('47cc67093475061e3d95369e'),
+					content: 'Comment 3',
+					postedAt: new Date(),
+					answers: [
+						[commentId: '20120102',
+							author: new ObjectId('47cc67093475061e3d95369f'),
+							content: 'Answer 1',
+							postedAt: new Date()],
+						[commentId: '20120103',
+							author: new ObjectId('47cc67093475061e3d95369f'),
+							content: 'Answer 2',
+							postedAt: new Date()]
+						]
+					]
+				])
+
 	}
 	
 	def cleanup() {
@@ -81,85 +85,140 @@ class CommentsServiceSpecification extends MongoSpecification {
 		db.rollingStocks.remove([:])
 	}
 	
-	def "should find comments by id"() {
-		given:
-		def c = db.comments.findOne(content: 'Comment1')
-		def id = c._id
-		assert id != null
-		
-		when:
-		def comment = service.findById id
-		
-		then:
-		comment != null
-	}
-
-	def "should find comments by author"() {
-		given:
-		def author = new Account(slug: 'bob')
-		
-		when:
-		def results = service.findByAuthor author
-
-		then:
-		results != null
-		results.size == 2
-		results.collect{ it.content }.sort() == ['Comment1', 'Comment2']
-	}
-	
 	def "should find comments by rolling stock"() {
 		given:
-		def doc = db.rollingStocks.findOne(slug: 'acme-69501')
-		def rs = new RollingStock(id: doc._id, slug: doc.slug)
-		assert rs != null
+		def rs = new RollingStock(slug: 'acme-69501')
 		
 		when:
 		def results = service.findByRollingStock rs
 		
 		then:
 		results != null
-		results.size == 2
-		results.collect{ it.content }.sort() == ['Comment1', 'Comment3']
+		results.numberOfComments == 2
+		results.items.size() == 2
+		results.items.collect{ it.content }.sort() == ['Comment 1', 'Comment 2']
 	}
 	
-	def "should save comments"() {
+	def "should post comments"() {
 		given:
-		def doc = db.rollingStocks.findOne(slug: 'acme-69501')
-		def rs = new RollingStock(id: doc._id, slug: doc.slug)
-		rs.setBrand(WeakDbRef.buildFromSlug('acme', Brand.class))
-		assert rs != null
-		
+		def rs = new RollingStock.Builder(roco(), "69503")
+			.scale(scaleH0())
+			.railway(db())
+			.description("Desc")
+			.build()
+			
 		and:
-		def newComment = new Comment(content: 'My comment')
-		newComment.setRollingStock(rs)
-		newComment.setAuthor(new Account(emailAddress: 'bob@mail.com', displayName: 'Bob'))
+		def authorId = new ObjectId()
+		def newComment = new Comment(authorId: authorId, content: 'My comment')
 		
 		when:
-		service.save newComment
+		service.postComment(rs, newComment)
 		
 		then:
-		newComment.id != null
+		def comments = db.comments.findOne(slug: 'roco-69503')
+		
+		comments != null
+		comments.numberOfComments == 1
+		comments.rollingStock == [slug: 'roco-69503', label: 'Roco 69503']
+		comments.items != null
+		comments.items.size() == 1
 		
 		and:
-		def c = db.comments.findOne(_id: newComment.id)
+		def comment = comments.items[0]
+		comment.authorId == authorId
+		comment.content == 'My comment'
 		
-		c != null
-		c.author.slug == 'bob'
-		c.rollingStock.slug == 'acme-69501'
-		c.postedAt != null 
+		comment.commentId != null
+		comment.postedAt != null
 	}
 	
-	def "should remove comments"() {
+	def "should post comment answers"() {
 		given:
-		def doc = db.comments.findOne(content: 'Comment1')
-		def comment = new Comment(id: doc._id)
-		assert comment != null
+		def rs = new RollingStock.Builder(acme(), "69501")
+			.scale(scaleH0())
+			.railway(db())
+			.description("Desc")
+			.build()
+			
+		and:
+		def authorId = new ObjectId()
+		def parent = new Comment(commentId: '20120101')
+		def newAnswer = new Comment(authorId: authorId, content: 'My answer')
 		
 		when:
-		service.remove comment
+		service.postAnswer(rs, parent, newAnswer)
 		
 		then:
-		def c = db.comments.findOne(_id: comment.id)
-		c == null
+		def comments = db.comments.findOne(slug: 'acme-69501')
+		
+		comments != null
+		comments.numberOfComments == 3
+		comments.items != null
+		comments.items.size() == 2
+		
+		and:
+		def comment = comments.items[0]
+		comment.answers != null
+		comment.answers.size() == 1
+		
+		def answer = comment.answers[0]
+		answer.authorId == authorId
+		answer.content == 'My answer'
+		answer.postedAt != null
+	}
+	
+	def "should delete comments"() {
+		given:
+		def rs = new RollingStock.Builder(acme(), "69501")
+			.scale(scaleH0())
+			.railway(db())
+			.description("Desc")
+			.build()
+			
+		and:
+		def authorId = new ObjectId()
+		def comment = new Comment(commentId: '20120101')
+		
+		when:
+		service.deleteComment(rs, comment)
+		
+		then:
+		def comments = db.comments.findOne(slug: 'acme-69501')
+		
+		comments != null
+		comments.numberOfComments == 1
+		comments.items != null
+		comments.items.size() == 1		
+	}
+	
+	def "should delete comment answers"() {
+		given:
+		def rs = new RollingStock.Builder(acme(), "69502")
+			.scale(scaleH0())
+			.railway(db())
+			.description("Desc")
+			.build()
+			
+		and:
+		def authorId = new ObjectId()
+		def parent = new Comment(commentId: '20120101')
+		def answer = new Comment(commentId: '20120103')
+		
+		when:
+		service.deleteAnswer(rs, parent, answer)
+		
+		then:
+		def comments = db.comments.findOne(slug: 'acme-69502')
+		
+		comments != null
+		comments.numberOfComments == 2
+		comments.items != null
+		comments.items.size() == 1
+		
+		and:
+		def comment = comments.items[0]
+		comment.answers != null
+		comment.answers.size() == 1
+		comment.answers.collect{ it.content } == ['Answer 1']
 	}
 }

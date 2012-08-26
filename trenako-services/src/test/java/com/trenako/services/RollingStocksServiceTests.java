@@ -20,8 +20,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +28,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockComments;
 import com.trenako.entities.RollingStockReviews;
 import com.trenako.repositories.CommentsRepository;
 import com.trenako.repositories.ReviewsRepository;
@@ -90,7 +88,7 @@ public class RollingStocksServiceTests {
 	@Test
 	public void shouldFillRollingStockViewsForTheProvidedSlug() {
 		RollingStockReviews reviews = new RollingStockReviews();
-		Iterable<Comment> comments = Arrays.asList(new Comment(), new Comment());
+		RollingStockComments comments = new RollingStockComments(RS);
 		String slug = "acme-123456";
 
 		when(repo.findBySlug(eq(slug))).thenReturn(RS);
@@ -101,7 +99,7 @@ public class RollingStocksServiceTests {
 		
 		assertNotNull("Rolling stock view is null", view);
 		assertEquals(RS, view.getRs());
-		assertEquals(comments, view.getComments());
+		assertEquals(comments.getItems(), view.getComments());
 		assertEquals(reviews, view.getReviews());
 	}
 

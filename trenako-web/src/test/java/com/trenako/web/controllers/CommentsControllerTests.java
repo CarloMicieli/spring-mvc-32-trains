@@ -15,9 +15,11 @@
  */
 package com.trenako.web.controllers;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +30,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
-import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.CommentsService;
+import com.trenako.services.RollingStocksService;
 
 /**
  * 
@@ -45,24 +46,27 @@ public class CommentsControllerTests {
 	@Mock BindingResult mockResult;
 	@Mock RedirectAttributes mockRedirectAtts;
 	@Mock CommentsService mockService;
+	@Mock RollingStocksService mockRsService;
 	private CommentsController controller;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new CommentsController(mockService);
+		controller = new CommentsController(mockService, mockRsService);
 	}
 	
 	@Test
 	public void shouldPostNewComments() {
-		when(mockResult.hasErrors()).thenReturn(false);
 		String slug = "rs-slug";
 		ModelMap model = new ModelMap();
+		
+		when(mockResult.hasErrors()).thenReturn(false);
+		when(mockRsService.findBySlug(eq(slug))).thenReturn(rollingStock());
 		
 		String redirect = controller.postComment(slug, comment(), mockResult, model, mockRedirectAtts);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", redirect);
-		verify(mockService, times(1)).save(eq(comment()));
+		verify(mockService, times(1)).postComment(eq(rollingStock()), eq(comment()));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(CommentsController.COMMENT_POSTED_MSG));
 	}
 	
@@ -76,14 +80,19 @@ public class CommentsControllerTests {
 		
 		assertEquals("redirect:/rollingstocks/{slug}", redirect);
 		assertEquals(comment(), (Comment) model.get("comment"));
-		verify(mockService, times(0)).save(eq(comment()));
+		verify(mockService, times(0)).postComment(eq(rollingStock()), eq(comment()));
 	}
 	
 	Comment comment() {
-		Comment c = new Comment();
-		c.setAuthor(WeakDbRef.buildFromSlug("bob", Account.class));
-		c.setRollingStock(WeakDbRef.buildFromSlug("acme-123456", RollingStock.class));
-		c.setContent("My comment");
+		Comment c = new Comment(new ObjectId("5039f3bc84ae7e1f1ac8ce5b"), "my comment", date("2012/08/01"));
 		return c;
+	}
+	
+	RollingStock rollingStock() {
+		return new RollingStock.Builder(acme(), "123456")
+			.railway(fs())
+			.scale(scaleH0())
+			.description("Desc")
+			.build();
 	}
 }

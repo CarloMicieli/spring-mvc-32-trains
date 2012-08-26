@@ -15,32 +15,17 @@
  */
 package com.trenako.repositories;
 
-import org.bson.types.ObjectId;
-
-import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockComments;
 
 /**
- * The interface for the comments repository.
+ * The interface for the rolling stock comments repository.
  * @author Carlo Micieli
  *
  */
 public interface CommentsRepository {
-	/**
-	 * Finds the comment by its unique id.
-	 * @param id the comment id
-	 * @return the comment if found; <em>null</em> otherwise
-	 */
-	Comment findById(ObjectId id);
-	
-	/**
-	 * Finds the list of comments with the same author.
-	 * @param author the comments' author
-	 * @return the list of comments
-	 */
-	Iterable<Comment> findByAuthor(Account author);
-	
+
 	/**
 	 * Finds the list of comments for a rolling stock.
 	 * 
@@ -50,17 +35,36 @@ public interface CommentsRepository {
 	 * @param rollingStock the rolling stock
 	 * @return the list of comments
 	 */	
-	Iterable<Comment> findByRollingStock(RollingStock rollingStock);
+	RollingStockComments findByRollingStock(RollingStock rollingStock);
 	
 	/**
-	 * Saves the comment.
+	 * Creates a new {@code Comment}.
+	 * @param rs the rolling stock under review
 	 * @param comment the comment to be saved
 	 */
-	void save(Comment comment);
+	void createNew(RollingStock rs, Comment comment);
 	
 	/**
-	 * Removes the comment.
+	 * Creates a new {@code Comment}'s answer.
+	 * @param rs the rolling stock under review
+	 * @param comment the original {@code Comment}
+	 * @param answer the answer
+	 */
+	void createAnswer(RollingStock rs, Comment comment, Comment answer);
+	
+	
+	/**
+	 * Removes the {@code Comment}.
+	 * @param rs the rolling stock under review
 	 * @param comment the comment to be removed
 	 */
-	void remove(Comment comment);
+	void remove(RollingStock rs, Comment comment);
+
+	/**
+	 * Removes the {@code Comment}'s answer.
+	 * @param rs the rolling stock under review
+	 * @param comment the comment
+	 * @param answer the answer to be removed
+	 */
+	void removeAnswer(RollingStock rs, Comment comment, Comment answer);
 }

@@ -15,16 +15,17 @@
  */
 package com.trenako.repositories.mongo;
 
-import org.bson.types.ObjectId;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockComments;
 import com.trenako.repositories.CommentsRepository;
 
 import static org.springframework.data.mongodb.core.query.Query.*;
@@ -39,7 +40,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.*;
 public class CommentsRepositoryImpl implements CommentsRepository {
 
 	private final MongoTemplate mongo;
-	
+		
 	/**
 	 * Creates a new mongodb repository for comments.
 	 * @param mongo the mongodb template
@@ -49,33 +50,79 @@ public class CommentsRepositoryImpl implements CommentsRepository {
 		this.mongo = mongo;
 	}
 	
+	// for testing
+	private Date now = null;
+	protected void setCurrentTimestamp(Date now) {
+		this.now = now;
+	}
+	
+	protected Date now() {
+		if (now == null) {
+			return new Date();
+		}
+		return now;
+	}
+	
 	@Override
-	public Comment findById(ObjectId id) {
-		return mongo.findById(id, Comment.class);
+	public RollingStockComments findByRollingStock(RollingStock rollingStock) {
+		Query query = query(where("slug").is(rollingStock.getSlug()));
+		return mongo.findOne(query, RollingStockComments.class);
 	}
 
 	@Override
-	public Iterable<Comment> findByAuthor(Account author) {
-		Query query = query(where("author.slug").is(author.getSlug()));
-		query.sort().on("postedAt", Order.DESCENDING);
-		return mongo.find(query, Comment.class);
+	public void createNew(RollingStock rs, Comment comment) {
+		RollingStockComments rsc = new RollingStockComments(rs);
+		Comment c = new Comment(comment.getAuthorId(), comment.getContent(), now());
+		
+		Update upd = new Update()
+			.set("rollingStock", rsc.getRollingStock())
+			.inc("numberOfComments", 1)
+			.push("items", c);
+		
+		mongo.upsert(query(where("slug").is(rsc.getSlug())), upd, RollingStockComments.class);
 	}
 
 	@Override
-	public Iterable<Comment> findByRollingStock(RollingStock rollingStock) {
-		Query query = query(where("rollingStock.slug").is(rollingStock.getSlug()));
-		query.sort().on("postedAt", Order.DESCENDING);
-		return mongo.find(query, Comment.class);
+	public void createAnswer(RollingStock rs, Comment comment, Comment answer) {
+		RollingStockComments rsc = new RollingStockComments(rs);
+		Comment a = new Comment(answer.getAuthorId(), answer.getContent(), now());
+		
+		Update upd = new Update()
+			.inc("numberOfComments", 1)
+			.push("items.$.answers", a);
+		
+		Query where = query(where("slug").is(rsc.getSlug())
+				.and("items.commentId").is(comment.getCommentId()));
+		
+		mongo.updateFirst(where, upd, RollingStockComments.class);
+	}
+	
+	@Override
+	public void remove(RollingStock rs, Comment comment) {
+		RollingStockComments rsc = new RollingStockComments(rs);
+		Comment c = new Comment(comment.getCommentId());
+		
+		Update upd = new Update()
+			.inc("numberOfComments", -1)
+			.pull("items", c);
+		
+		Query where = query(where("slug").is(rsc.getSlug()));
+		
+		mongo.updateFirst(where, upd, RollingStockComments.class);
 	}
 
 	@Override
-	public void save(Comment comment) {
-		mongo.save(comment);
+	public void removeAnswer(RollingStock rs, Comment comment, Comment answer) {
+		RollingStockComments rsc = new RollingStockComments(rs);
+		Comment a = new Comment(answer.getCommentId());
+		
+		Update upd = new Update()
+			.inc("numberOfComments", -1)
+			.pull("items.$.answers", a);
+		
+		Query where = query(where("slug").is(rsc.getSlug())
+				.and("items.commentId").is(comment.getCommentId()));
+		
+		mongo.updateFirst(where, upd, RollingStockComments.class);
 	}
-
-	@Override
-	public void remove(Comment comment) {
-		mongo.remove(comment);
-	}
-
 }

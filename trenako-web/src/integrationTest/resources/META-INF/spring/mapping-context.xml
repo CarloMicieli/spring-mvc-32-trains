@@ -9,6 +9,10 @@
 
 	<context:component-scan base-package="com.trenako.web.controllers"/>
 
+ 	<bean id="accountsService" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.services.AccountsService" />
+    </bean>
+
  	<bean id="brandsService" class="com.trenako.web.test.MockitoFactoryBean">
         <constructor-arg name="classToBeMocked" value="com.trenako.services.BrandsService" />
     </bean>

@@ -18,7 +18,6 @@ package com.trenako.services;
 import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,9 +25,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockComments;
 import com.trenako.repositories.CommentsRepository;
 
 /**
@@ -39,10 +38,21 @@ import com.trenako.repositories.CommentsRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class CommentsServiceTests {
 
-	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+	private RollingStock rollingStock() {
+		return new RollingStock.Builder(acme(), "123456")
 		.railway(fs())
 		.scale(scaleH0())
+		.description("desc")
 		.build();
+	}
+	
+	private Comment comment() {
+		return new Comment();
+	}
+	
+	private Comment answer() {
+		return new Comment();
+	}
 	
 	@Mock CommentsRepository repo;
 	CommentsService service;
@@ -54,49 +64,33 @@ public class CommentsServiceTests {
 	}
 
 	@Test
-	public void shouldFindCommentsById() {
-		ObjectId id = new ObjectId();
-		
-		service.findById(id);
-		verify(repo, times(1)).findById(eq(id));
-	}
-
-	@Test
-	public void shouldFindCommentsByAuthor() {
-		Account author = new Account.Builder("mail@mail.com")
-			.displayName("User Name")
-			.build();
-		
-		service.findByAuthor(author);
-		verify(repo, times(1)).findByAuthor(eq(author));
-	}
-
-	@Test
 	public void shouldFindCommentsByRollingStock() {
-		service.findByRollingStock(rollingStock);
-		verify(repo, times(1)).findByRollingStock(eq(rollingStock));
+		@SuppressWarnings("unused")
+		RollingStockComments comments = service.findByRollingStock(rollingStock());
+		verify(repo, times(1)).findByRollingStock(eq(rollingStock()));
+	}
+	
+	@Test
+	public void shouldPostNewComments() {
+		service.postComment(rollingStock(), comment());
+		verify(repo, times(1)).createNew(eq(rollingStock()), eq(comment()));
 	}
 
 	@Test
-	public void shouldSaveComments() {
-		Comment c = newComment();
-		service.save(c);
-		verify(repo, times(1)).save(eq(c));
+	public void shouldPostNewCommentAnswers() {
+		service.postAnswer(rollingStock(), comment(), answer());
+		verify(repo, times(1)).createAnswer(eq(rollingStock()), eq(comment()), eq(answer()));
 	}
-
+	
 	@Test
-	public void shouldRemoveComments() {
-		Comment c = newComment();
-		service.remove(c);
-		verify(repo, times(1)).remove(eq(c));
+	public void shouldDeleteComments() {
+		service.deleteComment(rollingStock(), comment());
+		verify(repo, times(1)).remove(eq(rollingStock()), eq(comment()));
 	}
-
-	private Comment newComment() {
-		Account author = new Account.Builder("mail@mail.com")
-			.displayName("User Name")
-			.build();
-
-		final Comment c = new Comment(author, rollingStock, "Comment");
-		return c;
+	
+	@Test
+	public void shouldDeleteCommentAnswers() {
+		service.deleteAnswer(rollingStock(), comment(), answer());
+		verify(repo, times(1)).removeAnswer(eq(rollingStock()), eq(comment()), eq(answer()));
 	}
 }
