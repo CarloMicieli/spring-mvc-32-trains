@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.junit.Test;
@@ -36,7 +37,19 @@ public class MoneyTests {
 		assertEquals(10050, m.getValue());
 		assertEquals("EUR", m.getCurrency());
 	}
+
+	@Test
+	public void shouldCreateMoneyValueFromBigDecimalValues() {
+		Money m1 = new Money(BigDecimal.valueOf(100), "EUR");
+		assertEquals(10000, m1.getValue());
 		
+		Money m2 = new Money(BigDecimal.valueOf(100.50), "EUR");
+		assertEquals(10050, m2.getValue());
+
+		Money m3 = new Money(BigDecimal.valueOf(100.5), "EUR");
+		assertEquals(10050, m3.getValue());
+	}
+	
 	@Test
 	public void shouldProduceStringRepresentations() {
 		Money m = new Money(10050, "USD");

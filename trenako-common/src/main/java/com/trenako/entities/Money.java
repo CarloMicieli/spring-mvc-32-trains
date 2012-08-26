@@ -64,22 +64,31 @@ public class Money {
 	 * the provided Locale.
 	 *
 	 * @param value the {@code Money} value
-	 * @param currency the {@code Money} currency
+	 * @param locale the currency locale
 	 */
 	public Money(int value, Locale locale) {
 		this(value, Currency.getInstance(locale).getCurrencyCode());
 	}
 	
+	/**
+	 * Creates a new {@code Money}.
+	 *
+	 * @param value the {@code Money} value
+	 * @param currency the {@code Money} currency
+	 */
 	public Money(BigDecimal value, String currency) {
 		this(intValue(value), currency);
 	}
 	
+	/**
+	 * Creates a new {@code Money} using the currency from 
+	 * the provided Locale.
+	 *
+	 * @param value the {@code Money} value
+	 * @param locale the currency locale
+	 */
 	public Money(BigDecimal value, Locale locale) {
 		this(intValue(value), Currency.getInstance(locale).getCurrencyCode());
-	}
-	
-	private static int intValue(BigDecimal d) {
-		return d.multiply(BigDecimal.valueOf(100)).intValue();
 	}
 	
 	/**
@@ -136,5 +145,10 @@ public class Money {
 		nf.setMinimumFractionDigits(2);
 
 		return nf.format(v);
+	}
+	
+	private static int intValue(BigDecimal d) {
+		return d.setScale(2, BigDecimal.ROUND_DOWN)
+				.multiply(MONEY_VALUE_FACTOR).intValue();
 	}
 }
