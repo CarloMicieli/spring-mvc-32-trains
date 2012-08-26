@@ -75,6 +75,7 @@ public class Account implements Serializable, DbReferenceable {
 	@Indexed(unique = true)
 	private String slug;
 
+	private Profile profile;
 	private boolean expired;
 	private boolean locked;
 	private boolean enabled;
@@ -97,6 +98,7 @@ public class Account implements Serializable, DbReferenceable {
 		this.locked = b.locked;
 		this.roles = b.roles;
 		this.id = b.id;
+		this.profile = b.profile;
 	}
 	
 	/**
@@ -113,6 +115,7 @@ public class Account implements Serializable, DbReferenceable {
 		private boolean expired = false;
 		private boolean enabled = true;
 		private boolean locked = false;
+		private Profile profile = null;
 		
 		private List<String> roles = null;
 
@@ -155,11 +158,15 @@ public class Account implements Serializable, DbReferenceable {
 					Arrays.asList(roles));
 			return this;
 		}
+
+		public Builder profile(Profile profile) {
+			this.profile = profile;
+			return this;
+		}
 		
 		public Account build() {
 			return new Account(this);
 		}
-
 	}
 
 	/**
@@ -267,6 +274,17 @@ public class Account implements Serializable, DbReferenceable {
 	@Override
 	public String getLabel() {
 		return displayName;
+	}
+	
+	public Profile getProfile() {
+		if (profile == null) {
+			return Profile.defaultProfile();
+		}
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 
 	/**

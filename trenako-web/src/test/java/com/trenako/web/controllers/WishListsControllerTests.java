@@ -76,7 +76,7 @@ public class WishListsControllerTests {
 		assertNotNull(form);
 		assertNotNull("Visibility list is empty", form.getVisibilities());
 		assertEquals(new WishList(), form.getWishList());
-		assertEquals(BigDecimal.valueOf(0.0), form.getBudget());
+		assertEquals(BigDecimal.valueOf(0), form.getBudget());
 	}
 	
 	@Test
@@ -112,7 +112,7 @@ public class WishListsControllerTests {
 		ModelMap model = new ModelMap();
 
 		doThrow(new DuplicateKeyException("Duplicate key error"))
-			.when(mockService).createNew(eq(form().build(owner())));
+			.when(mockService).createNew(eq(form().wishListFor(owner())));
 
 		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
 		when(mockResults.hasErrors()).thenReturn(false);
@@ -219,7 +219,7 @@ public class WishListsControllerTests {
 	}
 
 	WishListForm form() {
-		return new WishListForm(wishList(), BigDecimal.valueOf(100), null);
+		return WishListForm.newForm(wishList(), BigDecimal.valueOf(100), null);
 	}
 	
 	WishListItemForm itemForm() {

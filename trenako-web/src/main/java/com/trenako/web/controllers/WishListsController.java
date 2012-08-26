@@ -98,7 +98,7 @@ public class WishListsController {
 		}
 
 		try {
-			WishList wishList = form.build(userContext.getCurrentUser().getAccount());
+			WishList wishList = form.wishListFor(userContext.getCurrentUser().getAccount());
 			service.createNew(wishList);
 	
 			WISH_LIST_CREATED_MSG.appendToRedirect(redirectAtts);
@@ -149,7 +149,7 @@ public class WishListsController {
 		}
 
 		try {
-			WishList wishList = form.build(userContext.getCurrentUser().getAccount());
+			WishList wishList = form.wishListFor(userContext.getCurrentUser().getAccount());
 			service.saveChanges(wishList);
 	
 			WISH_LIST_SAVED_MSG.appendToRedirect(redirectAtts);

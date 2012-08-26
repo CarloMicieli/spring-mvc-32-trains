@@ -15,6 +15,8 @@
  */
 package com.trenako.values;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * The content visibility enum.
  * 
@@ -35,10 +37,23 @@ public enum Visibility {
 
 	/**
 	 * Parses the string argument as a {@code Visibility}.
-	 * @param s the string to be parsed
+	 * @param vis the string to be parsed
 	 * @return a {@code Visibility} value
 	 */
-	public static Visibility parse(String s) {
-		return LocalizedEnum.parseString(s, Visibility.class);
+	public static Visibility parse(String vis) {
+		return LocalizedEnum.parseString(vis, Visibility.class);
+	}
+	
+	/**
+	 * Parses the string argument as a {@code Visibility}.
+	 * @param vis the string to be parsed
+	 * @param defaultVis the default {@code Visibility} value 
+	 * @return a {@code Visibility} value
+	 */
+	public static Visibility parse(String vis, Visibility defaultVis) {
+		if (StringUtils.isBlank(vis)) {
+			return defaultVis;
+		}
+		return LocalizedEnum.parseString(vis, Visibility.class);
 	}
 }

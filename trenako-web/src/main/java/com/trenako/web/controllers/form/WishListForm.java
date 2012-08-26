@@ -16,6 +16,8 @@
 package com.trenako.web.controllers.form;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.validation.Valid;
 
@@ -38,29 +40,44 @@ public class WishListForm {
 	@Valid
 	private WishList wishList;
 	
-	@Range(min = 0, message = "wishlist.budget.range.notmet")
+	@Range(min = 0, max = 9999, message = "wishlist.budget.range.notmet")
 	private BigDecimal budget;
 	
 	private Iterable<LocalizedEnum<Visibility>> visibilities;
 	
+	/**
+	 * Creates an empty {@code WishListForm}.
+	 */
 	public WishListForm() {
 	}
 
-	public WishListForm(WishList wishList, BigDecimal budget, Iterable<LocalizedEnum<Visibility>> visibilities) {
+	private WishListForm(WishList wishList, BigDecimal budget, Iterable<LocalizedEnum<Visibility>> visibilities) {
 		this.wishList = wishList;
 		this.budget = budget;
 		this.visibilities = visibilities;
 	}
 	
-	public static WishListForm newForm(WishList wishList, MessageSource ms) {
-		int budget = 0;
-		Money m = wishList.getBudget();
-		if (m != null) {
-			budget = m.getValue();
-		}
+	/**
+	 * Creates a new {@code WishList} form the provided user.
+	 * @param wishList the {@code WishList}
+	 * @param messageSource the message source for localized labels
+	 * @return the form
+	 */
+	public static WishListForm newForm(WishList wishList, MessageSource messageSource) {
+		return WishListForm.newForm(wishList, budget(wishList.getBudget()), messageSource);
+	}
+	
+	/**
+	 * Creates a new {@code WishList} form the provided user.
+	 * @param wishList the {@code WishList}
+	 * @param budget the budget
+	 * @param messageSource the message source for localized labels
+	 * @return the form
+	 */
+	public static WishListForm newForm(WishList wishList, BigDecimal budget, MessageSource messageSource) {
 		return new WishListForm(wishList,
-				BigDecimal.valueOf(budget / 100.0),
-				LocalizedEnum.list(Visibility.class, ms, null));
+				budget,
+				LocalizedEnum.list(Visibility.class, messageSource, null));
 	}
 	
 	public WishList getWishList() {
@@ -71,23 +88,37 @@ public class WishListForm {
 		this.wishList = wishList;
 	}
 
-	public WishList build(Account owner) {
-		WishList wishList = getWishList();
-		wishList.setBudget(new Money(getBudget(), "EUR"));
-		wishList.setOwner(owner.getSlug());
+	public WishList wishListFor(Account owner) {
+		WishList wishList = new WishList(owner, 
+				getWishList().getName(), 
+				visibility(getWishList().getVisibility()),
+				budget(owner, getBudget()));
 		return wishList;
 	}
 	
 	public BigDecimal getBudget() {
 		return budget;
 	}
-
+	
 	public void setBudget(BigDecimal budget) {
 		this.budget = budget;
 	}
 
-	public Iterable<LocalizedEnum<Visibility>> getVisibilities() {
-		return visibilities;
+	/**
+	 * Returns the {@code Visibility} list.
+	 * @return
+	 */
+	public HashMap<LocalizedEnum<Visibility>, String> getVisibilities() {
+		
+		HashMap<LocalizedEnum<Visibility>, String> map = 
+				new LinkedHashMap<LocalizedEnum<Visibility>, String>(Visibility.values().length);
+		
+		for (LocalizedEnum<Visibility> val : visibilities) {
+			String checked = val.getValue().equals(getWishList().getVisibilityValue()) ? "checked" : "";
+			map.put(val, checked);
+		}
+		
+		return map;
 	}
 	
 	@Override
@@ -98,5 +129,18 @@ public class WishListForm {
 		WishListForm other = (WishListForm) obj;
 		return this.wishList.equals(other.wishList) &&
 				this.budget.equals(other.budget);	
+	}
+	
+	private static BigDecimal budget(Money money) {
+		int budget = (money != null) ? money.getValue() : 0;
+		return 	BigDecimal.valueOf(budget).divide(Money.MONEY_VALUE_FACTOR);
+	}
+	
+	private static Visibility visibility(String vis) {
+		return Visibility.parse(vis, WishList.defaultVisibility());
+	}
+	
+	private static Money budget(Account owner, BigDecimal val) {
+		return new Money(val, owner.getProfile().getCurrency());
 	}
 }

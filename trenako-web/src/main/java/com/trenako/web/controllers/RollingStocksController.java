@@ -140,7 +140,7 @@ public class RollingStocksController {
 			return "rollingstock/new";
 		}
 		
-		Account user = secContext.getCurrentUser().getAccount();		
+		Account user = secContext.getCurrentUser().getAccount();
 		rs.setCreatedBy(user.getId());
 		
 		try {

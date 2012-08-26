@@ -177,6 +177,11 @@ public class LocalizedEnum<T extends Enum<T>> {
 		return this.getValue().equals(other.getValue());
 	}
 	
+	@Override
+	public int hashCode() {
+		return this.getValue().hashCode();
+	}
+	
 	private String getMessage(String code, MessageSource messageSource, MessageFailback<T> failback) {
 		if (messageSource == null) {
 			if (failback != null) {

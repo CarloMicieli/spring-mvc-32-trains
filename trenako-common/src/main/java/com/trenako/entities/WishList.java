@@ -363,6 +363,14 @@ public class WishList {
 		return slug(getOwner(), newName);
 	}
 
+	/**
+	 * Returns the default {@code Visibility} for wish lists.
+	 * @return the default visibility
+	 */
+	public static Visibility defaultVisibility() {
+		return Visibility.PUBLIC;
+	}
+	
 	private String slug(String owner, String name) {
 		String s = new StringBuilder()
 			.append(owner)
@@ -372,10 +380,6 @@ public class WishList {
 		return Slug.encode(s);
 	}
 	
-	private static Visibility defaultVisibility() {
-		return Visibility.PUBLIC;
-	}
-
 	private String visibility(Visibility visibility) {
 		return visibility.label();
 	}

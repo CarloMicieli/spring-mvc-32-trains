@@ -170,12 +170,13 @@ public class RollingStocksControllerTests {
 		
 		ModelMap model = new ModelMap();
 		
+		controller.setUserContext(mockSecurity());
 		String viewName = controller.create(form, mockResult, model, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
 		
 		ArgumentCaptor<RollingStock> arg = ArgumentCaptor.forClass(RollingStock.class);
-		verify(service, times(1)).save(arg.capture());
+		verify(service, times(1)).createNew(arg.capture());
 		
 		RollingStock savedRs = arg.getValue();
 		assertEquals(rollingStock(), savedRs);
@@ -207,7 +208,7 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldShowErrorMessageAfterDuplicatedKeyErrorsDuringCreation() {
 		doThrow(new DuplicateKeyException("Duplicate key error"))
-			.when(service).save(eq(rollingStock()));
+			.when(service).createNew(eq(rollingStock()));
 		
 		when(mockResult.hasErrors()).thenReturn(false);
 		when(mockFile.isEmpty()).thenReturn(true);
@@ -215,6 +216,7 @@ public class RollingStocksControllerTests {
 		
 		ModelMap model = new ModelMap();
 		
+		controller.setUserContext(mockSecurity());
 		String viewName = controller.create(form, mockResult, model, mockRedirect);
 		
 		assertEquals("rollingstock/new", viewName);
@@ -226,7 +228,7 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldShowErrorMessageAfterDatabaseErrorsDuringCreation() {
 		doThrow(new RecoverableDataAccessException("Database error"))
-			.when(service).save(eq(rollingStock()));
+			.when(service).createNew(eq(rollingStock()));
 		
 		when(mockResult.hasErrors()).thenReturn(false);
 		when(mockFile.isEmpty()).thenReturn(true);
@@ -234,6 +236,7 @@ public class RollingStocksControllerTests {
 		
 		ModelMap model = new ModelMap();
 		
+		controller.setUserContext(mockSecurity());
 		String viewName = controller.create(form, mockResult, model, mockRedirect);
 		
 		assertEquals("rollingstock/new", viewName);
@@ -264,6 +267,7 @@ public class RollingStocksControllerTests {
 		form.setTags("two, one");
 		ModelMap model = new ModelMap();
 		
+		controller.setUserContext(mockSecurity());
 		String viewName = controller.save(form, mockResult, model, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
@@ -305,6 +309,7 @@ public class RollingStocksControllerTests {
 		
 		ModelMap model = new ModelMap();
 		
+		controller.setUserContext(mockSecurity());
 		String viewName = controller.save(form, mockResult, model, mockRedirect);
 		
 		assertEquals("rollingstock/edit", viewName);

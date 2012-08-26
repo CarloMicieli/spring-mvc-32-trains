@@ -34,7 +34,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 public class Money {
 
-	private static BigDecimal MONEY_VALUE_FACTOR = BigDecimal.valueOf(100);
+	public static final BigDecimal MONEY_VALUE_FACTOR = BigDecimal.valueOf(100);
 
 	@Field("val")
 	@Range(min = 0, max = 999900, message = "money.value.range.notmet")
@@ -81,14 +81,13 @@ public class Money {
 	}
 	
 	/**
-	 * Creates a new {@code Money} using the currency from 
-	 * the provided Locale.
+	 * Creates a new {@code Money}.
 	 *
 	 * @param value the {@code Money} value
-	 * @param locale the currency locale
+	 * @param currency the {@code Money} currency
 	 */
-	public Money(BigDecimal value, Locale locale) {
-		this(intValue(value), Currency.getInstance(locale).getCurrencyCode());
+	public Money(BigDecimal value, Currency currency) {
+		this(intValue(value), currency.getCurrencyCode());
 	}
 	
 	/**
