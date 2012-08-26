@@ -92,6 +92,7 @@ public class RollingStocksControllerTests {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		controller = new RollingStocksController(service, valuesService, imgService);
+		controller.setUserContext(mockSecurity());
 		
 		when(valuesService.brands()).thenReturn(BRANDS);
 		when(valuesService.railways()).thenReturn(RAILWAYS);
@@ -129,10 +130,7 @@ public class RollingStocksControllerTests {
 		
 		ModelMap model = new ExtendedModelMap();
 		
-		controller.setUserContext(mockSecurity());
-		
-		@SuppressWarnings("unused")
-		String viewName = controller.show(slug, model);
+		controller.show(slug, model);
 		
 		Comment newComment = (Comment) model.get("newComment");
 		assertNotNull("Comment is null", newComment);
@@ -170,7 +168,6 @@ public class RollingStocksControllerTests {
 		
 		ModelMap model = new ModelMap();
 		
-		controller.setUserContext(mockSecurity());
 		String viewName = controller.create(form, mockResult, model, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
@@ -216,7 +213,6 @@ public class RollingStocksControllerTests {
 		
 		ModelMap model = new ModelMap();
 		
-		controller.setUserContext(mockSecurity());
 		String viewName = controller.create(form, mockResult, model, mockRedirect);
 		
 		assertEquals("rollingstock/new", viewName);
@@ -236,7 +232,6 @@ public class RollingStocksControllerTests {
 		
 		ModelMap model = new ModelMap();
 		
-		controller.setUserContext(mockSecurity());
 		String viewName = controller.create(form, mockResult, model, mockRedirect);
 		
 		assertEquals("rollingstock/new", viewName);
@@ -267,7 +262,6 @@ public class RollingStocksControllerTests {
 		form.setTags("two, one");
 		ModelMap model = new ModelMap();
 		
-		controller.setUserContext(mockSecurity());
 		String viewName = controller.save(form, mockResult, model, mockRedirect);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", viewName);
@@ -309,7 +303,6 @@ public class RollingStocksControllerTests {
 		
 		ModelMap model = new ModelMap();
 		
-		controller.setUserContext(mockSecurity());
 		String viewName = controller.save(form, mockResult, model, mockRedirect);
 		
 		assertEquals("rollingstock/edit", viewName);

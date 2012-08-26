@@ -21,14 +21,18 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
+import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.RollingStock;
+import com.trenako.security.AccountDetails;
 import com.trenako.services.FormValuesService;
 import com.trenako.services.RollingStocksService;
 import com.trenako.services.view.RollingStockView;
+import com.trenako.web.security.UserContext;
 import com.trenako.web.test.AbstractSpringControllerTests;
 
 /**
@@ -41,6 +45,7 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 	private final static String ID = "47cc67093475061e3d95369d";
 	private @Autowired RollingStocksService mockService;
 	private @Autowired FormValuesService mockValuesService;
+	private @Autowired UserContext mockUserContext;
 
 	@Override
 	protected void init() {
@@ -57,24 +62,46 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 			.build();
 		when(mockService.findViewBySlug(eq("acme-123456")))
 			.thenReturn(new RollingStockView(rs, null, null));
+
+		Account user = new Account.Builder("mail@mail.com")
+			.id(new ObjectId())
+			.displayName("bob")
+			.build();
+		when(mockUserContext.getCurrentUser()).thenReturn(new AccountDetails(user));
 	}
 	
 	@After
 	public void cleanUp() {
 		reset(mockService);
 		reset(mockValuesService);
+		reset(mockUserContext);
 	}
 	
 	@Test
-	public void shouldShowARollingStock() throws Exception {
+	public void shouldShowRollingStocks() throws Exception {
+		String slug = "acme-123456";
+		when(mockService.findViewBySlug(eq(slug)))
+			.thenReturn(new RollingStockView(null, null, null));
+		when(mockUserContext.getCurrentUser()).thenReturn(null);
+		
+		mockMvc().perform(get("/rollingstocks/{slug}", slug))
+			.andExpect(status().isOk())	
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("result"))
+			.andExpect(forwardedUrl(view("rollingstock", "show")));
+	}
+	
+	@Test
+	public void shouldShowRollingStocksWithCommentsBoxForAuthenticatedUsers() throws Exception {
 		String slug = "acme-123456";
 		when(mockService.findViewBySlug(eq(slug)))
 			.thenReturn(new RollingStockView(null, null, null));
 		
 		mockMvc().perform(get("/rollingstocks/{slug}", slug))
 			.andExpect(status().isOk())	
-			.andExpect(model().size(1))
+			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("result"))
+			.andExpect(model().attributeExists("newComment"))
 			.andExpect(forwardedUrl(view("rollingstock", "show")));
 	}
 		
