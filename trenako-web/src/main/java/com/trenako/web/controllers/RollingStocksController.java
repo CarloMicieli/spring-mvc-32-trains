@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
@@ -139,8 +140,11 @@ public class RollingStocksController {
 			return "rollingstock/new";
 		}
 		
+		Account user = secContext.getCurrentUser().getAccount();		
+		rs.setCreatedBy(user.getId());
+		
 		try {
-			service.save(rs);
+			service.createNew(rs);
 			if (!file.isEmpty()) {
 				imgService.saveImageWithThumb(UploadRequest.create(rs, file), 100);
 			}
@@ -186,6 +190,9 @@ public class RollingStocksController {
 			model.addAttribute(newForm(rs, valuesService));
 			return "rollingstock/edit";
 		}
+		
+		Account user = secContext.getCurrentUser().getAccount();		
+		rs.setUpdatedBy(user.getId());
 		
 		try {
 			service.save(rs);
