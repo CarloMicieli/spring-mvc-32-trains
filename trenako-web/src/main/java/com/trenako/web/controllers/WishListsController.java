@@ -215,7 +215,7 @@ public class WishListsController {
 		return "redirect:/wishlists/{slug}";
 	}
 	
-	@RequestMapping(value = "/{slug}/items", method = RequestMethod.PUT)
+	@RequestMapping(value = "/items", method = RequestMethod.PUT)
 	public String updateItem(@ModelAttribute @Valid WishListItemForm form, 
 		BindingResult bindingResult, 
 		ModelMap model, 
