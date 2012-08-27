@@ -27,29 +27,24 @@ import static org.junit.Assert.*;
 public class AccountTests {
 	
 	@Test
-	public void shouldProduceAStringRepresentation() {
+	public void shouldProduceStringRepresentationForAccounts() {
 		Account user = new Account.Builder("mail@mail.com")
 			.displayName("Nickname")
 			.build();
-		assertEquals("mail@mail.com (Nickname)", user.toString());
+		assertEquals("account{emailAddress; mail@mail.com, displayName: Nickname}", user.toString());
 	}
 	
 	@Test
 	public void shouldCreateNewAccounts() {
-		Account user = new Account.Builder("mail@mail.com")
-			.password("$ecret")
-			.displayName("Nickname")
-			.expired(false)
-			.enabled(true)
-			.locked(false)
-			.build();
+		Account user = new Account("mail@mail.com", "$ecret", "Nickname", null);
 		
 		assertEquals("mail@mail.com", user.getEmailAddress());
 		assertEquals("$ecret", user.getPassword());
 		assertEquals("Nickname", user.getDisplayName());
+		assertEquals("[ROLE_USER]", user.getRoles().toString());
 		assertFalse(user.isExpired());
 		assertFalse(user.isLocked());
-		assertTrue(user.isEnabled());		
+		assertTrue(user.isEnabled());
 	}
 	
 	@Test

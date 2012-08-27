@@ -71,19 +71,20 @@ public class SpringSignupService implements SignupService {
 	
 	// returns the current SecurityContext
 	SecurityContext getSecurityContext() {
-		if (securityContext!=null) return securityContext;
+		if (securityContext != null) {
+			return securityContext;
+		}
 		return SecurityContextHolder.getContext();
 	}
 	
 	@Override
-	public void createAccount(Account account) {
-		account.setEnabled(true);
-		account.setPassword(passwordEncoder.encodePassword(account.getPassword(), null));
-		
-		if (account.getRoles()==null || account.getRoles().size()==0)
-			account.addRole("ROLE_USER");
-		
-		repo.save(account);
+	public Account createAccount(Account a) {
+		String encodedPwd =  passwordEncoder.encodePassword(a.getPassword(), null);		
+		Account account = new Account(a.getEmailAddress(),
+				encodedPwd,
+				a.getDisplayName(),
+				a.getRoles());
+		return repo.save(account);
 	}
 	
 	@Override

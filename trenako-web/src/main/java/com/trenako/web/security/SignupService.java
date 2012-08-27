@@ -35,8 +35,9 @@ public interface SignupService {
 	 * </p>
 	 *
 	 * @param account the new {@code Account} to be saved
+	 * @return the {@code Account}
 	 */
-	void createAccount(Account account);
+	Account createAccount(Account account);
 	
 	/**
 	 * Authenticates the {@code Account} after it has been created.

@@ -16,7 +16,6 @@
 package com.trenako.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -54,6 +53,8 @@ import com.trenako.utility.Slug;
  */
 @Document(collection = "accounts")
 public class Account implements Serializable, DbReferenceable {
+	
+	private static final List<String> ROLES = Collections.unmodifiableList(Arrays.asList("ROLE_USER"));
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -89,6 +90,26 @@ public class Account implements Serializable, DbReferenceable {
 	public Account() {
 	}
 	
+	/**
+	 * Creates a new {@code Account}.
+	 * @param emailAddress the email address
+	 * @param password the password
+	 * @param displayName the displayed name
+	 * @param roles the roles
+	 */
+	public Account(String emailAddress, String password, String displayName, List<String> roles) {
+		this.emailAddress = emailAddress;
+		this.password = password;
+		this.displayName = displayName;
+		this.roles = rolesList(roles);
+		
+		this.slug = slug(displayName);
+		
+		this.expired = false;
+		this.locked = false;
+		this.enabled = true;
+	}
+
 	private Account(Builder b) {
 		this.emailAddress = b.emailAddress;
 		this.password = b.password;
@@ -203,7 +224,7 @@ public class Account implements Serializable, DbReferenceable {
 	
 	/**
 	 * Returns the user name.
-	 * @return the username
+	 * @return the user name
 	 */
 	public String getUsername() {
 		return emailAddress;
@@ -266,11 +287,11 @@ public class Account implements Serializable, DbReferenceable {
 	@Override
 	public String getSlug() {
 		if (slug == null) {
-			slug = Slug.encode(displayName);
+			slug = slug(displayName);
 		}
 		return slug;
 	}
-	
+
 	@Override
 	public String getLabel() {
 		return displayName;
@@ -350,17 +371,6 @@ public class Account implements Serializable, DbReferenceable {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-
-	/**
-	 * Adds a new role to the {@code Account}.
-	 * @param role the role
-	 */
-	public void addRole(String role) {
-		if (roles == null) {
-			roles = new ArrayList<String>();
-		}
-		roles.add(role);
-	}
 	
 	/**
 	 * Returns the last modified timestamp.
@@ -412,10 +422,22 @@ public class Account implements Serializable, DbReferenceable {
 	@Override
 	public String toString() {
         return new StringBuilder()
+        	.append("account{emailAddress; ")
 			.append(getEmailAddress())
-			.append(" (")
+			.append(", displayName: ")
 			.append(getDisplayName())
-			.append(")")
+			.append("}")
 			.toString();
     }
+	
+	private static List<String> rolesList(List<String> roles) {
+		if (roles == null || roles.size() == 0)
+			return ROLES;
+		
+		return roles;
+	}
+	
+	private static String slug(String displayName) {
+		return Slug.encode(displayName);
+	}
 }

@@ -80,10 +80,13 @@ public class AuthControllerTests {
 	
 	@Test
 	public void shouldCreateNewAccounts() {
+		Account account = new Account.Builder("mail@mail.com").build();
+		Account newAccount = new Account.Builder("mail@mail.com").build();
+		
 		when(mockResult.hasErrors()).thenReturn(false);
-		Account newAccount = new Account();
-
-		String viewName = controller.createUser(newAccount, mockResult, mockModel);
+		when(mockService.createAccount(eq(account))).thenReturn(newAccount);
+		
+		String viewName = controller.createUser(account, mockResult, mockModel);
 
 		assertEquals("redirect:/default", viewName);
 		verify(mockService, times(1)).createAccount(eq(newAccount));

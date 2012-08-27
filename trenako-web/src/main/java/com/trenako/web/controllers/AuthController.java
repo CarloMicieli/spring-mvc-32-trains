@@ -56,16 +56,19 @@ public class AuthController {
 	}
 
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public String createUser(@Valid @ModelAttribute Account account, BindingResult result, ModelMap model) {
+	public String createUser(@Valid @ModelAttribute Account account, 
+			BindingResult result, 
+			ModelMap model) {
+		
 		if (result.hasErrors()) {
 			model.addAttribute(account);
 			return "auth/signup";
 		}
 
-		signupService.createAccount(account);
+		Account newUser = signupService.createAccount(account);
 		
 		// automatically sign in the new user
-		signupService.authenticate(account);
+		signupService.authenticate(newUser);
 		
 		return "redirect:/default";
 	}

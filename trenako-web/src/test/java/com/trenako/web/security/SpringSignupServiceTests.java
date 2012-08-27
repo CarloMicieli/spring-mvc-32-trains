@@ -20,6 +20,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 
+import org.bson.types.ObjectId;
 import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,9 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.Authentication;
@@ -57,21 +60,18 @@ public class SpringSignupServiceTests {
 	}
 	
 	Account buildAccount() {
-		Account a = new Account();
-		a.setPassword("pa$$word");
-		a.setRoles(Arrays.asList("ROLE_USER"));
-		return a;
+		return new Account("mail@mail.com", "pa$$word", "Bob", Arrays.asList("ROLE_USER"));
 	}
 
 	@Test
-	public void shouldCreateAccounts() {
+	public void shouldCreateNewUserAccounts() {
 		Account account = buildAccount();
-		ArgumentCaptor<Account> arg = ArgumentCaptor.forClass(Account.class);
 		when(mockEncoder.encodePassword(eq(account.getPassword()), eq(null)))
 			.thenReturn("a1b2c3d4");
 		
 		service.createAccount(account);
-		
+
+		ArgumentCaptor<Account> arg = ArgumentCaptor.forClass(Account.class);
 		verify(mockRepo, times(1)).save(arg.capture());
 		Account newAccount = arg.getValue();
 		assertEquals("Password has not been encoded", "a1b2c3d4", newAccount.getPassword());
@@ -80,9 +80,30 @@ public class SpringSignupServiceTests {
 	}
 	
 	@Test
-	public void shouldAuthenticateNewAccounts() {
+	public void shouldFillSlugAndRolesCreatingNewAccounts() {
+		Account user = new Account("mail@mail.com", "pa$$word", "George Stephenson", null);
+		when(mockEncoder.encodePassword(eq(user.getPassword()), eq(null)))
+			.thenReturn("a1b2c3d4");
+		when(mockRepo.save(isA(Account.class))).thenAnswer(new Answer<Account>() {
+			@Override
+			public Account answer(InvocationOnMock invocation) throws Throwable {
+				Object[] args = invocation.getArguments();
+				Account newUser = (Account) args[0];
+				newUser.setId(new ObjectId());
+				return newUser;
+			}
+		});
+		
+		Account newUser = service.createAccount(user);
+		
+		assertEquals("george-stephenson", newUser.getSlug());
+		assertEquals("[ROLE_USER]", newUser.getRoles().toString());
+	}
+	
+	@Test
+	public void shouldAuthenticateAccounts() {
 		SecurityContext mockContext = mock(SecurityContext.class);
-		ArgumentCaptor<Authentication> arg = ArgumentCaptor.forClass(Authentication.class);
+
 		Account account = buildAccount();
 		AccountDetails accountDetails = new AccountDetails(account);
 		
@@ -90,6 +111,7 @@ public class SpringSignupServiceTests {
 		service.setSecurityContext(mockContext);
 		service.authenticate(account);
 
+		ArgumentCaptor<Authentication> arg = ArgumentCaptor.forClass(Authentication.class);
 		verify(mockContext, times(1)).setAuthentication(arg.capture());
 		Authentication auth = arg.getValue();
 		assertEquals("pa$$word", auth.getCredentials());
