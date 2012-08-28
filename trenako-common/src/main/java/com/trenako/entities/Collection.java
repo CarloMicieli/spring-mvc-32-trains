@@ -15,10 +15,11 @@
  */
 package com.trenako.entities;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.bson.types.ObjectId;
@@ -27,7 +28,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.trenako.mapping.WeakDbRef;
 import com.trenako.values.Visibility;
 
 /**
@@ -65,15 +65,14 @@ public class Collection {
 	private String slug;
 
 	@NotNull(message = "collection.owner.required")
-	@Indexed(name = "owner.slug", unique = true)
-	private WeakDbRef<Account> owner;
+	@Indexed(unique = true)
+	private String owner;
 
+	@Valid
 	private List<CollectionItem> items;
 
 	private CategoriesCount categories;
-
 	private String visibility;
-
 	private Date lastModified;
 
 	/**
@@ -87,7 +86,7 @@ public class Collection {
 	 * @param owner the collection owner
 	 */
 	public Collection(Account owner) {
-		this.setOwner(owner);
+		this(owner, defaultVisibility());
 	}
 
 	/**
@@ -97,13 +96,12 @@ public class Collection {
 	 * @param visibility the collection visibility
 	 */
 	public Collection(Account owner, Visibility visibility) {
-		this.setOwner(owner);
-		this.setVisibility(visibility);
-		this.slug = slug();
+		this.owner = owner(owner);
+		this.visibility = visibility(visibility);
+		this.slug = slug(owner);
 		this.lastModified = new Date();
 	}
 
-	
 	/**
 	 * Returns the {@code Collection} id.
 	 * @return the unique id
@@ -125,9 +123,6 @@ public class Collection {
 	 * @return the slug
 	 */
 	public String getSlug() {
-		if (slug == null) {
-			slug = slug();
-		}
 		return slug;
 	}
 	
@@ -143,7 +138,7 @@ public class Collection {
 	 * Returns the account of the {@code Collection}'s owner.
 	 * @return the owner
 	 */
-	public WeakDbRef<Account> getOwner() {
+	public String getOwner() {
 		return owner;
 	}
 
@@ -151,15 +146,7 @@ public class Collection {
 	 * Sets the account of the {@code Collection}'s owner.
 	 * @param owner the owner
 	 */
-	public void setOwner(Account owner) {
-		this.owner = WeakDbRef.buildRef(owner);
-	}
-	
-	/**
-	 * Sets the account of the {@code Collection}'s owner.
-	 * @param owner the owner
-	 */
-	public void setOwner(WeakDbRef<Account> owner) {
+	public void setOwner(String owner) {
 		this.owner = owner;
 	}
 
@@ -173,11 +160,15 @@ public class Collection {
 
 	/**
 	 * Returns the {@code Collection} rolling stocks list.
+	 * <p>
+	 * This method returns an immutable list of collection items.
+	 * </p>
+	 * 
 	 * @return the rolling stocks list
 	 */
 	public List<CollectionItem> getItems() {
 		if (items == null) {
-			items = new ArrayList<CollectionItem>();
+			items = Collections.emptyList();
 		}
 		return items;
 	}
@@ -199,15 +190,6 @@ public class Collection {
 	}
 
 	/**
-	 * Indicates whether the {@code Collection} is visible.
-	 * 
-	 * @return {@code true} if the collection is public; {@code false} otherwise
-	 */
-	public boolean isVisible() {
-		return true;
-	}
-
-	/**
 	 * Sets the {@code Collection} visibility.
 	 * <p>
 	 * By default the collections are created {@link Visibility#PUBLIC}, only the owner
@@ -217,18 +199,6 @@ public class Collection {
 	 */
 	public void setVisibility(String visibility) {
 		this.visibility = visibility;
-	}
-	
-	/**
-	 * Sets the {@code Collection} visibility.
-	 * <p>
-	 * By default the collections are created {@link Visibility#PUBLIC}, only the owner
-	 * can see the collection if its visibility is set to {@link Visibility#PRIVATE}.
-	 * </p>
-	 * @param visibility the collection visibility
-	 */
-	public void setVisibility(Visibility visibility) {
-		this.visibility = visibility.label();
 	}
 	
 	/**
@@ -254,12 +224,20 @@ public class Collection {
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
+
+	/**
+	 * Returns the default {@code Visibility} for collections.
+	 * @return the default visibility
+	 */
+	public static Visibility defaultVisibility() {
+		return Visibility.PUBLIC;
+	}
 	
 	@Override
 	public String toString() {
 		return new StringBuilder()
 			.append("collection{owner: ")
-			.append(getOwner().getSlug())
+			.append(getOwner())
 			.append(", visibility: ")
 			.append(getVisibility())
 			.append(", item(s): ")
@@ -276,8 +254,16 @@ public class Collection {
 		Collection other = (Collection) obj;
 		return getOwner().equals(other.getOwner());
 	}
+
+	private static String visibility(Visibility visibility) {
+		return visibility.label();
+	}
 	
-	private String slug() {
-		return getOwner().getSlug();
+	private static String slug(Account owner) {
+		return owner.getSlug();
+	}
+	
+	private static String owner(Account owner) {
+		return owner.getSlug();
 	}
 }

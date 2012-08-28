@@ -69,7 +69,7 @@ public class AuthControllerMappingTests extends AbstractSpringControllerTests {
 		
 		// should authenticate the newly created account
 		ArgumentCaptor<Account> arg = ArgumentCaptor.forClass(Account.class);
-		verify(mockService, times(1)).authenticate(arg.capture());
+		verify(mockService, times(1)).createAccount(arg.capture());
 		assertEquals("mail@mail.com", arg.getValue().getEmailAddress());
 		assertEquals("pa$$word", arg.getValue().getPassword());
 	}

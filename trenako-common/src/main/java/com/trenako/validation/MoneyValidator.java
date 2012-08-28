@@ -15,30 +15,55 @@
  */
 package com.trenako.validation;
 
+import java.util.Currency;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.trenako.entities.Address;
-import com.trenako.validation.constraints.ValidAddress;
+import org.apache.commons.lang3.StringUtils;
+
+import com.trenako.entities.Money;
+import com.trenako.validation.constraints.ValidMoney;
 
 /**
- * It represents a {@code Address} validator class.
+ * 
  * @author Carlo Micieli
  *
  */
-public class AddressValidator 
-	implements ConstraintValidator<ValidAddress, Address> {
+public class MoneyValidator implements ConstraintValidator<ValidMoney, Money> {
 
 	@Override
-	public void initialize(ValidAddress constraintAnnotation) {
+	public void initialize(ValidMoney constraintAnnotation) {
 	}
 
 	@Override
-	public boolean isValid(Address value, ConstraintValidatorContext context) {
-		if (value == null || value.isEmpty()) {
+	public boolean isValid(Money money, ConstraintValidatorContext context) {
+		if (money == null || money.isEmpty()) {
 			return true;
 		}
-
+		
+		if (money.getValue() <= 0) {
+			return false;
+		}
+		
+		if (!validCurrency(money)) {
+			return false;
+		}
+		
 		return true;
+	}
+
+	private static boolean validCurrency(Money m) {
+		if (StringUtils.isBlank(m.getCurrency())) return false;
+		
+		try {
+			Currency.getInstance(m.getCurrency());
+			return true;
+		}
+		catch (IllegalArgumentException ex) {
+			// currencyCode is not a supported ISO 4217 code
+		}
+		
+		return false;
 	}
 }

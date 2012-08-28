@@ -104,7 +104,7 @@ public class CollectionsController {
 			return "collection/add";
 		}
 		
-		newItem.setRollingStock(rs);
+		newItem.setRollingStock(WeakDbRef.buildRef(rs));
 		
 		Account owner = userContext.getCurrentUser().getAccount();
 		service.addRollingStock(owner, newItem);

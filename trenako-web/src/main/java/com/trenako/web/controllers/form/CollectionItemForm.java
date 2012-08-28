@@ -17,7 +17,10 @@ package com.trenako.web.controllers.form;
 
 import javax.validation.Valid;
 
+import org.hibernate.validator.constraints.Range;
+
 import com.trenako.entities.CollectionItem;
+import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
 import com.trenako.values.Condition;
 import com.trenako.values.LocalizedEnum;
@@ -28,11 +31,14 @@ import com.trenako.values.LocalizedEnum;
  *
  */
 public class CollectionItemForm {
-	@Valid
+	//@Valid
 	private CollectionItem item;
 	private RollingStock rs;
 	private boolean alreadyInCollection;
 	private Iterable<LocalizedEnum<Condition>> conditionsList;
+	
+	@Range(min = 0)
+	private int price;
 	
 	public CollectionItemForm() {
 	}
@@ -55,12 +61,18 @@ public class CollectionItemForm {
 		this.rs = rs;
 	}
 
-	public CollectionItem getItem() {
+	public CollectionItem getItem() {	
+		item.setPrice(new Money(getPrice(), "USD"));
+		item.setItemId(item.getItemId());
 		return item;
 	}
 
-	public void setItem(CollectionItem item) {
-		this.item = item;
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 	public Iterable<LocalizedEnum<Condition>> getConditionsList() {

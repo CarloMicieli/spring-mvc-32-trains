@@ -15,47 +15,41 @@
  */
 package com.trenako.entities;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import org.hibernate.validator.constraints.Range;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-import com.trenako.format.annotations.IntegerFormat;
-import com.trenako.format.annotations.IntegerFormat.Style;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.utility.Slug;
+import com.trenako.validation.constraints.ValidMoney;
 import com.trenako.values.Condition;
 
 /**
- * It represents a rolling stocks collection item.
+ * It represents an item of rolling stocks collections.
  * 
  * @author Carlo Micieli
  *
  */
 public class CollectionItem {
 
+	@NotNull(message = "item.itemId.required")
 	@Indexed
 	private String itemId;
 
 	@NotNull(message = "item.rollingStock.required")
 	private WeakDbRef<RollingStock> rollingStock;
 
-	@Range(min = 0, max = 999900, message = "item.price.range.notmet")
-	@IntegerFormat(style = Style.CURRENCY)
-	private int price;
+	@ValidMoney(message = "item.price.money.notmet")
+	private Money price;
 
 	private String condition;
 
 	private String notes;
 
 	private String category;
-
-	@Range(min = 1, max = 99, message = "item.quantity.range.notmet")
-	private int quantity = 1;
 
 	@NotNull(message = "item.addedAt.required")
 	@Past(message = "item.addedAt.past.notmet")
@@ -67,79 +61,49 @@ public class CollectionItem {
 	public CollectionItem() {
 	}
 
-	private CollectionItem(Builder b) {
-		setRollingStock(b.rs);
-		
-		this.addedAt = b.addedAt;
-		this.price = b.price;
-		this.condition = b.condition;
-		this.notes = b.notes;
-		this.quantity = b.quantity;
-		this.category = b.category;
-	}
-    
-	public static class Builder {
-		// required fields
-		private final RollingStock rs;
-		
-		// optional fields
-		private String category = null;
-		private Date addedAt = null;
-		private int price = 0;
-		private String condition = null;
-		private String notes = null;
-		private int quantity = 1;
-		
-		public Builder(RollingStock rs) {
-			this.rs = rs;
-		}
-
-		public Builder addedAt(Date date) {
-			addedAt = date;
-			return this;
-		}
-
-		public Builder condition(Condition cond) {
-			condition = cond.label();
-			return this;
-		}
-		
-		public Builder category(String category) {
-			this.category = category;
-			return this;
-		}
-
-		public Builder notes(String n) {
-			notes = n;
-			return this;
-		}
-
-		public Builder price(int p) {
-			price = p;
-			return this;
-		}
-
-		public Builder quantity(int q) {
-			quantity = q;
-			return this;
-		}
-		
-		public CollectionItem build() {
-			return new CollectionItem(this);
-		}
-	}
-    
 	/**
+	 * Creates a new {@code CollectionItem} for the provided rolling stock
+	 * @param rs the rolling stock
+	 * @param addedAt the date
+	 */
+	public CollectionItem(RollingStock rs, Date addedAt) {
+		this(rs, addedAt, null, null, null);
+	}
+	
+	/**
+	 * Creates a new {@code CollectionItem} for the provided rolling stock
+	 * @param rs the rolling stock
+	 * @param addedAt the date
+	 * @param notes the notes
+	 * @param price the purchasing price
+	 * @param condition the item conditions
+	 */
+	public CollectionItem(RollingStock rs, Date addedAt, String notes, Money price, Condition condition) {
+		this.rollingStock = rollingStock(rs);
+		this.category = rs.getCategory();
+		this.addedAt = addedAt;
+		this.notes = notes;
+		this.price = price;
+		this.condition = condition(condition);
+		
+		this.itemId = itemId(this.rollingStock, this.addedAt);
+	}
+	
+	private static String condition(Condition cond) {
+		if (cond == null) {
+			return null;
+		}
+		
+		return cond.label();
+	}
+	
+    /**
 	 * Returns the {@code CollectionItem} id.    
 	 * @return the id
 	 */
 	public String getItemId() {
 		if (itemId == null) {
-			itemId = new StringBuilder()
-				.append(getRollingStock().getSlug())
-				.append("-")
-				.append(Slug.encode(getAddedAt()))
-				.toString();
+			itemId = itemId(getRollingStock(), getAddedAt());
 		}
 		return itemId;
 	}
@@ -169,15 +133,6 @@ public class CollectionItem {
 	}
 
 	/**
-	 * Sets the rolling stock.
-	 * @param rollingStock the rolling stock
-	 */
-	public void setRollingStock(RollingStock rollingStock) {
-		this.rollingStock = WeakDbRef.buildRef(rollingStock);
-		this.category = rollingStock.getCategory();
-	}
-
-	/**
 	 * Returns the rolling stock category.
 	 * @return the category
 	 */
@@ -198,9 +153,6 @@ public class CollectionItem {
 	 * @return the purchasing date
 	 */
 	public Date getAddedAt() {
-		if (addedAt == null) {
-			addedAt = new Date();
-		}
 		return addedAt;
 	}
 
@@ -213,19 +165,10 @@ public class CollectionItem {
 	}
 
 	/**
-	 * Returns the price as currency value.
-	 * @return the price
-	 */
-	public BigDecimal price() {
-		return (new BigDecimal(getPrice()))
-				.divide(new BigDecimal(100));
-	}
-
-	/**
 	 * Returns the price.
 	 * @return the price
 	 */
-	public int getPrice() {
+	public Money getPrice() {
 		return price;
 	}
 
@@ -233,24 +176,8 @@ public class CollectionItem {
 	 * Sets the rolling stock price.
 	 * @param price the price
 	 */
-	public void setPrice(int price) {
+	public void setPrice(Money price) {
 		this.price = price;
-	}
-
-	/**
-	 * Returns the rolling stock model quantity.
-	 * @return the quantity
-	 */
-	public int getQuantity() {
-		return quantity;
-	}
-
-	/**
-	 * Sets the rolling stock model quantity.
-	 * @param quantity the quantity
-	 */
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
 	}
 
 	/**
@@ -292,5 +219,17 @@ public class CollectionItem {
 
 		CollectionItem other = (CollectionItem) obj;
 		return this.getItemId().equals(other.getItemId());
+	}
+	
+	private static String itemId(WeakDbRef<RollingStock> rs, Date addedAt) {
+		return new StringBuilder()
+			.append(rs.getSlug())
+			.append("-")
+			.append(Slug.encode(addedAt))
+			.toString();
+	}
+	
+	private static WeakDbRef<RollingStock> rollingStock(RollingStock rs) {
+		return WeakDbRef.buildRef(rs);
 	}
 }

@@ -26,7 +26,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.trenako.entities.Account;
@@ -34,7 +33,6 @@ import com.trenako.entities.CategoriesCount;
 import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
-import com.trenako.mapping.WeakDbRef;
 import com.trenako.repositories.CollectionsRepository;
 import com.trenako.utility.Maps;
 import com.trenako.values.Visibility;
@@ -80,13 +78,13 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 
 	@Override
 	public Collection findByOwner(Account owner) {
-		Query query = query(where("owner.slug").is(owner.getSlug()));
+		Query query = query(where("owner").is(owner.getSlug()));
 		return mongo.findOne(query, Collection.class);
 	}
 
 	@Override
 	public boolean containsRollingStock(Account owner, RollingStock rollingStock) {
-		Query query = query(where("owner.slug").is(owner.getSlug())
+		Query query = query(where("owner").is(owner.getSlug())
 				.and("items.rollingStock.slug").is(rollingStock.getSlug()));
 				
 		return mongo.count(query, Collection.class) > 0;
@@ -94,25 +92,26 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 
 	@Override
 	public void addItem(Account owner, CollectionItem item) {
-		Assert.notNull(item.getCategory(), "The item category is required");
-		Assert.notNull(owner.getSlug(), "Owner slug is required");
-		
+		Collection collection = new Collection(owner);
+				
 		// force the item to calculate its id
 		if (!StringUtils.hasText(item.getItemId())) {
 			item.setItemId(item.getItemId());
 		}
 		
 		Update upd = new Update()
-			.set("owner", WeakDbRef.buildRef(owner))
+			.set("owner", collection.getOwner())
 			.set("lastModified", now())
 			.push("items", item)
 			.inc("categories." + CategoriesCount.getKey(item.getCategory()), 1);
-		mongo.upsert(query(where("owner.slug").is(owner.getSlug())), upd, Collection.class);
+		mongo.upsert(query(where("owner").is(owner.getSlug())), upd, Collection.class);
 	}
 
 	@Override
 	public void updateItem(Account owner, CollectionItem item) {
-		Query where = query(where("owner.slug").is(owner.getSlug())
+		Collection collection = new Collection(owner);
+		
+		Query where = query(where("owner").is(collection.getOwner())
 				.and("items.itemId").is(item.getItemId()));
 		Update upd = new Update()
 			.set("lastModified", now())
@@ -122,15 +121,13 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 	
 	@Override
 	public void removeItem(Account owner, CollectionItem item) {
-		Assert.notNull(item.getItemId(), "The item ID is required");
-		Assert.notNull(item.getCategory(), "The item category is required");
-		Assert.notNull(owner.getSlug(), "Owner slug is required");
+		Collection collection = new Collection(owner);
 		
 		Update upd = new Update()
 			.pull("items", Maps.map("itemId", item.getItemId()))
 			.inc("categories." + CategoriesCount.getKey(item.getCategory()), -1)
 			.set("lastModified", now());
-		mongo.updateFirst(query(where("owner.slug").is(owner.getSlug())), upd, Collection.class);
+		mongo.updateFirst(query(where("owner").is(collection.getOwner())), upd, Collection.class);
 	}
 
 	@Override
@@ -138,7 +135,7 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 		Update upd = new Update()
 			.set("visibility", visibility.label())
 			.set("lastModified", now());
-		mongo.updateFirst(query(where("owner.slug").is(owner.getSlug())), upd, Collection.class);	
+		mongo.updateFirst(query(where("owner").is(owner.getSlug())), upd, Collection.class);	
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
 
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -120,6 +121,10 @@ public class Money {
 	 */	
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+	
+	public boolean isEmpty() {
+		return StringUtils.isBlank(currency) && value == 0;
 	}
 	
 	@Override 

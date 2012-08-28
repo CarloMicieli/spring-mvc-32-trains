@@ -19,6 +19,8 @@ import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 import static com.trenako.test.TestDataBuilder.*;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,6 +116,7 @@ public class CollectionsControllerTests {
 	CollectionItem newItem() {
 		CollectionItem item = new CollectionItem();
 		item.setRollingStock(WeakDbRef.buildFromSlug("acme-123456", RollingStock.class));
+		item.setAddedAt(new Date());
 		return item;
 	}
 	

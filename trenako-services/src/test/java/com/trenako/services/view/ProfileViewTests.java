@@ -97,17 +97,18 @@ public class ProfileViewTests {
 		return new RollingStock.Builder(acme(), itemNumber)
 			.railway(fs())
 			.scale(scaleH0())
+			.category("electric-locomotives")
 			.build();
 	}
 	
 	private Collection collection() {
 		Collection c = new Collection(bob, Visibility.PUBLIC);
 		List<CollectionItem> items = Arrays.asList(
-				new CollectionItem.Builder(rollingStock("1000")).addedAt(date("2012/01/01")).build(),
-				new CollectionItem.Builder(rollingStock("1001")).addedAt(date("2012/02/01")).build(),
-				new CollectionItem.Builder(rollingStock("1002")).addedAt(date("2012/03/01")).build(),
-				new CollectionItem.Builder(rollingStock("1003")).addedAt(date("2012/04/01")).build(),
-				new CollectionItem.Builder(rollingStock("1004")).addedAt(date("2012/05/01")).build());
+				new CollectionItem(rollingStock("1000"), date("2012/01/01")),
+				new CollectionItem(rollingStock("1001"), date("2012/02/01")),
+				new CollectionItem(rollingStock("1002"), date("2012/03/01")),
+				new CollectionItem(rollingStock("1003"), date("2012/04/01")),
+				new CollectionItem(rollingStock("1004"), date("2012/05/01")));
 		c.setItems(items);
 		return c;
 	}

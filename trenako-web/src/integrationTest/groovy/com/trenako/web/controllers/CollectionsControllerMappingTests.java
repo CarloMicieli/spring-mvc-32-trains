@@ -76,7 +76,8 @@ public class CollectionsControllerMappingTests extends AbstractSpringControllerT
 		mockMvc().perform(post("/collections")
 				.param("item.rollingStock.slug", "acme-123456")
 				.param("item.addedAt", "2012-01-01")
-				.param("item.price", "1000"))
+				//.param("item.category", "electric-locomotives")
+				.param("price", "10000"))
 			.andExpect(status().isOk())
 			.andExpect(redirectedUrl("/rollingstocks/acme-123456"));
 	}

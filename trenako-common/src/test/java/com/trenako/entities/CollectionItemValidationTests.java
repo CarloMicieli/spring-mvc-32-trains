@@ -45,9 +45,7 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 
 	@Test
 	public void shouldValidateValidCollectionsItem() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock)
-			.addedAt(new Date())
-			.build();
+		CollectionItem item = new CollectionItem(rollingStock, new Date());
 		
 		Map<String, String> errors = validate(item);
 		
@@ -60,55 +58,28 @@ public class CollectionItemValidationTests extends AbstractValidationTests<Colle
 		
 		Map<String, String> errors = validate(item);
 		
-		assertEquals(2, errors.size());
+		assertEquals(3, errors.size());
+		assertEquals("item.itemId.required", errors.get("itemId"));
 		assertEquals("item.rollingStock.required", errors.get("rollingStock"));
 		assertEquals("item.addedAt.required", errors.get("addedAt"));
 	}
 	
 	@Test
-	public void shouldValidateItemMinQuantity() {
-		CollectionItem item1 = new CollectionItem.Builder(rollingStock)
-			.addedAt(new Date())
-			.quantity(0)
-			.build();
-		
-		Map<String, String> errors = validate(item1);
-		assertEquals(1, errors.size());
-		assertEquals("item.quantity.range.notmet", errors.get("quantity"));
-	}
-	
-	@Test
-	public void shouldValidateItemMaxQuantity() {
-		CollectionItem item1 = new CollectionItem.Builder(rollingStock)
-			.addedAt(new Date())
-			.quantity(100)
-			.build();
-		
-		Map<String, String> errors = validate(item1);
-		assertEquals(1, errors.size());
-		assertEquals("item.quantity.range.notmet", errors.get("quantity"));
-	}
-	
-	@Test
-	public void shouldValidateItemPrice() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock)
-			.addedAt(new Date())
-			.price(-1)
-			.build();
-		
-		Map<String, String> errors = validate(item);
-		assertEquals(1, errors.size());
-		assertEquals("item.price.range.notmet", errors.get("price"));
-	}
-	
-	@Test
 	public void shouldValidateAddedAtDate() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock)
-			.addedAt(tomorrow())
-			.build();
+		CollectionItem item = new CollectionItem(rollingStock, tomorrow());
 		
 		Map<String, String> errors = validate(item);
 		assertEquals(1, errors.size());
 		assertEquals("item.addedAt.past.notmet", errors.get("addedAt"));
+	}
+	
+	@Test
+	public void shouldValidateItemPrices() {
+		CollectionItem item = new CollectionItem(rollingStock, new Date());
+		item.setPrice(new Money(-1, "USD"));
+		
+		Map<String, String> errors = validate(item);
+		assertEquals(1, errors.size());
+		assertEquals("item.price.money.notmet", errors.get("price"));
 	}
 }

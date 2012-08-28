@@ -30,47 +30,52 @@ import com.trenako.values.Visibility;
  */
 public class CollectionTests {
 
-	private Account owner = new Account.Builder("mail@mail.com")
-		.displayName("bob")
-		.build();
-	private Account alice = new Account.Builder("mail@mail.com")
-		.displayName("alice")
-		.build();
+	private Account georgeStephenson() {
+		return new Account.Builder("george@mail.com")		
+			.displayName("George Stephenson")
+			.build();
+	}
 	
-	@Test
-	public void shouldCreatePublicCollections() {
-		Collection coll = new Collection(owner);
-		assertEquals(true, coll.isVisible());
+	private Account theodoreJudah() {
+		return new Account.Builder("theodore@mail.com")		
+			.displayName("Theodore Judah")
+			.build();
 	}
 	
 	@Test
-	public void shouldFillTheNameFromOwner() {
-		Collection coll = new Collection(owner);
-		assertEquals("bob", coll.getOwner().getSlug());
+	public void shouldCreateCollectionsPublicByDefault() {
+		Collection coll = new Collection(georgeStephenson());
+		assertEquals(Visibility.PUBLIC.label(), coll.getVisibility());
+	}
+	
+	@Test
+	public void shouldFillCollectionNames() {
+		Collection coll = new Collection(georgeStephenson());
+		assertEquals("george-stephenson", coll.getOwner());
 	}
 	
 	@Test
 	public void shouldCheckWhetherTwoCollectionsAreEquals() {
-		Collection x = new Collection(owner, Visibility.PRIVATE);
-		Collection y = new Collection(owner, Visibility.PRIVATE);
+		Collection x = new Collection(georgeStephenson(), Visibility.PRIVATE);
+		Collection y = new Collection(georgeStephenson(), Visibility.PRIVATE);
 		assertTrue(x.equals(x));
 		assertTrue(x.equals(y));
 	}
 	
 	@Test
 	public void shouldCheckWhetherTwoCollectionsAreDifferents() {
-		Collection x = new Collection(owner, Visibility.PRIVATE);
-		Collection y = new Collection(alice, Visibility.PRIVATE);
+		Collection x = new Collection(georgeStephenson(), Visibility.PRIVATE);
+		Collection y = new Collection(theodoreJudah(), Visibility.PRIVATE);
 		assertFalse(x.equals(y));
 	}
 	
 	@Test
 	public void shouldProduceStringRepresentations() {
-		Collection x = new Collection(owner, Visibility.PRIVATE);
-		assertEquals("collection{owner: bob, visibility: private, item(s): 0}", x.toString());
+		Collection x = new Collection(georgeStephenson(), Visibility.PRIVATE);
+		assertEquals("collection{owner: george-stephenson, visibility: private, item(s): 0}", x.toString());
 		
-		Collection y = new Collection(owner, Visibility.PRIVATE);
+		Collection y = new Collection(georgeStephenson(), Visibility.PRIVATE);
 		y.setItems(Arrays.asList(new CollectionItem(), new CollectionItem()));
-		assertEquals("collection{owner: bob, visibility: private, item(s): 2}", y.toString());
+		assertEquals("collection{owner: george-stephenson, visibility: private, item(s): 2}", y.toString());
 	}
 }

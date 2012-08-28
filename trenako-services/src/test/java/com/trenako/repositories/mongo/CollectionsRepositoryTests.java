@@ -20,6 +20,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
 import java.util.GregorianCalendar;
 
 import org.bson.types.ObjectId;
@@ -32,6 +33,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import com.trenako.entities.Account;
 import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
+import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
 import com.trenako.repositories.CollectionsRepository;
 import com.trenako.values.Condition;
@@ -44,13 +46,23 @@ import com.trenako.values.Visibility;
  */
 public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 
-	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
+	private RollingStock rollingStock() {
+		return new RollingStock.Builder(acme(), "123456")
 		.railway(fs())
+		.category("electric-locomotives")
 		.scale(scaleH0())
 		.build();
-	private Account owner = new Account.Builder("mail@mail.com")
-		.displayName("Bob")
-		.build();
+	}
+
+	private Account georgeStephenson() {
+		return new Account.Builder("george@mail.com")
+			.displayName("George Stephenson")
+			.build();
+	}
+	
+	private Money USD100() {
+		return new Money(BigDecimal.valueOf(100), "USD");
+	}
 	
 	CollectionsRepository repo;
 
@@ -64,9 +76,9 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 	}
 
 	@Test
-	public void shouldfindCollectionById() {
+	public void shouldFindCollectionsById() {
 		ObjectId id = new ObjectId();
-		Collection value = new Collection(owner);
+		Collection value = new Collection(georgeStephenson());
 		when(mongo().findById(eq(id), eq(Collection.class))).thenReturn(value);
 		
 		Collection coll = repo.findById(id);
@@ -76,9 +88,9 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 	}
 	
 	@Test
-	public void shouldfindCollectionBySlug() {
+	public void shouldFindCollectionsBySlug() {
 		String slug = "slug";
-		Collection value = new Collection(owner);
+		Collection value = new Collection(georgeStephenson());
 		when(mongo().findOne(isA(Query.class), eq(Collection.class))).thenReturn(value);
 		
 		Collection coll = repo.findBySlug(slug);
@@ -88,93 +100,84 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 	}
 	
 	@Test
-	public void shouldfindCollectionByOwner() {
-		Collection value = new Collection(owner);
+	public void shouldFindCollectionsByOwner() {
+		Collection value = new Collection(georgeStephenson());
 		when(mongo().findOne(isA(Query.class), eq(Collection.class))).thenReturn(value);
 		
-		Collection coll = repo.findByOwner(owner);
+		Collection coll = repo.findByOwner(georgeStephenson());
 
 		assertNotNull(coll);
-		assertEquals("{ \"owner.slug\" : \"bob\"}", verifyFindOne(Collection.class).toString());
+		assertEquals("{ \"owner\" : \"george-stephenson\"}", verifyFindOne(Collection.class).toString());
 	}
 	
 	@Test
 	public void shouldCheckIfCollectionContainsRollingStocks() {
 		when(mongo().count(isA(Query.class), eq(Collection.class))).thenReturn(1L);
 		
-		boolean ret = repo.containsRollingStock(owner, rollingStock);
+		boolean ret = repo.containsRollingStock(georgeStephenson(), rollingStock());
 		
 		assertTrue(ret);
-		assertEquals("{ \"owner.slug\" : \"bob\" , \"items.rollingStock.slug\" : \"acme-123456\"}", verifyCount(Collection.class).toString());
+		assertEquals("{ \"owner\" : \"george-stephenson\" , \"items.rollingStock.slug\" : \"acme-123456\"}", verifyCount(Collection.class).toString());
 	}
 	
 	@Test
 	public void shouldCheckIfCollectionNotContainsRollingStocks() {
 		when(mongo().count(isA(Query.class), eq(Collection.class))).thenReturn(0L);
 		
-		boolean ret = repo.containsRollingStock(owner, rollingStock);
+		boolean ret = repo.containsRollingStock(georgeStephenson(), rollingStock());
 		
 		assertFalse(ret);
 	}
 	
 	@Test
 	public void shouldAddNewItemsToCollection() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock)
-			.addedAt(new GregorianCalendar(2012, 0, 1).getTime())
-			.category("electric-locomotives")
-			.notes("My notes")
-			.condition(Condition.NEW)
-			.build();
+		CollectionItem item = new CollectionItem(rollingStock(), date("2012/1/1"), "My notes", USD100(), Condition.NEW);
 		
-		repo.addItem(owner, item);
+		repo.addItem(georgeStephenson(), item);
 	
 		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).upsert(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
-		assertEquals("{ \"owner.slug\" : \"bob\"}", queryObject(argQuery).toString());
+		assertEquals("{ \"owner\" : \"george-stephenson\"}", queryObject(argQuery).toString());
 		
-		String expected = "{ \"$set\" : { \"owner\" : { \"slug\" : \"bob\" , \"label\" : \"Bob\"} , "+
-				"\"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}} , "+
-				"\"$push\" : { \"items\" : { \"itemId\" : \"acme-123456-2012-01-01\" , \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
-				"\"price\" : 0 , \"condition\" : \"new\" , \"notes\" : \"My notes\" , \"category\" : \"electric-locomotives\" , "+
-				"\"quantity\" : 1 , \"addedAt\" : { \"$date\" : \"2011-12-31T23:00:00.000Z\"}}} , \"$inc\" : { \"categories.electricLocomotives\" : 1}}";
+		String expected = "{ \"$set\" : { \"owner\" : \"george-stephenson\" , \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}} , "+
+				"\"$push\" : { \"items\" : { \"itemId\" : \"acme-123456-2012-01-01\" , "+
+				"\"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
+				"\"price\" : { \"val\" : 10000 , \"cur\" : \"USD\"} , \"condition\" : \"new\" , \"notes\" : \"My notes\" , "+
+				"\"category\" : \"electric-locomotives\" , \"addedAt\" : { \"$date\" : \"2011-12-31T23:00:00.000Z\"}}} , "+
+				"\"$inc\" : { \"categories.electricLocomotives\" : 1}}"; 
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
 	
 	@Test
-	public void shouldUpdateItemInTheWishLists() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock)
-			.addedAt(new GregorianCalendar(2012, 0, 1).getTime())
-			.category("electric-locomotives")
-			.build();
-		
-		repo.updateItem(owner, item);
+	public void shouldUpdateCollectionItems() {
+		CollectionItem item = new CollectionItem(rollingStock(), date("2012/1/1"), "My notes", USD100(), Condition.NEW);
+				
+		repo.updateItem(georgeStephenson(), item);
 		
 		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
-		assertEquals("{ \"owner.slug\" : \"bob\" , \"items.itemId\" : \"acme-123456-2012-01-01\"}", queryObject(argQuery).toString());
+		assertEquals("{ \"owner\" : \"george-stephenson\" , \"items.itemId\" : \"acme-123456-2012-01-01\"}", queryObject(argQuery).toString());
 		
-		String expected = "{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"} , " +
-			"\"items.$\" : { \"itemId\" : \"acme-123456-2012-01-01\" , " +
-			"\"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , " +
-			"\"price\" : 0 , \"category\" : \"electric-locomotives\" , \"quantity\" : 1 , \"addedAt\" : { \"$date\" : \"2011-12-31T23:00:00.000Z\"}}}}";
+		String expected = "{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"} , "+
+				"\"items.$\" : { \"itemId\" : \"acme-123456-2012-01-01\" , \"rollingStock\" : "+
+				"{ \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , \"price\" : "+
+				"{ \"val\" : 10000 , \"cur\" : \"USD\"} , \"condition\" : \"new\" , \"notes\" : \"My notes\" ,"+
+				" \"category\" : \"electric-locomotives\" , \"addedAt\" : { \"$date\" : \"2011-12-31T23:00:00.000Z\"}}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
 	
 	@Test
 	public void shouldRemoveItemsFromUserCollection() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock)
-			.addedAt(new GregorianCalendar(2012, 0, 1).getTime())
-			.category("electric-locomotives")
-			.build();
+		CollectionItem item = new CollectionItem(rollingStock(), date("2012/1/1"));
 
-		repo.removeItem(owner, item);
+		repo.removeItem(georgeStephenson(), item);
 		
 		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
-		assertEquals("{ \"owner.slug\" : \"bob\"}", queryObject(argQuery).toString());
+		assertEquals("{ \"owner\" : \"george-stephenson\"}", queryObject(argQuery).toString());
 		
 		String expected = "{ \"$pull\" : { \"items\" : { \"itemId\" : \"acme-123456-2012-01-01\"}} , "+
 				"\"$inc\" : { \"categories.electricLocomotives\" : -1} , " +
@@ -184,12 +187,12 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 	
 	@Test
 	public void shouldChangeCollectionVisibility() {
-		repo.changeVisibility(owner, Visibility.PUBLIC);
+		repo.changeVisibility(georgeStephenson(), Visibility.PUBLIC);
 		
 		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
-		assertEquals("{ \"owner.slug\" : \"bob\"}", queryObject(argQuery).toString());
+		assertEquals("{ \"owner\" : \"george-stephenson\"}", queryObject(argQuery).toString());
 		assertEquals("{ \"$set\" : { \"visibility\" : \"public\" , \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}", 
 				updateObject(argUpdate).toString());
 	}

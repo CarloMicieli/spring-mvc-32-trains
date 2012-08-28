@@ -21,9 +21,7 @@ import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
@@ -36,78 +34,54 @@ import com.trenako.values.Condition;
  */
 public class CollectionItemTests {
 	
-	private RollingStock rollingStock = new RollingStock.Builder(acme(), "123456")
-		.railway(db())
-		.scale(scaleN())
-		.build();
+	private RollingStock rollingStock() {
+		return new RollingStock.Builder(acme(), "123456")
+			.railway(db())
+			.scale(scaleN())
+			.category("electric-locomotives")
+			.build();
+	}
+	
+	private Money USD100() {
+		return new Money(BigDecimal.valueOf(100), "USD");
+	}
 	
 	@Test
 	public void shouldCreateNewCollectionItems() {
 		Date now = new Date();
-		CollectionItem item = new CollectionItem.Builder(rollingStock)
-			.addedAt(now)
-			.condition(Condition.NEW)
-			.quantity(2)
-			.notes("Notes text")
-			.price(100)
-			.build();
+		CollectionItem item = new CollectionItem(rollingStock(), now, "Notes text", USD100(), Condition.NEW);
 		
 		assertEquals("{slug: acme-123456, label: ACME 123456}", item.getRollingStock().toCompleteString());
 		assertEquals("new", item.getCondition());
 		assertEquals(now, item.getAddedAt());
 		assertEquals("Notes text", item.getNotes());
-		assertEquals(100, item.getPrice());
-		assertEquals(2, item.getQuantity());
+		assertEquals("$100.00", item.getPrice().toString());
 	}
 	
 	@Test
 	public void shouldFillTheItemId() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock)
-			.addedAt(new GregorianCalendar(2012, 0, 1).getTime())
-			.build();
-		
+		CollectionItem item = new CollectionItem(rollingStock(), date("2012/01/01"));		
 		assertEquals("acme-123456-2012-01-01", item.getItemId());
 	}
-	
+
 	@Test
-	public void shouldCreateItemWithDefaultQuantity() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock).build();
-		assertEquals(1, item.getQuantity());
-	}
-	
-	@Test
-	public void shouldReturnThePriceAsMoney() {
-		CollectionItem item = new CollectionItem.Builder(rollingStock)
-			.price(9912)
-			.build();
-		BigDecimal money = item.price();
-		assertEquals(new BigDecimal("99.12"), money);
+	public void shouldFillTheItemCategoryUsingTheRollingStockValue() {
+		CollectionItem item = new CollectionItem(rollingStock(), date("2012/01/01"));		
+		assertEquals("electric-locomotives", item.getCategory());
 	}
 	
 	@Test
 	public void shouldCheckWhetherTwoItemsAreEquals() {
 		Date now = new Date();
-		CollectionItem x = new CollectionItem.Builder(rollingStock)
-			.addedAt(now)
-			.build();
-		CollectionItem y = new CollectionItem.Builder(rollingStock)
-			.addedAt(now)
-			.build();
+		CollectionItem x = new CollectionItem(rollingStock(), now);
+		CollectionItem y = new CollectionItem(rollingStock(), now);
 		assertTrue(x.equals(y));
 	}
 	
 	@Test
 	public void shouldCheckWhetherTwoItemsAreDifferents() throws ParseException {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date date1 = format.parse("2012-01-31");
-		Date date2 = format.parse("2012-02-11");
-
-		CollectionItem x = new CollectionItem.Builder(rollingStock)
-			.addedAt(date1)
-			.build();
-		CollectionItem y = new CollectionItem.Builder(rollingStock)
-			.addedAt(date2)
-			.build();
+		CollectionItem x = new CollectionItem(rollingStock(), date("2012/01/31"));
+		CollectionItem y = new CollectionItem(rollingStock(), date("2012/02/11"));
 		assertFalse(x.equals(y));
 	}
 }

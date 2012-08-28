@@ -21,6 +21,7 @@ import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 
 import com.trenako.entities.Account
+import com.trenako.entities.Money
 import com.trenako.entities.RollingStock
 import com.trenako.entities.Collection
 import com.trenako.entities.CollectionItem
@@ -44,23 +45,21 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		
 		db.collections.insert(
 			slug: 'the-rocket',
-			owner: [label: 'The Rocket', slug: 'the-rocket'],
+			owner: 'the-rocket',
 			items: [
 				[itemId: 'acme-123456-2012-01-01', 
 					rollingStock: [label: 'ACME 123456', slug: 'acme-123456'], 
-					price: 15000, 
+					price: [val: 15000, cur: 'USD'], 
 					condition: 'new', 
 					notes: 'My notes', 
 					category: 'electric-locomotives', 
-					quantity: 1, 
 					addedAt: new Date()],
 				[itemId: 'acme-123457-2012-01-01', 
 					rollingStock: [label: 'ACME 123457', slug: 'acme-123457'], 
-					price: 3500, 
+					price: [val: 15000, cur: 'USD'], 
 					condition: 'new', 
 					notes: 'My notes', 
 					category: 'freight-cars', 
-					quantity: 1, 
 					addedAt: new Date()]],
 			categories: [electricLocomotives: 1, freightCars: 1],
 			visibility: 'public',
@@ -81,7 +80,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		
 		then:
 		col != null
-		col.owner.slug == 'the-rocket'
+		col.owner == 'the-rocket'
 		col.categories.electricLocomotives == 1
 		col.categories.freightCars == 1
 		col.lastModified == now.time
@@ -106,7 +105,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		
 		then:
 		col != null
-		col.owner.slug == 'the-rocket'
+		col.owner == 'the-rocket'
 		col.categories.electricLocomotives == 1
 		col.categories.freightCars == 1
 		col.lastModified == now.time
@@ -131,7 +130,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 
 		then:
 		col != null
-		col.owner.slug == owner.slug
+		col.owner == 'the-rocket'
 	}
 	
 	def "should return null if no collection with the provided owner exists"() {
@@ -191,11 +190,10 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		def rs = new WeakDbRef<RollingStock>(slug: 'acme-123457', label: 'ACME 123457')
 		def newItem = new CollectionItem(
 			rollingStock: rs, 
-			price: 7500, 
+			price: new Money(1000, 'USD'), 
 			condition: 'new', 
 			notes: 'My notes', 
 			category: 'freight-cars', 
-			quantity: 1, 
 			addedAt: date)
 		
 		when:
@@ -220,10 +218,9 @@ class CollectionsServiceSpecification extends MongoSpecification {
 			itemId: 'acme-123456-2012-01-01',
 			category: 'electric-locomotives',
 			rollingStock: rs,
-			price: 999,
+			price: new Money(1000, 'USD'),
 			condition: 'pre-owned',
 			notes: 'My updated notes',
-			quantity: 1,
 			addedAt: date)
 
 		when:
@@ -241,7 +238,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		doc.items[0].rollingStock == [slug: 'acme-123456', label: 'ACME 123456']
 		doc.items[0].notes == 'My updated notes'
 		doc.items[0].condition == 'pre-owned'
-		doc.items[0].price == 999
+		doc.items[0].price == [val: 1000, cur: 'USD']
 	}
 	
 	def "should remove a rolling stock from the collection"() {

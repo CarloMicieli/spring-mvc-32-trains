@@ -16,7 +16,10 @@
 package com.trenako.entities;
 
 import static org.junit.Assert.*;
+import static com.trenako.test.TestDataBuilder.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -31,6 +34,24 @@ import com.trenako.test.AbstractValidationTests;
  */
 public class CollectionValidationTests extends AbstractValidationTests<Collection> {
 	
+	private RollingStock rollingStock() {
+		return new RollingStock.Builder(acme(), "123456")
+			.railway(fs())
+			.scale(scaleH0())
+			.description("Description")
+			.build();
+	}
+	
+	private Account georgeStephenson() {
+		return new Account.Builder("mail@mail.com")
+			.displayName("George Stephenson")
+			.build();
+	}
+	
+	private List<CollectionItem> items() {
+		return Arrays.asList(new CollectionItem(rollingStock(), date("2012/01/01")));
+	}
+	
 	@Before
 	public void initValidator() {
 		super.init(Collection.class);
@@ -38,10 +59,7 @@ public class CollectionValidationTests extends AbstractValidationTests<Collectio
 
 	@Test
 	public void shouldValidateValidCollections() {
-		Account owner = new Account.Builder("mail@mail.com")
-			.displayName("bob")
-			.build();
-		Collection c = new Collection(owner);
+		Collection c = new Collection(georgeStephenson());
 		
 		Map<String, String> errors = validate(c);
 		assertEquals(0, errors.size());
@@ -54,5 +72,14 @@ public class CollectionValidationTests extends AbstractValidationTests<Collectio
 		Map<String, String> errors = validate(c);
 		assertEquals(1, errors.size());
 		assertEquals("collection.owner.required", errors.get("owner"));
+	}
+	
+	@Test
+	public void shouldValidateCollectionItems() {
+		Collection c = new Collection(georgeStephenson());
+		c.setItems(items());
+		
+		Map<String, String> errors = validate(c);
+		assertEquals(0, errors.size());
 	}
 }
