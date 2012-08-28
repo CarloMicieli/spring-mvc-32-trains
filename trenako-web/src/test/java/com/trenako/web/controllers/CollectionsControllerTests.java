@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 import static com.trenako.test.TestDataBuilder.*;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.entities.Account;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
-import com.trenako.mapping.WeakDbRef;
 import com.trenako.security.AccountDetails;
 import com.trenako.services.CollectionsService;
 import com.trenako.services.RollingStocksService;
@@ -65,10 +64,10 @@ public class CollectionsControllerTests {
 	}
 	
 	@Test
-	public void shouldRenderTheCollectionAddingForm() {
+	public void shouldRenderTheFormToAddCollectionItems() {
 		String slug = "acme-123456";
 		ModelMap model = new ModelMap();
-		when(service.conditionsList()).thenReturn(LocalizedEnum.list(Condition.class));
+		when(rsService.findBySlug(eq(slug))).thenReturn(rollingStock());
 		
 		String viewName = controller.addItemForm(slug, model);
 		
@@ -78,6 +77,7 @@ public class CollectionsControllerTests {
 	
 	@Test
 	public void shouldAddNewItemsToCollections() {
+		CollectionItem newItem = newForm().collectionItem(owner());
 		ModelMap model = new ModelMap();
 		
 		when(mockResults.hasErrors()).thenReturn(false);
@@ -87,9 +87,7 @@ public class CollectionsControllerTests {
 		String redirect = controller.addItem(newForm(), mockResults, model, mockRedirectAtts);
 
 		assertEquals("redirect:/rollingstocks/{slug}", redirect);
-		//assertEquals("ACME 123456", newForm().getItem().getRollingStock().getLabel());
-		verify(rsService, times(1)).findBySlug(eq("acme-123456"));
-		verify(service, times(1)).addRollingStock(eq(owner()), eq(newForm().getItem()));
+		verify(service, times(1)).addRollingStock(eq(owner()), eq(newItem));
 		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("acme-123456"));
 	}
 	
@@ -110,13 +108,11 @@ public class CollectionsControllerTests {
 	}
  	
 	CollectionItemForm newForm() {
-		return new CollectionItemForm(newItem(), rollingStock(), conditionsList(), false);
+		return new CollectionItemForm(newItem(), BigDecimal.valueOf(0), BigDecimal.valueOf(0), null);
 	}
 	
 	CollectionItem newItem() {
-		CollectionItem item = new CollectionItem();
-		item.setRollingStock(WeakDbRef.buildFromSlug("acme-123456", RollingStock.class));
-		item.setAddedAt(new Date());
+		CollectionItem item = new CollectionItem(rollingStock(), date("2012/07/16"));
 		return item;
 	}
 	
@@ -136,6 +132,7 @@ public class CollectionsControllerTests {
 		RollingStock rs = new RollingStock.Builder(acme(), "123456")
 			.railway(fs())
 			.scale(scaleH0())
+			.category("electric-locomotives")
 			.description("desc")
 			.build();
 		return rs;		

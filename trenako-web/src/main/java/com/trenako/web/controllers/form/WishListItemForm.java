@@ -85,8 +85,8 @@ public class WishListItemForm {
 				rs.getSlug(),
 				rs.getLabel(),
 				item,
-				priceValue(item.getPrice()),
-				priceValue(item.getPrice()),
+				Money.moneyValue(item.getPrice()),
+				Money.moneyValue(item.getPrice()),
 				LocalizedEnum.list(Priority.class, messageSource, null));
 	}
 		
@@ -97,15 +97,15 @@ public class WishListItemForm {
 				getItem().getNotes(), 
 				priority(getItem().getPriority()), 
 				addedAt(getItem().getAddedAt()),
-				price(owner, getPrice()));
+				Money.newMoney(getPrice(), owner));
 	}
 	
 	public WishListItem deletedItem(Account owner) {
-		return new WishListItem(item.getItemId(), price(owner, getPrice()));
+		return new WishListItem(item.getItemId(), Money.newMoney(getPrice(), owner));
 	}
 
 	public Money previousPrice(Account owner) {
-		return price(owner, getPreviousPrice());
+		return Money.newMoney(getPreviousPrice(), owner);
 	}
 	
 	public String getSlug() {
@@ -187,13 +187,5 @@ public class WishListItemForm {
 	private static WeakDbRef<RollingStock> rollingStock(String rsSlug, String rsLabel) {
 		return new WeakDbRef<RollingStock>(rsSlug, rsLabel); 
 	}
-	
-	private static BigDecimal priceValue(Money money) {
-		int budget = (money != null) ? money.getValue() : 0;
-		return 	BigDecimal.valueOf(budget).divide(Money.MONEY_VALUE_FACTOR);
-	}
 
-	private static Money price(Account owner, BigDecimal val) {
-		return new Money(val, owner.getProfile().getCurrency());
-	}
 }

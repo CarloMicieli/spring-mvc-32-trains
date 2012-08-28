@@ -57,6 +57,12 @@ public class MoneyTests {
 	}
 	
 	@Test
+	public void shouldExtractValueFromMoneys() {
+		Money m = new Money(10050, "USD");
+		assertEquals(BigDecimal.valueOf(100.5), Money.moneyValue(m));
+	}
+	
+	@Test
 	public void shouldCheckWheterTwoMoneysAreEquals() {
 		Money x = new Money(10050, "USD");
 		Money y = new Money(10050, "USD");

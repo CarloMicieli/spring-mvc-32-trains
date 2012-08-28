@@ -92,6 +92,16 @@ public class Money {
 	}
 	
 	/**
+	 * Build a new {@code Money} getting the currency form the user profile.
+	 * @param val the money value
+	 * @param user the user
+	 * @return a {@code Money}
+	 */
+	public static Money newMoney(BigDecimal val, Account user) {
+		return new Money(val, user.getProfile().getCurrency());
+	}
+	
+	/**
 	 * Returns the {@code Money} value.
 	 * @return the {@code Money} value
 	 */
@@ -125,6 +135,12 @@ public class Money {
 	
 	public boolean isEmpty() {
 		return StringUtils.isBlank(currency) && value == 0;
+	}
+	
+	
+	public static BigDecimal moneyValue(Money money) {
+		int val = (money != null) ? money.getValue() : 0;
+		return 	BigDecimal.valueOf(val).divide(Money.MONEY_VALUE_FACTOR);
 	}
 	
 	@Override 

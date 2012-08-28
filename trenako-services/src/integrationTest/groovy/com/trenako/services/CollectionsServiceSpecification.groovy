@@ -47,14 +47,14 @@ class CollectionsServiceSpecification extends MongoSpecification {
 			slug: 'the-rocket',
 			owner: 'the-rocket',
 			items: [
-				[itemId: 'acme-123456-2012-01-01', 
+				[itemId: '2012-01-01_acme-123456', 
 					rollingStock: [label: 'ACME 123456', slug: 'acme-123456'], 
 					price: [val: 15000, cur: 'USD'], 
 					condition: 'new', 
 					notes: 'My notes', 
 					category: 'electric-locomotives', 
 					addedAt: new Date()],
-				[itemId: 'acme-123457-2012-01-01', 
+				[itemId: '2012-01-01_acme-123457', 
 					rollingStock: [label: 'ACME 123457', slug: 'acme-123457'], 
 					price: [val: 15000, cur: 'USD'], 
 					condition: 'new', 
@@ -85,7 +85,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		col.categories.freightCars == 1
 		col.lastModified == now.time
 		col.items.size() == 2
-		col.items.collect { it.itemId }.sort() == ['acme-123456-2012-01-01', 'acme-123457-2012-01-01']
+		col.items.collect { it.itemId }.sort() == ['2012-01-01_acme-123456', '2012-01-01_acme-123457']
 	}
 	
 	def "should return null if no collection with the provided id exists"() {
@@ -110,7 +110,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		col.categories.freightCars == 1
 		col.lastModified == now.time
 		col.items.size() == 2
-		col.items.collect { it.itemId }.sort() == ['acme-123456-2012-01-01', 'acme-123457-2012-01-01']
+		col.items.collect { it.itemId }.sort() == ['2012-01-01_acme-123456', '2012-01-01_acme-123457']
 	}
 	
 	def "should return null if no collection with the provided slug exists"() {
@@ -205,7 +205,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		doc.categories.freightCars == 2
 		doc.lastModified != now.time
 		doc.items.size() == 3
-		doc.items.collect { it.itemId }.sort() == ['acme-123456-2012-01-01', 'acme-123457-2010-07-22', 'acme-123457-2012-01-01']
+		doc.items.collect { it.itemId }.sort() == ['2010-07-22_acme-123457', '2012-01-01_acme-123456', '2012-01-01_acme-123457']
 	}
 	
 	def "should update the collection items"() {
@@ -215,7 +215,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		def date = new GregorianCalendar(2010, Calendar.JULY, 22, 1, 30, 00).time
 		def rs = new WeakDbRef<RollingStock>(slug: 'acme-123456', label: 'ACME 123456')
 		def item = new CollectionItem(
-			itemId: 'acme-123456-2012-01-01',
+			itemId: '2012-01-01_acme-123456',
 			category: 'electric-locomotives',
 			rollingStock: rs,
 			price: new Money(1000, 'USD'),
@@ -234,7 +234,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		
 		and:
 		doc.items.size() == 2
-		doc.items[0].itemId == 'acme-123456-2012-01-01'
+		doc.items[0].itemId == '2012-01-01_acme-123456'
 		doc.items[0].rollingStock == [slug: 'acme-123456', label: 'ACME 123456']
 		doc.items[0].notes == 'My updated notes'
 		doc.items[0].condition == 'pre-owned'
@@ -245,7 +245,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		given:
 		def owner = new Account(slug: 'the-rocket')
 		def item = new CollectionItem(
-			itemId: 'acme-123456-2012-01-01', 
+			itemId: '2012-01-01_acme-123456', 
 			category: 'electric-locomotives')
 		
 		when:
@@ -257,7 +257,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		doc.categories.freightCars == 1
 		doc.lastModified != now.time
 		doc.items.size() == 1
-		doc.items.collect { it.itemId } == ['acme-123457-2012-01-01']
+		doc.items.collect { it.itemId } == ['2012-01-01_acme-123457']
 	}
 	
 	def "should create a public and empty collection for a user"() {

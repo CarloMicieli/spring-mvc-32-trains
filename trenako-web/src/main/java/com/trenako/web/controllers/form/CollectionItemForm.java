@@ -15,10 +15,16 @@
  */
 package com.trenako.web.controllers.form;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.context.MessageSource;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
@@ -31,64 +37,86 @@ import com.trenako.values.LocalizedEnum;
  *
  */
 public class CollectionItemForm {
-	//@Valid
+
+	@Valid
 	private CollectionItem item;
-	private RollingStock rs;
-	private boolean alreadyInCollection;
-	private Iterable<LocalizedEnum<Condition>> conditionsList;
 	
-	@Range(min = 0)
-	private int price;
+	@Range(min = 0, max = 9999, message = "collectionItem.price.range.notmet")
+	private BigDecimal price;
+	
+	private BigDecimal previousPrice;
+	
+	private Iterable<LocalizedEnum<Condition>> conditionsList;
 	
 	public CollectionItemForm() {
 	}
 	
-	public CollectionItemForm(CollectionItem item, 
-			RollingStock rs, 
-			Iterable<LocalizedEnum<Condition>> conditionsList,
-			boolean included) {
+	public CollectionItemForm(
+			CollectionItem item, 
+			BigDecimal price,
+			BigDecimal previousPrice,
+			Iterable<LocalizedEnum<Condition>> conditionsList) {
 		this.item = item;
-		this.rs = rs;
-		this.alreadyInCollection = included;
 		this.conditionsList = conditionsList;
+		this.price = price;
+		this.previousPrice = previousPrice;
 	}
 
-	public RollingStock getRs() {
-		return rs;
+	public static CollectionItemForm newForm(
+			RollingStock rs, 
+			MessageSource messageSource) {
+		return newForm(rs, new Date(), messageSource);
+	}
+	
+	public static CollectionItemForm newForm(
+			RollingStock rs, 
+			Date addedAt,
+			MessageSource messageSource) {
+
+		CollectionItem newItem = new CollectionItem(rs, addedAt);	
+		BigDecimal price = Money.moneyValue(newItem.getPrice());
+		return new CollectionItemForm(newItem,
+				price,
+				price,
+				LocalizedEnum.list(Condition.class, messageSource, null));
 	}
 
-	public void setRs(RollingStock rs) {
-		this.rs = rs;
+	public CollectionItem collectionItem(Account owner) {
+		return new CollectionItem(
+				getItem().getRollingStock(),
+				getItem().getCategory(),
+				getItem().getAddedAt(),
+				getItem().getNotes(),
+				Money.newMoney(getPrice(), owner),
+				condition(getItem()));
 	}
 
+	public void setItem(CollectionItem item) {	
+		this.item = item;
+	}
+	
 	public CollectionItem getItem() {	
-		item.setPrice(new Money(getPrice(), "USD"));
-		item.setItemId(item.getItemId());
 		return item;
 	}
 
-	public int getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public BigDecimal getPreviousPrice() {
+		return previousPrice;
+	}
+
+	public void setPreviousPrice(BigDecimal previousPrice) {
+		this.previousPrice = previousPrice;
 	}
 
 	public Iterable<LocalizedEnum<Condition>> getConditionsList() {
 		return conditionsList;
-	}
-
-	public void setConditionsList(Iterable<LocalizedEnum<Condition>> conditionsList) {
-		this.conditionsList = conditionsList;
-	}
-
-	public boolean isAlreadyInCollection() {
-		return alreadyInCollection;
-	}
-
-	public void setAlreadyInCollection(boolean alreadyInCollection) {
-		this.alreadyInCollection = alreadyInCollection;
 	}
 	
 	@Override
@@ -98,5 +126,13 @@ public class CollectionItemForm {
 		
 		CollectionItemForm other = (CollectionItemForm) obj;
 		return this.item.equals(other.item);
+	}
+	
+	private static Condition condition(CollectionItem item) {
+		if (StringUtils.isBlank(item.getCondition())) {
+			return null;
+		}
+		
+		return Condition.parse(item.getCondition());
 	}
 }

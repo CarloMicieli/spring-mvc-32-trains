@@ -59,9 +59,9 @@ public class CollectionItemTests {
 	}
 	
 	@Test
-	public void shouldFillTheItemId() {
+	public void shouldFillTheCollectionItemId() {
 		CollectionItem item = new CollectionItem(rollingStock(), date("2012/01/01"));		
-		assertEquals("acme-123456-2012-01-01", item.getItemId());
+		assertEquals("2012-01-01_acme-123456", item.getItemId());
 	}
 
 	@Test

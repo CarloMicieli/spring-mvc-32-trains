@@ -141,7 +141,7 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 		assertEquals("{ \"owner\" : \"george-stephenson\"}", queryObject(argQuery).toString());
 		
 		String expected = "{ \"$set\" : { \"owner\" : \"george-stephenson\" , \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}} , "+
-				"\"$push\" : { \"items\" : { \"itemId\" : \"acme-123456-2012-01-01\" , "+
+				"\"$push\" : { \"items\" : { \"itemId\" : \"2012-01-01_acme-123456\" , "+
 				"\"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
 				"\"price\" : { \"val\" : 10000 , \"cur\" : \"USD\"} , \"condition\" : \"new\" , \"notes\" : \"My notes\" , "+
 				"\"category\" : \"electric-locomotives\" , \"addedAt\" : { \"$date\" : \"2011-12-31T23:00:00.000Z\"}}} , "+
@@ -158,10 +158,10 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
-		assertEquals("{ \"owner\" : \"george-stephenson\" , \"items.itemId\" : \"acme-123456-2012-01-01\"}", queryObject(argQuery).toString());
+		assertEquals("{ \"owner\" : \"george-stephenson\" , \"items.itemId\" : \"2012-01-01_acme-123456\"}", queryObject(argQuery).toString());
 		
 		String expected = "{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"} , "+
-				"\"items.$\" : { \"itemId\" : \"acme-123456-2012-01-01\" , \"rollingStock\" : "+
+				"\"items.$\" : { \"itemId\" : \"2012-01-01_acme-123456\" , \"rollingStock\" : "+
 				"{ \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , \"price\" : "+
 				"{ \"val\" : 10000 , \"cur\" : \"USD\"} , \"condition\" : \"new\" , \"notes\" : \"My notes\" ,"+
 				" \"category\" : \"electric-locomotives\" , \"addedAt\" : { \"$date\" : \"2011-12-31T23:00:00.000Z\"}}}}";
@@ -179,7 +179,7 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
 		assertEquals("{ \"owner\" : \"george-stephenson\"}", queryObject(argQuery).toString());
 		
-		String expected = "{ \"$pull\" : { \"items\" : { \"itemId\" : \"acme-123456-2012-01-01\"}} , "+
+		String expected = "{ \"$pull\" : { \"items\" : { \"itemId\" : \"2012-01-01_acme-123456\"}} , "+
 				"\"$inc\" : { \"categories.electricLocomotives\" : -1} , " +
 				"\"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());

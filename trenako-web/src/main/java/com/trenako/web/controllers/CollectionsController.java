@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -37,7 +38,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.trenako.entities.Account;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
-import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.CollectionsService;
 import com.trenako.services.RollingStocksService;
 import com.trenako.web.controllers.form.CollectionItemForm;
@@ -52,6 +52,8 @@ import com.trenako.web.security.UserContext;
 @RequestMapping("/collections")
 public class CollectionsController {
 
+	private @Autowired(required = false) MessageSource messageSource;
+	
 	private final UserContext userContext;
 	private final CollectionsService service;
 	private final RollingStocksService rsService;
@@ -79,12 +81,7 @@ public class CollectionsController {
 		
 		RollingStock rs = rsService.findBySlug(slug);
 		
-		CollectionItem newItem = new CollectionItem();
-		newItem.setRollingStock(WeakDbRef.buildFromSlug(slug, RollingStock.class));
-		CollectionItemForm newForm = new CollectionItemForm(newItem, 
-				rs,
-				service.conditionsList(), 
-				true);
+		CollectionItemForm newForm = CollectionItemForm.newForm(rs, messageSource);
 		model.addAttribute("itemForm", newForm);
 		return "collection/add";
 	}
@@ -95,21 +92,16 @@ public class CollectionsController {
 			ModelMap model, 
 			RedirectAttributes redirectAtts) {
 		
-		CollectionItem newItem = form.getItem();
-		RollingStock rs = rsService.findBySlug(newItem.getRollingStock().getSlug());
-		
 		if (bindingResult.hasErrors()) {
-			form.setRs(rs);
 			model.addAttribute("itemForm", form);
 			return "collection/add";
 		}
 		
-		newItem.setRollingStock(WeakDbRef.buildRef(rs));
-		
 		Account owner = userContext.getCurrentUser().getAccount();
+		CollectionItem newItem = form.collectionItem(owner);
 		service.addRollingStock(owner, newItem);
 		
-		redirectAtts.addAttribute("slug", rs.getSlug());
+		redirectAtts.addAttribute("slug", newItem.getRollingStock().getSlug());
 		return "redirect:/rollingstocks/{slug}";
 	}
 }

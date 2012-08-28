@@ -74,10 +74,12 @@ public class CollectionsControllerMappingTests extends AbstractSpringControllerT
 	@Test
 	public void shouldAddItemsToCollections() throws Exception {
 		mockMvc().perform(post("/collections")
+				.param("item.itemId", "2012-01-02_acme-123456")
 				.param("item.rollingStock.slug", "acme-123456")
+				.param("item.rollingStock.label", "ACME 123456")
+				.param("item.category", "electric-locomotives")
 				.param("item.addedAt", "2012-01-01")
-				//.param("item.category", "electric-locomotives")
-				.param("price", "10000"))
+				.param("price", "100.50"))
 			.andExpect(status().isOk())
 			.andExpect(redirectedUrl("/rollingstocks/acme-123456"));
 	}

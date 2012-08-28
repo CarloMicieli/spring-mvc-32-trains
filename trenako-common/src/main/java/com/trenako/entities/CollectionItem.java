@@ -79,8 +79,21 @@ public class CollectionItem {
 	 * @param condition the item conditions
 	 */
 	public CollectionItem(RollingStock rs, Date addedAt, String notes, Money price, Condition condition) {
-		this.rollingStock = rollingStock(rs);
-		this.category = rs.getCategory();
+		this(rollingStock(rs), rs.getCategory(), addedAt, notes, price, condition);
+	}
+	
+	/**
+	 * Creates a new {@code CollectionItem} for the provided rolling stock
+	 * @param rs the rolling stock
+	 * @param category the rolling stock category
+	 * @param addedAt the date
+	 * @param notes the notes
+	 * @param price the purchasing price
+	 * @param condition the item conditions
+	 */
+	public CollectionItem(WeakDbRef<RollingStock> rs, String category, Date addedAt, String notes, Money price, Condition condition) {
+		this.rollingStock = rs;
+		this.category = category;
 		this.addedAt = addedAt;
 		this.notes = notes;
 		this.price = price;
@@ -89,15 +102,7 @@ public class CollectionItem {
 		this.itemId = itemId(this.rollingStock, this.addedAt);
 	}
 	
-	private static String condition(Condition cond) {
-		if (cond == null) {
-			return null;
-		}
-		
-		return cond.label();
-	}
-	
-    /**
+	/**
 	 * Returns the {@code CollectionItem} id.    
 	 * @return the id
 	 */
@@ -223,13 +228,21 @@ public class CollectionItem {
 	
 	private static String itemId(WeakDbRef<RollingStock> rs, Date addedAt) {
 		return new StringBuilder()
-			.append(rs.getSlug())
-			.append("-")
 			.append(Slug.encode(addedAt))
+			.append("_")
+			.append(rs.getSlug())
 			.toString();
 	}
 	
 	private static WeakDbRef<RollingStock> rollingStock(RollingStock rs) {
 		return WeakDbRef.buildRef(rs);
+	}
+	
+	private static String condition(Condition cond) {
+		if (cond == null) {
+			return null;
+		}
+		
+		return cond.label();
 	}
 }
