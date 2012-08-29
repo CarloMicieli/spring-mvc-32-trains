@@ -72,7 +72,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
 	@Override
 	public void createNew(RollingStock rs, Comment comment) {
 		RollingStockComments rsc = new RollingStockComments(rs);
-		Comment c = new Comment(comment.getAuthorId(), comment.getContent(), now());
+		Comment c = new Comment(comment.getAuthor(), comment.getContent(), now());
 		
 		Update upd = new Update()
 			.set("rollingStock", rsc.getRollingStock())
@@ -85,7 +85,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
 	@Override
 	public void createAnswer(RollingStock rs, Comment comment, Comment answer) {
 		RollingStockComments rsc = new RollingStockComments(rs);
-		Comment a = new Comment(answer.getAuthorId(), answer.getContent(), now());
+		Comment a = new Comment(answer.getAuthor(), answer.getContent(), now());
 		
 		Update upd = new Update()
 			.inc("numberOfComments", 1)

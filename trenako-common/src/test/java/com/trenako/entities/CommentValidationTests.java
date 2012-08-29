@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ import static org.junit.Assert.*;
  */
 public class CommentValidationTests extends AbstractValidationTests<Comment> {
 	Account author = new Account.Builder("mail@mailcom")
-		.id(new ObjectId())
+		.displayName("Bob")
 		.build();
 	
 	@Before
@@ -56,7 +55,7 @@ public class CommentValidationTests extends AbstractValidationTests<Comment> {
 		Map<String, String> errors = validate(c);
 		
 		assertEquals(2, errors.size());
-		assertEquals("comment.author.required", errors.get("authorId"));
+		assertEquals("comment.author.required", errors.get("author"));
 		assertEquals("comment.content.required", errors.get("content"));
 	}
 	
@@ -71,5 +70,19 @@ public class CommentValidationTests extends AbstractValidationTests<Comment> {
 		Map<String, String> errors = validate(c);
 		
 		assertEquals(0, errors.size());
+	}
+	
+	@Test
+	public void shouldValidateWrongCommentAnswers() {
+		Comment c = new Comment(author, "Comment content");
+		List<Comment> answers = Arrays.asList(
+				new Comment(author, "my first comment"),
+				new Comment(author, null));
+		c.setAnswers(answers);
+		
+		Map<String, String> errors = validate(c);
+		
+		assertEquals(1, errors.size());
+		assertEquals("comment.content.required", errors.get("answers[1].content"));
 	}
 }

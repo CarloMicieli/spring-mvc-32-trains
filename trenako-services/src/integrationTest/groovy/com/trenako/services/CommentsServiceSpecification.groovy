@@ -45,12 +45,12 @@ class CommentsServiceSpecification extends MongoSpecification {
 			rollingStock: [slug: 'acme-69501', label: 'ACME 69501'],
 			numberOfComments: 2,
 			items: [
-				[commentId: '20120101', 
-					author: new ObjectId('47cc67093475061e3d95369e'), 
+				[commentId: '12-07-01-12-30-00_bob', 
+					author: 'bob', 
 					content: 'Comment 1', 
 					postedAt: new Date()],
 				[commentId: '20120102', 
-					author: new ObjectId('47cc67093475061e3d95369f'), 
+					author: 'alice', 
 					content: 'Comment 2', 
 					postedAt: new Date()]
 				]
@@ -61,17 +61,17 @@ class CommentsServiceSpecification extends MongoSpecification {
 			rollingStock: [slug: 'acme-69502', label: 'ACME 69502'],
 			numberOfComments: 3,
 			items: [
-				[commentId: '20120101',
-					author: new ObjectId('47cc67093475061e3d95369e'),
+				[commentId: '12-07-01-12-30-00_bob',
+					author: 'bob',
 					content: 'Comment 3',
 					postedAt: new Date(),
 					answers: [
-						[commentId: '20120102',
-							author: new ObjectId('47cc67093475061e3d95369f'),
+						[commentId: '12-07-01-12-31-00_alice',
+							author: 'alice',
 							content: 'Answer 1',
 							postedAt: new Date()],
-						[commentId: '20120103',
-							author: new ObjectId('47cc67093475061e3d95369f'),
+						[commentId: '12-07-01-12-32-15_bob',
+							author: 'bob',
 							content: 'Answer 2',
 							postedAt: new Date()]
 						]
@@ -108,8 +108,7 @@ class CommentsServiceSpecification extends MongoSpecification {
 			.build()
 			
 		and:
-		def authorId = new ObjectId()
-		def newComment = new Comment(authorId: authorId, content: 'My comment')
+		def newComment = new Comment(author: 'alice', content: 'My comment')
 		
 		when:
 		service.postComment(rs, newComment)
@@ -125,7 +124,7 @@ class CommentsServiceSpecification extends MongoSpecification {
 		
 		and:
 		def comment = comments.items[0]
-		comment.authorId == authorId
+		comment.author == 'alice'
 		comment.content == 'My comment'
 		
 		comment.commentId != null
@@ -141,9 +140,8 @@ class CommentsServiceSpecification extends MongoSpecification {
 			.build()
 			
 		and:
-		def authorId = new ObjectId()
-		def parent = new Comment(commentId: '20120101')
-		def newAnswer = new Comment(authorId: authorId, content: 'My answer')
+		def parent = new Comment(commentId: '12-07-01-12-30-00_bob')
+		def newAnswer = new Comment(author: 'alice', content: 'My answer')
 		
 		when:
 		service.postAnswer(rs, parent, newAnswer)
@@ -162,7 +160,7 @@ class CommentsServiceSpecification extends MongoSpecification {
 		comment.answers.size() == 1
 		
 		def answer = comment.answers[0]
-		answer.authorId == authorId
+		answer.author == 'alice'
 		answer.content == 'My answer'
 		answer.postedAt != null
 	}
@@ -176,8 +174,7 @@ class CommentsServiceSpecification extends MongoSpecification {
 			.build()
 			
 		and:
-		def authorId = new ObjectId()
-		def comment = new Comment(commentId: '20120101')
+		def comment = new Comment(commentId: '12-07-01-12-30-00_bob')
 		
 		when:
 		service.deleteComment(rs, comment)
@@ -200,9 +197,8 @@ class CommentsServiceSpecification extends MongoSpecification {
 			.build()
 			
 		and:
-		def authorId = new ObjectId()
-		def parent = new Comment(commentId: '20120101')
-		def answer = new Comment(commentId: '20120103')
+		def parent = new Comment(commentId: '12-07-01-12-30-00_bob')
+		def answer = new Comment(commentId: '12-07-01-12-32-15_bob')
 		
 		when:
 		service.deleteAnswer(rs, parent, answer)

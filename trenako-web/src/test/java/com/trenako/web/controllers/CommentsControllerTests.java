@@ -19,7 +19,6 @@ import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,7 +83,7 @@ public class CommentsControllerTests {
 	}
 	
 	Comment comment() {
-		Comment c = new Comment(new ObjectId("5039f3bc84ae7e1f1ac8ce5b"), "my comment", date("2012/08/01"));
+		Comment c = new Comment("bob", "my comment", date("2012/08/01"));
 		return c;
 	}
 	

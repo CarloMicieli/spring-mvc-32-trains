@@ -25,7 +25,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -40,7 +39,7 @@ public class Comment {
 	private String commentId;
 	
 	@NotNull(message = "comment.author.required")
-	private ObjectId authorId;
+	private String author;
 
 	@NotBlank(message = "comment.content.required")
 	@Size(max = 150, message = "comment.content.size.notmet")
@@ -72,28 +71,40 @@ public class Comment {
 	 * @param content the comment content
 	 */
 	public Comment(Account account, String content) {
-		this(author(account), content, new Date());
+		this(account, content, new Date());
 	}
 	
 	/**
 	 * Creates a new {@code Comment} for a rolling stock model.
 	 * 
-	 * @param authorId the comment's author id
+	 * @param author the author
 	 * @param content the comment content
 	 * @param postedAt the posting date
 	 */
-	public Comment(ObjectId authorId, String content, Date postedAt) {
-		this.authorId = authorId;
-		this.content = content;
-		this.postedAt = postedAt;
-		
-		this.commentId = commentId(this.postedAt);
+	public Comment(Account author, String content, Date postedAt) {
+		this(author(author), content, postedAt);
 	}
 	
+	public Comment(String author, String content, Date postedAt) {
+		this.author = author;
+		this.content = content;
+		this.postedAt = postedAt;
+
+		this.commentId = commentId(this.author, this.postedAt);
+	}	
+	
+	/**
+	 * Returns the {@code Comment} id.
+	 * @return the comment id
+	 */
 	public String getCommentId() {
 		return commentId;
 	}
 
+	/**
+	 * Sets the {@code Comment} id.
+	 * @param commentId the comment id
+	 */
 	public void setCommentId(String commentId) {
 		this.commentId = commentId;
 	}
@@ -102,20 +113,20 @@ public class Comment {
 	 * Returns the {@code Comment}'s author.
 	 * @return the author
 	 */
-	public ObjectId getAuthorId() {
-		return authorId;
+	public String getAuthor() {
+		return author;
 	}
 
 	/**
 	 * Sets the {@code Comment}'s author.
 	 * @param authorId the author
 	 */
-	public void setAuthorId(ObjectId authorId) {
-		this.authorId = authorId;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 		
 	/**
-	 * Returns the comment's content.
+	 * Returns the {@code Comment}'s content.
 	 * @return the content
 	 */
 	public String getContent() {
@@ -123,7 +134,7 @@ public class Comment {
 	}
 
 	/**
-	 * Sets the comment's content.
+	 * Sets the {@code Comment}'s content.
 	 * @param content the content
 	 */
 	public void setContent(String content) {
@@ -170,7 +181,7 @@ public class Comment {
 		Comment other = (Comment) obj;
 		return new EqualsBuilder()
 			.append(this.content, other.content)
-			.append(this.authorId, other.authorId)
+			.append(this.author, other.author)
 			.append(this.postedAt, other.postedAt)
 			.isEquals();
 	}
@@ -178,8 +189,8 @@ public class Comment {
 	@Override
 	public String toString() {
 		return new StringBuilder()
-			.append("comment{authorId: ")
-			.append(getAuthorId())
+			.append("comment{author: ")
+			.append(getAuthor())
 			.append(", content: ")
 			.append(getContent())
 			.append(", postedAt: ")
@@ -188,12 +199,16 @@ public class Comment {
 			.toString();	
 	}
 	
-	private static ObjectId author(Account account) {
-		return account.getId();
+	private static String author(Account account) {
+		return account.getSlug();
 	}
 	
-	private String commentId(Date postedAt) {
-		DateFormat df = new SimpleDateFormat("ddMMyyHHmmssSSS");
-		return df.format(postedAt);
+	private String commentId(String author, Date postedAt) {
+		DateFormat df = new SimpleDateFormat("yy-MM-dd-HH-mm-ss");
+		return new StringBuilder()
+			.append(df.format(postedAt))
+			.append("_")
+			.append(author)
+			.toString();
 	}
 }

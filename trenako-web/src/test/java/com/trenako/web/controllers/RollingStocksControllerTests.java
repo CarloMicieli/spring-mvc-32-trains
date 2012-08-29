@@ -23,7 +23,6 @@ import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -134,7 +133,7 @@ public class RollingStocksControllerTests {
 		
 		Comment newComment = (Comment) model.get("newComment");
 		assertNotNull("Comment is null", newComment);
-		assertEquals(USERID, newComment.getAuthorId());
+		assertEquals("bob", newComment.getAuthor());
 	}
 	
 	@Test(expected = NotFoundException.class)
@@ -341,13 +340,10 @@ public class RollingStocksControllerTests {
 		return form;
 	}
 	
-	private final static ObjectId USERID = new ObjectId("47cc67093475061e3d95369d");
-	
 	private UserContext mockSecurity() {
 		UserContext mockSecurity = mock(UserContext.class);
 		Account user = new Account.Builder("mail@mail.com")
-			.id(USERID)
-			.displayName("bob")
+			.displayName("Bob")
 			.build();
 		when(mockSecurity.getCurrentUser()).thenReturn(new AccountDetails(user));
 		

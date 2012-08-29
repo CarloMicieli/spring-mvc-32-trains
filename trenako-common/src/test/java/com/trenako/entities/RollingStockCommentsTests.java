@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 
 import java.util.Collections;
 
-import org.bson.types.ObjectId;
 import org.junit.Test;
 
 /**
@@ -29,11 +28,8 @@ import org.junit.Test;
  *
  */
 public class RollingStockCommentsTests {
-	private static final ObjectId USERID = new ObjectId("5039258b84ae08ae6de15da2");
-	
 	private final Account author() {
 		return new Account.Builder("mail@mail.com")
-			.id(USERID)
 			.displayName("Bob")
 			.build();
 	}
@@ -53,7 +49,7 @@ public class RollingStockCommentsTests {
 		assertEquals("acme-123456", comments.getRollingStock().getSlug());
 		assertEquals("ACME 123456", comments.getRollingStock().getLabel());
 		
-		assertEquals(USERID, comments.getItems().get(0).getAuthorId());
+		assertEquals("bob", comments.getItems().get(0).getAuthor());
 		assertEquals("Comment content", comments.getItems().get(0).getContent());		
 	}
 	

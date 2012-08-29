@@ -53,7 +53,7 @@ public class CommentsControllerMappingTests extends AbstractSpringControllerTest
 	public void shouldPostNewComments() throws Exception {
 		when(rsService.findBySlug(eq(SLUG))).thenReturn(rollingStock());
 		mockMvc().perform(post("/rollingstocks/{slug}/comments", SLUG)
-				.param("authorId", "47cc67093475061e3d95369d")
+				.param("author", "bob")
 				.param("content", "My comment"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))

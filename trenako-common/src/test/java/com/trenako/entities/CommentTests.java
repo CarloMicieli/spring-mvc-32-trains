@@ -18,7 +18,6 @@ package com.trenako.entities;
 import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
-import org.bson.types.ObjectId;
 import org.junit.Test;
 
 /**
@@ -28,19 +27,16 @@ import org.junit.Test;
  */
 public class CommentTests {
 	
-	private static final ObjectId USERID = new ObjectId("5039258b84ae08ae6de15da2");
-	
 	private final Account author() {
 		return new Account.Builder("mail@mail.com")
-			.id(USERID)
 			.displayName("Bob")
 			.build();
 	}
 	
 	@Test
 	public void shouldCheckWhetherTwoUserCommentsAreEquals() {
-		Comment x = new Comment(USERID, "Comment content", date("2012/1/1"));
-		Comment y = new Comment(USERID, "Comment content", date("2012/1/1"));
+		Comment x = new Comment(author(), "Comment content", date("2012/1/1"));
+		Comment y = new Comment(author(), "Comment content", date("2012/1/1"));
 		
 		assertTrue(x.equals(y));
 	}
@@ -51,19 +47,19 @@ public class CommentTests {
 		Comment y = new Comment(author(), "Comment content 2");
 		assertFalse(x.equals(y));
 		
-		Comment z = new Comment(USERID, "Comment content 1", date("2012/1/1"));
+		Comment z = new Comment(author(), "Comment content 1", date("2012/1/1"));
 		assertFalse(x.equals(z));
 	}
 	
 	@Test
 	public void shouldProduceCommentIds() {
-		Comment x = new Comment(USERID, "Comment content 1", fulldate("2012/06/01 10:30:00.500"));
-		assertEquals("010612103000500", x.getCommentId());
+		Comment x = new Comment(author(), "Comment content 1", fulldate("2012/06/01 10:30:00.500"));
+		assertEquals("12-06-01-10-30-00_bob", x.getCommentId());
 	}
 	
 	@Test
 	public void shouldProduceStringRepresentationFromComments() {
-		Comment c = new Comment(USERID, "Comment content", date("2012/1/1"));
-		assertEquals("comment{authorId: 5039258b84ae08ae6de15da2, content: Comment content, postedAt: Sun Jan 01 00:00:00 CET 2012}", c.toString());
+		Comment c = new Comment(author(), "Comment content", date("2012/1/1"));
+		assertEquals("comment{author: bob, content: Comment content, postedAt: Sun Jan 01 00:00:00 CET 2012}", c.toString());
 	}
 }

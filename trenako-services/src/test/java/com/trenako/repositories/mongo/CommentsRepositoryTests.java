@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 
-import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -44,8 +43,6 @@ import com.trenako.repositories.CommentsRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class CommentsRepositoryTests extends AbstractMongoRepositoryTests {
 
-	private ObjectId USERID = new ObjectId("5039dd3284aea5534ca9a182");
-	
 	private RollingStock rollingStock() {
 		return new RollingStock.Builder(acme(), "123456")
 			.railway(fs())
@@ -92,7 +89,7 @@ public class CommentsRepositoryTests extends AbstractMongoRepositoryTests {
 		
 		String expected = "{ \"$set\" : { \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"}} ,"+
 			" \"$inc\" : { \"numberOfComments\" : 1} ,"+
-			" \"$push\" : { \"items\" : { \"commentId\" : \"010712100000000\" , \"authorId\" : { \"$oid\" : \"5039dd3284aea5534ca9a182\"} ,"+
+			" \"$push\" : { \"items\" : { \"commentId\" : \"12-07-01-10-00-00_bob\" , \"author\" : \"bob\" ,"+
 			" \"content\" : \"Comment\" , \"postedAt\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
@@ -105,11 +102,11 @@ public class CommentsRepositoryTests extends AbstractMongoRepositoryTests {
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateFirst(argWhere.capture(), argUpdate.capture(), eq(RollingStockComments.class));
 		
-		assertEquals("{ \"slug\" : \"acme-123456\" , \"items.commentId\" : \"010712100000000\"}", queryObject(argWhere).toString());
+		assertEquals("{ \"slug\" : \"acme-123456\" , \"items.commentId\" : \"12-07-01-12-30-00_bob\"}", queryObject(argWhere).toString());
 		
 		String expected = "{ \"$inc\" : { \"numberOfComments\" : 1} ,"+
 				" \"$push\" : { \"items.$.answers\" : "+
-				"{ \"commentId\" : \"010712100000000\" , \"authorId\" : { \"$oid\" : \"5039dd3284aea5534ca9a182\"} , "+
+				"{ \"commentId\" : \"12-07-01-10-00-00_bob\" , \"author\" : \"bob\" , "+
 				"\"content\" : \"Answer\" , \"postedAt\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
@@ -124,21 +121,21 @@ public class CommentsRepositoryTests extends AbstractMongoRepositoryTests {
 		
 		assertEquals("{ \"slug\" : \"acme-123456\"}", queryObject(argWhere).toString());
 		
-		String expected = "{ \"$inc\" : { \"numberOfComments\" : -1} , \"$pull\" : { \"items\" : { \"commentId\" : \"010712100000000\"}}}";
+		String expected = "{ \"$inc\" : { \"numberOfComments\" : -1} , \"$pull\" : { \"items\" : { \"commentId\" : \"12-07-01-12-30-00_bob\"}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
 	
 	@Test
 	public void shouldDeleteCommentAnswers() {
-		repo.removeAnswer(rollingStock(), newComment("010712100000000", "Comment"), newComment("020812200000000", "Answer"));
+		repo.removeAnswer(rollingStock(), newComment("12-07-01-12-30-00_bob", "Comment"), newComment("12-07-01-10-00-00_bob", "Answer"));
 		
 		ArgumentCaptor<Query> argWhere = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateFirst(argWhere.capture(), argUpdate.capture(), eq(RollingStockComments.class));
 		
-		assertEquals("{ \"slug\" : \"acme-123456\" , \"items.commentId\" : \"010712100000000\"}", queryObject(argWhere).toString());
+		assertEquals("{ \"slug\" : \"acme-123456\" , \"items.commentId\" : \"12-07-01-12-30-00_bob\"}", queryObject(argWhere).toString());
 		
-		String expected = "{ \"$inc\" : { \"numberOfComments\" : -1} , \"$pull\" : { \"items.$.answers\" : { \"commentId\" : \"020812200000000\"}}}";
+		String expected = "{ \"$inc\" : { \"numberOfComments\" : -1} , \"$pull\" : { \"items.$.answers\" : { \"commentId\" : \"12-07-01-10-00-00_bob\"}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
 	
@@ -149,13 +146,13 @@ public class CommentsRepositoryTests extends AbstractMongoRepositoryTests {
 	}
 	
 	private Comment newComment(String content) {
-		return newComment("010712100000000", content);
+		return newComment("12-07-01-12-30-00_bob", content);
 	}
 	
 	private Comment newComment(String commentId, String content) {
 		Comment c = new Comment();
 		c.setCommentId(commentId);
-		c.setAuthorId(USERID);
+		c.setAuthor("bob");
 		c.setContent(content);
 		return c;
 	}
