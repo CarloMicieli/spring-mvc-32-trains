@@ -16,6 +16,7 @@
 package com.trenako.activities;
 
 import com.trenako.entities.RollingStock;
+import com.trenako.mapping.WeakDbRef;
 
 /**
  * It represents an the object for a user activity.
@@ -100,7 +101,7 @@ public class ActivityObject {
 	 * @param rs the rolling stock
 	 * @return a new {@code ActivityObject}
 	 */
-	public static ActivityObject rsObject(RollingStock rs) {
+	public static ActivityObject rsObject(WeakDbRef<RollingStock> rs) {
 		return new ActivityObject("rollingStock", "/rollingstocks/" + rs.getSlug(), rs.getLabel());
 	}
 }

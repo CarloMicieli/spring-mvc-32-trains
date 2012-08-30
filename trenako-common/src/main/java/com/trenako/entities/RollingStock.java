@@ -117,8 +117,7 @@ public class RollingStock implements DbReferenceable {
 	
 	private DeliveryDate deliveryDate;
 	
-	private ObjectId createdBy;
-	private ObjectId updatedBy;
+	private String modifiedBy;
 		
 	private Date lastModified;
 	
@@ -730,35 +729,19 @@ public class RollingStock implements DbReferenceable {
 	}
 	
 	/**
-	 * Returns the id for the user who created this {@code RollingStock}.
-	 * @return the user id
+	 * Returns the the user who updated this {@code RollingStock}.
+	 * @return the user
 	 */
-	public ObjectId getCreatedBy() {
-		return createdBy;
+	public String getModifiedBy() {
+		return modifiedBy;
 	}
 
 	/**
-	 * Sets the id for the user who created this {@code RollingStock}.
-	 * @param createdBy the user id
+	 * Sets the user who updated this {@code RollingStock}.
+	 * @param modifiedBy the user
 	 */
-	public void setCreatedBy(ObjectId createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	/**
-	 * Returns the id for the user who updated this {@code RollingStock}.
-	 * @return the user id
-	 */
-	public ObjectId getUpdatedBy() {
-		return updatedBy;
-	}
-
-	/**
-	 * Sets the id for the user who updated this {@code RollingStock}.
-	 * @param updatedBy the user id
-	 */
-	public void setUpdatedBy(ObjectId updatedBy) {
-		this.updatedBy = updatedBy;
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 	/**

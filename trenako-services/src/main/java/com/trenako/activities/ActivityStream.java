@@ -16,27 +16,60 @@
 package com.trenako.activities;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Collection;
+import com.trenako.entities.CollectionItem;
 import com.trenako.entities.Comment;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.WishList;
+import com.trenako.entities.WishListItem;
 
 /**
- * It represents the interface for the {@code Activity} stream.
+ * The interface for the {@code Activity} stream.
  * @author Carlo Micieli
  *
  */
 public interface ActivityStream {
 
 	/**
-	 * Saves the provided {@code Activity}.
-	 * @param activity the {@code Activity} to be saved
+	 * Records a new {@code Activity} for a user comment.
+	 * @param comment the comment
+	 * @param rs the rolling stock
 	 */
-	void recordActivity(Activity activity);
+	void comment(Comment comment, RollingStock rs);
 
-	void comment(Comment c, RollingStock rs);
-	void review(Review c, RollingStock rs);
+	/**
+	 * Records a new {@code Activity} for a user review.
+	 * @param review the review
+	 * @param rs the rolling stock
+	 */
+	void review(Review review, RollingStock rs);
+	
+	/**
+	 * Records a new {@code Activity} for the rolling stock creation.
+	 * @param rs the rolling stock
+	 */
 	void createRollingStock(RollingStock rs);
-	void updateRollingStock(RollingStock rs);
+	
+	/**
+	 * Records a new {@code Activity} for the rolling stock modification.
+	 * @param rs the rolling stock
+	 */	
+	void changeRollingStock(RollingStock rs);
+	
+	/**
+	 * Records a new {@code Activity} for the rolling stock added to wish lists.
+	 * @param wishList the wish list
+	 * @param item the wish list item
+	 */
+	void wishList(WishList wishList, WishListItem item);
+	
+	/**
+	 * Records a new {@code Activity} for the rolling stock added to collections.
+	 * @param collection the collection
+	 * @param item the collection item
+	 */	
+	void collection(Collection collection, CollectionItem item);
 
 	/**
 	 * Returns at most {@code numberOfItems} elements from the activity stream.

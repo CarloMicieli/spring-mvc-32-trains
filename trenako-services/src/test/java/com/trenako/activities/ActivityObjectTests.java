@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.trenako.entities.RollingStock;
+import com.trenako.mapping.WeakDbRef;
 
 /**
  * 
@@ -58,11 +59,15 @@ public class ActivityObjectTests {
 	
 	@Test
 	public void shouldCreateActivityObjectsFromRollingStocks() {
-		ActivityObject obj = ActivityObject.rsObject(rollingStock());
+		ActivityObject obj = ActivityObject.rsObject(rsRef());
 		
 		assertEquals("rollingStock", obj.getObjectType());
 		assertEquals("/rollingstocks/acme-123456", obj.getUrl());
 		assertEquals("ACME 123456", obj.getDisplayName());
+	}
+	
+	private WeakDbRef<RollingStock> rsRef() {
+		return WeakDbRef.buildRef(rollingStock());
 	}
 	
 	private RollingStock rollingStock() { 

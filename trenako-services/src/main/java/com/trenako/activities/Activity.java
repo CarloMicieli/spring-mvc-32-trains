@@ -26,6 +26,14 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Collection;
+import com.trenako.entities.CollectionItem;
+import com.trenako.entities.Comment;
+import com.trenako.entities.Review;
+import com.trenako.entities.RollingStock;
+import com.trenako.entities.WishList;
+import com.trenako.entities.WishListItem;
+import com.trenako.mapping.WeakDbRef;
 
 /**
  * It represents an element in the user activity stream.
@@ -87,34 +95,121 @@ public class Activity {
 	 * @param context the {@code Activity} target
 	 */
 	public Activity(Account actor, ActivityVerb verb, ActivityObject object, ActivityContext context) {
-		this.actor = actorId(actor);
+		this(actorId(actor), verb, object, context, new Date());
+	}
+	
+	private Activity(String actor, ActivityVerb verb, ActivityObject object, ActivityContext context, Date recordAt) {
+		this.actor = actor;
 		this.verb = activityVerb(verb);
 		this.object = object;
 		this.context = context;
-
-		this.recorded = new Date();
+		this.recorded = recordAt;
 	}
 	
+	/**
+	 * Builds a new {@code Activity} for provided user comments.
+	 * @param comment the comment
+	 * @param rsRef the rolling stock ref
+	 * @return a new {@code Activity}
+	 */
+	public static Activity buildForComment(Comment comment, WeakDbRef<RollingStock> rsRef) {
+		return new Activity(comment.getAuthor(), 
+				ActivityVerb.COMMENT, 
+				ActivityObject.rsObject(rsRef), 
+				null, 
+				comment.getPostedAt());
+	}
+	
+	/**
+	 * Builds a new {@code Activity} for provided user reviews.
+	 * @param review the review
+	 * @param rsRef the rolling stock ref
+	 * @return a new {@code Activity}
+	 */
+	public static Activity buildForReview(Review review, WeakDbRef<RollingStock> rsRef) {
+		return new Activity(review.getAuthor(), 
+				ActivityVerb.REVIEW, 
+				ActivityObject.rsObject(rsRef), 
+				null, 
+				review.getPostedAt());
+	}
+	
+	public static Activity buildForRsCreate(RollingStock rollingStock) {
+		return new Activity(rollingStock.getModifiedBy(), 
+				ActivityVerb.RS_INSERT, 
+				ActivityObject.rsObject(WeakDbRef.buildRef(rollingStock)), 
+				null, 
+				rollingStock.getLastModified());
+	}
+	
+	public static Activity buildForRsChange(RollingStock rollingStock) {
+		return new Activity(rollingStock.getModifiedBy(), 
+				ActivityVerb.RS_UPDATE, 
+				ActivityObject.rsObject(WeakDbRef.buildRef(rollingStock)), 
+				null, 
+				rollingStock.getLastModified());
+	}
+	
+	public static Activity buildForWishList(WishList wishList, WishListItem item) {
+		return new Activity(wishList.getOwner(), 
+				ActivityVerb.ADD_WISH_LIST, 
+				ActivityObject.rsObject(item.getRollingStock()), 
+				ActivityContext.wishListContext(wishList), 
+				item.getAddedAt());
+	}
+	
+	public static Activity buildForCollection(Collection collection, CollectionItem item) {
+		return new Activity(collection.getOwner(), 
+				ActivityVerb.ADD_COLLECTION, 
+				ActivityObject.rsObject(item.getRollingStock()), 
+				ActivityContext.collectionContext(collection), 
+				item.getAddedAt());
+	}
+	
+	/**
+	 * Returns the {@code Activity} id.
+	 * @return the id
+	 */
 	public ObjectId getId() {
 		return id;
 	}
 
+	/**
+	 * Sets the {@code Activity} id.
+	 * @param id the id
+	 */
 	public void setId(ObjectId id) {
 		this.id = id;
 	}
 
+	/**
+	 * Returns the {@code Activity} actor.
+	 * @return the actor
+	 */
 	public String getActor() {
 		return actor;
 	}
 
+	/**
+	 * Sets the {@code Activity} actor.
+	 * @param actor the actor
+	 */
 	public void setActor(String actor) {
 		this.actor = actor;
 	}
 
+	/**
+	 * Returns the {@code Activity} verb.
+	 * @return the verb
+	 */
 	public String getVerb() {
 		return verb;
 	}
 
+	/**
+	 * Sets the {@code Activity} verb.
+	 * @param verb the verb
+	 */
 	public void setVerb(String verb) {
 		this.verb = verb;
 	}
@@ -135,10 +230,18 @@ public class Activity {
 		this.object = object;
 	}
 
+	/**
+	 * Returns the {@code Activity} context.
+	 * @return the context
+	 */
 	public ActivityContext getContext() {
 		return context;
 	}
 
+	/**
+	 * Sets the {@code Activity} context.
+	 * @param context the context
+	 */
 	public void setContext(ActivityContext context) {
 		this.context = context;
 	}
@@ -195,4 +298,5 @@ public class Activity {
 	private static String activityVerb(ActivityVerb verb) {
 		return verb.label();
 	}
+
 }
