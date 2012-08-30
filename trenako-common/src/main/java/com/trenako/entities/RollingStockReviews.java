@@ -46,7 +46,6 @@ public class RollingStockReviews {
 	private String slug;
 
 	@NotNull(message = "reviews.rollingStock.required")
-	@Indexed(name = "rollingStock.slug", unique = true)
 	private WeakDbRef<RollingStock> rollingStock;
 
 	@Valid
@@ -55,7 +54,7 @@ public class RollingStockReviews {
 	@Range(min = 1, message = "reviews.numberOfReviews.range.notmet")
 	private int numberOfReviews;
 
-	@Range(min = 0, message = "reviews.numberOfReviews.range.notmet")
+	@Range(min = 0, message = "reviews.totalRating.range.notmet")
 	private int totalRating;
 
 	/**
