@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Test;
 
@@ -58,7 +59,7 @@ public class ReviewTests {
 	public void shouldCalculateNumberOfReviewsAndRatingForEmptyReview() {
 		assertEquals(0, rsReviews.getNumberOfReviews());
 		assertEquals(0, rsReviews.getTotalRating());
-		assertEquals(null, rsReviews.getItems());
+		assertEquals(Collections.emptyList(), rsReviews.getItems());
 	}
 	
 	@Test

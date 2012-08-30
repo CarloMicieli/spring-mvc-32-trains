@@ -17,6 +17,7 @@ package com.trenako.entities;
 
 import org.bson.types.ObjectId;
 
+import java.util.Collections;
 import java.util.List;
 import java.math.BigDecimal;
 
@@ -28,11 +29,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-import com.trenako.utility.Slug;
 import com.trenako.mapping.WeakDbRef;
 
 /**
- * It represents a container for all the user reviews for a rolling stock.
+ * It represents a list of user reviews for a rolling stock.
  * @author Carlo Micieli
  * 
  */
@@ -70,6 +70,7 @@ public class RollingStockReviews {
 	 */
 	public RollingStockReviews(RollingStock rollingStock) {
 		this.setRollingStock(rollingStock);
+		this.slug = reviewsSlug(getRollingStock());
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class RollingStockReviews {
 	 */
 	public String getSlug() {
 		if (slug == null) {
-			slug = Slug.encode(getRollingStock().getSlug());
+			slug = reviewsSlug(getRollingStock());
 		}
 		return slug;
 	}
@@ -133,9 +134,15 @@ public class RollingStockReviews {
 
 	/**
 	 * Returns the list of rolling stock reviews.
+	 * <p>
+	 * The list of items is immutable.
+	 * </p>
 	 * @return the reviews list
 	 */
 	public List<Review> getItems() {
+		if (items == null) {
+			return Collections.emptyList();
+		}
 		return items;
 	}
 
@@ -211,5 +218,9 @@ public class RollingStockReviews {
 			.append(getTotalRating())
 			.append("}")
 			.toString();	
+	}
+	
+	private static String reviewsSlug(WeakDbRef<RollingStock> rs) {
+		return rs.getSlug();
 	}
 }
