@@ -67,7 +67,7 @@ public class ActivityStreamTests {
 	
 	@Test
 	public void shouldRecordActivityForCommentsPosting() {
-		activityStream.comment(comment(), rollingStock());
+		activityStream.comment(rollingStock(), comment());
 		
 		verify(repo, times(1)).save(arg.capture());
 		Activity act = (Activity) arg.getValue();
@@ -76,7 +76,7 @@ public class ActivityStreamTests {
 	
 	@Test
 	public void shouldRecordActivityForReviewsPosting() {
-		activityStream.review(review(), rollingStock());
+		activityStream.review(rollingStock(), review());
 		
 		verify(repo, times(1)).save(arg.capture());
 		Activity act = (Activity) arg.getValue();
@@ -111,8 +111,8 @@ public class ActivityStreamTests {
 	}
 	
 	@Test
-	public void shouldRecordCollectionChanges() {
-		activityStream.collection(collection(), collectionItem());
+	public void shouldRecordRollingStocksAddedToCollections() {
+		activityStream.collection(user(), collectionItem());
 		
 		verify(repo, times(1)).save(arg.capture());
 		Activity act = (Activity) arg.getValue();

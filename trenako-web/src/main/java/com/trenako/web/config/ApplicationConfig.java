@@ -40,8 +40,10 @@ import com.mongodb.WriteConcern;
 @ComponentScan(basePackages = "com.trenako")
 @Profile("default")
 @EnableMongoRepositories("com.trenako.repositories")
-@ImportResource(value = {"classpath:META-INF/spring/spring-data.xml", 
-		"classpath:META-INF/spring/spring-security.xml"})
+@ImportResource(value = {
+		"classpath:META-INF/spring/spring-data.xml", 
+		"classpath:META-INF/spring/spring-security.xml",
+		"classpath:META-INF/spring/spring-aop.xml"})
 public class ApplicationConfig extends AbstractMongoConfiguration {
 	
 	// Autowired from 'spring-data.xml' context

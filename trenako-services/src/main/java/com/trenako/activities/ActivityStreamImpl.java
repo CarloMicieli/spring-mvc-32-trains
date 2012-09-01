@@ -51,13 +51,13 @@ public class ActivityStreamImpl implements ActivityStream {
 	}
 	
 	@Override
-	public void comment(Comment comment, RollingStock rs) {
+	public void comment(RollingStock rs, Comment comment) {
 		Activity act = Activity.buildForComment(comment, WeakDbRef.buildRef(rs));
 		repo.save(act);
 	}
 
 	@Override
-	public void review(Review review, RollingStock rs) {
+	public void review(RollingStock rs, Review review) {
 		Activity act = Activity.buildForReview(review, WeakDbRef.buildRef(rs));
 		repo.save(act);
 	}
@@ -81,7 +81,8 @@ public class ActivityStreamImpl implements ActivityStream {
 	}
 
 	@Override
-	public void collection(Collection collection, CollectionItem item) {
+	public void collection(Account owner, CollectionItem item) {
+		Collection collection = new Collection(owner);
 		Activity act = Activity.buildForCollection(collection, item);
 		repo.save(act);
 	}

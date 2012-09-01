@@ -27,6 +27,7 @@ def logbackVersion = "1.0.6"
 def spockVersion = "0.6-groovy-1.8"
 def mongoDriverVersion = "2.9.0"
 def hibernateValidationVersion = "4.3.0.Final"
+def aspectjVersion = "1.7.0.RELEASE"
 
 allprojects {
 	apply plugin: 'java'
@@ -85,9 +86,12 @@ allprojects {
 			exclude group: "commons-logging", module: "commons-logging"
 		}
 
+		// aop - aspectj
 		compile("org.springframework:spring-aop:${springVersion}") {
 			exclude group: "commons-logging", module: "commons-logging"
 		}
+		compile "org.aspectj:aspectjrt:${aspectjVersion}",
+			"org.aspectj:aspectjweaver:${aspectjVersion}"
 
 		// GCLIB, required for @Configuration usage
 		compile "cglib:cglib-nodep:2.2.2"

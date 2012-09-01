@@ -16,7 +16,6 @@
 package com.trenako.activities;
 
 import com.trenako.entities.Account;
-import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.Comment;
 import com.trenako.entities.Review;
@@ -33,17 +32,17 @@ public interface ActivityStream {
 
 	/**
 	 * Records a new {@code Activity} for a user comment.
-	 * @param comment the comment
 	 * @param rs the rolling stock
+	 * @param comment the comment
 	 */
-	void comment(Comment comment, RollingStock rs);
+	void comment(RollingStock rs, Comment comment);
 
 	/**
 	 * Records a new {@code Activity} for a user review.
-	 * @param review the review
 	 * @param rs the rolling stock
+	 * @param review the review
 	 */
-	void review(Review review, RollingStock rs);
+	void review(RollingStock rs, Review review);
 	
 	/**
 	 * Records a new {@code Activity} for the rolling stock creation.
@@ -66,10 +65,10 @@ public interface ActivityStream {
 	
 	/**
 	 * Records a new {@code Activity} for the rolling stock added to collections.
-	 * @param collection the collection
+	 * @param owner the collection owner
 	 * @param item the collection item
 	 */	
-	void collection(Collection collection, CollectionItem item);
+	void collection(Account owner, CollectionItem item);
 
 	/**
 	 * Returns at most {@code numberOfItems} elements from the activity stream.
