@@ -17,6 +17,7 @@ package com.trenako.services.view;
 
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockComments;
 import com.trenako.entities.RollingStockReviews;
 
 /**
@@ -27,11 +28,11 @@ import com.trenako.entities.RollingStockReviews;
 public class RollingStockView {
 
 	private final RollingStock rs;
-	private final Iterable<Comment> comments;
+	private final RollingStockComments comments;
 	private final RollingStockReviews reviews;
 	
 	public RollingStockView(RollingStock rs, 
-			Iterable<Comment> comments, 
+			RollingStockComments comments, 
 			RollingStockReviews reviews) {
 		this.rs = rs;
 		this.comments = comments;
@@ -51,7 +52,7 @@ public class RollingStockView {
 	 * @return the comments list
 	 */
 	public Iterable<Comment> getComments() {
-		return comments;
+		return comments.getItems();
 	}
 
 	/**

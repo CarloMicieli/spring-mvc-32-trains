@@ -36,6 +36,9 @@ import com.trenako.mapping.WeakDbRef;
  */
 @Document(collection = "comments")
 public class RollingStockComments {
+	
+	private static final RollingStockComments DEFAULT_COMMENTS = new RollingStockComments();
+	
 	@Id
 	private ObjectId id;
 	
@@ -67,6 +70,10 @@ public class RollingStockComments {
 	public RollingStockComments(RollingStock rs, String slug) {
 		this.rollingStock = rollingStock(rs);
 		this.slug = slug;	
+	}
+	
+	public static RollingStockComments defaultRollingStockComments() {
+		return DEFAULT_COMMENTS;
 	}
 	
 	/**

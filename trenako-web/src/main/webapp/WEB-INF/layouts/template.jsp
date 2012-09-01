@@ -4,6 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -56,48 +57,35 @@
 					</a>
 					<a class="brand" href="<c:url value="/" />">Trenako</a>
 					<div class="btn-group pull-right">
-					<sec:authorize access="authenticated" var="authenticated" />
-						<c:choose>
-							<c:when test="${authenticated}">
-							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								<i class="icon-user"></i> <sec:authentication property="principal.username" />
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li><a href="#">Profile</a></li>
-								<li class="divider"></li>
-								<li><a href="<c:url value="/auth/logout" />">Sign Out</a></li>
-							</ul>
-						</c:when>
-						<c:otherwise>
-							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								<i class="icon-user"></i> Starts here
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li><a href="<c:url value="/auth/login" />">Login</a></li>
-								<li class="divider"></li>
-								<li><a href="<c:url value="/auth/signup" />">Sign up</a></li>
-							</ul>
-						</c:otherwise>
-					</c:choose>
-
+					<sec:authorize access="isAuthenticated()">
+						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="icon-user"></i> <sec:authentication property="principal.username" />
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Profile</a></li>
+							<li class="divider"></li>
+							<li><a href="<c:url value="/auth/logout" />">Sign Out</a></li>
+						</ul>
+					</sec:authorize>
 					</div>
 					<div class="nav-collapse">
   						<ul class="nav">
   							<li class="<decorator:getProperty property="meta.home"/>">
 								<a href="<c:url value="/home" />"><s:message code="menu.home.label"/></a>
 							</li>
+							<sec:authorize url="/you">
 							<li class="<decorator:getProperty property="meta.you"/>">
 								<a href="<c:url value="/you" />"><s:message code="menu.you.label"/></a>
 							</li>
+							</sec:authorize>
 							<li class="<decorator:getProperty property="meta.rs"/>">
 								<a href="<c:url value="/rs" />"><s:message code="menu.rollingStocks.label"/></a>
 							</li>						
 							<li class="<decorator:getProperty property="meta.browse"/>">
 								<a href="<c:url value="/browse" />"><s:message code="menu.browse.label"/></a>
 							</li>
-							<sec:authorize url="/admin">        
+							<sec:authorize url="/admin">
 							<li class="dropdown" id="menu1">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
 									<s:message code="menu.administration.label"/>
@@ -113,6 +101,16 @@
 	  		 				</li>
 	  		 				</sec:authorize>
 						</ul>
+						<sec:authorize access="!isAuthenticated()">
+						<s:url var="loginUrl" value="/j_spring_security_check" />
+						<form class="navbar-form pull-right" method="POST" action="${loginUrl}">
+							<input type="text" id="j_username" name="j_username" class="span2" placeholder="<s:message code="account.emailAddress.label" />" required="required"/>
+							<input type="password" id="j_password" name="j_password" class="span2" placeholder="<s:message code="account.password.label" />" required="required"/>
+			              	<button type="submit" class="btn btn-primary">
+			              		<i class="icon-check icon-white"></i> <s:message code="button.login.label" />
+			              	</button>
+			            </form>
+			            </sec:authorize>
 	       			</div>
 	    		</div>
 			</div>

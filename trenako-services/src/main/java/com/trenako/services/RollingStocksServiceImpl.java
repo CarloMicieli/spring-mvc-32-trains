@@ -23,11 +23,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
+import com.trenako.entities.RollingStockComments;
 import com.trenako.entities.RollingStockReviews;
-import com.trenako.repositories.CommentsRepository;
-import com.trenako.repositories.ReviewsRepository;
 import com.trenako.repositories.RollingStocksRepository;
 import com.trenako.services.view.RollingStockView;
 
@@ -40,18 +38,19 @@ import com.trenako.services.view.RollingStockView;
 public class RollingStocksServiceImpl implements RollingStocksService {
 	
 	private final RollingStocksRepository rollingStocks;
-	private final CommentsRepository comments;
-	private final ReviewsRepository reviews;
+	private final CommentsService comments;
+	private final ReviewsService reviews;
 	
 	/**
 	 * Creates a {@code RollingStocksServiceImpl}
 	 * @param rollingStocks the {@code RollingStock}s repository
-	 * @param comments the {@code Comment}s repository
+	 * @param comments the {@code Comment}s service
+	 * @param reviews the {@code Review}s service
 	 */
 	@Autowired
 	public RollingStocksServiceImpl(RollingStocksRepository rollingStocks,
-			CommentsRepository comments,
-			ReviewsRepository reviews) {
+			CommentsService comments,
+			ReviewsService reviews) {
 		
 		this.rollingStocks = rollingStocks;
 		this.comments = comments;
@@ -75,11 +74,11 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 			return null;
 		}
 		
-		Iterable<Comment> commentsList = comments.findByRollingStock(rs).getItems();
+		RollingStockComments rsComments = comments.findByRollingStock(rs);
 		RollingStockReviews rsReviews = reviews.findByRollingStock(rs);
 		
 		return new RollingStockView(rs, 
-				commentsList,
+				rsComments,
 				rsReviews);		
 	}
 

@@ -85,6 +85,13 @@ public class Comment {
 		this(author(author), content, postedAt);
 	}
 	
+	/**
+	 * Creates a new {@code Comment} for a rolling stock model.
+	 * 
+	 * @param author the author slug
+	 * @param content the comment content
+	 * @param postedAt the posting date
+	 */
 	public Comment(String author, String content, Date postedAt) {
 		this.author = author;
 		this.content = content;

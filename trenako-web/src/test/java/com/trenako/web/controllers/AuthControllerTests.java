@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.ui.ModelMap;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.validation.BindingResult;
@@ -72,10 +73,27 @@ public class AuthControllerTests {
 		when(mockResult.hasErrors()).thenReturn(true);
 		ModelMap model = new ExtendedModelMap();
 		
-		String viewName = controller.createUser(new Account(), mockResult, model);
+		String viewName = controller.createUser(newAccount(), mockResult, model);
 		
 		assertEquals("auth/signup", viewName);
 		assertTrue(model.containsAttribute("account"));
+	}
+	
+	@Test
+	public void shouldRedirectAfterDatabaseErrors() {
+		doThrow(new DuplicateKeyException("E11000 duplicate key error index"))
+			.when(mockService)
+			.createAccount(eq(newAccount()));
+		when(mockResult.hasErrors()).thenReturn(false);
+		ModelMap model = new ExtendedModelMap();
+		
+		String viewName = controller.createUser(newAccount(), mockResult, model);
+		
+		assertEquals("auth/signup", viewName);
+		assertTrue(model.containsAttribute("account"));
+		assertTrue(model.containsAttribute("message"));
+		assertEquals(AuthController.EMAIL_ADDRESS_OR_DISPLAY_NAME_ALREADY_TAKEN, model.get("message"));
+		verify(mockService, times(0)).authenticate(eq(newAccount()));
 	}
 	
 	@Test
@@ -91,5 +109,9 @@ public class AuthControllerTests {
 		assertEquals("redirect:/default", viewName);
 		verify(mockService, times(1)).createAccount(eq(newAccount));
 		verify(mockService, times(1)).authenticate(eq(newAccount));
+	}
+	
+	Account newAccount() { 
+		return new Account.Builder("mail@mail.com").build();
 	}
 }

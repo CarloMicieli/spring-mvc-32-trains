@@ -80,8 +80,6 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 	@Test
 	public void shouldShowRollingStocks() throws Exception {
 		String slug = "acme-123456";
-		when(mockService.findViewBySlug(eq(slug)))
-			.thenReturn(new RollingStockView(null, null, null));
 		when(mockUserContext.getCurrentUser()).thenReturn(null);
 		
 		mockMvc().perform(get("/rollingstocks/{slug}", slug))
@@ -94,14 +92,12 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 	@Test
 	public void shouldShowRollingStocksWithCommentsBoxForAuthenticatedUsers() throws Exception {
 		String slug = "acme-123456";
-		when(mockService.findViewBySlug(eq(slug)))
-			.thenReturn(new RollingStockView(null, null, null));
 		
 		mockMvc().perform(get("/rollingstocks/{slug}", slug))
 			.andExpect(status().isOk())	
 			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("result"))
-			.andExpect(model().attributeExists("newComment"))
+			.andExpect(model().attributeExists("commentForm"))
 			.andExpect(forwardedUrl(view("rollingstock", "show")));
 	}
 		

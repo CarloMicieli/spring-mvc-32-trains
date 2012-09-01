@@ -16,6 +16,11 @@
 				</div>
 				<s:url var="loginUrl" value="/j_spring_security_check" />
 				<form:form id="form" class="form-horizontal" method="POST" action="${loginUrl}" >
+					<p>
+						<s:url var="signupUrl" value="/auth/signup" />
+						New user? Sign up <a href="${signupUrl}">here</a>.
+					</p>
+					
 				    <div class="control-group">
 						<label for="j_username" class="control-label">
 							<s:message code="account.emailAddress.label" />:
@@ -37,7 +42,7 @@
 					<div class="controls">
 						<label class="checkbox">
 							<input type="checkbox" name="_spring_security_remember_me" id="_spring_security_remember_me">
-							Remember me
+							<s:message code="account.remember.me.label"/>
 					</label>
 					</div>
 					

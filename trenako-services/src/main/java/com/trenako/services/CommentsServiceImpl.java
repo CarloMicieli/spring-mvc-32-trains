@@ -40,7 +40,12 @@ public class CommentsServiceImpl implements CommentsService {
 
 	@Override
 	public RollingStockComments findByRollingStock(RollingStock rollingStock) {
-		return repo.findByRollingStock(rollingStock);
+		RollingStockComments rsc = repo.findByRollingStock(rollingStock);
+		if (rsc == null) {
+			return RollingStockComments.defaultRollingStockComments();
+		}
+		
+		return rsc;
 	}
 
 	@Override

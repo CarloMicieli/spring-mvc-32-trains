@@ -74,14 +74,14 @@ public class HomeControllerMappingTests extends AbstractSpringControllerTests {
 	
 	@Test
 	public void shouldRenderExplorePage() throws Exception {
-		mockMvc().perform(get("/explore"))
+		mockMvc().perform(get("/home/explore"))
 			.andExpect(status().isOk())
 			.andExpect(forwardedUrl(view("home", "explore")));
 	}
 	
 	@Test
 	public void shouldRenderDeveloperPage() throws Exception {
-		mockMvc().perform(get("/developers"))
+		mockMvc().perform(get("/home/developers"))
 			.andExpect(status().isOk())
 			.andExpect(forwardedUrl(view("home", "developers")));
 	}

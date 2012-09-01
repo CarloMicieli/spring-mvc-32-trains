@@ -48,7 +48,12 @@ public class ReviewsServiceImpl implements ReviewsService {
 
 	@Override
 	public RollingStockReviews findByRollingStock(RollingStock rollingStock) {
-		return repo.findByRollingStock(rollingStock);
+		RollingStockReviews rsr = repo.findByRollingStock(rollingStock);
+		if (rsr == null) {
+			return RollingStockReviews.defaultRollingStockReviews();
+		}
+		
+		return rsr;
 	}
 
 	@Override

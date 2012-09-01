@@ -53,7 +53,7 @@ public class HomeController {
 		return "home/index";
 	}
 	
-	@RequestMapping(value = "/explore", method = RequestMethod.GET)
+	@RequestMapping(value = "/home/explore", method = RequestMethod.GET)
 	public String explore() {
 		return "home/explore";
 	}
@@ -63,7 +63,7 @@ public class HomeController {
 		return "home/index";
 	}
 
-	@RequestMapping(value = "/developers", method = RequestMethod.GET)
+	@RequestMapping(value = "/home/developers", method = RequestMethod.GET)
 	public String developers() {
 		return "home/developers";
 	}

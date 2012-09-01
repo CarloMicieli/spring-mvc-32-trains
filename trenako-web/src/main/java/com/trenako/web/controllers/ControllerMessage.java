@@ -18,6 +18,7 @@ package com.trenako.web.controllers;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -113,6 +114,14 @@ public class ControllerMessage {
 	 */
 	public void appendToRedirect(RedirectAttributes redirectAtts) {
 		redirectAtts.addFlashAttribute("message", this);		
+	}
+	
+	/**
+	 * Appends the current message to the provided {@code ModelMap}. 
+	 * @param model the {@code ModelMap}
+	 */
+	public void appendToModel(ModelMap model) {
+		model.addAttribute("message", this);		
 	}
 	
 	@Override

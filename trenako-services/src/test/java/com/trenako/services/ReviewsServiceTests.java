@@ -74,6 +74,15 @@ public class ReviewsServiceTests {
 	}
 	
 	@Test
+	public void shouldReturnEmptyReviewsWhenNoReviewWasPostedYet() {
+		when(repo.findByRollingStock(eq(rollingStock))).thenReturn(null);
+		
+		RollingStockReviews reviews = service.findByRollingStock(rollingStock);
+		
+		assertNotNull("Reviews are null", reviews);
+	}
+	
+	@Test
 	public void shouldPostNewRollingStockReviews() {
 		Review review = new Review();
 		

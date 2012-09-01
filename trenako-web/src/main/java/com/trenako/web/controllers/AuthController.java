@@ -18,6 +18,7 @@ package com.trenako.web.controllers;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -38,6 +39,7 @@ import com.trenako.web.security.SignupService;
 @RequestMapping("/auth")
 public class AuthController {
 	
+	static final ControllerMessage EMAIL_ADDRESS_OR_DISPLAY_NAME_ALREADY_TAKEN = ControllerMessage.error("auth.mail.display.name.used");
 	private final SignupService signupService;
 	
 	@Autowired
@@ -65,12 +67,19 @@ public class AuthController {
 			return "auth/signup";
 		}
 
-		Account newUser = signupService.createAccount(account);
-		
-		// automatically sign in the new user
-		signupService.authenticate(newUser);
-		
-		return "redirect:/default";
+		try {
+			Account newUser = signupService.createAccount(account);
+			
+			// automatically sign in the new user
+			signupService.authenticate(newUser);
+			
+			return "redirect:/default";
+		} 
+		catch (DuplicateKeyException ex) {
+			model.addAttribute(account);
+			EMAIL_ADDRESS_OR_DISPLAY_NAME_ALREADY_TAKEN.appendToModel(model);
+			return "auth/signup";
+		}
 	}
 }
 

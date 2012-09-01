@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -63,6 +64,16 @@ public class CommentsServiceTests {
 		service = new CommentsServiceImpl(repo);
 	}
 
+	@Test
+	public void shouldReturnEmptyCommentsListWhenNoCommentWasPostedYet() {
+		when(repo.findByRollingStock(eq(rollingStock()))).thenReturn(null);
+		
+		RollingStockComments comments = service.findByRollingStock(rollingStock());
+		
+		assertNotNull("Comments are null", comments);
+		assertNotNull("Comment items are null", comments.getItems());
+	}
+	
 	@Test
 	public void shouldFindCommentsByRollingStock() {
 		@SuppressWarnings("unused")

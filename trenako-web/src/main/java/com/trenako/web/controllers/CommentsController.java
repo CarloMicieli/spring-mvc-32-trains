@@ -24,16 +24,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.CommentsService;
 import com.trenako.services.RollingStocksService;
+import com.trenako.web.controllers.form.CommentForm;
 import com.trenako.web.editors.WeakDbRefPropertyEditor;
 
 /**
@@ -63,19 +62,18 @@ public class CommentsController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String postComment(@PathVariable("slug") String slug,
-			@ModelAttribute @Valid Comment comment,
+	public String postComment(@ModelAttribute @Valid CommentForm commentForm,
 			BindingResult bindingResult,
 			ModelMap model,
 			RedirectAttributes redirectAtts) {
 		
 		if (bindingResult.hasErrors()) {
-			model.addAttribute(comment);
+			model.addAttribute(commentForm);
 			return "redirect:/rollingstocks/{slug}";
 		}
 		
-		RollingStock rs = rsService.findBySlug(slug);
-		service.postComment(rs, comment);
+		RollingStock rs = rsService.findBySlug(commentForm.getRsSlug());
+		service.postComment(rs, commentForm.getComment());
 		
 		COMMENT_POSTED_MSG.appendToRedirect(redirectAtts);
 		return "redirect:/rollingstocks/{slug}";

@@ -35,13 +35,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Account;
-import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.FormValuesService;
 import com.trenako.services.RollingStocksService;
 import com.trenako.services.view.RollingStockView;
 import com.trenako.values.DeliveryDate;
+import com.trenako.web.controllers.form.CommentForm;
 import com.trenako.web.controllers.form.RollingStockForm;
 import com.trenako.web.editors.WeakDbRefPropertyEditor;
 import com.trenako.web.editors.DeliveryDatePropertyEditor;
@@ -110,10 +110,9 @@ public class RollingStocksController {
 			throw new NotFoundException();
 		}
 		
-		// init comments form only for authenticated users
-		if (secContext != null && secContext.getCurrentUser() != null) {
-			Comment newComment = new Comment(secContext.getCurrentUser().getAccount(), ""); 
-			model.addAttribute("newComment", newComment);
+		CommentForm form = CommentForm.newForm(rsView.getRs(), secContext);
+		if (form != null) {
+			model.addAttribute("commentForm", form);
 		}
 		
 		model.addAttribute("result", rsView);

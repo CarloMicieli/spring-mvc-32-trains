@@ -39,8 +39,6 @@ import org.springframework.data.domain.Sort.Direction;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.RollingStockComments;
 import com.trenako.entities.RollingStockReviews;
-import com.trenako.repositories.CommentsRepository;
-import com.trenako.repositories.ReviewsRepository;
 import com.trenako.repositories.RollingStocksRepository;
 import com.trenako.services.RollingStocksServiceImpl;
 import com.trenako.services.view.RollingStockView;
@@ -59,8 +57,8 @@ public class RollingStocksServiceTests {
 		.build();
 	
 	@Mock RollingStocksRepository repo;
-	@Mock CommentsRepository commentsRepo;
-	@Mock ReviewsRepository reviewsRepo;
+	@Mock CommentsService commentsService;
+	@Mock ReviewsService reviewsService;
 	
 	@Mock Page<RollingStock> results;
 	
@@ -69,7 +67,7 @@ public class RollingStocksServiceTests {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		service = new RollingStocksServiceImpl(repo, commentsRepo, reviewsRepo);
+		service = new RollingStocksServiceImpl(repo, commentsService, reviewsService);
 	}
 
 	@Test
@@ -123,8 +121,8 @@ public class RollingStocksServiceTests {
 		String slug = "acme-123456";
 
 		when(repo.findBySlug(eq(slug))).thenReturn(RS);
-		when(commentsRepo.findByRollingStock(eq(RS))).thenReturn(comments);
-		when(reviewsRepo.findByRollingStock(eq(RS))).thenReturn(reviews);
+		when(commentsService.findByRollingStock(eq(RS))).thenReturn(comments);
+		when(reviewsService.findByRollingStock(eq(RS))).thenReturn(reviews);
 		
 		RollingStockView view = service.findViewBySlug(slug);
 		

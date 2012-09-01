@@ -33,6 +33,7 @@ import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
 import com.trenako.services.CommentsService;
 import com.trenako.services.RollingStocksService;
+import com.trenako.web.controllers.form.CommentForm;
 
 /**
  * 
@@ -56,13 +57,13 @@ public class CommentsControllerTests {
 	
 	@Test
 	public void shouldPostNewComments() {
-		String slug = "rs-slug";
+		String slug = "acme-123456";
 		ModelMap model = new ModelMap();
 		
 		when(mockResult.hasErrors()).thenReturn(false);
 		when(mockRsService.findBySlug(eq(slug))).thenReturn(rollingStock());
 		
-		String redirect = controller.postComment(slug, comment(), mockResult, model, mockRedirectAtts);
+		String redirect = controller.postComment(commentForm(), mockResult, model, mockRedirectAtts);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", redirect);
 		verify(mockService, times(1)).postComment(eq(rollingStock()), eq(comment()));
@@ -72,14 +73,21 @@ public class CommentsControllerTests {
 	@Test
 	public void shouldRedirectAfterValidationErrorsDuringCommentPosting() {
 		when(mockResult.hasErrors()).thenReturn(true);
-		String slug = "rs-slug";
 		ModelMap model = new ModelMap();
 		
-		String redirect = controller.postComment(slug, comment(), mockResult, model, mockRedirectAtts);
+		String redirect = controller.postComment(commentForm(), mockResult, model, mockRedirectAtts);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", redirect);
-		assertEquals(comment(), (Comment) model.get("comment"));
+		assertEquals(commentForm(), (CommentForm) model.get("commentForm"));
 		verify(mockService, times(0)).postComment(eq(rollingStock()), eq(comment()));
+	}
+	
+	CommentForm commentForm() {
+		CommentForm f = new CommentForm();
+		f.setComment(comment());
+		f.setRsLabel("ACME 123456");
+		f.setRsSlug("acme-123456");
+		return f;
 	}
 	
 	Comment comment() {

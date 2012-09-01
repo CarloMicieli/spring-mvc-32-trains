@@ -28,6 +28,7 @@ import com.trenako.entities.Scale
 import com.trenako.entities.Review
 import com.trenako.entities.Railway
 import com.trenako.entities.RollingStock
+import com.trenako.entities.RollingStockReviews
 
 import com.mongodb.DBRef
 
@@ -95,7 +96,7 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		result.items.collect { it.content }.sort() == ['Review content1', 'Review content2']
 	}
 	
-	def "should return null if no review exists for the provided rolling stock"() {
+	def "should return default instance if no review exists for the provided rolling stock"() {
 		given:
 		def rollingStock = new RollingStock(slug: 'acme-123456')
 		
@@ -103,7 +104,7 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		def result = service.findByRollingStock(rollingStock)
 		
 		then:
-		result == null
+		result == RollingStockReviews.defaultRollingStockReviews()
 	}
 	
 	def "should post a new rolling stock review"() {

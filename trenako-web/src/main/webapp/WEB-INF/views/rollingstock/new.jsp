@@ -83,7 +83,7 @@
 							<form:select path="rs.scale" required="required">
 								<s:message code="rollingStock.scales.list.label" var="scalesLabel"/>
 								<form:option value="" label="${scalesLabel}"/>
-								<form:options items="${rollingStockForm.scalesList}" itemValue="slug"/>
+								<form:options items="${rollingStockForm.scalesList}" itemValue="slug" itemLabel="label" />
 							</form:select>
 							<form:errors path="rs.scale" element="span" cssClass="help-inline"/>
 							</div>

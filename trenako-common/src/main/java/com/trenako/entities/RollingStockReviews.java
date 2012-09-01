@@ -39,6 +39,8 @@ import com.trenako.mapping.WeakDbRef;
 @Document(collection = "reviews")
 public class RollingStockReviews {
 
+	private final static RollingStockReviews DEFAULT = new RollingStockReviews();
+	
 	@Id
 	private ObjectId id;
 
@@ -73,6 +75,10 @@ public class RollingStockReviews {
 		this.slug = reviewsSlug(getRollingStock());
 	}
 
+	public static RollingStockReviews defaultRollingStockReviews() {
+		return DEFAULT;
+	}
+	
 	/**
 	 * Returns the {@code RollingStockReviews} id.
 	 * @return the unique id

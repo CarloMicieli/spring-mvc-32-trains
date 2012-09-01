@@ -132,14 +132,20 @@
 	           		<s:url value="/rollingstocks/{slug}/comments" var="commentsUrl">
 	           			<s:param name="slug" value="${result.rs.slug}"></s:param>
 					</s:url>
-	           		<form:form modelAttribute="newComment" method="POST" action="${commentsUrl}" class="well form-inline">
-	           			<form:hidden path="rollingStock.slug"/>
-	           			<form:hidden path="rollingStock.label"/>
-	           			<form:hidden path="author.slug"/>
-	           			<form:hidden path="author.label"/>
+	           		<form:form modelAttribute="commentForm" method="POST" action="${commentsUrl}" class="well form-inline">
+	           			<form:hidden path="rsSlug"/>
+	           			<form:hidden path="rsLabel"/>
+	           			<form:hidden path="comment.author"/>
 	           			
-	           			<form:textarea path="content" class="input-small" style="width:400px" rows="3" placeholder="New comment"/>
-	           			<form:button type="submit" class="btn btn-primary"><i class="icon-envelope icon-white"></i> <s:message code="button.send.label"/></form:button>
+	           			<s:message var="placeholder" code="comment.content.placeholder"/>
+	           			<form:textarea path="comment.content" 
+		           			class="input-small" 
+		           			style="width:400px" 
+		           			rows="3" 
+		           			placeholder="${placeholder}" required="required"/>
+	           			<form:button type="submit" class="btn btn-primary">
+	           				<i class="icon-envelope icon-white"></i> <s:message code="button.send.label"/>
+	           			</form:button>
 	           		</form:form>
 	           		<hr/>
 	           		</sec:authorize>
@@ -153,7 +159,7 @@
            					<p>
            						${cmm.content}
            						<br>
-           						<strong><a href="">${cmm.author.label}</a></strong> - <tk:period since="${cmm.postedAt}"/>
+           						<strong><a href="">${cmm.author}</a></strong> - <tk:period since="${cmm.postedAt}"/>
            					</p>
            				</div>
            			</div>

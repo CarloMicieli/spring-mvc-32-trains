@@ -42,7 +42,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.Brand;
-import com.trenako.entities.Comment;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
@@ -56,6 +55,7 @@ import com.trenako.values.Category;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
+import com.trenako.web.controllers.form.CommentForm;
 import com.trenako.web.controllers.form.RollingStockForm;
 import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.images.UploadRequest;
@@ -108,8 +108,8 @@ public class RollingStocksControllerTests {
 	
 	@Test
 	public void shouldRenderRollingStockViews() {
-		String slug = "rs-slug";
-		RollingStockView value = new RollingStockView(new RollingStock(), null, null);
+		String slug = "acme-123456";
+		RollingStockView value = new RollingStockView(rollingStock(), null, null);
 		when(service.findViewBySlug(eq(slug))).thenReturn(value);
 		
 		ModelMap model = new ExtendedModelMap();
@@ -119,21 +119,12 @@ public class RollingStocksControllerTests {
 		assertEquals("rollingstock/show", viewName);
 		assertTrue(model.containsAttribute("result"));
 		assertEquals(value, model.get("result"));
-	}
-	
-	@Test
-	public void shouldInitNewCommentsWhenShowingRollingStocks() {
-		String slug = "rs-slug";
-		RollingStockView value = new RollingStockView(rollingStock(), null, null);
-		when(service.findViewBySlug(eq(slug))).thenReturn(value);
 		
-		ModelMap model = new ExtendedModelMap();
-		
-		controller.show(slug, model);
-		
-		Comment newComment = (Comment) model.get("newComment");
-		assertNotNull("Comment is null", newComment);
-		assertEquals("bob", newComment.getAuthor());
+		CommentForm commentForm = (CommentForm) model.get("commentForm");
+		assertNotNull("Comment is null", commentForm);
+		assertEquals("bob", commentForm.getComment().getAuthor());
+		assertEquals("acme-123456", commentForm.getRsSlug());
+		assertEquals("ACME 123456", commentForm.getRsLabel());
 	}
 	
 	@Test(expected = NotFoundException.class)

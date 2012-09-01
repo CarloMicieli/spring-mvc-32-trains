@@ -10,12 +10,21 @@
 	</head>
 	<body>
 		<div class="row-fluid">
-			<div class="span3">
+			<div class="span2">
 			</div>
-			<div class="span9">
+			<div class="span10">
 				<div class="page-header">
-					<h1><s:message code="signup.title.label" /></h1>
+					<h1>
+						<s:message code="signup.title.label"/>
+						<small><s:message code="signup.title.sub.label"/></small>
+					</h1>
 				</div>
+				
+				<c:if test="${not empty message}">
+				<div class="alert alert-${message.type}">
+					<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
+				</div>
+				</c:if>
 	
 				<s:url var="signupUrl" value="/auth/signup" />
 				<form:form id="form" class="form-horizontal" method="POST" action="${signupUrl}" modelAttribute="account">
