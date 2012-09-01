@@ -42,6 +42,13 @@ import com.trenako.services.view.RollingStockView;
 public interface RollingStocksService {
 
 	/**
+	 * Returns the latest modified rolling stocks list.
+	 * @param numberOfItems the maximum number of returned items
+	 * @return the rolling stocks list
+	 */
+	Iterable<RollingStock> findLatestModified(int numberOfItems);
+	
+	/**
 	 * Finds the {@code RollingStock} with the provided id.
 	 * @param id the unique id
 	 * @return a {@code RollingStock} if found; {@code null} otherwise

@@ -19,6 +19,9 @@ import static org.junit.Assert.*;
 import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +29,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.Collection;
@@ -46,6 +53,7 @@ import com.trenako.repositories.ActivityRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityStreamTests {
 	
+	private @Mock Page<Activity> results;
 	private @Mock ActivityRepository repo;
 	private ActivityStream activityStream;
 	
@@ -109,6 +117,46 @@ public class ActivityStreamTests {
 		verify(repo, times(1)).save(arg.capture());
 		Activity act = (Activity) arg.getValue();
 		assertEquals(Activity.buildForCollection(collection(), collectionItem()), act);
+	}
+	
+	@Test
+	public void shouldReturnTheLastRecordedActivities() {
+		int numberOfItems = 10;
+		Pageable paging = new PageRequest(0, numberOfItems, Direction.DESC, "recorded");
+		List<Activity> items = Collections.emptyList();
+		
+		when(results.hasContent()).thenReturn(true);
+		when(results.getContent()).thenReturn(items);
+		when(repo.findAll(eq(paging))).thenReturn(results);
+		
+		Iterable<Activity> stream = activityStream.recentActivity(numberOfItems);
+		
+		assertNotNull("Activity result is empty", stream);
+		ArgumentCaptor<Pageable> arg = ArgumentCaptor.forClass(Pageable.class);
+		verify(repo, times(1)).findAll(arg.capture());
+		
+		assertEquals(0, arg.getValue().getPageNumber());
+		assertEquals(10, arg.getValue().getPageSize());
+		assertEquals("recorded: DESC", arg.getValue().getSort().toString());
+	}
+	
+	@Test
+	public void shouldReturnTheLastRecordedActivitiesForTheProvidedActor() {
+		int numberOfItems = 10;
+		Pageable paging = new PageRequest(0, numberOfItems, Direction.DESC, "recorded");
+		List<Activity> items = Collections.emptyList();
+		
+		when(repo.findByActor(eq(user().getSlug()), eq(paging))).thenReturn(items);
+		
+		Iterable<Activity> stream = activityStream.userActivity(user(), numberOfItems);
+		
+		assertNotNull("Activity result is empty", stream);
+		ArgumentCaptor<Pageable> arg = ArgumentCaptor.forClass(Pageable.class);
+		verify(repo, times(1)).findByActor(eq(user().getSlug()), arg.capture());
+		
+		assertEquals(0, arg.getValue().getPageNumber());
+		assertEquals(10, arg.getValue().getPageSize());
+		assertEquals("recorded: DESC", arg.getValue().getSort().toString());
 	}
 	
 	WeakDbRef<RollingStock> rsRef() {

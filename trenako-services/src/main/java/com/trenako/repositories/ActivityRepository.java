@@ -15,7 +15,10 @@
  */
 package com.trenako.repositories;
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.activities.Activity;
@@ -26,4 +29,12 @@ import com.trenako.activities.Activity;
  *
  */
 public interface ActivityRepository extends MongoRepository<Activity, ObjectId> {
+
+	/**
+	 * Returns the {@code Activity} list for the provided actor
+	 * @param actorSlug the actor slug
+	 * @param pageable the paging information
+	 * @return the {@code Activity} list 
+	 */
+	List<Activity> findByActor(String actorSlug, Pageable pageable);
 }

@@ -15,27 +15,70 @@
  */
 package com.trenako.web.controllers;
 
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+import java.util.Collections;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.ui.ModelMap;
+
+import com.trenako.activities.Activity;
+import com.trenako.entities.Account;
+import com.trenako.entities.RollingStock;
+import com.trenako.security.AccountDetails;
+import com.trenako.services.HomeService;
+import com.trenako.services.view.HomeView;
+import com.trenako.web.security.UserContext;
 
 /**
  * 
  * @author Carlo Micieli
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class HomeControllerTests {
 
-	HomeController controller = new HomeController();
+	HomeController controller;
+	private @Mock HomeService mockService;
+	private @Mock UserContext mockUserContext;
+	
+	@Before
+	public void setup() {
+		controller = new HomeController(mockService, mockUserContext);
+	}
 	
 	@Test
-	public void shouldRenderHomepage() {
-		String viewName = controller.home();
+	public void shouldRenderHomepageForAnonymousUsers() {
+		when(mockService.getHomeContent((Account)isNull()))
+			.thenReturn(homeContent(false));
+		ModelMap model = new ModelMap();
+		
+		String viewName = controller.home(model);
+		
 		assertEquals("home/index", viewName);
+		assertEquals(homeContent(false), model.get("content"));
+	}
+	
+	@Test
+	public void shouldRenderHomepageForLoggedUsers() {
+		when(mockUserContext.getCurrentUser()).thenReturn(new AccountDetails(loggedUser()));
+		when(mockService.getHomeContent(eq(loggedUser())))
+			.thenReturn(homeContent(true));
+		ModelMap model = new ModelMap();
+		
+		String viewName = controller.home(model);
+		
+		assertEquals("home/index", viewName);
+		assertEquals(homeContent(true), model.get("content"));
 	}
 
 	@Test
-	public void shouldRenderDefaultHomepage() {
+	public void shouldRenderDefaultPage() {
 		String viewName = controller.defaultAction();
 		assertEquals("home/index", viewName);
 	}
@@ -45,4 +88,24 @@ public class HomeControllerTests {
 		String viewName = controller.explore();
 		assertEquals("home/explore", viewName);
 	}
+	
+	@Test
+	public void shouldRenderDevelopersPage() {
+		String viewName = controller.developers();
+		assertEquals("home/developers", viewName);
+	}
+	
+	HomeView homeContent(boolean isLogged) {
+		Iterable<RollingStock> rollingStocks = Collections.emptyList();
+		Iterable<Activity> activityStream = Collections.emptyList();
+		
+		return new HomeView(isLogged, rollingStocks, activityStream);
+	}
+	
+	Account loggedUser() {
+		return new Account.Builder("mail@mail.com")
+			.displayName("Bob")
+			.build();
+	}
+	
 }

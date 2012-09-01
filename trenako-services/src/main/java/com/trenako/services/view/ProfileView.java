@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
+import com.trenako.activities.Activity;
 import com.trenako.entities.CategoriesCount;
 import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
@@ -37,6 +38,7 @@ import com.trenako.entities.WishListItem;
  */
 public class ProfileView {
 
+	private final Iterable<Activity> userActivity;
 	private final ProfileOptions options;
 	private final Collection collection;
 	private final Iterable<WishList> wishLists;
@@ -47,7 +49,12 @@ public class ProfileView {
 	 * @param collection the user collection
 	 * @param wishLists the user wish lists
 	 */
-	public ProfileView(Collection collection, Iterable<WishList> wishLists, ProfileOptions options) {
+	public ProfileView(Iterable<Activity> userActivity,
+			Collection collection, 
+			Iterable<WishList> wishLists, 
+			ProfileOptions options) {
+		
+		this.userActivity = userActivity;
 		this.collection = collection;
 		this.wishLists = wishLists;
 		this.options = options;
@@ -62,6 +69,10 @@ public class ProfileView {
 		return wishLists;
 	}
 
+	public Iterable<Activity> getUserActivity() {
+		return userActivity;
+	}
+	
 	public Map<String, String> getWishListNames() {
 		return wishListNames;
 	}
@@ -84,7 +95,7 @@ public class ProfileView {
 				new ItemViewComparator(), 
 				options.getNumberOfItemsForCollections());
 	}
-
+	
 	public Iterable<ItemView> getWishListItems() {
 		List<ItemView> items = new ArrayList<ItemView>();
 		for (WishList list : wishLists) {

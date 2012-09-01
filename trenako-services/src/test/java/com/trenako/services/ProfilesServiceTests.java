@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -30,6 +31,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.trenako.activities.Activity;
+import com.trenako.activities.ActivityStream;
 import com.trenako.entities.Account;
 import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
@@ -52,36 +55,65 @@ public class ProfilesServiceTests {
 
 	@Mock CollectionsRepository collectionsRepo;
 	@Mock WishListsRepository wishListsRepo;
+	@Mock ActivityStream activityStream;
+	
 	private ProfilesService service;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		service = new ProfilesServiceImpl(collectionsRepo, wishListsRepo);
+		service = new ProfilesServiceImpl(collectionsRepo, wishListsRepo, activityStream);
 	}
-	
+		
 	@Test
-	public void shouldReturnEmptyProfileViews() {
+	public void shouldInitializeUserCollectionIfNoneWasFound() {
+		when(collectionsRepo.findByOwner(eq(owner))).thenReturn(null);
+		
 		ProfileView pv = service.findProfileView(owner);
 		
 		assertNotNull("Profile view is null", pv);
-		assertEquals(defaultCollection(), pv.getCollection());
+		assertEquals(newCollection(), pv.getCollection());
+	}
+	
+	@Test
+	public void shouldReturnEmptyWishListsIfNoneWasFound() {
+		when(wishListsRepo.findByOwner(eq(owner))).thenReturn(null);
+		
+		ProfileView pv = service.findProfileView(owner);
+		
+		assertNotNull("Profile view is null", pv);
 		assertEquals(defaultWishList(), pv.getWishLists());
+	}
+	
+	@Test
+	public void shouldReturnNullUserActivityStreamIfNotFound() {
+		when(activityStream.userActivity(eq(owner), eq(10))).thenReturn(null);
+		
+		ProfileView pv = service.findProfileView(owner);
+		
+		assertNotNull("Profile view is null", pv);
+		assertNull(pv.getUserActivity());
 	}
 	
 	@Test
 	public void shouldFillProfileViewForAccounts() {
 		when(collectionsRepo.findByOwner(eq(owner))).thenReturn(collection());
 		when(wishListsRepo.findByOwner(eq(owner))).thenReturn(wishLists());
+		when(activityStream.userActivity(eq(owner), eq(10))).thenReturn(userActivity());
 		
 		ProfileView pv = service.findProfileView(owner);
 		
 		assertNotNull("Profile view is null", pv);
 		assertEquals(collection(), pv.getCollection());
 		assertEquals(wishLists(), pv.getWishLists());
+		assertEquals(userActivity(), pv.getUserActivity());
 	}
 	
-	Collection defaultCollection() {
+	Iterable<Activity> userActivity() {
+		return Collections.emptyList();
+	}
+
+	Collection newCollection() {
 		return new Collection(owner);
 	}
 	

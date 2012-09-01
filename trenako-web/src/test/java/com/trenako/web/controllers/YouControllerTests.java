@@ -18,7 +18,7 @@ package com.trenako.web.controllers;
 import static org.springframework.test.web.ModelAndViewAssert.*;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +28,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.trenako.activities.Activity;
 import com.trenako.entities.Account;
 import com.trenako.entities.Collection;
 import com.trenako.entities.WishList;
@@ -60,7 +61,11 @@ public class YouControllerTests {
 	
 	@Test
 	public void shouldRenderIndex() {
-		ProfileView value = new ProfileView(new Collection(ACCOUNT), new ArrayList<WishList>(), ProfileOptions.DEFAULT);
+		ProfileView value = new ProfileView(
+				userActivity(),
+				collection(), 
+				wishLists(), 
+				ProfileOptions.DEFAULT);
 		when(service.findProfileView(eq(ACCOUNT))).thenReturn(value);
 		when(secContext.getCurrentUser()).thenReturn(USER);
 		
@@ -70,4 +75,15 @@ public class YouControllerTests {
 		assertModelAttributeValue(mav, "info", value);
 	}
 
+	private Collection collection() {
+		return new Collection(ACCOUNT);
+	}
+	
+	Iterable<Activity> userActivity() {
+		return Collections.emptyList();
+	}
+	
+	Iterable<WishList> wishLists() {
+		return Collections.emptyList();
+	}
 }

@@ -15,12 +15,14 @@
  */
 package com.trenako.services;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.trenako.activities.Activity;
+import com.trenako.activities.ActivityStream;
 import com.trenako.entities.Account;
 import com.trenako.entities.Collection;
 import com.trenako.entities.WishList;
@@ -39,15 +41,22 @@ public class ProfilesServiceImpl implements ProfilesService {
 
 	private final CollectionsRepository collections;
 	private final WishListsRepository wishLists;
+	private final ActivityStream activityStream;
 	
 	@Autowired
-	public ProfilesServiceImpl(CollectionsRepository collections, WishListsRepository wishLists) {
+	public ProfilesServiceImpl(CollectionsRepository collections, 
+			WishListsRepository wishLists,
+			ActivityStream activityStream) {
+		
 		this.collections = collections;
 		this.wishLists = wishLists;
+		this.activityStream = activityStream;
 	}
 
 	@Override
 	public ProfileView findProfileView(Account owner) {
+		
+		Iterable<Activity> userActivity = activityStream.userActivity(owner, 10);
 		
 		Collection collection = collections.findByOwner(owner);
 		if (collection == null) {
@@ -56,9 +65,9 @@ public class ProfilesServiceImpl implements ProfilesService {
 		
 		List<WishList> lists = (List<WishList>) wishLists.findByOwner(owner);
 		if (lists == null) {
-			lists = new ArrayList<WishList>();
+			lists = Collections.emptyList();
 		}
 		
-		return new ProfileView(collection, lists, ProfileOptions.DEFAULT);
+		return new ProfileView(userActivity, collection, lists, ProfileOptions.DEFAULT);
 	}
 }

@@ -19,12 +19,13 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.trenako.activities.Activity;
 import com.trenako.entities.Account;
 import com.trenako.entities.Collection;
 import com.trenako.entities.WishList;
@@ -53,8 +54,10 @@ public class YouControllerMappingTests extends AbstractSpringControllerTests {
 		AccountDetails ownerDetails = new AccountDetails(account);
 		when(secContext.getCurrentUser()).thenReturn(ownerDetails);
 		
-		ProfileView value = new ProfileView(new Collection(account), 
-				new ArrayList<WishList>(), 
+		ProfileView value = new ProfileView(
+				userActivity(),
+				collection(account), 
+				wishLists(), 
 				ProfileOptions.DEFAULT);
 		when(service.findProfileView(eq(account))).thenReturn(value);
 	}
@@ -73,5 +76,17 @@ public class YouControllerMappingTests extends AbstractSpringControllerTests {
 			.andExpect(model().attributeExists("user"))
 			.andExpect(model().attributeExists("info"))
 			.andExpect(forwardedUrl(view("you", "index")));
+	}
+	
+	Collection collection(Account account) {
+		return new Collection(account);
+	}
+	
+	Iterable<WishList> wishLists() {
+		return Collections.emptyList();
+	}
+	
+	Iterable<Activity> userActivity() {
+		return Collections.emptyList();
 	}
 }

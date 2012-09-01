@@ -15,7 +15,13 @@
  */
 package com.trenako.activities;
 
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Account;
@@ -82,15 +88,19 @@ public class ActivityStreamImpl implements ActivityStream {
 	
 	@Override
 	public Iterable<Activity> recentActivity(int numberOfItems) {
-		// TODO Auto-generated method stub
-		return null;
+		Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "recorded");
+		Page<Activity> results = repo.findAll(pageable);
+		
+		if (!results.hasContent()) {
+			return Collections.emptyList();
+		}
+		
+		return results.getContent();
 	}
 
 	@Override
 	public Iterable<Activity> userActivity(Account user, int numberOfItems) {
-		// TODO Auto-generated method stub
-		return null;
+		Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "recorded");
+		return repo.findByActor(user.getSlug(), pageable);
 	}
-
-
 }

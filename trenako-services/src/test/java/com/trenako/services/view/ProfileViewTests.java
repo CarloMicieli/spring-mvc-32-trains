@@ -20,11 +20,13 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 
+import com.trenako.activities.Activity;
 import com.trenako.entities.Account;
 import com.trenako.entities.CategoriesCount;
 import com.trenako.entities.Collection;
@@ -44,28 +46,29 @@ public class ProfileViewTests {
 	
 	@Test
 	public void shouldCreateNewProfileViewsFromCollectionAndWishLists() {
-		ProfileView pv = new ProfileView(collection(), wishLists(), options());
+		ProfileView pv = new ProfileView(userActivity(), collection(), wishLists(), options());
 		assertEquals(collection(), pv.getCollection());
 		assertEquals(wishLists(), pv.getWishLists());
+		assertEquals(userActivity(), pv.getUserActivity());
 	}
 	
 	@Test
 	public void shouldFillCategoriesCountWhenTheCollectionIsNull() {
-		ProfileView pv = new ProfileView(null, wishLists(), options());
+		ProfileView pv = new ProfileView(userActivity(), null, wishLists(), options());
 		assertNull(pv.getCollection());
 		assertEquals(new CategoriesCount(), pv.getCategoriesCount());
 	}
 	
 	@Test
 	public void shouldExtractWishListNames() {
-		ProfileView pv = new ProfileView(collection(), wishLists(), options());
+		ProfileView pv = new ProfileView(userActivity(), collection(), wishLists(), options());
 		Map<String, String> names = pv.getWishListNames();
 		assertEquals("{bob-my-first-list=My first list, bob-my-second-list=My second list}", names.toString());
 	}
 	
 	@Test
 	public void shouldExtractRollingStocksFromCollection() {
-		ProfileView pv = new ProfileView(collection(), wishLists(), options());
+		ProfileView pv = new ProfileView(userActivity(), collection(), wishLists(), options());
 		
 		List<ItemView> items = (List<ItemView>) pv.getCollectionItems();
 		
@@ -78,7 +81,7 @@ public class ProfileViewTests {
 	
 	@Test
 	public void shouldExtractRollingStocksFromWishlists() {
-		ProfileView pv = new ProfileView(collection(), wishLists(), options());
+		ProfileView pv = new ProfileView(userActivity(), collection(), wishLists(), options());
 		
 		List<ItemView> items = (List<ItemView>) pv.getWishListItems();
 		
@@ -135,4 +138,8 @@ public class ProfileViewTests {
 	}
 	
 	static final Account bob = new Account.Builder("bob@mail.com").displayName("Bob").build();
+	
+	Iterable<Activity> userActivity() {
+		return Collections.emptyList();
+	}
 }

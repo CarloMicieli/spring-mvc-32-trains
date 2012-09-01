@@ -20,13 +20,21 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+import java.util.List;
+import java.util.Collections;
+
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.RollingStockComments;
@@ -53,6 +61,9 @@ public class RollingStocksServiceTests {
 	@Mock RollingStocksRepository repo;
 	@Mock CommentsRepository commentsRepo;
 	@Mock ReviewsRepository reviewsRepo;
+	
+	@Mock Page<RollingStock> results;
+	
 	RollingStocksService service;
 	
 	@Before
@@ -61,6 +72,26 @@ public class RollingStocksServiceTests {
 		service = new RollingStocksServiceImpl(repo, commentsRepo, reviewsRepo);
 	}
 
+	@Test
+	public void shouldReturnTheLatestModifiedRollingStocks() {
+		int numberOfItems = 10;
+		
+		Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "lastModified");
+		
+		List<RollingStock> rollingStocks = Collections.emptyList();
+		when(results.getContent()).thenReturn(rollingStocks);
+		when(repo.findAll(pageable)).thenReturn(results);
+				
+		Iterable<RollingStock> results = service.findLatestModified(numberOfItems);
+		assertNotNull("Rolling stocks result is empty", results);
+		
+		ArgumentCaptor<Pageable> arg = ArgumentCaptor.forClass(Pageable.class);
+		verify(repo, times(1)).findAll(arg.capture());
+		assertEquals(0, arg.getValue().getPageNumber());
+		assertEquals(numberOfItems, arg.getValue().getPageSize());
+		assertEquals("lastModified: DESC", arg.getValue().getSort().toString());
+	}
+	
 	@Test
 	public void shouldFindRollingStocksById() {
 		ObjectId id = new ObjectId();

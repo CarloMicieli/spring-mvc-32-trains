@@ -17,6 +17,9 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -94,5 +97,11 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	@Override
 	public void remove(RollingStock rs) {
 		rollingStocks.delete(rs);
+	}
+
+	@Override
+	public Iterable<RollingStock> findLatestModified(int numberOfItems) {
+		Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "lastModified");
+		return rollingStocks.findAll(pageable).getContent();
 	}
 }

@@ -85,6 +85,10 @@ allprojects {
 			exclude group: "commons-logging", module: "commons-logging"
 		}
 
+		compile("org.springframework:spring-aop:${springVersion}") {
+			exclude group: "commons-logging", module: "commons-logging"
+		}
+
 		// GCLIB, required for @Configuration usage
 		compile "cglib:cglib-nodep:2.2.2"
 
