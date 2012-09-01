@@ -262,7 +262,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 	
 	def "should create a public and empty collection for a user"() {
 		given:
-		def owner = new Account(displayName: 'George', slug: 'george')
+		def owner = new Account(slug: 'george')
 		
 		when:
 		service.createNew(owner)

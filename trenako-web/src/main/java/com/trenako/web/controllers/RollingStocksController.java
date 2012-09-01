@@ -141,7 +141,7 @@ public class RollingStocksController {
 		}
 		
 		Account user = secContext.getCurrentUser().getAccount();
-		rs.setCreatedBy(user.getId());
+		rs.setModifiedBy(user.getSlug());
 		
 		try {
 			service.createNew(rs);
@@ -192,7 +192,7 @@ public class RollingStocksController {
 		}
 		
 		Account user = secContext.getCurrentUser().getAccount();		
-		rs.setUpdatedBy(user.getId());
+		rs.setModifiedBy(user.getSlug());
 		
 		try {
 			service.save(rs);
