@@ -59,7 +59,37 @@ public class ActivityAspectTests {
 		aspect.recordCommentPosting(joinPoint, rollingStock(), comment());
 		verify(activityStream, times(1)).comment(eq(rollingStock()), eq(comment()));
 	}
-		
+
+	@Test
+	public void shouldRecordReviewsPosting() {
+		aspect.recordReviewPosting(joinPoint, rollingStock(), review());
+		verify(activityStream, times(1)).review(eq(rollingStock()), eq(review()));
+	}
+	
+	@Test
+	public void shouldRecordRollingStockCreation() {
+		aspect.recordRollingStockCreation(joinPoint, rollingStock());
+		verify(activityStream, times(1)).createRollingStock(eq(rollingStock()));
+	}
+	
+	@Test
+	public void shouldRecordRollingStockUpdate() {
+		aspect.recordRollingStockUpdate(joinPoint, rollingStock());
+		verify(activityStream, times(1)).changeRollingStock(eq(rollingStock()));
+	}
+	
+	@Test
+	public void shouldRecordCollectionChanges() {
+		aspect.recordCollectionChange(joinPoint, user(), collectionItem());
+		verify(activityStream, times(1)).collection(eq(user()), eq(collectionItem()));
+	}
+	
+	@Test
+	public void shouldRecordWishListChanges() {
+		aspect.recordWishListChange(joinPoint, wishList(), wishListItem());
+		verify(activityStream, times(1)).wishList(eq(wishList()), eq(wishListItem()));
+	}
+	
 	RollingStock rollingStock() {
 		 RollingStock rs = new RollingStock.Builder(acme(), "123456")
 			.scale(scaleH0())
