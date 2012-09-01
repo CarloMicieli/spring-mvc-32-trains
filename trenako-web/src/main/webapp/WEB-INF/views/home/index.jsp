@@ -35,6 +35,7 @@
 						</p>
 						<p>
 							<a class="btn btn-info" href="<s:url value="/rollingstocks/new" />"><s:message code="button.new.rolling.stock.label"/></a>
+							<hr>
 						</p>
 						</sec:authorize>
 						<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
@@ -53,8 +54,8 @@
 							<s:message code="account.emailAddress.label" />:
 						</label>
 						<div class="controls">
-							<input id="emailAddress" name="emailAddress" class="input-xlarge focused" required="required" type="text" value=""/>
-							<p class="help-block"><s:message code="account.emailAddress.help.label" /></p>
+							<s:message var="email" code="account.emailAddress.help.label" />
+							<input id="emailAddress" name="emailAddress" class="input-xlarge focused" required="required" type="text" value="" placeholder="${email}"/>
 						</div>
 					</div>
 
@@ -63,8 +64,8 @@
 							<s:message code="account.displayName.label" />:
 						</label>
 						<div class="controls">
-							<input id="displayName" name="displayName" class="input-xlarge focused" required="required" type="text" value=""/>
-							<p class="help-block"><s:message code="account.displayName.help.label" /></p>
+							<s:message var="name" code="account.displayName.help.label" />
+							<input id="displayName" name="displayName" class="input-xlarge focused" required="required" type="text" value="" placeholder="${name}"/>
 						</div>
 					</div>
 
@@ -73,7 +74,8 @@
 							<s:message code="account.password.label" />:
 						</label>
 						<div class="controls">
-							<input id="password" name="password" data-typetoggle="#show-password" class="input-xlarge focused" required="required" type="password" value=""/>
+							<s:message var="pwd" code="account.password.help.label" text="At least 6 characters"/>
+							<input id="password" name="password" data-typetoggle="#show-password" class="input-xlarge focused" required="required" type="password" value="" placeholder="${pwd}"/>
 							<label class="checkbox">
 								<input id="show-password" type="checkbox"> <s:message code="account.showPassword.label" />
 							</label>

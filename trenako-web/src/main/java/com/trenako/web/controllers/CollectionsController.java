@@ -83,6 +83,7 @@ public class CollectionsController {
 		
 		CollectionItemForm newForm = CollectionItemForm.newForm(rs, messageSource);
 		model.addAttribute("itemForm", newForm);
+		model.addAttribute("rs", rs);
 		return "collection/add";
 	}
 

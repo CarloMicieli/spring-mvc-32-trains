@@ -73,6 +73,7 @@ public class CollectionsControllerTests {
 		
 		assertEquals("collection/add", viewName);
 		assertTrue("Item form not found in the model", model.containsAttribute("itemForm"));
+		assertTrue("Rolling stock not found in the model", model.containsAttribute("rs"));
 	}
 	
 	@Test

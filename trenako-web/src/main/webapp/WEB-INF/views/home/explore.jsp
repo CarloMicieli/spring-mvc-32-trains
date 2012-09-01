@@ -14,58 +14,90 @@
 			<s:url value="/home" var="homeUrl"/>
 	    	<a href="${homeUrl}"><s:message code="home.title" text="Home"/></a> <span class="divider">/</span>
 		</li>
-	  	<li class="active"><s:message code="home.explore.title" text="explore"/></li>
+	  	<li class="active"><s:message code="home.explore.title" text="Explore"/></li>
 	</ul>
 
 	<div class="page-header">
-		<h1><s:message code="home.explore.header.title" text="explore trenako" /></h1>
-		<small><s:message code="home.explore.header.subtitle" text="Discover" /></small>
+		<h1>
+			<s:message code="home.explore.header.title" text="explore" />
+			<small><s:message code="home.explore.header.subtitle" text="Discover trenako.com" /></small>
+		</h1>
 	</div>
-	
-	<div class="row-fluid">
-    	<div class="span6">
-    		<h2>Discover new rolling stocks</h2>
-    		<p>discover</p>
-    		<ul class="thumbnails">
-        		<li>
-		        	<div class="thumbnail">
-			            <img src="http://placehold.it/260x180" alt="">
-			            <div class="caption">
-			            	<h4>Browse by brand</h4>
-			              	<p>description goes here</p>
-			              	<p><a href="#" class="btn btn-primary">See in action</a></p>
-			            </div>
-		          	</div>
-		      	</li>
-		      	<li>
-		        	<div class="thumbnail">
-			            <img src="http://placehold.it/260x180" alt="">
-			            <div class="caption">
-			            	<h4>Browse by railway</h4>
-			              	<p>description goes here</p>
-			              	<p><a href="#" class="btn btn-primary">See in action</a></p>
-			            </div>
-		          	</div>
-		      	</li>
-		      	<li>
-		      			        		<h3>Browse by railway</h3>
-		        		<p>
-		        			Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus 
-		        			ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo 
-		        			sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-						</p>
-		        	<div class="thumbnail">
-			            <img src="http://placehold.it/260x180" alt="">
-			            <div class="caption">
-			            </div>
-		          	</div>
-		      	</li>		      	
-			</ul>
-      	</div>
-      	<div class="span6">
-      		<h2>Create and manage your collection</h2>
-      	</div>
-  	</div>
 
+	<div class="span12">
+		<div class="row-fluid">
+			<div class="span10 offset1">
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim lacus vel turpis accumsan luctus. Sed eleifend justo eu velit iaculis bibendum. Maecenas scelerisque euismod nisi, eget dictum ligula imperdiet id. Fusce tristique dapibus sodales. Cras vestibulum lorem eget leo euismod adipiscing. Nullam quam risus, egestas at sollicitudin eget, luctus.
+				</p>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim lacus vel turpis accumsan luctus. Sed eleifend justo eu velit iaculis bibendum. Maecenas scelerisque euismod nisi, eget dictum ligula imperdiet id. Fusce tristique dapibus sodales. Cras vestibulum lorem eget leo euismod adipiscing. Nullam quam risus, egestas at sollicitudin eget, luctus.
+				</p>
+				<br>
+			</div>
+		</div>
+
+		<div class="row-fluid">
+			<h3>
+				Features
+			</h3>
+			<hr>
+			<div class="span3 offset1">
+				<a href="#" class="fancybox"><img src="http://placehold.it/300x200" alt="img1"></a>
+				<h4>Rolling stocks</h4>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim lacus vel turpis accumsan luctus. Sed eleifend justo eu velit iaculis bibendum. Maecenas scelerisque euismod nisi, eget dictum ligula imperdiet id. Fusce tristique dapibus sodales. Cras vestibulum lorem eget leo euismod adipiscing. Nullam quam risus, egestas at sollicitudin eget, luctus.
+				</p>
+			</div>
+			<div class="span3">
+				<a href="#" class="fancybox"><img src="http://placehold.it/300x200" alt="im2"></a>
+				<h4>Share your opinion</h4>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim lacus vel turpis accumsan luctus. Sed eleifend justo eu velit iaculis bibendum. Maecenas scelerisque euismod nisi, eget dictum ligula imperdiet id. Fusce tristique dapibus sodales. Cras vestibulum lorem eget leo euismod adipiscing. Nullam quam risus, egestas at sollicitudin eget, luctus.
+				</p>
+			</div>
+			<div class="span3">
+				<a href="#" class="fancybox"><img src="http://placehold.it/300x200" alt="img3"></a>
+				<h4>Collections 2.0</h4>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim lacus vel turpis accumsan luctus. Sed eleifend justo eu velit iaculis bibendum. Maecenas scelerisque euismod nisi, eget dictum ligula imperdiet id. Fusce tristique dapibus sodales. Cras vestibulum lorem eget leo euismod adipiscing. Nullam quam risus, egestas at sollicitudin eget, luctus.
+				</p>
+			</div>
+		</div>
+	
+		<div class="row-fluid"style="margin-top: 15px;">
+			<h3>
+				Start now
+				<small>how it works</small>
+			</h3>
+			<hr>
+		
+			<div class="span3 offset1">
+				<h4><span><img src="http://placehold.it/35x35" alt="iii"></span> Browse</h4>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim lacus vel turpis accumsan luctus. Sed eleifend justo eu velit iaculis bibendum. Maecenas scelerisque euismod nisi, eget dictum ligula imperdiet id. Fusce tristique dapibus sodales. Cras vestibulum lorem eget leo euismod adipiscing. Nullam quam risus, egestas at sollicitudin eget, luctus.
+				</p>
+			</div>
+			<div class="span3">
+				<h4><span><img src="http://placehold.it/35x35" alt="iii"></span> Browse</h4>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim lacus vel turpis accumsan luctus. Sed eleifend justo eu velit iaculis bibendum. Maecenas scelerisque euismod nisi, eget dictum ligula imperdiet id. Fusce tristique dapibus sodales. Cras vestibulum lorem eget leo euismod adipiscing. Nullam quam risus, egestas at sollicitudin eget, luctus.
+				</p>
+			</div>
+			<div class="span3">
+				<h4><span><img src="http://placehold.it/35x35" alt="iii"></span> Browse</h4>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim lacus vel turpis accumsan luctus. Sed eleifend justo eu velit iaculis bibendum. Maecenas scelerisque euismod nisi, eget dictum ligula imperdiet id. Fusce tristique dapibus sodales. Cras vestibulum lorem eget leo euismod adipiscing. Nullam quam risus, egestas at sollicitudin eget, luctus.
+				</p>
+			</div>
+		</div>
+		
+		<br>
+		<div class="well">
+			<h3>
+				Ready to start? Sign up <a href="#">here</a> (it is easy and free!)	
+			</h3>
+		</div>
+	</div>
 </body>
 </html>

@@ -38,13 +38,14 @@ import com.trenako.values.LocalizedEnum;
  */
 public class CollectionItemForm {
 
-	@Valid
 	private CollectionItem item;
 	
 	@Range(min = 0, max = 9999, message = "collectionItem.price.range.notmet")
 	private BigDecimal price;
 	
 	private BigDecimal previousPrice;
+	
+	private boolean alreadyInCollection;
 	
 	private Iterable<LocalizedEnum<Condition>> conditionsList;
 	
@@ -119,6 +120,14 @@ public class CollectionItemForm {
 		return conditionsList;
 	}
 	
+	public boolean isAlreadyInCollection() {
+		return alreadyInCollection;
+	}
+
+	public void setAlreadyInCollection(boolean alreadyInCollection) {
+		this.alreadyInCollection = alreadyInCollection;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;

@@ -26,7 +26,7 @@
       	}
       	.footer {
      		border-top: 1px solid #E5E5E5;
-			background-color: whiteSmoke;
+			background-color: #EEE;
 		}
     	</style>
 		
@@ -125,7 +125,8 @@
 				<p></p>
 				<p class="pull-right"><a href="#top"><s:message code="footer.back.top.label"/></a></p>
 				<p>
-					<a href="#">About us</a> | <a href="#">Developers</a> 
+					<s:url var="devUrl" value="/home/developers"/>
+					<a href="#">About us</a> | <a href="${devUrl}">Developers</a> | <a href="#">Terms of use</a>
 					<br/>
 					<s:message code="footer.designed.built.label"/> <a href="https://twitter.com/#!/chuckmiskyes" target="_blank">@chuckmiskyes</a>.
 					<s:message code="footer.source.code.label"/> <a href="https://github.com/CarloMicieli/trenako" target="_blank">GitHub</a>.

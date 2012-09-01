@@ -107,25 +107,29 @@
 						<s:param name="slug" value="${result.rs.slug}" />
 					</s:url>
 					<img src="${imgUrl}" alt="Not found">
-				</div>				
+					<hr>
+				</div>
 				<div class="row-fluid">
 					<p>
-						<span class="label label-info">Tags</span>
 						<c:forEach var="tag" items="${result.rs.tags}">
 							<s:url var="tagUrl" value="/tag/{tagName}">
 								<s:param name="tagName" value="${tag}"></s:param>
 							</s:url>
-							[<a href="${tagUrl}" title="Tag: ${tag}">${tag}</a>]
+							<a class="label label-info" href="${tagUrl}" title="Tag: ${tag}">${tag}</a>
 						</c:forEach>
 					</p>
 		   		</div>
 		   		
 		   		<div class="row-fluid">
 	        		<sec:authorize access="isAnonymous()">
-	           			<s:url value="/auth/login" var="loginUrl"/>
-	           			<s:url value="/auth/signup" var="signupUrl"/>
-		           		<a href="${loginUrl}"><s:message code="auth.signin.link.label"/></a> / 
-		           		<a href="${signupUrl}"><s:message code="auth.signup.link.label"/></a> <s:message code="auth.not.authorize.comment.label"/>
+	        			<div class="well">
+	        				<p>
+			           			<s:url value="/auth/login" var="loginUrl"/>
+	    	       				<s:url value="/auth/signup" var="signupUrl"/>
+		    		       		<a href="${loginUrl}"><s:message code="auth.signin.link.label"/></a> / 
+		           				<a href="${signupUrl}"><s:message code="auth.signup.link.label"/></a> <s:message code="auth.not.authorize.comment.label"/>
+	           				</p>
+	           			</div>
 	           		</sec:authorize>
 	           	
 	           		<sec:authorize access="isAuthenticated()">
