@@ -60,7 +60,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "/default", method = RequestMethod.GET)
 	public String defaultAction() {
-		return "home/index";
+		return "redirect:/home";
 	}
 
 	@RequestMapping(value = "/home/developers", method = RequestMethod.GET)

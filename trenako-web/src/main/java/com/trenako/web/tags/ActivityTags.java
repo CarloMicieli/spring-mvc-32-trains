@@ -80,7 +80,7 @@ public class ActivityTags extends SpringTagSupport {
 		
 		String slug = user == null ? activity().getActor() : user.getSlug();
 		String displayName = user == null ? activity().getActor() : user.getDisplayName();
-		sb.append("\n<a href=\"").append("/users/").append(slug).append("\">")
+		sb.append("\n<a href=\"").append(contextPath).append("/users/").append(slug).append("\">")
 			.append(displayName)
 			.append("</a>");
 		
@@ -88,12 +88,12 @@ public class ActivityTags extends SpringTagSupport {
 				activity().getVerb(), 
 				messageSource(), 
 				ActivityVerb.class);
-		sb.append(" <strong>").append(verb.getLabel()).append("</strong> ");
+		sb.append(" ").append(verb.getLabel()).append(" ");
 		
 		String objectName = activity().getObject().getDisplayName();
 		String objectUrl = activity().getObject().getUrl();
 		
-		sb.append("\n<a href=\"").append(objectUrl).append("\">")
+		sb.append("\n<a href=\"").append(contextPath).append(objectUrl).append("\">")
 			.append(objectName)
 			.append("</a>");
 		
@@ -107,7 +107,7 @@ public class ActivityTags extends SpringTagSupport {
 				p.getKey(), 
 				getRequestContext().getLocale());
 		
-		sb.append(" - <strong>").append(periodText).append("</strong>");
+		sb.append("\n<br/><strong>").append(periodText).append("</strong>");
 				
 		try {
 			jspWriter.append(sb.toString());

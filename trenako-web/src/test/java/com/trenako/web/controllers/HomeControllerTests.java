@@ -80,7 +80,7 @@ public class HomeControllerTests {
 	@Test
 	public void shouldRenderDefaultPage() {
 		String viewName = controller.defaultAction();
-		assertEquals("home/index", viewName);
+		assertEquals("redirect:/home", viewName);
 	}
 
 	@Test

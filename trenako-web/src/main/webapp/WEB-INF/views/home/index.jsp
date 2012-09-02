@@ -37,7 +37,7 @@
 						</p>
 					</div>
 					
-					<div class="span7">
+					<div class="span7" style="margin-bottom: 15px">
 						<h2><s:message code="home.rolling.stocks.title"/></h2>
 						<sec:authorize url="/rollingstocks/new">
 						<p>

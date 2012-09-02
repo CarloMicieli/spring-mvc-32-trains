@@ -73,8 +73,9 @@ public class ActivityTagsTests extends AbstractSpringTagsTest {
 		
 		String output = renderTag();
 		
-		String expected = "\n<a href=\"/users/bob\">Bob</a> <strong>rs-insert</strong> "+ 
-				"\n<a href=\"/rollingstocks/acme-123456\">ACME 123456</a> - <strong>interval.days.one.label</strong>";
+		String expected = "\n<a href=\"/trenako-web/users/bob\">Bob</a> rs-insert "+ 
+				"\n<a href=\"/trenako-web/rollingstocks/acme-123456\">ACME 123456</a>"+
+				"\n<br/><strong>interval.days.one.label</strong>";
 		assertEquals(expected, output);
 	}
 	
@@ -87,9 +88,9 @@ public class ActivityTagsTests extends AbstractSpringTagsTest {
 		
 		String output = renderTag();
 		
-		String expected = "\n<a href=\"/users/bob\">Bob</a> <strong>add-collection</strong> "+ 
-				"\n<a href=\"/rollingstocks/acme-123456\">ACME 123456</a> collection - "+
-				"<strong>interval.days.one.label</strong>";
+		String expected = "\n<a href=\"/trenako-web/users/bob\">Bob</a> add-collection "+ 
+				"\n<a href=\"/trenako-web/rollingstocks/acme-123456\">ACME 123456</a> collection"+
+				"\n<br/><strong>interval.days.one.label</strong>";
 		assertEquals(expected, output);
 	}
 	
