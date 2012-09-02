@@ -5,8 +5,23 @@
 	version="2.1">
 
 	<tlib-version>1.0</tlib-version>
-	 <short-name>tk</short-name>
+	<short-name>tk</short-name>
 
+	<tag>
+		<name>activity</name>
+		<tag-class>com.trenako.web.tags.ActivityTags</tag-class>
+		<body-content>empty</body-content>
+		<description>
+			Display the user activity entry.
+		</description>
+		<attribute>
+			<name>activity</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.trenako.activities.Activity</type>
+		</attribute>
+	</tag>
+	
 	<tag>
 		<name>avatar</name>
 		<tag-class>com.trenako.web.tags.AvatarTags</tag-class>
@@ -18,7 +33,6 @@
 			<name>user</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>com.trenako.entities.Account</type>
 		</attribute>
 		<attribute>
 			<name>size</name>
@@ -26,10 +40,15 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>onlyPicture</name>
+			<name>showGravatarLink</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<name>showName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
 	</tag>
 
 	<tag>

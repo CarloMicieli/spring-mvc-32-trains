@@ -53,7 +53,7 @@
 					<c:forEach var="rev" items="${reviews.items}">
            			<div class="row-fluid">
            				<div class="span2">
-           					<img src="http://placehold.it/96x96">
+           					<tk:avatar user="${rev.author}" size="64" showName="true"/>
            				</div>
            				<div class="span10">
            					<h4>

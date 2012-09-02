@@ -111,7 +111,7 @@ public class ActivityAspectTests {
 	}
 
 	Review review() {
-		Review r = new Review(user(), "title", "content", 4);
+		Review r = new Review(user(), "title", "content", 4, null);
 		r.setPostedAt(date("2012/02/02"));
 		return r;
 	}

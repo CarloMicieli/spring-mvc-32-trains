@@ -20,7 +20,7 @@
 		
 		<div class="row-fluid">
 			<div class="span9">
-				<tk:avatar user="${user.account}" size="64" onlyPicture="true"/>
+				<tk:avatar user="${user.account.slug}" size="64" showGravatarLink="true"/>
 				<div class="page-header">
 					<h1>${user.username} <small>(${user.displayName})</small></h1>
 				</div>

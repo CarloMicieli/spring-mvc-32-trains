@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
 <html>
 	<head>
@@ -22,9 +23,20 @@
 					<div class="span5">
 						<h2><s:message code="home.recent.activity.title"/></h2>
 						<p>
-						
+							<c:forEach var="act" items="${content.activityStream}">
+								<div class="row-fluid" style="border-left: thick solid orange;">
+									<div class="span3 offset1">
+										<tk:avatar user="${act.actor}" size="48" showName="true"/>
+									</div>
+									<div class="span8">
+										<a href="#">${act.actor}</a> ${act.verb} <a href="#">${act.object.displayName}</a>
+										<br/>
+										<strong><tk:period since="${act.recorded}"/></strong> 
+									</div>
+								</div>
+								<hr/>
+							</c:forEach>
 						</p>
-						<p><a class="btn" href="#">View details &raquo;</a></p>
 					</div>
 					
 					<div class="span7">
@@ -35,11 +47,44 @@
 						</p>
 						<p>
 							<a class="btn btn-info" href="<s:url value="/rollingstocks/new" />"><s:message code="button.new.rolling.stock.label"/></a>
-							<hr>
 						</p>
+						<hr/>
 						</sec:authorize>
-						<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-						<p><a class="btn" href="#">View details &raquo;</a></p>
+						<p>
+							<c:forEach var="rs" items="${content.rollingStocks}">
+								<div class="row-fluid">
+									<div class="span3 offset1">
+							       		<s:url value="/rollingstocks/{slug}" var="showUrl">
+											<s:param name="slug" value="${rs.slug}" />
+										</s:url>
+										<a href="${showUrl}" class="thumbnail">
+									      	<s:url value="/images/th_rollingstock_{slug}" var="imgUrl">
+												<s:param name="slug" value="${rs.slug}" />
+											</s:url>
+											<img src="${imgUrl}" alt="Not found">
+									    </a>
+									    <br/>
+										<tk:period since="${rs.lastModified}"/>
+									</div>
+									<div class="span8">
+										<h5><tk:eval expression="${rs.description}" maxLength="50" /></h5>
+										<dl class="dl-horizontal">
+											<dt><s:message code="rollingStock.itemNumber.label" /></dt> 
+											<dd>${rs.brand.label} - ${rs.itemNumber}</dd>
+											<dt><s:message code="rollingStock.scale.label" />:</dt> 
+											<dd>${rs.scale.label}</dd>
+											<dt><s:message code="rollingStock.railway.label" />:</dt> 
+											<dd>${rs.railway.label}</dd>
+										</dl>
+									</div>
+								</div>
+								<hr/>
+							</c:forEach>
+						</p>
+						<div class="pull-right">
+							<s:url var="rsUrl" value="/rs"/>
+							<a class="btn" href="${rsUrl}">See more</a>
+						</div>
 					</div>
 				</div>
 			</div>

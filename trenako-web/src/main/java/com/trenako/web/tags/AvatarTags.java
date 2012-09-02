@@ -20,7 +20,10 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.trenako.entities.Account;
+import com.trenako.services.AccountsService;
 
 import de.bripkens.gravatar.DefaultImage;
 import de.bripkens.gravatar.Gravatar;
@@ -34,20 +37,27 @@ import de.bripkens.gravatar.Rating;
 @SuppressWarnings("serial")
 public class AvatarTags extends SpringTagSupport {
 	
+	private @Autowired AccountsService userService;
+	
 	private int size;
-	private Account user;
-	private boolean onlyPicture;
-
+	private String user;
+	private boolean showGravatarLink;
+	private boolean showName;
+	
 	public void setSize(int size) {
 		this.size = size;
 	}
 
-	public void setUser(Account user) {
+	public void setUser(String user) {
 		this.user = user;
 	}
 	
-	public void setOnlyPicture(boolean onlyPicture) {
-		this.onlyPicture = onlyPicture;
+	public void setShowGravatarLink(boolean showGravatarLink) {
+		this.showGravatarLink = showGravatarLink;
+	}
+	
+	public void setShowName(boolean showName) {
+		this.showName = showName;
 	}
 	
 	int getSize() {
@@ -55,41 +65,51 @@ public class AvatarTags extends SpringTagSupport {
 		return size;
 	}
 
-	Account getUser() {
+	String getUser() {
 		return user;
 	}
 
-	boolean onlyPicture() {
-		return onlyPicture;
+	boolean showGravatarLink() {
+		return showGravatarLink;
+	}
+	
+	boolean showUsername() {
+		return showName;
 	}
 	
 	@Override
 	protected int writeTagContent(JspWriter jspWriter, String contextPath)
 			throws JspException {
 
+		Account account = userService.findBySlug(getUser());
+		
+		
 		String gravatarImageURL = new Gravatar()
 			.setSize(getSize())
 			.setHttps(true)
 			.setRating(Rating.PARENTAL_GUIDANCE_SUGGESTED)
 			.setStandardDefaultImage(DefaultImage.MYSTERY_MAN)
-			.getUrl(getUser().getEmailAddress());
+			.getUrl(account.getEmailAddress());
 
 		try {
 			
 			StringBuilder sb = new StringBuilder();
-			if (!onlyPicture()) {
-				sb.append("\n<ul class=\"thumbnails\">");
-				sb.append("\n<li class=\"span4\"><div class=\"thumbnail\">");
+
+			if (showGravatarLink()) {
+				sb.append("\n<a href=\"http://gravatar.com/emails/\">");
 			}
 			
-			sb.append("\n<a href=\"http://gravatar.com/emails/\">");
 			sb.append("\n<img height=\"" + getSize() + "\" width=\"" + getSize() + "\" src=\""+gravatarImageURL+"\" />");
-			sb.append("\n</a>");
 			
-			if (!onlyPicture()) {
-				sb.append("\n</div></li>");
-				sb.append("\n</ul>");
+			if (showGravatarLink()) {
+				sb.append("\n</a>");
 			}
+			
+			if (showUsername()) {
+				sb.append("\n<br/>");
+				sb.append("\n" + account.getDisplayName());
+			}
+			
 			jspWriter.append(sb.toString());
 		} catch (IOException e) {
 		}

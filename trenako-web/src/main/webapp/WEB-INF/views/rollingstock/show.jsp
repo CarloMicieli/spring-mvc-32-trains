@@ -158,6 +158,7 @@
 	           		<c:forEach var="cmm" items="${result.comments}">
            			<div class="row-fluid">
            				<div class="span2">
+           					<tk:avatar user="${cmm.author}" size="48" showName="true"/>
            				</div>
            				<div class="span10">
            					<p>
