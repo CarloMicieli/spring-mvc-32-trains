@@ -117,7 +117,8 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		def newReview = new Review(author,
 			'My third review',
 			'My third review content',
-			3)
+			3,
+			new Date())
 		
 		when:
 		service.postReview(rollingStock, newReview)
@@ -140,7 +141,8 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		def newReview = new Review(author, 
 			'My first review', 
 			'My first review content',
-			3)
+			3,
+			new Date())
 		
 		when:
 		service.postReview(rollingStock, newReview)
@@ -162,7 +164,7 @@ class ReviewsServiceSpecification extends MongoSpecification {
 		
 		and:
 		def author = new Account(slug: 'alice')
-		def review = new Review(author, '', '', 5)
+		def review = new Review(author, '', '', 5, null)
 		
 		assert author.slug != null
 		
