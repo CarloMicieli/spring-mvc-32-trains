@@ -30,14 +30,23 @@ import de.bripkens.gravatar.Gravatar;
 import de.bripkens.gravatar.Rating;
 
 /**
- * <tk:gravatar size="48" user="${slug}"/>
+ * It represents the tag to show the user's gravatar image.
+ * 
+ * <blockquote>
+ * <pre>
+ * <tk:gravatar size="48" user="${slug}" showGravatarLink="true" showName="true" />
+ * </pre>
+ * </blockquote>
+ * 
  * @author Carlo Micieli
  *
  */
 @SuppressWarnings("serial")
 public class AvatarTags extends SpringTagSupport {
 	
-	private @Autowired AccountsService userService;
+	private static final int DEFAULT_SIZE = 48;
+
+	private AccountsService userService;
 	
 	private int size;
 	private String user;
@@ -60,8 +69,15 @@ public class AvatarTags extends SpringTagSupport {
 		this.showName = showName;
 	}
 	
+	@Autowired
+	public void setAccountsService(AccountsService accountsService) {
+		this.userService = accountsService;
+	}
+	
 	int getSize() {
-		if (size == 0) return 48;
+		if (size <= 0) { 
+			return DEFAULT_SIZE;
+		}
 		return size;
 	}
 
@@ -82,8 +98,10 @@ public class AvatarTags extends SpringTagSupport {
 			throws JspException {
 
 		Account account = userService.findBySlug(getUser());
-		
-		
+		if (account == null) {
+			return SKIP_BODY;
+		}
+				
 		String gravatarImageURL = new Gravatar()
 			.setSize(getSize())
 			.setHttps(true)
@@ -92,14 +110,16 @@ public class AvatarTags extends SpringTagSupport {
 			.getUrl(account.getEmailAddress());
 
 		try {
-			
 			StringBuilder sb = new StringBuilder();
 
 			if (showGravatarLink()) {
 				sb.append("\n<a href=\"http://gravatar.com/emails/\">");
 			}
 			
-			sb.append("\n<img height=\"" + getSize() + "\" width=\"" + getSize() + "\" src=\""+gravatarImageURL+"\" />");
+			sb.append("\n<img ")
+				.append("height=\"").append(getSize()).append("\" ")
+				.append("width=\"").append(getSize()).append("\" ")
+				.append("src=\"").append(gravatarImageURL).append("\" />");
 			
 			if (showGravatarLink()) {
 				sb.append("\n</a>");
@@ -112,6 +132,7 @@ public class AvatarTags extends SpringTagSupport {
 			
 			jspWriter.append(sb.toString());
 		} catch (IOException e) {
+			throw new JspException(e);
 		}
 				
 		return SKIP_BODY;
