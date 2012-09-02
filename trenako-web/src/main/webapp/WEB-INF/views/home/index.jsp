@@ -24,14 +24,12 @@
 						<h2><s:message code="home.recent.activity.title"/></h2>
 						<p>
 							<c:forEach var="act" items="${content.activityStream}">
-								<div class="row-fluid" style="border-left: thick solid orange;">
+								<div class="row-fluid" style="border-left: thick solid ${act.color};">
 									<div class="span3 offset1">
 										<tk:avatar user="${act.actor}" size="48" showName="true"/>
 									</div>
 									<div class="span8">
-										<a href="#">${act.actor}</a> ${act.verb} <a href="#">${act.object.displayName}</a>
-										<br/>
-										<strong><tk:period since="${act.recorded}"/></strong> 
+										<tk:activity activity="${act}"/> 
 									</div>
 								</div>
 								<hr/>

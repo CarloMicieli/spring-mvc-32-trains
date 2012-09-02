@@ -18,8 +18,6 @@ package com.trenako.web.controllers.form;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.validation.Valid;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.context.MessageSource;

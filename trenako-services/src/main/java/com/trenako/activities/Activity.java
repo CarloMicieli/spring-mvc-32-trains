@@ -16,9 +16,12 @@
 package com.trenako.activities;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -53,6 +56,8 @@ import com.trenako.mapping.WeakDbRef;
  */
 @Document(collection = "activityStream")
 public class Activity {
+	private final static Map<String, String> verbColors = initColors();
+	
 	@Id
 	private ObjectId id;
 
@@ -181,6 +186,19 @@ public class Activity {
 	public void setId(ObjectId id) {
 		this.id = id;
 	}
+	
+	/**
+	 * Returns the {@code Activity} color.
+	 * @return the color
+	 */
+	public String getColor() {
+		String color = verbColors.get(getVerb());
+		if (StringUtils.isBlank(color)) {
+			return "White";
+		}
+		
+		return color;
+	}
 
 	/**
 	 * Returns the {@code Activity} actor.
@@ -299,4 +317,16 @@ public class Activity {
 		return verb.label();
 	}
 
+	private static Map<String, String> initColors() {
+		Map<String, String> colors = new HashMap<String, String>();
+		
+		colors.put(ActivityVerb.COMMENT.label(), "Darkorange");
+		colors.put(ActivityVerb.REVIEW.label(), "LimeGreen");
+		colors.put(ActivityVerb.RS_INSERT.label(), "SkyBlue");
+		colors.put(ActivityVerb.RS_UPDATE.label(), "StateBlue");
+		colors.put(ActivityVerb.ADD_COLLECTION.label(), "MediumTurquoise");
+		colors.put(ActivityVerb.ADD_WISH_LIST.label(), "DarkOrchid");
+		
+		return colors;
+	}
 }

@@ -157,14 +157,14 @@
 		   		<div class="row-fluid">
 	           		<c:forEach var="cmm" items="${result.comments}">
            			<div class="row-fluid">
-           				<div class="span2">
+           				<div class="span3">
            					<tk:avatar user="${cmm.author}" size="48" showName="true"/>
            				</div>
-           				<div class="span10">
+           				<div class="span9">
            					<p>
            						${cmm.content}
-           						<br>
-           						<strong><a href="">${cmm.author}</a></strong> - <tk:period since="${cmm.postedAt}"/>
+           						<br/>
+           						<strong><tk:period since="${cmm.postedAt}"/></strong>
            					</p>
            				</div>
            			</div>

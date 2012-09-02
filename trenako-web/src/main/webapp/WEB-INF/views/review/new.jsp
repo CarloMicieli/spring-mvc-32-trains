@@ -21,7 +21,7 @@
 				<div class="span3">
 					<p>
 					<s:url var="backUrl" value="/rollingstocks/{slug}">
-						<s:param name="slug" value="${reviewForm.rs.slug}" />
+						<s:param name="slug" value="${rs.slug}" />
 					</s:url>
 					<a href="${backUrl}" class="btn btn-info" style="width: 110px">
 						<i class="icon-arrow-left icon-white"></i> <s:message code="button.go.back.label"/>
@@ -29,23 +29,23 @@
 					</p>
 					<a href="#" class="thumbnail">
 						<s:url value="/images/th_rollingstock_{slug}" var="imgUrl">
-							<s:param name="slug" value="${reviewForm.rs.slug}" />
+							<s:param name="slug" value="${rs.slug}" />
 						</s:url>
 						<img src="${imgUrl}" alt="Not found">
 			    	</a>
 			    	<dl>
 			    		<dt><s:message code="rollingStock.brand.label"/>:</dt>
-			    		<dd>${reviewForm.rs.brand.label}</dd>
+			    		<dd>${rs.brand.label}</dd>
 			    		<dt><s:message code="rollingStock.itemNumber.label"/>:</dt>
-			    		<dd>${reviewForm.rs.itemNumber}</dd>
+			    		<dd>${rs.itemNumber}</dd>
 			    		<dt><s:message code="rollingStock.description.label"/>:</dt>
-			    		<dd><tk:eval expression="${reviewForm.rs.description}"/></dd>			    		
+			    		<dd><tk:eval expression="${rs.description}"/></dd>			    		
 			    	</dl>
 				</div>
 				
 				<div class="span9">
 					<s:url var="createUrl" value="/rollingstocks/{slug}/reviews">
-						<s:param name="slug" value="${reviewForm.rs.slug}" />
+						<s:param name="slug" value="${rs.slug}" />
 					</s:url>
 					<form:form id="form" class="form-horizontal" method="POST" action="${createUrl}" modelAttribute="reviewForm">
 						<fieldset>
@@ -56,7 +56,9 @@
 							</c:if>
 						</fieldset>
 						
-						<input type="hidden" id="review.author" name="review.author" value="${reviewForm.author.slug}"/>
+						<form:hidden path="review.author"/>
+						<input type="hidden" id="rsSlug" name="rsSlug" value="${rs.slug}"/>
+						<input type="hidden" id="rsLabel" name="rsLabel" value="${rs.label}"/>
 						
 						 <s:bind path="reviewForm.review.title">
 	    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">

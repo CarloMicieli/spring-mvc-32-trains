@@ -15,13 +15,22 @@
  */
 package com.trenako.web.tags;
 
+import java.io.IOException;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 import com.trenako.activities.Activity;
+import com.trenako.activities.ActivityVerb;
+import com.trenako.entities.Account;
+import com.trenako.services.AccountsService;
+import com.trenako.values.LocalizedEnum;
+
+import static com.trenako.utility.PeriodUtils.*;
 
 /**
  * 
@@ -31,24 +40,80 @@ import com.trenako.activities.Activity;
 @SuppressWarnings("serial")
 public class ActivityTags extends SpringTagSupport {
 
-	private @Autowired MessageSource messageSource;
+	private MessageSource messageSource;
 	private Activity activity;
+	private AccountsService accountsService;
 
+	@Autowired
+	protected void setMessageSource(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+	
+	@Autowired
+	protected void setAccountsService(AccountsService accountsService) {
+		this.accountsService = accountsService;
+	}
+	
 	public void setActivity(Activity activity) {
 		this.activity = activity;
 	}
 
-	Activity getActivity() {
+	AccountsService users() {
+		return accountsService;
+	}
+	
+	Activity activity() {
 		return activity;
 	}
-
+	
+	MessageSource messageSource() {
+		return messageSource;
+	}
+	
 	@Override
 	protected int writeTagContent(JspWriter jspWriter, String contextPath)
 			throws JspException {
 		
+		StringBuilder sb = new StringBuilder();
 		
-		//jspWriter.append()
+		Account user = users().findBySlug(activity().getActor());
 		
+		String slug = user == null ? activity().getActor() : user.getSlug();
+		String displayName = user == null ? activity().getActor() : user.getDisplayName();
+		sb.append("\n<a href=\"").append("/users/").append(slug).append("\">")
+			.append(displayName)
+			.append("</a>");
+		
+		LocalizedEnum<ActivityVerb> verb = LocalizedEnum.parseString(
+				activity().getVerb(), 
+				messageSource(), 
+				ActivityVerb.class);
+		sb.append(" <strong>").append(verb.getLabel()).append("</strong> ");
+		
+		String objectName = activity().getObject().getDisplayName();
+		String objectUrl = activity().getObject().getUrl();
+		
+		sb.append("\n<a href=\"").append(objectUrl).append("\">")
+			.append(objectName)
+			.append("</a>");
+		
+		if (activity().getContext() != null) {
+			sb.append(" ").append(activity().getContext().getContextType());
+		}
+		
+		Pair<String, Integer> p = periodUntilNow(activity().getRecorded());
+		String periodText = messageSource().getMessage(p.getKey(), 
+				new Object[] { p.getValue() }, 
+				p.getKey(), 
+				getRequestContext().getLocale());
+		
+		sb.append(" - <strong>").append(periodText).append("</strong>");
+				
+		try {
+			jspWriter.append(sb.toString());
+		} catch (IOException e) {
+			throw new JspException(e);
+		}
 		
 		return SKIP_BODY;
 	}

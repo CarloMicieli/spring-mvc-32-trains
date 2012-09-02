@@ -45,7 +45,7 @@ import com.trenako.results.RollingStockResults;
 
 /**
  * Helper class to initialize all the infrastructure needed
- * for custom jsp tags unit testing.
+ * for custom JSP tags unit testing.
  *  
  * @author Carlo Micieli
  *
