@@ -15,19 +15,22 @@
  */
 package com.trenako.web.controllers.form;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
+import com.trenako.web.security.UserContext;
 
 /**
- * 
+ * It represents the web form for {@code Review}s.
  * @author Carlo Micieli
  *
  */
@@ -37,9 +40,51 @@ public class ReviewForm {
 	@Valid
 	private Review review;
 	private RollingStock rs;
-	private Account author;
+	private String rsSlug;
+	private String rsLabel;
 	
 	public ReviewForm() {
+	}
+	
+	private ReviewForm(RollingStock rs, Account author) {
+		this.rs = rs;
+		this.rsLabel = rs.getLabel();
+		this.rsSlug = rs.getSlug();
+		this.review = new Review(author, "", "", 0, null, null);
+	}
+	
+	/**
+	 * Builds a new {@code ReviewForm}.
+	 * @param rs TODO
+	 * @param userContext the security content
+	 * @return the {@code ReviewForm}
+	 */
+	public static ReviewForm newForm(RollingStock rs, UserContext userContext) {
+		Account author = UserContext.authenticatedUser(userContext);
+		if (author != null) {
+			return new ReviewForm(rs, author);
+		}
+		return null;
+	}
+	
+	/**
+	 * Creates a new {@code Review} from the posted values.
+	 * @param postingDate the review posting date
+	 * @param userContext the security content
+	 * @return a new {@code Review}
+	 */
+	public Review buildReview(Date postingDate, UserContext userContext) {
+		if (getReview() == null) {
+			return null;
+		}
+		
+		Account author = UserContext.authenticatedUser(userContext);
+		return new Review(author, 
+				getReview().getTitle(),
+				getReview().getContent(),
+				getReview().getRating(),
+				postingDate
+				);
 	}
 	
 	public RollingStock getRs() {
@@ -57,17 +102,38 @@ public class ReviewForm {
 	public void setReview(Review review) {
 		this.review = review;
 	}
-
-	public Account getAuthor() {
-		return author;
+	
+	public String getRsSlug() {
+		return rsSlug;
 	}
 
-	public void setAuthor(Account author) {
-		this.author = author;
+	public void setRsSlug(String rsSlug) {
+		this.rsSlug = rsSlug;
+	}
+
+	public String getRsLabel() {
+		return rsLabel;
+	}
+
+	public void setRsLabel(String rsLabel) {
+		this.rsLabel = rsLabel;
 	}
 
 	public Map<Integer, String> getRatings() {
 		return RATING_LISTS;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof ReviewForm)) return false;
+		
+		ReviewForm other = (ReviewForm) obj;
+		return new EqualsBuilder()
+			.append(this.rsSlug, other.rsSlug)
+			.append(this.rsLabel, other.rsLabel)
+			.append(this.review, other.review)
+			.isEquals();
 	}
 	
 	private static Map<Integer, String> ratingsList() {
@@ -77,6 +143,4 @@ public class ReviewForm {
 		}
 		return ratings;
 	}
-	
-	
 }

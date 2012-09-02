@@ -24,8 +24,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
-import com.trenako.AppGlobals;
-
 /**
  * It represents a user review for a rolling stock.
  * 
@@ -65,9 +63,10 @@ public class Review {
 	 * @param title the review title
 	 * @param content the review content
 	 * @param rating the rating value
+	 * @param postedAt the posting date
 	 */
-	public Review(Account author, String title, String content, int rating) {
-		this(author, title, content, rating, AppGlobals.DEFAULT_LOCALE);
+	public Review(Account author, String title, String content, int rating, Date postedAt) {
+		this(author, title, content, rating, postedAt, null);
 	}
 	
 	/**
@@ -76,16 +75,18 @@ public class Review {
 	 * @param title the review title
 	 * @param content the review content
 	 * @param rating the rating value
+	 * @param postedAt the posting date
 	 * @param lang the user's locale
 	 */
-	public Review(Account author, String title, String content, int rating, Locale lang) {
-		this.setAuthor(author);
+	public Review(Account author, String title, String content, int rating, Date postedAt, Locale lang) {
+		this.author = authorSlug(author);
 		this.title = title;
 		this.content = content;
 		this.rating = rating;
-		this.lang = lang.getLanguage();
+		this.postedAt = postedAt;
+		this.lang = language(lang);
 	}
-
+	
 	/**
 	 * Returns the language used for the current {@code Review}.
 	 * @return the language code
@@ -118,14 +119,6 @@ public class Review {
 		this.author = author;
 	}
 	
-	/**
-	 * Sets the {@code Review}'s author name.
-	 * @param author the author name
-	 */
-	public void setAuthor(Account author) {
-		this.author = author.getSlug();
-	}
-
 	/**
 	 * Returns the {@code Review} title.
 	 * @return the title
@@ -234,4 +227,17 @@ public class Review {
         	.append(")")
         	.toString();
 	}
+	
+	private static String language(Locale locale) {
+		if (locale == null) {
+			return null;
+		}
+		
+		return locale.getLanguage();
+	}
+	
+	private static String authorSlug(Account author) {
+		return author.getSlug();
+	}
+	
 }

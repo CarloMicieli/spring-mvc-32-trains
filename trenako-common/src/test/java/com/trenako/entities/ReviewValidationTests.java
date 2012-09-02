@@ -42,7 +42,7 @@ public class ReviewValidationTests extends AbstractValidationTests<Review> {
 			.displayName("User Name")
 			.build();
 		
-		Review review = new Review(author, "Title", "Review content", 1);
+		Review review = new Review(author, "Title", "Review content", 1, null);
 		Map<String, String> errors = validate(review);
 		
 		assertEquals(0, errors.size());
@@ -65,7 +65,7 @@ public class ReviewValidationTests extends AbstractValidationTests<Review> {
 			.displayName("User Name")
 			.build();
 		
-		Review review = new Review(author, "Title", "Review content", 6);
+		Review review = new Review(author, "Title", "Review content", 6, null);
 		
 		Map<String, String> errors = validate(review);
 

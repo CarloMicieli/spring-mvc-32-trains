@@ -15,6 +15,8 @@
  */
 package com.trenako.web.controllers.form;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -22,11 +24,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import com.trenako.entities.Account;
 import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
-import com.trenako.security.AccountDetails;
 import com.trenako.web.security.UserContext;
 
 /**
- * 
+ * It represents a web form for {@code Comment}s.
  * @author Carlo Micieli
  *
  */
@@ -38,6 +39,9 @@ public class CommentForm {
 	@Valid
 	private Comment comment;
 	
+	/**
+	 * Creates a new empty {@code CommentForm}.
+	 */
 	public CommentForm() {
 	}
 	
@@ -45,15 +49,18 @@ public class CommentForm {
 		this.rsLabel = rs.getLabel();
 		this.rsSlug = rs.getSlug();
 		
-		this.comment = new Comment(author, content);
+		this.comment = new Comment(author, content, null);
 	}
 	
-	public static CommentForm newForm(RollingStock rs, Account author) {
-		return new CommentForm(rs, author, "");
-	}
-	
+	/**
+	 * Creates a new {@code CommentForm} for the currently logged user.
+	 * 
+	 * @param rs the rolling stock to be commented
+	 * @param secContext the security context
+	 * @return a {@code CommentForm} if there is a logged user; {@code null} otherwise
+	 */
 	public static CommentForm newForm(RollingStock rs, UserContext secContext) {
-		Account author = authenticatedUser(secContext);
+		Account author = UserContext.authenticatedUser(secContext);
 		if (author != null) {
 			return new CommentForm(rs, author, "");
 		}
@@ -85,6 +92,22 @@ public class CommentForm {
 		this.comment = comment;
 	}
 	
+	/**
+	 * Builds the {@code Comment} for the posted form.
+	 * @param postedAt the posting date
+	 * @return a {@code Comment}
+	 */
+	public Comment buildComment(Date postedAt) {
+		if (getComment() == null) {
+			return null;
+		}
+		
+		return new Comment(
+				getComment().getAuthor(), 
+				getComment().getContent(), 
+				postedAt);
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
@@ -96,18 +119,5 @@ public class CommentForm {
 			.append(this.rsSlug, other.rsSlug)
 			.append(this.rsLabel, other.rsLabel)
 			.isEquals();
-	}
-		
-	private static Account authenticatedUser(UserContext secContext) {
-		if (secContext == null) {
-			return null;
-		}
-
-		AccountDetails accountDetails = secContext.getCurrentUser();
-		if (accountDetails == null) {
-			return null;
-		}
-		
-		return accountDetails.getAccount();
 	}
 }

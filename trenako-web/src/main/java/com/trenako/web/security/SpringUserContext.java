@@ -29,7 +29,7 @@ import com.trenako.security.AccountDetails;
  *
  */
 @Component("userContext")
-public class SpringUserContext implements UserContext {
+public class SpringUserContext extends UserContext {
 
 	@Override
     public AccountDetails getCurrentUser() {

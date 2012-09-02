@@ -19,6 +19,8 @@ import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+import java.util.Locale;
+
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -114,7 +116,7 @@ public class ReviewsRepositoryTests extends AbstractMongoRepositoryTests {
 		DBObject updateObject = updateObject(argUpdate);
 		String expected = "{ \"$set\" : { \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"}} , " +
 			"\"$push\" : { \"items\" : { \"author\" : \"user-name\" , " +
-			"\"title\" : \"Title\" , \"content\" : \"Review\" , \"lang\" : \"en\" , \"rating\" : 3}} , "+
+			"\"title\" : \"Title\" , \"content\" : \"Review\" , \"lang\" : \"en\" , \"rating\" : 3 , \"postedAt\" : { \"$date\" : \"2012-06-30T22:00:00.000Z\"}}} , "+
 			"\"$inc\" : { \"numberOfReviews\" : 1 , \"totalRating\" : 3}}";
 		assertEquals(expected, updateObject.toString());
 	}
@@ -152,7 +154,7 @@ public class ReviewsRepositoryTests extends AbstractMongoRepositoryTests {
 			.displayName("User Name")
 			.build();
 
-		return new Review(author, "Title", "Review", 3);
+		return new Review(author, "Title", "Review", 3, date("2012/07/01"), Locale.ENGLISH);
 	}
 
 }

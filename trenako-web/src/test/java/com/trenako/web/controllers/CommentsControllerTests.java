@@ -63,6 +63,7 @@ public class CommentsControllerTests {
 		when(mockResult.hasErrors()).thenReturn(false);
 		when(mockRsService.findBySlug(eq(slug))).thenReturn(rollingStock());
 		
+		controller.setTimestamp(date("2012/08/01"));
 		String redirect = controller.postComment(commentForm(), mockResult, model, mockRedirectAtts);
 		
 		assertEquals("redirect:/rollingstocks/{slug}", redirect);

@@ -50,7 +50,7 @@ public class RollingStockReviewsValidationTests
 	@Test
 	public void shouldValidateValidRollingStockReviews() {
 		RollingStockReviews rsReviews = new RollingStockReviews(rs);
-		rsReviews.setItems(Arrays.asList(new Review(author, "Title", "Review content", 1)));
+		rsReviews.setItems(Arrays.asList(new Review(author, "Title", "Review content", 1, null)));
 		rsReviews.setNumberOfReviews(1);
 		
 		Map<String, String> errors = validate(rsReviews);
@@ -72,7 +72,7 @@ public class RollingStockReviewsValidationTests
 		RollingStockReviews rsReviews = new RollingStockReviews(rs);
 		rsReviews.setNumberOfReviews(1);
 		rsReviews.setItems(Arrays.asList(
-				new Review(author, null, null, -1)));
+				new Review(author, null, null, -1, null)));
 		
 		Map<String, String> errors = validate(rsReviews);
 		assertEquals(3, errors.size());

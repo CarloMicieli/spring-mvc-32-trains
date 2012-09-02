@@ -15,6 +15,7 @@
  */
 package com.trenako.web.security;
 
+import com.trenako.entities.Account;
 import com.trenako.security.AccountDetails;
 
 /**
@@ -24,11 +25,30 @@ import com.trenako.security.AccountDetails;
  * @author Carlo Micieli
  *
  */
-public interface UserContext {
+public abstract class UserContext {
 
     /**
-     * Gets the currently logged in {@link Account} or {@code null} if not logged in.
+     * Gets the currently logged in {@code Account} or {@code null} if not logged in.
      * @return
      */
-    AccountDetails getCurrentUser();
+    public abstract AccountDetails getCurrentUser();
+    
+    /**
+     * Returns the authenticated {@code Account} or {@code null} if there is no 
+     * user logged it or the security context is null.
+     * @param context the security content or {@code null}
+     * @return the authenticated {@code Account}
+     */
+    public static Account authenticatedUser(UserContext context) {
+		if (context == null) {
+			return null;
+		}
+
+		AccountDetails accountDetails = context.getCurrentUser();
+		if (accountDetails == null) {
+			return null;
+		}
+		
+		return accountDetails.getAccount();
+	}
 }

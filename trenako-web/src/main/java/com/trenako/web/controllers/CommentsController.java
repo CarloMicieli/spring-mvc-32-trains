@@ -15,6 +15,8 @@
  */
 package com.trenako.web.controllers;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,19 @@ public class CommentsController {
 	
 	final static ControllerMessage COMMENT_POSTED_MSG = ControllerMessage.success("comment.posted.message");
 	
+	// for testing
+	private Date now;
+	protected void setTimestamp(Date now) {
+		this.now = now;
+	}
+
+	private Date now() {
+		if (now == null) {
+			return new Date();
+		}
+		return now;
+	}
+	
 	@Autowired
 	public CommentsController(CommentsService service, RollingStocksService rsService) {
 		this.service = service;
@@ -73,7 +88,7 @@ public class CommentsController {
 		}
 		
 		RollingStock rs = rsService.findBySlug(commentForm.getRsSlug());
-		service.postComment(rs, commentForm.getComment());
+		service.postComment(rs, commentForm.buildComment(now()));
 		
 		COMMENT_POSTED_MSG.appendToRedirect(redirectAtts);
 		return "redirect:/rollingstocks/{slug}";

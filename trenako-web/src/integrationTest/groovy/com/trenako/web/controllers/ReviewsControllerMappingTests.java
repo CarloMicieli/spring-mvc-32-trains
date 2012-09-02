@@ -15,6 +15,7 @@
  */
 package com.trenako.web.controllers;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
@@ -66,14 +67,13 @@ public class ReviewsControllerMappingTests extends AbstractSpringControllerTests
 		Account account = new Account.Builder("mail@mail.com").displayName("Bob").build();
 		AccountDetails ownerDetails = new AccountDetails(account);
 		when(secContext.getCurrentUser()).thenReturn(ownerDetails);
-		
-		RollingStock value = new RollingStock();
-		when(rsService.findBySlug(eq(SLUG))).thenReturn(value);
+		when(rsService.findBySlug(eq(SLUG))).thenReturn(rollingStock());
 		
 		mockMvc().perform(get("/rollingstocks/{slug}/reviews/new", SLUG))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("reviewForm"))
+			.andExpect(model().attributeExists("rs"))
 			.andExpect(forwardedUrl(view("review", "new")));
 	}
 	
@@ -82,11 +82,11 @@ public class ReviewsControllerMappingTests extends AbstractSpringControllerTests
 		Account account = new Account.Builder("mail@mail.com").displayName("Bob").build();
 		AccountDetails ownerDetails = new AccountDetails(account);
 		when(secContext.getCurrentUser()).thenReturn(ownerDetails);
-		
-		RollingStock value = new RollingStock();
-		when(rsService.findBySlug(eq(SLUG))).thenReturn(value);
+		when(rsService.findBySlug(eq(SLUG))).thenReturn(rollingStock());
 		
 		mockMvc().perform(post("/rollingstocks/{slug}/reviews", SLUG)
+				.param("rsSlug", "acme-123456")
+				.param("rsLabel", "ACME 123456")
 				.param("review.author", "bob")
 				.param("review.title", "title")
 				.param("review.rating", "1")
@@ -97,4 +97,12 @@ public class ReviewsControllerMappingTests extends AbstractSpringControllerTests
 			.andExpect(redirectedUrl("/rollingstocks/acme-123456/reviews"));
 	}
 
+	RollingStock rollingStock() {
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.railway(fs())
+			.scale(scaleH0())
+			.description("desc")
+			.build();
+		return rs;		
+	}
 }

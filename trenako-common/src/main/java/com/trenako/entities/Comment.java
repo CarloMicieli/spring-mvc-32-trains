@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -211,6 +212,10 @@ public class Comment {
 	}
 	
 	private String commentId(String author, Date postedAt) {
+		if (StringUtils.isBlank(author) || postedAt == null) {
+			return null;
+		}
+		
 		DateFormat df = new SimpleDateFormat("yy-MM-dd-HH-mm-ss");
 		return new StringBuilder()
 			.append(df.format(postedAt))

@@ -86,7 +86,7 @@ public class ReviewsControllerTests {
 	}
 	
 	@Test
-	public void shouldRenderReviewsCreationView() {
+	public void shouldRenderFormsForReviewsCreation() {
 		String slug = "acme-123456";
 		ModelMap model = new ModelMap();
 
@@ -96,11 +96,16 @@ public class ReviewsControllerTests {
 		String viewName = controller.newReview(slug, model);
 		
 		assertEquals("review/new", viewName);
-		assertTrue("Review not found", model.containsAttribute("reviewForm"));
 		
-		ReviewForm form = (ReviewForm) model.get("reviewForm");
-		assertEquals(rollingStock(), form.getRs());
-		assertEquals(author(), form.getAuthor());
+		assertTrue("Rolling stock not found", model.containsAttribute("rs"));
+		assertEquals(rollingStock(), (RollingStock) model.get("rs"));
+		
+		assertTrue("Review form not found", model.containsAttribute("reviewForm"));
+		ReviewForm reviewForm = (ReviewForm) model.get("reviewForm");
+		
+		assertEquals(rollingStock().getSlug(), reviewForm.getRsSlug());
+		assertEquals(rollingStock().getLabel(), reviewForm.getRsLabel());
+		assertEquals(author().getSlug(), reviewForm.getReview().getAuthor());
 	}
 	
 	@Test
@@ -112,7 +117,7 @@ public class ReviewsControllerTests {
 		when(mockRsService.findBySlug(eq(slug))).thenReturn(rollingStock());
 		when(mockUserContext.getCurrentUser()).thenReturn(new AccountDetails(author()));
 		
-		String redirect = controller.postReview(slug, newForm(), mockResult, model, mockRedirectAtts);
+		String redirect = controller.postReview(postedForm(), mockResult, model, mockRedirectAtts);
 		
 		assertEquals("redirect:/rollingstocks/{slug}/reviews", redirect);
 		
@@ -120,10 +125,13 @@ public class ReviewsControllerTests {
 		verify(mockService, times(1)).postReview(eq(rollingStock()), arg.capture());
 		Review review = (Review) arg.getValue();
 		assertEquals(author().getSlug(), review.getAuthor());
+		assertEquals("My title", review.getTitle());
+		assertEquals("My content", review.getContent());
+		assertEquals(3, review.getRating());
 		
 		verify(mockRsService, times(1)).findBySlug(eq(slug));
 		verify(mockUserContext, times(1)).getCurrentUser();
-		//verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(rollingStock().getSlug()));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(rollingStock().getSlug()));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(ReviewsController.REVIEW_POSTED_MSG));
 	}
 	
@@ -136,26 +144,29 @@ public class ReviewsControllerTests {
 		when(mockRsService.findBySlug(eq(slug))).thenReturn(rollingStock());
 		when(mockUserContext.getCurrentUser()).thenReturn(new AccountDetails(author()));
 		
-		String viewName = controller.postReview(slug, newForm(), mockResult, model, mockRedirectAtts);
+		String viewName = controller.postReview(postedForm(), mockResult, model, mockRedirectAtts);
 		
 		assertEquals("review/new", viewName);
 		
 		assertTrue("Review not found", model.containsAttribute("reviewForm"));
 		ReviewForm form = (ReviewForm) model.get("reviewForm");
-		assertEquals(rollingStock(), form.getRs());
-		assertEquals(author(), form.getAuthor());
-		
+		assertEquals(postedForm(), form);
 		verify(mockService, times(0)).postReview(isA(RollingStock.class), isA(Review.class));
-		//verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(rollingStock().getSlug()));
 	}
 	
-	ReviewForm newForm() {
-		Account author = new Account.Builder("mail@mail.com").displayName("bob").build();
-		ReviewForm form = new ReviewForm();
-		form.setAuthor(author);
-		form.setReview(review());
-		form.setRs(rollingStock());
-		return form;
+	ReviewForm postedForm() {
+		ReviewForm rf = new ReviewForm();
+		rf.setRsLabel(rollingStock().getLabel());
+		rf.setRsSlug(rollingStock().getSlug());
+		
+		Review r = new Review();
+		r.setAuthor(author().getSlug());
+		r.setTitle("My title");
+		r.setContent("My content");
+		r.setRating(3);
+		rf.setReview(r);
+		
+		return rf;
 	}
 	
 	Account author() {
@@ -169,10 +180,5 @@ public class ReviewsControllerTests {
 			.description("desc")
 			.build();
 		return rs;		
-	}
-	
-	Review review() {
-		Review r = new Review(author(), "title", "content", 5);
-		return r;
 	}
 }

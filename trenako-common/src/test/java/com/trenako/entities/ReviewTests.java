@@ -64,7 +64,7 @@ public class ReviewTests {
 	
 	@Test
 	public void shouldFillRollingStockAndReviewAuthor() {
-		Review review1 = new Review(alice, "Review1 title", "Review1 content", 5);
+		Review review1 = new Review(alice, "Review1 title", "Review1 content", 5, null);
 
 		rsReviews.setItems(Arrays.asList(review1));
 
@@ -75,8 +75,8 @@ public class ReviewTests {
 	
 	@Test
 	public void shouldCalculateRollingStockRating() {
-		Review review1 = new Review(alice, "Review1 title", "Review1 content", 5);
-		Review review2 = new Review(bob, "Review2 title", "Review2 content", 4);
+		Review review1 = new Review(alice, "Review1 title", "Review1 content", 5, null);
+		Review review2 = new Review(bob, "Review2 title", "Review2 content", 4, null);
 		
 		rsReviews.setItems(Arrays.asList(review1, review2));
 		rsReviews.setNumberOfReviews(2);
@@ -90,8 +90,8 @@ public class ReviewTests {
 
 	@Test
 	public void shouldCheckWheterTwoReviewsAreEquals() {
-		Review x = new Review(alice, "Title", "Review content", 1);
-		Review y = new Review(alice, "Title", "Review content", 1);
+		Review x = new Review(alice, "Title", "Review content", 1, null);
+		Review y = new Review(alice, "Title", "Review content", 1, null);
 		
 		assertTrue(x.equals(x));
 		assertTrue(x.equals(y));
@@ -99,12 +99,12 @@ public class ReviewTests {
 	
 	@Test
 	public void shouldCheckWheterTwoReviewsAreDifferent() {
-		Review x = new Review(alice, "Title", "Review content 1", 1);
-		Review y = new Review(bob, "Title", "Review content 2", 2);
+		Review x = new Review(alice, "Title", "Review content 1", 1, null);
+		Review y = new Review(bob, "Title", "Review content 2", 2, null);
 		
 		assertFalse(x.equals(y));
 		
-		Review z = new Review(alice, "Title", "Review content 1", 2);
+		Review z = new Review(alice, "Title", "Review content 1", 2, null);
 		assertFalse(x.equals(z));
 	}
 
@@ -114,13 +114,13 @@ public class ReviewTests {
 			.displayName("User Name")
 			.build();
 		
-		Review r1 = new Review(author, "Title", "Review content", 5);
+		Review r1 = new Review(author, "Title", "Review content", 5, null);
 		assertEquals("Review content", r1.getSummary());
 		
 		String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "+
 				"Proin nisl erat, mattis commodo iaculis a, hendrerit at turpis. Fusce odio dui, "+
 				"feugiat sit amet placerat vitae, hendrerit non ipsum cras amet.";
-		Review r2 = new Review(author, "Title", content, 5);
+		Review r2 = new Review(author, "Title", content, 5, null);
 		assertEquals(150 + "..".length(), r2.getSummary().length());
 		assertTrue(r2.getSummary().endsWith(".."));
 	}

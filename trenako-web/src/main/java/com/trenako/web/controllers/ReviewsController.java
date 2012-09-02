@@ -15,6 +15,8 @@
  */
 package com.trenako.web.controllers;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.Review;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.RollingStockReviews;
@@ -74,40 +75,30 @@ public class ReviewsController {
 	
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public String newReview(@PathVariable("slug") String slug, ModelMap model) {
-		
-		ReviewForm newForm = new ReviewForm();
-		newForm.setAuthor(userContext.getCurrentUser().getAccount());
-		newForm.setRs(rsService.findBySlug(slug));
-		newForm.setReview(new Review());
-		
+		RollingStock rs = rsService.findBySlug(slug);
+		ReviewForm newForm = ReviewForm.newForm(rs, userContext);
 		model.addAttribute(newForm);
+		model.addAttribute("rs", rs);
 		return "review/new";
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String postReview(@PathVariable("slug") String slug, 
-			@Valid @ModelAttribute ReviewForm reviewForm, 
+	public String postReview(	@Valid @ModelAttribute ReviewForm reviewForm, 
 			BindingResult bindingResult,
 			ModelMap model,
 			RedirectAttributes redirectAtts) {
 
-		RollingStock rollingStock = rsService.findBySlug(slug);
-		Review review = reviewForm.getReview();
-		Account author = userContext.getCurrentUser().getAccount();
-		review.setAuthor(author);
+		RollingStock rollingStock = rsService.findBySlug(reviewForm.getRsSlug());
+		Review review = reviewForm.buildReview(new Date(), userContext);
 		
 		if (bindingResult.hasErrors()) {
-			reviewForm.setAuthor(author);
-			reviewForm.setRs(rollingStock);
-			
 			model.addAttribute(reviewForm);
-			//model.addAttribute("slug", rollingStock.getSlug());
 			return "review/new";
 		}
 		
 		service.postReview(rollingStock, review);
 		REVIEW_POSTED_MSG.appendToRedirect(redirectAtts);
-		//redirectAtts.addAttribute("slug", rollingStock.getSlug());
+		redirectAtts.addAttribute("slug", rollingStock.getSlug());
 		return "redirect:/rollingstocks/{slug}/reviews";
 	}
 }
