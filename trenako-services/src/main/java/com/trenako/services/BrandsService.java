@@ -18,6 +18,7 @@ package com.trenako.services;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.trenako.entities.Brand;
 
@@ -94,6 +95,7 @@ public interface BrandsService {
 	 * </p>	 
 	 * @param brand the {@code Brand} to be saved
 	 */
+	@PreAuthorize("hasRole('ROLE_STAFF')")
 	void save(Brand brand);
 
 	/**
@@ -104,5 +106,6 @@ public interface BrandsService {
 	 * </p>	 
 	 * @param brand the {@code Brand} to be saved
 	 */
+	@PreAuthorize("hasRole('ROLE_STAFF')")
 	void remove(Brand brand);
 }

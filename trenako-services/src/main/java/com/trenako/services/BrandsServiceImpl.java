@@ -19,7 +19,6 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Brand;
@@ -56,7 +55,6 @@ public class BrandsServiceImpl implements BrandsService {
 	}
 	
 	@Override
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save(Brand brand) {
 		if (brand.getAddress() != null && brand.getAddress().isEmpty()) {
 			brand.setAddress(null);
@@ -66,7 +64,6 @@ public class BrandsServiceImpl implements BrandsService {
 	}
 	
 	@Override
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void remove(Brand brand) {
 		repo.delete(brand);
 	}
