@@ -75,7 +75,7 @@ public class ActivityTagsTests extends AbstractSpringTagsTest {
 		
 		String expected = "\n<a href=\"/trenako-web/users/bob\">Bob</a> rs-insert "+ 
 				"\n<a href=\"/trenako-web/rollingstocks/acme-123456\">ACME 123456</a>"+
-				"\n<br/><strong>interval.days.one.label</strong>";
+				"\n<br/><strong>interval.years.more.label</strong>";
 		assertEquals(expected, output);
 	}
 	
@@ -90,7 +90,7 @@ public class ActivityTagsTests extends AbstractSpringTagsTest {
 		
 		String expected = "\n<a href=\"/trenako-web/users/bob\">Bob</a> add-collection "+ 
 				"\n<a href=\"/trenako-web/rollingstocks/acme-123456\">ACME 123456</a> collection"+
-				"\n<br/><strong>interval.days.one.label</strong>";
+				"\n<br/><strong>interval.years.more.label</strong>";
 		assertEquals(expected, output);
 	}
 	
@@ -109,7 +109,7 @@ public class ActivityTagsTests extends AbstractSpringTagsTest {
 			.build();
 		 
 		 rs.setModifiedBy("bob");
-		 rs.setLastModified(date("2012/09/01"));
+		 rs.setLastModified(date("2001/09/01"));
 		 return rs;
 	}
 	
@@ -124,6 +124,6 @@ public class ActivityTagsTests extends AbstractSpringTagsTest {
 	}
 	
 	CollectionItem collectionItem() {
-		return new CollectionItem(rollingStock(), date("2012/09/01"));
+		return new CollectionItem(rollingStock(), date("2001/09/01"));
 	}
 }
