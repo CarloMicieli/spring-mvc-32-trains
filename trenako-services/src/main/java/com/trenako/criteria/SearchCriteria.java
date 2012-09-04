@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
@@ -245,7 +245,7 @@ public class SearchCriteria {
 		}
 		
 		private void add(Criteria criteria, String key, String label) {
-			if (StringUtils.hasText(key)) {
+			if (!StringUtils.isBlank(key)) {
 				values.put(criteria, new ImmutablePair<String, String>(key, label));
 			}
 		}

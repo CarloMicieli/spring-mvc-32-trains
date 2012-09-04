@@ -186,7 +186,10 @@ public class Collection {
 	 * @return the counter map
 	 */
 	public CategoriesCount getCategories() {
-		return this.categories;
+		if (categories == null) {
+			return CategoriesCount.EMPTY;
+		}
+		return categories;
 	}
 
 	/**
@@ -210,7 +213,7 @@ public class Collection {
 	}
 
 	/**
-	 * Returns the timestamp for the last {@code Collection} changes.
+	 * Returns the last modification timestamp for the {@code Collection}.
 	 * @return the last modified timestamp
 	 */
 	public Date getLastModified() {
@@ -218,7 +221,7 @@ public class Collection {
 	}
 
 	/**
-	 * Sets the timestamp for the last {@code Collection} changes.
+	 * Sets the last modification timestamp for the {@code Collection}.
 	 * @param lastModified the last modified timestamp
 	 */
 	public void setLastModified(Date lastModified) {

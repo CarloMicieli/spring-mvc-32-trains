@@ -15,10 +15,10 @@
  */
 package com.trenako.services;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.trenako.criteria.Criteria;
 import com.trenako.criteria.SearchCriteria;
@@ -176,7 +176,7 @@ public class BrowseServiceImpl implements BrowseService {
 		}
 
 		String key = sc.get(crit);
-		if (!StringUtils.hasText(key)) {
+		if (StringUtils.isBlank(key)) {
 			return null;
 		}
 		

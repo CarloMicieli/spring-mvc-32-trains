@@ -50,6 +50,11 @@ public class WishListItem implements Comparable<WishListItem> {
 	public WishListItem() {
 	}
 	
+	/**
+	 * Creates a new {@code WishListItem}.
+	 * @param itemId the item id
+	 * @param price the item price
+	 */
 	public WishListItem(String itemId, Money price) {
 		this.itemId = itemId;
 		this.price = price;
@@ -98,15 +103,6 @@ public class WishListItem implements Comparable<WishListItem> {
 		this.price = price;
 		
 		this.itemId = itemId(itemId, rollingStock);
-	}
-
-	private String itemId(String id, WeakDbRef<RollingStock> rs) {
-		if (StringUtils.isBlank(id)) {
-			return rs.getSlug();
-		}
-		else {
-			return id;
-		}
 	}
 	
 	/**
@@ -165,6 +161,10 @@ public class WishListItem implements Comparable<WishListItem> {
 		this.notes = notes;
 	}
 
+	/**
+	 * Returns the item priority as {@code Priority} value.
+	 * @return the item priority
+	 */
 	public Priority priority() {
 		return Priority.parse(getPriority());
 	}
@@ -194,7 +194,7 @@ public class WishListItem implements Comparable<WishListItem> {
 	 */
 	public Money getPrice() {
 		if (price == null) {
-			return new Money();
+			return Money.nullMoney();
 		}
 		return price;
 	}
@@ -248,5 +248,14 @@ public class WishListItem implements Comparable<WishListItem> {
 		if (c1 != 0) return c1;
 		
 		return o.getAddedAt().compareTo(this.getAddedAt());
+	}
+
+	private String itemId(String id, WeakDbRef<RollingStock> rs) {
+		if (StringUtils.isBlank(id)) {
+			return rs.getSlug();
+		}
+		else {
+			return id;
+		}
 	}
 }

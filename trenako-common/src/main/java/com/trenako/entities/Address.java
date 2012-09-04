@@ -186,14 +186,13 @@ public class Address {
 		if (!(obj instanceof Address)) return false;
 		
 		Address other = (Address) obj;
-		EqualsBuilder eb = new EqualsBuilder();
-		
-		return eb.append(this.streetAddress, other.streetAddress)
-					.append(this.postalCode, other.postalCode)
-					.append(this.city, other.city)
-					.append(this.locality, other.locality)
-					.append(this.country, other.country)
-					.isEquals();
+		return new EqualsBuilder()
+			.append(this.streetAddress, other.streetAddress)
+			.append(this.postalCode, other.postalCode)
+			.append(this.city, other.city)
+			.append(this.locality, other.locality)
+			.append(this.country, other.country)
+			.isEquals();
 	}
 	
 	@Override
@@ -211,9 +210,11 @@ public class Address {
 	 * Returns a string representation of the object.
 	 * <p>
 	 * This method should returns an address representation like this:
+	 * <blockquote>
 	 * <pre>
-	 * {@code street name, postal-code city, country}
+	 * {@code street name, postal code, city, (country)}
 	 * </pre>
+	 * </blockquote>
 	 * </p>
 	 * 
 	 * @return a string representation of the object

@@ -21,12 +21,12 @@ import java.util.Locale;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.trenako.validation.constraints.ISOCountry;
 
 /**
- * 
+ * It represents a validator for countries ISO codes. 
  * @author Carlo Micieli
  *
  */
@@ -38,10 +38,9 @@ public class ISOCountryValidator implements ConstraintValidator<ISOCountry, Stri
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		if (!StringUtils.hasText(value)) {
+		if (StringUtils.isBlank(value)) {
 			return true;
 		}
 		return Arrays.binarySearch(Locale.getISOCountries(), value.toUpperCase()) >= 0;
 	}
-
 }

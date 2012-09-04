@@ -258,10 +258,21 @@ public class WishList {
 		this.visibility = visibility;
 	}
 	
+	/**
+	 * Returns the total price for the {@code WishList}.
+	 * @return the total price
+	 */
 	public Money getTotalPrice() {
+		if (totalPrice == null) {
+			return Money.nullMoney();
+		}
 		return totalPrice;
 	}
 
+	/**
+	 * Sets the total price for the {@code WishList}.
+	 * @param totalPrice the total price
+	 */
 	public void setTotalPrice(Money totalPrice) {
 		this.totalPrice = totalPrice;
 	}
@@ -271,6 +282,9 @@ public class WishList {
 	 * @return the budget
 	 */
 	public Money getBudget() {
+		if (budget == null) {
+			return Money.nullMoney();
+		}
 		return budget;
 	}
 
@@ -298,10 +312,18 @@ public class WishList {
 		this.numberOfItems = numberOfItems;
 	}
 
+	/**
+	 * Returns the {@code WishList} notes.
+	 * @return the notes
+	 */
 	public String getNotes() {
 		return notes;
 	}
 
+	/**
+	 * Sets the {@code WishList} notes.
+	 * @param notes the notes
+	 */
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}

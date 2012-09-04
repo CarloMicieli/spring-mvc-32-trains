@@ -20,13 +20,13 @@ import static org.springframework.data.mongodb.core.query.Criteria.*;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.CategoriesCount;
@@ -38,7 +38,7 @@ import com.trenako.utility.Maps;
 import com.trenako.values.Visibility;
 
 /**
- * The concrete implementation of {@code CollectionsRepository} for Mongo db.
+ * The concrete implementation of {@code CollectionsRepository} for MongoDB.
  * @author Carlo Micieli
  *
  */
@@ -95,7 +95,7 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 		Collection collection = new Collection(owner);
 				
 		// force the item to calculate its id
-		if (!StringUtils.hasText(item.getItemId())) {
+		if (StringUtils.isBlank(item.getItemId())) {
 			item.setItemId(item.getItemId());
 		}
 		

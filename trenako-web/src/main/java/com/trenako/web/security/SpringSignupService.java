@@ -17,6 +17,7 @@ package com.trenako.web.security;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,7 @@ public class SpringSignupService implements SignupService {
 		Account account = new Account(a.getEmailAddress(),
 				encodedPwd,
 				a.getDisplayName(),
+				new Date(),
 				a.getRoles());
 		return repo.save(account);
 	}

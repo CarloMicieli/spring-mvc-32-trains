@@ -48,14 +48,14 @@ import com.trenako.validation.constraints.ValidAddress;
  * <p>
  * Two distinct family of manufacturer exists:
  * <ul>
- * <li><strong>industrial</strong>: these manufactures produce models using the die casting method;</li>
- * <li><strong>brass models</strong>: these manufacturers produce models which are made of brass or
+ * <li>{@code industrial}: these manufactures produce models using the die casting method;</li>
+ * <li>{@code brass models}: these manufacturers produce models which are made of brass or
  * similar alloys. They are usually more expensive than the industrial series due to the limited
- * production quantities and the <em>"hand made"</em> nature of the production.</li>
+ * production quantities and the {@code "hand made"} nature of the production.</li>
  * </ul>
  * </p>
  * <p>
- * This class allows one company to have local branches by country, either a local 
+ * This class allows one company to have local branches for a given country, either a local 
  * office or a distribution company.
  * </p>
  * 
@@ -211,7 +211,9 @@ public class Brand implements DbReferenceable {
 		}
 		
 		public Builder address(String country, Address a) {
-			if (branches == null) branches = new HashMap<String, Address>();
+			if (branches == null) {
+				branches = new HashMap<String, Address>();
+			}
 			branches.put(country, a);
 			return this;
 		}
@@ -285,7 +287,7 @@ public class Brand implements DbReferenceable {
 	 * The application will show this value as string representation
 	 * for the current {@code Brand} instead of the usual {@code Brand#toString()}.
 	 * </p>
-	 * @return the label string
+	 * @return the {@code Brand} label string
 	 */
 	@Override
 	public String getLabel() {

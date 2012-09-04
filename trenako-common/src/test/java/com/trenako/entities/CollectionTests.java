@@ -43,6 +43,12 @@ public class CollectionTests {
 	}
 	
 	@Test
+	public void shouldInitCategoriesCounterForEmptyCollections() {
+		Collection coll = new Collection(georgeStephenson());
+		assertEquals("categories{0, 0, 0, 0, 0, 0, 0, 0, 0}", coll.getCategories().toString());
+	}
+
+	@Test
 	public void shouldCreateCollectionsPublicByDefault() {
 		Collection coll = new Collection(georgeStephenson());
 		assertEquals(Visibility.PUBLIC.label(), coll.getVisibility());

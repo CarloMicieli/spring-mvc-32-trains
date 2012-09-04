@@ -17,8 +17,8 @@ package com.trenako.web.editors;
 
 import java.beans.PropertyEditorSupport;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
-import org.springframework.util.StringUtils;
 
 import com.trenako.entities.Railway;
 
@@ -40,7 +40,7 @@ public class RailwayPropertyEditor extends PropertyEditorSupport {
 	
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		if (allowEmpty && !StringUtils.hasText(text)) {
+		if (allowEmpty && StringUtils.isBlank(text)) {
 			setValue(null);
 			return;
 		}

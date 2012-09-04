@@ -15,8 +15,11 @@
  */
 package com.trenako.entities;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 /**
@@ -35,33 +38,50 @@ public class AccountTests {
 	}
 	
 	@Test
+	public void shouldCreateNewAccountsWithUserRoleByDefault() {
+		Account user = new Account("mail@mail.com", 
+			"$ecret", 
+			"Nickname", 
+			date("2012/09/01"), 
+			null);
+
+		assertEquals("[ROLE_USER]", user.getRoles().toString());
+	}
+
+	@Test
 	public void shouldCreateNewAccounts() {
-		Account user = new Account("mail@mail.com", "$ecret", "Nickname", null);
+		Account user = new Account("mail@mail.com", 
+			"$ecret", 
+			"Nickname", 
+			date("2012/09/01"), 
+			Arrays.asList("ROLE_STAFF"));
 		
 		assertEquals("mail@mail.com", user.getEmailAddress());
 		assertEquals("$ecret", user.getPassword());
 		assertEquals("Nickname", user.getDisplayName());
-		assertEquals("[ROLE_USER]", user.getRoles().toString());
+		assertEquals("[ROLE_STAFF]", user.getRoles().toString());
+		assertEquals(date("2012/09/01"), user.getMemberSince());
 		assertFalse(user.isExpired());
 		assertFalse(user.isLocked());
 		assertTrue(user.isEnabled());
 	}
 	
 	@Test
-	public void shouldReturnsTrueWhenTwoAccountsAreEquals() {
+	public void shouldCheckWhetherTwoAccountsAreEquals() {
 		Account x = new Account.Builder("mail@mail.com")
 			.password("$ecret")
 			.displayName("Bob")
 			.build();
 		Account y = new Account.Builder("mail@mail.com")
 			.password("$ecret")
-			.displayName("Alice")
+			.displayName("Bob")
 			.build();
-		assertTrue(x.equals(y));
+		assertTrue("Accounts are different", x.equals(x));
+		assertTrue("Accounts are different", x.equals(y));
 	}
 	
 	@Test
-	public void shouldReturnsFalseWhenTwoAccountsAreEquals() {
+	public void shouldCheckWhetherTwoAccountsAreDifferent() {
 		Account x = new Account.Builder("bob@mail.com")
 			.password("$ecret")
 			.displayName("Bob")
@@ -70,11 +90,17 @@ public class AccountTests {
 			.password("$ecret")
 			.displayName("Alice")
 			.build();
-		assertFalse(x.equals(y));
+		assertFalse("Accounts are equals", x.equals(y));
+
+		Account z = new Account.Builder("bob@mail.com")
+			.password("$ecret")
+			.displayName("Alice")
+			.build();
+		assertFalse("Accounts are equals", x.equals(z));
 	}
 	
 	@Test
-	public void shouldFillTheSlug() {
+	public void shouldFillTheAccountSlug() {
 		Account user = new Account.Builder("mail@mail.com")
 			.password("$ecret")
 			.displayName("User name")

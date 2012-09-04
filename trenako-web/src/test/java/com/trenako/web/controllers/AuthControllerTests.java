@@ -98,8 +98,12 @@ public class AuthControllerTests {
 	
 	@Test
 	public void shouldCreateNewAccounts() {
-		Account account = new Account.Builder("mail@mail.com").build();
-		Account newAccount = new Account.Builder("mail@mail.com").build();
+		Account account = new Account.Builder("mail@mail.com")
+			.displayName("Bob")
+			.build();
+		Account newAccount = new Account.Builder("mail@mail.com")
+			.displayName("Bob")
+			.build();
 		
 		when(mockResult.hasErrors()).thenReturn(false);
 		when(mockService.createAccount(eq(account))).thenReturn(newAccount);
@@ -112,6 +116,6 @@ public class AuthControllerTests {
 	}
 	
 	Account newAccount() { 
-		return new Account.Builder("mail@mail.com").build();
+		return new Account.Builder("mail@mail.com").displayName("Bob").build();
 	}
 }

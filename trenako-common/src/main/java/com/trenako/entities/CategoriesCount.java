@@ -27,6 +27,8 @@ import com.trenako.values.Category;
  */
 public class CategoriesCount {
 
+	public final static CategoriesCount EMPTY = new CategoriesCount();
+
 	private int steamLocomotives;
 	private int dieselLocomotives;
 	private int electricLocomotives;
@@ -166,6 +168,22 @@ public class CategoriesCount {
 	}
 	
 	@Override
+	public String toString() {
+		return new StringBuilder()
+			.append("categories{")
+			.append(this.steamLocomotives).append(", ")
+			.append(this.dieselLocomotives).append(", ")
+			.append(this.electricLocomotives).append(", ")
+			.append(this.railcars).append(", ")
+			.append(this.electricMultipleUnit).append(", ")
+			.append(this.freightCars).append(", ")
+			.append(this.passengerCars).append(", ")
+			.append(this.trainSets).append(", ")
+			.append(this.starterSets).append("}")
+			.toString();
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
 		if (!(obj instanceof CategoriesCount)) return false;
@@ -181,6 +199,6 @@ public class CategoriesCount {
 			.append(this.passengerCars, other.passengerCars)
 			.append(this.trainSets, other.trainSets)
 			.append(this.starterSets, other.starterSets)
-			.isEquals();	
+			.isEquals();
 	}
 }

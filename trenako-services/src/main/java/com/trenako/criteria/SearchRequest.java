@@ -18,7 +18,7 @@ package com.trenako.criteria;
 import java.util.EnumMap;
 import java.util.Map;
 
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class represent a container for rolling stocks
@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
  * to add and remove criterion freely. 
  * </p>
  * <p>
- * The object of this class are not synchronized.
+ * The objects of this class are not synchronized.
  * </p>
  * 
  * @author Carlo Micieli
@@ -41,53 +41,55 @@ public class SearchRequest {
 	 * Creates an empty {@code SearchRequest}.
 	 */
 	public SearchRequest() {
-		values = new EnumMap<Criteria, String>(Criteria.class);
+		initValues();
 	}
 	
 	/**
 	 * Creates a new {@code SearchRequest}.
-	 * @param brand
-	 * @param scale
-	 * @param railway
-	 * @param era
-	 * @param cat
-	 * @param powerMethod
-	 * @param category
+	 * @param brand the brand criterion
+	 * @param scale the scale criterion
+	 * @param railway the railway criterion
+	 * @param era the era criterion
+	 * @param cat the power method and category criterion
+	 * @param powerMethod the power method criterion
+	 * @param category the category criterion
 	 */
-	public SearchRequest(String brand, String scale, String railway, String era, String cat, String powerMethod, String category) {
-		this();
+	public SearchRequest(String brand, String scale, String railway, 
+			String era, String cat, String powerMethod, String category) {
 		
-		this.setBrand(brand);
-		this.setCat(cat);
-		this.setCategory(category);
-		this.setEra(era);
-		this.setPowerMethod(powerMethod);
-		this.setRailway(railway);
-		this.setScale(scale);
+		initValues();
+		
+		brand(brand);
+		category(category);
+		cat(cat);
+		era(era);
+		powerMethod(powerMethod);
+		railway(railway);
+		scale(scale);
 	}
-	
+
 	/**
 	 * Sets the {@code power method} search criteria.
 	 * @param powerMethod the {@code power method} 
 	 */
 	public void setPowerMethod(String powerMethod) {
-		put(Criteria.POWER_METHOD, powerMethod);
+		powerMethod(powerMethod);
 	}
-	
+
 	/**
 	 * Sets the {@code Brand} search criteria.
 	 * @param brand the {@code Brand} 
 	 */
 	public void setBrand(String brand) {
-		put(Criteria.BRAND, brand);
+		brand(brand);
 	}
-	
+		
 	/**
 	 * Sets the {@code Scale} search criteria.
 	 * @param scale the {@code Scale} 
 	 */
 	public void setScale(String scale) {
-		put(Criteria.SCALE, scale);
+		scale(scale);
 	}
 	
 	/**
@@ -95,7 +97,7 @@ public class SearchRequest {
 	 * @param category the {@code Category} 
 	 */
 	public void setCategory(String category) {
-		put(Criteria.CATEGORY, category);
+		category(category);
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class SearchRequest {
 	 * @param cat the {@code Cat} 
 	 */
 	public void setCat(String cat) {
-		put(Criteria.CAT, cat);
+		cat(cat);
 	}
 	
 	/**
@@ -111,7 +113,7 @@ public class SearchRequest {
 	 * @param era the {@code Era} 
 	 */
 	public void setEra(String era) {
-		put(Criteria.ERA, era);
+		era(era);
 	}
 	
 	/**
@@ -119,7 +121,7 @@ public class SearchRequest {
 	 * @param railway the {@code Railway} 
 	 */
 	public void setRailway(String railway) {
-		put(Criteria.RAILWAY, railway);
+		railway(railway);
 	}
 	
 	/**
@@ -154,7 +156,9 @@ public class SearchRequest {
 	 * Removes all criteria from this {@code SearchRequest}.
 	 */
 	public void clear() {
-		if (isEmpty()) return;
+		if (isEmpty()) {
+			return;
+		}
 		values.clear();
 	}
 	
@@ -178,8 +182,40 @@ public class SearchRequest {
 	}
 	
 	private void put(Criteria criteria, String value) {
-		if (StringUtils.hasText(value)) {
+		if (!StringUtils.isBlank(value)) {
 			values.put(criteria, value);
 		}
+	}
+	
+	private void initValues() {
+		values = new EnumMap<Criteria, String>(Criteria.class);
+	}
+	
+	private void powerMethod(String powerMethod) {
+		put(Criteria.POWER_METHOD, powerMethod);
+	}
+	
+	private void brand(String brand) {
+		put(Criteria.BRAND, brand);
+	}
+	
+	private void scale(String scale) {
+		put(Criteria.SCALE, scale);
+	}
+	
+	private void railway(String railway) {
+		put(Criteria.RAILWAY, railway);
+	}
+
+	private void era(String era) {
+		put(Criteria.ERA, era);
+	}
+
+	private void cat(String cat) {
+		put(Criteria.CAT, cat);
+	}
+
+	private void category(String category) {
+		put(Criteria.CATEGORY, category);
 	}
 }

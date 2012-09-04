@@ -60,4 +60,10 @@ public class CategoriesCountTests {
 		CategoriesCount y = new CategoriesCount(9, 8, 7, 6, 5, 4, 3, 2, 1);
 		assertFalse("Categories counts are equals", x.equals(y));
 	}
+
+	@Test
+	public void shouldProduceStringRepresentationForCategoriesCount() {
+		CategoriesCount x = new CategoriesCount(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		assertEquals("categories{1, 2, 3, 4, 5, 6, 7, 8, 9}", x.toString());
+	}
 }

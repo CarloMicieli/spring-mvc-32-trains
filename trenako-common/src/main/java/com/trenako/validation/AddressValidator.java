@@ -18,11 +18,20 @@ package com.trenako.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.trenako.entities.Address;
 import com.trenako.validation.constraints.ValidAddress;
 
 /**
- * It represents a {@code Address} validator class.
+ * It represents an {@code Address} validator class.
+ * <p>
+ * Address values are valid if they are:
+ * <ul>
+ * <li>{@code empty};</li>
+ * <li>have valid values for {@code street address}, {@code postal code}, {@code city} and {@code country}.</li>
+ * </ul>
+ * </p>
  * @author Carlo Micieli
  *
  */
@@ -34,11 +43,32 @@ public class AddressValidator
 	}
 
 	@Override
-	public boolean isValid(Address value, ConstraintValidatorContext context) {
-		if (value == null || value.isEmpty()) {
+	public boolean isValid(Address addr, ConstraintValidatorContext context) {
+		if (addr == null || addr.isEmpty()) {
 			return true;
 		}
 
+		if (invalidStreetAddress(addr)) return false;
+		if (invalidPostalCode(addr)) return false;
+		if (invalidCity(addr)) return false;
+		if (invalidCountry(addr)) return false;
+		
 		return true;
+	}
+
+	private static boolean invalidStreetAddress(Address addr) {
+		return StringUtils.isBlank(addr.getStreetAddress());
+	}
+
+	private static boolean invalidPostalCode(Address addr) {
+		return StringUtils.isBlank(addr.getPostalCode());
+	}
+
+	private static boolean invalidCity(Address addr) {
+		return StringUtils.isBlank(addr.getCity());
+	}
+
+	private static boolean invalidCountry(Address addr) {
+		return StringUtils.isBlank(addr.getCountry());
 	}
 }

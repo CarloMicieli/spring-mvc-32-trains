@@ -19,7 +19,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.Brand;
+import com.trenako.entities.Profile;
 import com.trenako.entities.Railway;
 import com.trenako.entities.Scale;
 import com.trenako.utility.Cat;
@@ -35,6 +37,13 @@ import com.trenako.values.PowerMethod;
  *
  */
 public class TestDataBuilder {
+	
+	Account georgeStephenson() {
+		return new Account.Builder("mail@mail.com")
+			.profile(new Profile("USD"))
+			.displayName("George Stephenson")
+			.build();
+	}
 	
 	public static Date now() {
 		return new Date();

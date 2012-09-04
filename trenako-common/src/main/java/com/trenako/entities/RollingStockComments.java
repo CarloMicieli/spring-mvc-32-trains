@@ -37,7 +37,7 @@ import com.trenako.mapping.WeakDbRef;
 @Document(collection = "comments")
 public class RollingStockComments {
 	
-	private static final RollingStockComments DEFAULT_COMMENTS = new RollingStockComments();
+	private static final RollingStockComments EMPTY = new RollingStockComments();
 	
 	@Id
 	private ObjectId id;
@@ -67,13 +67,23 @@ public class RollingStockComments {
 		this(rs, slug(rs));
 	}
 	
-	public RollingStockComments(RollingStock rs, String slug) {
+	/**
+	 * Creates an empty {@code RollingStockComments} for the
+	 * provided {@code RollingStock}.
+	 * @param rs the rolling stock
+	 * @param commentsSlug the comments slug
+	 */
+	public RollingStockComments(RollingStock rs, String commentsSlug) {
 		this.rollingStock = rollingStock(rs);
-		this.slug = slug;	
+		this.slug = commentsSlug;	
 	}
 	
+	/**
+	 * Returns the default value for {@code RollingStockComments}.
+	 * @return the default value
+	 */
 	public static RollingStockComments defaultRollingStockComments() {
-		return DEFAULT_COMMENTS;
+		return EMPTY;
 	}
 	
 	/**

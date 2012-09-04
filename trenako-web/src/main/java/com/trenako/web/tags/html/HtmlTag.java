@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 
@@ -97,7 +97,7 @@ public abstract class HtmlTag {
 	}
 
 	void addOptionalAttribute(String name, String value) {
-		if (StringUtils.hasText(value)) {
+		if (!StringUtils.isBlank(value)) {
 			getAttributes().put(name, value);
 		}
 	}

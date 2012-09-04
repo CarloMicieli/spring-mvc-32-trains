@@ -19,13 +19,13 @@ import java.beans.PropertyEditorSupport;
 
 import javax.servlet.ServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.PropertyValues;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.ServletRequestParameterPropertyValues;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -96,7 +96,7 @@ public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolv
 	private static class ObjectIdPropertyEditor extends PropertyEditorSupport {
 		@Override
 		public void setAsText(String text) throws IllegalArgumentException {
-			if (!StringUtils.hasText(text)) {
+			if (StringUtils.isBlank(text)) {
 				setValue(null);
 			}
 			

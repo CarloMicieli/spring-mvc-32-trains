@@ -35,6 +35,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 public class Money {
 
+	private static final Money EMPTY_VALUE = new Money(0, "");
 	public static final BigDecimal MONEY_VALUE_FACTOR = BigDecimal.valueOf(100);
 
 	@Field("val")
@@ -102,6 +103,14 @@ public class Money {
 	}
 	
 	/**
+	 * Returns the {@code NULL} value for {@code Money}.
+	 * @return the default value
+	 */
+	public static Money nullMoney() {
+		return EMPTY_VALUE;
+	}
+
+	/**
 	 * Returns the {@code Money} value.
 	 * @return the {@code Money} value
 	 */
@@ -133,11 +142,18 @@ public class Money {
 		this.currency = currency;
 	}
 	
+	/**
+	 * Checks whether the current {@code Money} is without a meaningful value.
+	 * @return {@code true} if the {@code Money} is empty; {@code false} otherwise
+	 */
 	public boolean isEmpty() {
 		return StringUtils.isBlank(currency) && value == 0;
 	}
 	
-	
+	/**
+	 * Returns the value part of the provided {@code Money}.
+	 * @return the value
+	 */
 	public static BigDecimal moneyValue(Money money) {
 		int val = (money != null) ? money.getValue() : 0;
 		return 	BigDecimal.valueOf(val).divide(Money.MONEY_VALUE_FACTOR);

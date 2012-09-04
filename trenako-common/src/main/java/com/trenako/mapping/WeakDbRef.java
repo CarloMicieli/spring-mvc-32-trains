@@ -15,14 +15,13 @@
  */
 package com.trenako.mapping;
 
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
- * It represents a wrapper for <em>"weak"</em> database references.
+ * It represents a wrapper for {@code "weak"} database references.
  * <p>
  * As stated in the official Mongodb documentation, {@code manual reference}
  * are the preferred way to link two collections.
@@ -30,7 +29,7 @@ import org.springframework.util.StringUtils;
  * <p>
  * Typically the entities wrapped in a {@code WeakDbRef} contains all
  * the information needed to fully describe the entity. This produces a
- * de-normalized schemas, but it requires less database queries to populate
+ * denormalized schemas, but it requires less database queries to populate
  * the field values.
  * </p>
  * 
@@ -50,9 +49,9 @@ public class WeakDbRef<E extends DbReferenceable> {
 	}
 	
 	/**
-	 * 
-	 * @param slug
-	 * @param label
+	 * Creates a new {@code WeakDbRef}.
+	 * @param slug the slug
+	 * @param label the label
 	 */
 	public WeakDbRef(String slug, String label) {
 		this.slug = slug;
@@ -69,7 +68,7 @@ public class WeakDbRef<E extends DbReferenceable> {
 	 * @return the new {@code WeakDbRef}
 	 */
 	public static <E extends DbReferenceable> WeakDbRef<E> buildRef(E entity) {
-		Assert.notNull(entity, "Entity obj is required.");
+		Assert.notNull(entity, "Weak ref: entity obj is required.");
 		return new WeakDbRef<E>(entity);
 	}
 
@@ -80,7 +79,7 @@ public class WeakDbRef<E extends DbReferenceable> {
 	 * @return the new {@code WeakDbRef}
 	 */
 	public static <E extends DbReferenceable> WeakDbRef<E> buildFromSlug(String slug, Class<E> entity) {
-		Assert.notNull(slug, "Slug text is required.");
+		Assert.notNull(slug, "Weak ref: slug text is required.");
 		return new WeakDbRef<E>().setSlug(slug);
 	}
 	
@@ -92,7 +91,7 @@ public class WeakDbRef<E extends DbReferenceable> {
 	 * @return {@code true} the reference was loaded; {@code false} otherwise.
 	 */
 	public boolean isLoaded() {
-		return (StringUtils.hasText(slug) && StringUtils.hasText(label));
+		return (!StringUtils.isBlank(slug) && !StringUtils.isBlank(label));
 	}
 	
 	/**
@@ -134,6 +133,11 @@ public class WeakDbRef<E extends DbReferenceable> {
 		return this.getSlug();
 	}
 	
+	/**
+	 * Returns the complete (both slug and label) representation for the 
+	 * current reference.
+	 * @return the complete string representation
+	 */
 	public String toCompleteString() {
 		return new StringBuilder()
 			.append("{slug: ").append(getSlug())

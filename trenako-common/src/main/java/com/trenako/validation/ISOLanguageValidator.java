@@ -21,12 +21,12 @@ import java.util.Locale;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.trenako.validation.constraints.ISOLanguage;
 
 /**
- * 
+ * It represents a validator for languages ISO codes.
  * @author Carlo Micieli
  *
  */
@@ -38,7 +38,7 @@ public class ISOLanguageValidator implements ConstraintValidator<ISOLanguage, St
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		if (!StringUtils.hasText(value)) {
+		if (StringUtils.isBlank(value)) {
 			return true;
 		}
 		return Arrays.binarySearch(Locale.getISOLanguages(), value.toLowerCase()) >= 0;

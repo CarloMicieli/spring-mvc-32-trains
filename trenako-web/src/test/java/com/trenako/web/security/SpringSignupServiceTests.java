@@ -18,8 +18,6 @@ package com.trenako.web.security;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.util.Arrays;
-
 import org.bson.types.ObjectId;
 import org.junit.runner.RunWith;
 import org.junit.Before;
@@ -60,7 +58,11 @@ public class SpringSignupServiceTests {
 	}
 	
 	Account buildAccount() {
-		return new Account("mail@mail.com", "pa$$word", "Bob", Arrays.asList("ROLE_USER"));
+		return new Account.Builder("mail@mail.com")
+		.password("pa$$word")
+		.displayName("Bob")
+		.roles("ROLE_USER")
+		.build();
 	}
 
 	@Test
@@ -81,7 +83,10 @@ public class SpringSignupServiceTests {
 	
 	@Test
 	public void shouldFillSlugAndRolesCreatingNewAccounts() {
-		Account user = new Account("mail@mail.com", "pa$$word", "George Stephenson", null);
+		Account user = new Account.Builder("mail@mail.com")
+			.password("pa$$word")
+			.displayName("George Stephenson")
+			.build();
 		when(mockEncoder.encodePassword(eq(user.getPassword()), eq(null)))
 			.thenReturn("a1b2c3d4");
 		when(mockRepo.save(isA(Account.class))).thenAnswer(new Answer<Account>() {

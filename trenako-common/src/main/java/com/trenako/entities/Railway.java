@@ -23,6 +23,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -30,7 +31,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.util.StringUtils;
 
 import com.trenako.mapping.DbReferenceable;
 import com.trenako.mapping.LocalizedField;
@@ -359,7 +359,7 @@ public class Railway implements DbReferenceable {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getName());
 		
-		if (StringUtils.hasText(getCompanyName())) {
+		if (!StringUtils.isBlank(getCompanyName())) {
 			sb.append(" (")
 				.append(getCompanyName())
 				.append(")");

@@ -27,6 +27,16 @@ import org.junit.Test;
 public class SearchRequestTests {
 
 	@Test
+	public void shouldClearSearchRequests() {
+		SearchRequest c = buildSearchRequest("ACME", "FS");
+		assertFalse(c.isEmpty());
+		
+		c.clear();
+		
+		assertTrue(c.isEmpty());		
+	}
+	
+	@Test
 	public void shouldCheckWhetherSearchRequestsAreEmpty() {
 		SearchRequest sr = new SearchRequest();
 		assertTrue("Result is not empty", sr.isEmpty());
@@ -35,12 +45,29 @@ public class SearchRequestTests {
 		sr2.setBrand("ACME");
 		assertFalse("Result is empty", sr2.isEmpty());
 	}
+	
+	@Test
+	public void shouldCreateNewSearchRequests() {
+		SearchRequest sr = new SearchRequest("ACME", 
+				"H0", 
+				"Scnf", 
+				"III", 
+				"ac-electric-locomotives", 
+				"AC", 
+				"electric-locomotives");
+		
+		String expected = "{BRAND=ACME, SCALE=H0, " +
+				"CAT=ac-electric-locomotives, RAILWAY=Scnf, " +
+				"ERA=III, POWER_METHOD=AC, CATEGORY=electric-locomotives}";
+		assertEquals(expected, sr.toString());
+	}
 
 	@Test
 	public void shouldBuildNewSearchRequestsThroughSetters() {
 		SearchRequest sr = new SearchRequest();
 		sr.setBrand("ACME");
 		sr.setCat("ac-electric-locomotives");
+		sr.setEra("III");
 		sr.setCategory("electric-locomotives");
 		sr.setPowerMethod("AC");
 		sr.setScale("H0");
@@ -48,7 +75,7 @@ public class SearchRequestTests {
 		
 		String expected = "{BRAND=ACME, SCALE=H0, " +
 				"CAT=ac-electric-locomotives, RAILWAY=Scnf, " +
-				"POWER_METHOD=AC, CATEGORY=electric-locomotives}";
+				"ERA=III, POWER_METHOD=AC, CATEGORY=electric-locomotives}";
 		assertEquals(expected, sr.toString());
 	}
 	
@@ -59,13 +86,17 @@ public class SearchRequestTests {
 		
 		SearchRequest c = buildSearchRequest("ACME", "FS");
 		SearchRequest d = buildSearchRequest("ACME", "FS");
+		assertTrue("Results are different", c.equals(c));
 		assertTrue("Results are different", c.equals(d));
-		
+	}
+	
+	@Test 
+	public void shouldCheckWhetherTwoRequestsAreDifferent() {
 		SearchRequest e = buildSearchRequest("ACME", "FS");
 		SearchRequest f = buildSearchRequest("Marklin", "DB");
 		assertFalse("Results are equals", e.equals(f));
 	}
-
+	
 	private SearchRequest buildSearchRequest(String brand, String railway) {
 		SearchRequest c = new SearchRequest();
 		c.setBrand(brand);

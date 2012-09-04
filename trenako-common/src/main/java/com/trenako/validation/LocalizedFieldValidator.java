@@ -18,13 +18,13 @@ package com.trenako.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.trenako.mapping.LocalizedField;
 import com.trenako.validation.constraints.ContainsDefault;
 
 /**
- * 
+ * It represents a validator for {@code LocalizedField} values.
  * @author Carlo Micieli
  *
  */
@@ -54,7 +54,7 @@ public class LocalizedFieldValidator
 		}
 		
 		if (clazz[0].equals(String.class)) {
-			return StringUtils.hasText(value.getDefault().toString());
+			return !StringUtils.isBlank(value.getDefault().toString());
 		}
 		
 		return true;

@@ -107,6 +107,10 @@ public class Scale implements DbReferenceable {
 		this.name = name;
 	}
 
+	/**
+	 * Creates a new {@code Scale} with the provided id.
+	 * @param name the name
+	 */
 	public Scale(ObjectId id) {
 		this.id = id;
 	}
@@ -360,14 +364,10 @@ public class Scale implements DbReferenceable {
 	}
 
 	/**
-	 * Returns whether has track gauge 
-	 * narrower than the standard gauge railways or not.
-	 * <p>
-	 * <em>true</em> if the scale is narrow, 
-	 * <em>false</em> otherwise.
-	 * </p>
+	 * Indicates whether has track gauge narrower than the standard 
+	 * gauge railways or not.
 	 * 
-	 * @return the narrow flag value
+	 * @return {@code true} if the scale is narrow; {@code false} otherwise
 	 */
 	public boolean isNarrow() {
 		return narrow;
@@ -377,7 +377,7 @@ public class Scale implements DbReferenceable {
 	 * Indicates whether has track gauge narrower than the standard 
 	 * gauge railways or not.
 	 * 
-	 * @param isNarrow the narrow flag value
+	 * @param isNarrow {@code true} if the scale is narrow; {@code false} otherwise
 	 */
 	public void setNarrow(boolean isNarrow) {
 		this.narrow = isNarrow;

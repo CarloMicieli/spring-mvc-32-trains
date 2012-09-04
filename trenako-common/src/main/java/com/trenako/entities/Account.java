@@ -30,7 +30,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.trenako.mapping.DbReferenceable;
 import com.trenako.utility.Slug;
 
 /**
@@ -52,7 +51,7 @@ import com.trenako.utility.Slug;
  *
  */
 @Document(collection = "accounts")
-public class Account implements Serializable, DbReferenceable {
+public class Account implements Serializable {
 	
 	private static final List<String> ROLES = Collections.unmodifiableList(Arrays.asList("ROLE_USER"));
 	private static final long serialVersionUID = 1L;
@@ -81,7 +80,8 @@ public class Account implements Serializable, DbReferenceable {
 	private boolean locked;
 	private boolean enabled;
 	private List<String> roles;
-	
+	private Date memberSince;
+
 	private Date lastModified;
 	
 	/**
@@ -95,9 +95,10 @@ public class Account implements Serializable, DbReferenceable {
 	 * @param emailAddress the email address
 	 * @param password the password
 	 * @param displayName the displayed name
+	 * @param memberSince the date when the user made its registration
 	 * @param roles the roles
 	 */
-	public Account(String emailAddress, String password, String displayName, List<String> roles) {
+	public Account(String emailAddress, String password, String displayName, Date memberSince, List<String> roles) {
 		this.emailAddress = emailAddress;
 		this.password = password;
 		this.displayName = displayName;
@@ -108,6 +109,7 @@ public class Account implements Serializable, DbReferenceable {
 		this.expired = false;
 		this.locked = false;
 		this.enabled = true;
+		this.memberSince = memberSince;
 	}
 
 	private Account(Builder b) {
@@ -119,6 +121,7 @@ public class Account implements Serializable, DbReferenceable {
 		this.locked = b.locked;
 		this.roles = b.roles;
 		this.id = b.id;
+		this.memberSince = b.memberSince;
 		this.profile = b.profile;
 	}
 	
@@ -136,6 +139,7 @@ public class Account implements Serializable, DbReferenceable {
 		private boolean expired = false;
 		private boolean enabled = true;
 		private boolean locked = false;
+		private Date memberSince = null;
 		private Profile profile = null;
 		
 		private List<String> roles = null;
@@ -156,6 +160,11 @@ public class Account implements Serializable, DbReferenceable {
 
 		public Builder displayName(String displayName) {
 			this.displayName = displayName;
+			return this;
+		}
+
+		public Builder memberSince(Date memberSince) {
+			this.memberSince = memberSince;
 			return this;
 		}
 
@@ -223,14 +232,6 @@ public class Account implements Serializable, DbReferenceable {
 	}
 	
 	/**
-	 * Returns the user name.
-	 * @return the user name
-	 */
-	public String getUsername() {
-		return emailAddress;
-	}
-	
-	/**
 	 * Returns the {@code Account} password.
 	 * @return the password
 	 */
@@ -284,7 +285,6 @@ public class Account implements Serializable, DbReferenceable {
 	 * 
 	 * @return the slug
 	 */
-	@Override
 	public String getSlug() {
 		if (slug == null) {
 			slug = slug(displayName);
@@ -292,11 +292,10 @@ public class Account implements Serializable, DbReferenceable {
 		return slug;
 	}
 
-	@Override
-	public String getLabel() {
-		return displayName;
-	}
-	
+	/**
+	 * Returns the {@code Account} profile.
+	 * @return the profile
+	 */
 	public Profile getProfile() {
 		if (profile == null) {
 			return Profile.defaultProfile();
@@ -304,13 +303,33 @@ public class Account implements Serializable, DbReferenceable {
 		return profile;
 	}
 
+	/**
+	 * Sets the {@code Account} profile.
+	 * @param profile the profile
+	 */
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
 
 	/**
+	 * Returns the date when the {@code Account} made his registration.
+	 * @return the registration date
+	 */
+	public Date getMemberSince() {
+		return memberSince;
+	}
+
+	/**
+	 * Sets the date when the {@code Account} made his registration.
+	 * @param memberSince the registration date
+	 */
+	public void setMemberSince(Date memberSince) {
+		this.memberSince = memberSince;
+	}
+
+	/**
 	 * Indicates whether the {@code Account} is enabled or disabled.
-	 * @return {@code true} if the account is enabled; {@code false} otherwise
+	 * @return {@code true} if the {@code Account} is enabled; {@code false} otherwise
 	 */
 	public boolean isEnabled() {
 		return enabled;
@@ -318,15 +337,15 @@ public class Account implements Serializable, DbReferenceable {
 
 	/**
 	 * Indicates whether the {@code Account} is enabled or disabled.
-	 * @param b {@code true} if the account is enabled; {@code false} otherwise
+	 * @param enabled {@code true} if the {@code Account} is enabled; {@code false} otherwise
 	 */
-	public void setEnabled(boolean b) {
-		this.enabled = b;		
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;		
 	}
 	
 	/**
 	 * Indicates whether the {@code Account} is expired.
-	 * @return {@code true} if the account is expired; {@code false} otherwise
+	 * @return {@code true} if the {@code Account} is expired; {@code false} otherwise
 	 */
 	public boolean isExpired() {
 		return expired;
@@ -334,7 +353,7 @@ public class Account implements Serializable, DbReferenceable {
 	
 	/**
 	 * Indicates whether the {@code Account} is expired.
-	 * @param expired {@code true} if the account is expired; {@code false} otherwise
+	 * @param expired {@code true} if the {@code Account} is expired; {@code false} otherwise
 	 */
 	public void setExpired(boolean expired) {
 		this.expired = expired;
@@ -342,7 +361,7 @@ public class Account implements Serializable, DbReferenceable {
 
 	/**
 	 * Indicates whether the {@code Account} is locked or unlocked.
-	 * @return {@code true} if the account is locked; {@code false} otherwise
+	 * @return {@code true} if the {@code Account} is locked; {@code false} otherwise
 	 */
 	public boolean isLocked() {
 		return locked;
@@ -350,14 +369,14 @@ public class Account implements Serializable, DbReferenceable {
 	
 	/**
 	 * Indicates whether the {@code Account} is locked or unlocked.
-	 * @param locked {@code true} if the account is locked; {@code false} otherwise
+	 * @param locked {@code true} if the {@code Account} is locked; {@code false} otherwise
 	 */
 	public void setLocked(boolean locked) {
 		this.locked = locked;
 	}
 
 	/**
-	 * Returns the roles granted to the {@code Account}.
+	 * Returns an immutable list of roles granted to the {@code Account}.
 	 * @return the roles
 	 */
 	public List<String> getRoles() {
@@ -404,7 +423,8 @@ public class Account implements Serializable, DbReferenceable {
 		if (!(obj instanceof Account)) return false;
 		
 		Account other = (Account) obj;
-		return this.emailAddress.equals(other.emailAddress);
+		return this.emailAddress.equals(other.emailAddress) &&
+			this.displayName.equals(other.displayName);
 	}
 	
 	/**
