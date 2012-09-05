@@ -22,6 +22,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 
 import org.springframework.data.annotation.Id;
@@ -209,9 +210,28 @@ public class Collection {
 	 * @return the collection visibility
 	 */
 	public String getVisibility() {
+		if (StringUtils.isBlank(visibility)) {
+			visibility = defaultVisibility().label();
+		}
 		return visibility;
 	}
 
+	/**
+	 * Returns the {@code Collection} visibility as one of {@code Visibility} value.
+	 * @return the visibility
+	 */
+	public Visibility getVisibilityValue() {
+		return Visibility.parse(getVisibility());
+	}
+
+	/**
+	 * Returns the default {@code Visibility} for collections.
+	 * @return the default visibility
+	 */
+	public static Visibility defaultVisibility() {
+		return Visibility.PUBLIC;
+	}
+	
 	/**
 	 * Returns the last modification timestamp for the {@code Collection}.
 	 * @return the last modified timestamp
@@ -227,13 +247,14 @@ public class Collection {
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
-
+	
 	/**
-	 * Returns the default {@code Visibility} for collections.
-	 * @return the default visibility
+	 * Checks whether the provided user is {@code Collection} owner
+	 * @param user the user
+	 * @return {@code true} if the user is the owner; {@code false} otherwise
 	 */
-	public static Visibility defaultVisibility() {
-		return Visibility.PUBLIC;
+	public boolean isOwnedBy(Account user) {
+		return getOwner().equals(owner(user));
 	}
 	
 	@Override

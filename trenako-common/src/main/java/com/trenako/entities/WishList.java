@@ -392,6 +392,15 @@ public class WishList {
 	public static Visibility defaultVisibility() {
 		return Visibility.PUBLIC;
 	}
+
+	/**
+	 * Checks whether the user is the {@code WishList} owner.
+	 * @param user the user
+	 * @return {@code true} if the user is the owner; {@code false} otherwise
+	 */
+	public boolean isOwnedBy(Account user) {
+		return getOwner().equals(owner(user));
+	}
 	
 	private String slug(String owner, String name) {
 		String s = new StringBuilder()
@@ -409,5 +418,4 @@ public class WishList {
 	private String owner(Account owner) {
 		return owner.getSlug();
 	}
-
 }

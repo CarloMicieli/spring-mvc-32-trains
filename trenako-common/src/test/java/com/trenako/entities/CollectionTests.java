@@ -84,4 +84,20 @@ public class CollectionTests {
 		y.setItems(Arrays.asList(new CollectionItem(), new CollectionItem()));
 		assertEquals("collection{owner: george-stephenson, visibility: private, item(s): 2}", y.toString());
 	}
+	
+	@Test
+	public void shouldGetCollectionVisibilityValue() {
+		Collection x = new Collection(georgeStephenson(), Visibility.PRIVATE);
+		assertEquals(Visibility.PRIVATE, x.getVisibilityValue());
+		
+		Collection y = new Collection(georgeStephenson());
+		assertEquals(Visibility.PUBLIC, y.getVisibilityValue());
+	}
+	
+	@Test
+	public void shouldCheckCollectionOwner() {
+		Collection c = new Collection(georgeStephenson());
+		assertTrue("User is not the collection owner", c.isOwnedBy(georgeStephenson()));
+		assertFalse("User is the collection owner", c.isOwnedBy(theodoreJudah()));
+	}
 }

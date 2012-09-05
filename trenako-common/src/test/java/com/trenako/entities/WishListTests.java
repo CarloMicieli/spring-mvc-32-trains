@@ -29,9 +29,12 @@ import com.trenako.values.Visibility;
 public class WishListTests {
 	
 	private Account bob = new Account.Builder("bob@mail.com")
-		.displayName("bob")
+		.displayName("Bob")
 		.build();
-	
+	private Account alice = new Account.Builder("bob@mail.com")
+		.displayName("Alice")
+		.build();
+		
 	@Test
 	public void shouldProduceSlugFromWishLists() {
 		WishList x = new WishList(bob, "My first list", Visibility.PUBLIC);
@@ -62,7 +65,7 @@ public class WishListTests {
 	@Test
 	public void shouldCreatePublicWishListsByDefault() {
 		WishList wl = new WishList(bob, "My first list");
-		assertEquals(Visibility.PUBLIC.label(), wl.getVisibility());
+		assertEquals(Visibility.PUBLIC, wl.getVisibilityValue());
 	}
 	
 	@Test
@@ -71,5 +74,12 @@ public class WishListTests {
 		assertEquals(Visibility.PUBLIC.label(), wl.getVisibility());
 		assertEquals(WishList.DEFAULT_LIST_NAME, wl.getName());
 		assertEquals("bob-new-list", wl.getSlug());
+	}
+	
+	@Test
+	public void shouldCheckWishListOwner() {
+		WishList wl = new WishList(bob, "My first list");
+		assertTrue("User is not the wish list owner", wl.isOwnedBy(bob));
+		assertFalse("User is the wish list owner", wl.isOwnedBy(alice));
 	}
 }
