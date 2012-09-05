@@ -30,16 +30,21 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
+import com.trenako.mapping.LocalizedField;
+import com.trenako.mapping.WeakDbRef;
+import com.trenako.security.AccountDetails;
 import com.trenako.services.FormValuesService;
 import com.trenako.values.Category;
 import com.trenako.values.DeliveryDate;
 import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
+import com.trenako.web.security.UserContext;
 
 /**
  * 
@@ -48,6 +53,8 @@ import com.trenako.values.PowerMethod;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStockFormTests {
+	
+	@Mock UserContext userContext;
 	@Mock FormValuesService mockService;
 	
 	static final List<Brand> BRANDS = Arrays.asList(acme(), marklin(), roco());
@@ -59,13 +66,7 @@ public class RollingStockFormTests {
 	static final List<LocalizedEnum<Category>> CATEGORIES = (List<LocalizedEnum<Category>>) LocalizedEnum.list(Category.class);
 	static final List<DeliveryDate> DELIVERY_DATES = Arrays.asList(new DeliveryDate(2012, 1), new DeliveryDate(2012, 2));
 	
-	private final static RollingStock RS = new RollingStock.Builder(acme(), "123456")
-		.scale(scaleH0())
-		.railway(fs())
-		.description("Description")
-		.tags("one", "two")
-		.build();
-	
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
@@ -73,8 +74,15 @@ public class RollingStockFormTests {
 	
 	@Test
 	public void shouldCreateRollingStockForms() {
-		RollingStockForm form = RollingStockForm.newForm(RS, mockService);
-		assertEquals(RS, form.getRs());
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.scale(scaleH0())
+			.railway(fs())
+			.description("Description")
+			.tags("one", "two")
+			.build();
+	
+		RollingStockForm form = RollingStockForm.newForm(rs, mockService);
+		assertEquals(rs, form.getRs());
 		assertEquals("one,two", form.getTags());
 	}
 		
@@ -88,7 +96,7 @@ public class RollingStockFormTests {
 		when(mockService.powerMethods()).thenReturn(POWERMETHODS);
 		when(mockService.deliveryDates()).thenReturn(DELIVERY_DATES);
 		
-		RollingStockForm form = RollingStockForm.newForm(RS, mockService);
+		RollingStockForm form = RollingStockForm.newForm(postedRs(), mockService);
 		Iterable<Brand> brands = form.getBrandsList();
 		Iterable<Scale> scales = form.getScalesList();
 		Iterable<Railway> railways = form.getRailwaysList();
@@ -105,20 +113,32 @@ public class RollingStockFormTests {
 	}
 	
 	@Test
-	public void shouldLoadRollingStockReferences() {
+	public void shouldBuildNewRollingStockUsingFormValues() {
 		when(mockService.getBrand(eq(acme().getSlug()))).thenReturn(acme());
 		when(mockService.getRailway(eq(fs().getSlug()))).thenReturn(fs());
 		when(mockService.getScale(eq(scaleH0().getSlug()))).thenReturn(scaleH0());
 		
-		RollingStockForm form = new RollingStockForm(RS);
+		when(userContext.getCurrentUser()).thenReturn(new AccountDetails(loggedUser()));
+		
+		RollingStockForm form = postedForm();
+		
+		RollingStock newRs = form.buildRollingStock(mockService, userContext, date("2012/09/01"));
+		
+		assertNotNull("New rolling stock is null", newRs);
+		assertEquals("{slug: acme, label: ACME}", newRs.getBrand().toCompleteString());
+		assertEquals("{slug: fs, label: FS (Ferrovie dello stato)}", newRs.getRailway().toCompleteString());
+		assertEquals("{slug: h0, label: H0 (1:87)}", newRs.getScale().toCompleteString());
+		assertEquals("[one, two]", newRs.getTags().toString());
+		assertEquals(date("2012/09/01"), newRs.getLastModified());
+		assertEquals("bob", newRs.getModifiedBy());
+		assertEquals("it", newRs.getCountry());
+	}
+
+	private RollingStockForm postedForm() {
+		RollingStockForm form = new RollingStockForm();
+		form.setRs(postedRs());
 		form.setTags("one, two");
-		
-		RollingStock rs = form.getRsLoadingRefs(mockService);
-		
-		assertEquals("{slug: acme, label: ACME}", rs.getBrand().toCompleteString());
-		assertEquals("{slug: fs, label: FS (Ferrovie dello stato)}", rs.getRailway().toCompleteString());
-		assertEquals("{slug: h0, label: H0 (1:87)}", rs.getScale().toCompleteString());
-		assertEquals("[one, two]", rs.getTags().toString());
+		return form;
 	}
 	
 	@Test
@@ -130,5 +150,24 @@ public class RollingStockFormTests {
 		RollingStockForm y = new RollingStockForm();
 		y.setTags("one , two two, three");
 		assertEquals("[one, three, two-two]", y.getTagsSet().toString());
+	}
+	
+	RollingStock postedRs() {
+		RollingStock rs = new RollingStock();
+		rs.setBrand(WeakDbRef.buildFromSlug("acme", Brand.class));
+		rs.setScale(WeakDbRef.buildFromSlug("h0", Scale.class));
+		rs.setRailway(WeakDbRef.buildFromSlug("fs", Railway.class));
+		rs.setItemNumber("123456");
+		rs.setDescription(new LocalizedField<String>("Description"));
+		rs.setDetails(new LocalizedField<String>("Details"));
+		rs.setEra("iii");
+		rs.setCategory("electric-locomotives");
+		return rs;
+	}
+	
+	Account loggedUser() {
+		return new Account.Builder("mail@mail.com")
+			.displayName("Bob")
+			.build();
 	}
 }

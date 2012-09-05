@@ -15,6 +15,8 @@
  */
 package com.trenako.web.controllers;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -34,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.trenako.entities.Account;
 import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.FormValuesService;
@@ -79,7 +80,7 @@ public class RollingStocksController {
 	/**
 	 * Creates a new {@code RollingStocksController}.
 	 * @param service the service to manage rolling stocks
-	 * @param valuesService the service to fill the form dropdown lists
+	 * @param valuesService the service to fill the form drop down lists
 	 * @param imgService the service for the upload files
 	 */
 	@Autowired
@@ -132,15 +133,12 @@ public class RollingStocksController {
 			RedirectAttributes redirectAtts) {
 		
 		MultipartFile file = form.getFile();
-		RollingStock rs = form.getRsLoadingRefs(valuesService);
+		RollingStock rs = form.buildRollingStock(valuesService, secContext, new Date());
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute(newForm(rs, valuesService));
 			return "rollingstock/new";
 		}
-		
-		Account user = secContext.getCurrentUser().getAccount();
-		rs.setModifiedBy(user.getSlug());
 		
 		try {
 			service.createNew(rs);
@@ -183,16 +181,13 @@ public class RollingStocksController {
 			ModelMap model,
 			RedirectAttributes redirectAtts) {
 		
-		RollingStock rs = form.getRsLoadingRefs(valuesService);
+		RollingStock rs = form.buildRollingStock(valuesService, secContext, new Date());
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute(newForm(rs, valuesService));
 			return "rollingstock/edit";
 		}
-		
-		Account user = secContext.getCurrentUser().getAccount();		
-		rs.setModifiedBy(user.getSlug());
-		
+			
 		try {
 			service.save(rs);
 	

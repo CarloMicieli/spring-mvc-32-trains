@@ -15,6 +15,9 @@
  */
 package com.trenako.web.controllers.form;
 
+import static com.trenako.web.security.UserContext.*;
+
+import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -23,6 +26,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
@@ -35,6 +39,7 @@ import com.trenako.values.Era;
 import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
 import com.trenako.web.images.validation.Image;
+import com.trenako.web.security.UserContext;
 
 /**
  * It represent a creation/editing form for {@code RollingStock}.
@@ -60,17 +65,9 @@ public class RollingStockForm {
 	}
 
 	/**
-	 * Creates a new form for the provided {@code RollingStock}. 
-	 * @param rs the {@code RollingStock}
-	 */
-	public RollingStockForm(RollingStock rs) {
-		this(rs, null, null);
-	}
-	
-	/**
 	 * Creates a new multipart form for the provided {@code RollingStock}. 
 	 * @param rs the {@code RollingStock}
-	 * @param valuesService the service to fill the dropdown lists
+	 * @param valuesService the service to fill the drop down lists
 	 * @param file the {@code RollingStock} image file
 	 */
 	public RollingStockForm(RollingStock rs, 
@@ -88,59 +85,93 @@ public class RollingStockForm {
 	/**
 	 * Creates a new form for the provided {@code RollingStock}. 
 	 * @param rs the {@code RollingStock}
-	 * @param valuesService the service to fill the dropdown lists
+	 * @param valuesService the service to fill the drop down lists
 	 */
-	public static RollingStockForm newForm(RollingStock rs, 
-			FormValuesService valuesService) {
+	public static RollingStockForm newForm(RollingStock rs, FormValuesService valuesService) {
 		return new RollingStockForm(rs, valuesService, null);
 	}	
 	
-	public FormValuesService getValuesService() {
-		return valuesService;
-	}
-
 	/**
-	 * Returns the form {@code RollingStock}.
-	 * @return the {@code RollingStock}
+	 * Builds a new {@code RollingStock} using the values posted with the form.
+	 * @param valuesService the values service
+	 * @param userContext the security context
+	 * @param modifiedAt the timestamp when the {@code RollingStock} was modified
+	 * @return a new {@code RollingStock}
 	 */
-	public RollingStock getRs() {
-		if (rs == null) {
-			rs = new RollingStock();
+	public RollingStock buildRollingStock(FormValuesService valuesService, UserContext userContext, Date modifiedAt) {
+		
+		Account user = authenticatedUser(userContext);
+		if (user == null) {
+			return null;
 		}
+		
+		Brand brand = valuesService.getBrand(brandSlug());
+		Railway railway = valuesService.getRailway(railwaySlug());
+		Scale scale = valuesService.getScale(scaleSlug());
+
+		RollingStock rs = new RollingStock.Builder(brand, getRs().getItemNumber())
+			.id(getRs().getId())
+			.railway(railway)
+			.scale(scale)
+			.description(getRs().getDescription())
+			.details(getRs().getDetails())
+			.country(railway.getCountry())
+			.era(getRs().getEra())
+			.category(getRs().getCategory())
+			.tags(getTagsSet())
+			.totalLength(getRs().getTotalLength())
+			.upcCode(getRs().getUpcCode())
+			.modifiedBy(user)
+			.lastModified(modifiedAt)
+			.build();
 		
 		return rs;
 	}
 
-	public RollingStock getRsLoadingRefs(FormValuesService valuesService) {
-		getRs().setBrand(valuesService.getBrand(getRs().getBrand().getSlug()));
-		getRs().setScale(valuesService.getScale(getRs().getScale().getSlug()));
-		getRs().setRailway(valuesService.getRailway(getRs().getRailway().getSlug()));
-		
-		getRs().setTags(getTagsSet());
-		
-		return getRs();
-	}
-	
 	/**
-	 * Sets the form {@code RollingStock}.
+	 * Returns the {@code RollingStock} managed by this form.
+	 * @return the {@code RollingStock}
+	 */
+	public RollingStock getRs() {
+		return rs;
+	}
+
+	/**
+	 * Sets the {@code RollingStock} managed by this form.
 	 * @param rs the {@code RollingStock}
 	 */
 	public void setRs(RollingStock rs) {
 		this.rs = rs;
 	}
 
+	/**
+	 * Returns the {@code Multipart} file.
+	 * @return the file
+	 */
 	public MultipartFile getFile() {
 		return file;
 	}
 
+	/**
+	 * Sets the {@code Multipart} file.
+	 * @param file the file
+	 */
 	public void setFile(MultipartFile file) {
 		this.file = file;
 	}
 
+	/**
+	 * Returns the list of tags.
+	 * @return the tags
+	 */
 	public String getTags() {
 		return tags;
 	}
 
+	/**
+	 * Sets the list of tags.
+	 * @param tags the tags
+	 */
 	public void setTags(String tags) {
 		this.tags = tags;
 	}
@@ -173,6 +204,10 @@ public class RollingStockForm {
 		return valuesService.deliveryDates();
 	}
 
+	/**
+	 * Returns the tags set built parsing a comma separated string.
+	 * @return the tags
+	 */
 	public SortedSet<String> getTagsSet() {
 		if (StringUtils.isBlank(getTags())) {
 			return null;
@@ -184,5 +219,17 @@ public class RollingStockForm {
 			tagsList.add(Slug.encode(tag.trim()));
 		}
 		return tagsList;
+	}
+
+	private String railwaySlug() {
+		return getRs().getRailway().getSlug();
+	}
+
+	private String scaleSlug() {
+		return getRs().getScale().getSlug();
+	}
+
+	private String brandSlug() {
+		return getRs().getBrand().getSlug();
 	}
 }

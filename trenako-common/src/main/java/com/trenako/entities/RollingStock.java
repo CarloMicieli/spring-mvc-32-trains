@@ -114,11 +114,8 @@ public class RollingStock implements DbReferenceable {
 	private String country;
 	
 	private Map<String, String> options;
-	
 	private DeliveryDate deliveryDate;
-	
 	private String modifiedBy;
-		
 	private Date lastModified;
 	
 	/**
@@ -154,6 +151,9 @@ public class RollingStock implements DbReferenceable {
 		this.totalLength = b.totalLength;
 		this.country = b.country;
 		this.upcCode = b.upcCode;
+		
+		this.modifiedBy = b.modifiedBy;
+		this.lastModified = b.lastModified;
 	}
 	
 	/**
@@ -181,6 +181,8 @@ public class RollingStock implements DbReferenceable {
 		private DeliveryDate deliveryDate = null;
 		private int totalLength = 0;
 		private String upcCode = null;
+		private String modifiedBy = null;
+		private Date lastModified = null;
 		
 		private Map<String, String> options = null;
 		
@@ -215,12 +217,22 @@ public class RollingStock implements DbReferenceable {
 			}
 			return this;
 		}
+		
+		public Builder description(LocalizedField<String> desc) {
+			this.description = desc;
+			return this;
+		}
 
 		public Builder description(Locale lang, String desc) {
 			if (this.description == null) {
 				this.description = new LocalizedField<String>();
 			}
 			this.description.put(lang, desc);
+			return this;
+		}
+		
+		public Builder details(LocalizedField<String> details) {
+			this.details = details;
 			return this;
 		}
 		
@@ -284,6 +296,11 @@ public class RollingStock implements DbReferenceable {
 			upcCode = c;
 			return this;
 		}
+
+		public Builder tags(SortedSet<String> tags) { 
+			this.tags = tags;
+			return this;
+		}
 		
 		public Builder tags(String... t) { 
 			tags = new TreeSet<String>(Arrays.asList(t));
@@ -299,6 +316,17 @@ public class RollingStock implements DbReferenceable {
 			this.id = id;
 			return this;
 		}
+		
+		public Builder modifiedBy(Account modifiedBy) {
+			this.modifiedBy = modifiedBy.getSlug();
+			return this;
+		}
+		
+		public Builder lastModified(Date lastModified) {
+			this.lastModified = lastModified;
+			return this;
+		}
+
 	}
 	
 	/**
