@@ -86,6 +86,20 @@ public class HomeControllerMappingTests extends AbstractSpringControllerTests {
 			.andExpect(forwardedUrl(view("home", "developers")));
 	}
 	
+	@Test
+	public void shouldRenderPrivacyPage() throws Exception {
+		mockMvc().perform(get("/home/privacy"))
+			.andExpect(status().isOk())
+			.andExpect(forwardedUrl(view("home", "privacy")));
+	}
+	
+	@Test
+	public void shouldRenderTermsPage() throws Exception {
+		mockMvc().perform(get("/home/terms"))
+			.andExpect(status().isOk())
+			.andExpect(forwardedUrl(view("home", "terms")));
+	}
+	
 	HomeView homeContent(boolean isLogged) {
 		Iterable<RollingStock> rollingStocks = Collections.emptyList();
 		Iterable<Activity> activityStream = Collections.emptyList();

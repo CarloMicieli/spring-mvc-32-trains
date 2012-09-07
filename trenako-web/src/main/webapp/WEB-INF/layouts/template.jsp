@@ -126,7 +126,9 @@
 				<p class="pull-right"><a href="#top"><s:message code="footer.back.top.label"/></a></p>
 				<p>
 					<s:url var="devUrl" value="/home/developers"/>
-					<a href="#">About us</a> | <a href="${devUrl}">Developers</a> | <a href="#">Terms of use</a>
+					<s:url var="privacyUrl" value="/home/privacy"/>
+					<s:url var="termsUrl" value="/home/terms"/>
+					<a href="#">About us</a> | <a href="${devUrl}">Developers</a> | <a href="${termsUrl}">Terms of use</a> | <a href="${privacyUrl}">Privacy</a>
 					<br/>
 					<s:message code="footer.designed.built.label"/> <a href="https://twitter.com/#!/chuckmiskyes" target="_blank">@chuckmiskyes</a>.
 					<s:message code="footer.source.code.label"/> <a href="https://github.com/CarloMicieli/trenako" target="_blank">GitHub</a>.

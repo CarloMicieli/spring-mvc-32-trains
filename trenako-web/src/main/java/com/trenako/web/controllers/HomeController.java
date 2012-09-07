@@ -68,6 +68,16 @@ public class HomeController {
 		return "home/developers";
 	}
 	
+	@RequestMapping(value = "/home/privacy", method = RequestMethod.GET)
+	public String privacy() {
+		return "home/privacy";
+	}
+	
+	@RequestMapping(value = "/home/terms", method = RequestMethod.GET)
+	public String termsOfUse() {
+		return "home/terms";
+	}
+	
 	private Account loggedUser() {
 		if (userContext != null && userContext.getCurrentUser() != null) {
 			return userContext.getCurrentUser().getAccount();

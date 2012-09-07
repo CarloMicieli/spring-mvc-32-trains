@@ -90,6 +90,18 @@ public class HomeControllerTests {
 	}
 	
 	@Test
+	public void shouldRenderPrivacyPage() {
+		String viewName = controller.privacy();
+		assertEquals("home/privacy", viewName);
+	}
+	
+	@Test
+	public void shouldRenderTermsOfUsePage() {
+		String viewName = controller.termsOfUse();
+		assertEquals("home/terms", viewName);
+	}
+	
+	@Test
 	public void shouldRenderDevelopersPage() {
 		String viewName = controller.developers();
 		assertEquals("home/developers", viewName);
