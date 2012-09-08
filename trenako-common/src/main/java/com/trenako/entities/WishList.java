@@ -114,7 +114,7 @@ public class WishList implements Comparable<WishList> {
 	 * @param visibility the visibility
 	 */
 	public WishList(Account owner, String name, Visibility visibility) {
-		this(owner, name, visibility, null);
+		this(owner, name, null, visibility, null);
 	}
 	
 	/**
@@ -125,9 +125,10 @@ public class WishList implements Comparable<WishList> {
 	 * @param visibility the visibility
 	 * @param budget the budget
 	 */
-	public WishList(Account owner, String name, Visibility visibility, Money budget) {
+	public WishList(Account owner, String name, String notes, Visibility visibility, Money budget) {
 		this.owner = owner(owner);
 		this.name = name;
+		this.notes = notes;
 		this.slug = slug(this.owner, this.name);
 		this.visibility = visibility(visibility);
 		this.budget = budget;

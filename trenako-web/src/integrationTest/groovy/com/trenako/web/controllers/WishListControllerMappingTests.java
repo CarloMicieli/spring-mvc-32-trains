@@ -69,8 +69,9 @@ public class WishListControllerMappingTests extends AbstractSpringControllerTest
 		
 		mockMvc().perform(get("/wishlists/{slug}", "bob-my-list"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("wishList"))
+			.andExpect(model().attributeExists("editForm"))
 			.andExpect(forwardedUrl(view("wishlist", "show")));		
 	}
 	

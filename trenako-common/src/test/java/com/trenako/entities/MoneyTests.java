@@ -29,6 +29,28 @@ import static org.junit.Assert.*;
 public class MoneyTests {
 	
 	@Test
+	public void shouldCreateMoneysFromDecimalAndUserProfile() {
+		Account user = new Account.Builder("mail@mail.com")
+			.displayName("Bob")
+			.profile(new Profile("USD"))
+			.build();
+		
+		Money m = Money.newMoney(BigDecimal.valueOf(100), user);
+		assertEquals("$100.00", m.toString());
+	}
+	
+	@Test
+	public void shouldCreateNullMoneysWhenDecimalValueIsNull() {
+		Account user = new Account.Builder("mail@mail.com")
+			.displayName("Bob")
+			.profile(new Profile("USD"))
+			.build();
+		
+		Money m = Money.newMoney(null, user);
+		assertNull("Money is not null", m);
+	}
+	
+	@Test
 	public void shouldCreateMoneyUsingALocale() {
 		Locale loc = Locale.ITALY;
 		

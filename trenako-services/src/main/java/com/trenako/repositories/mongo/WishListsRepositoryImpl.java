@@ -159,6 +159,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 		Update upd = new Update()
 			.set("name", wishList.getName())
 			.set("slug", wishList.slug())
+			.set("notes", wishList.getNotes())
 			.set("budget", wishList.getBudget())
 			.set("visibility", wishList.getVisibility())
 			.set("lastModified", now());

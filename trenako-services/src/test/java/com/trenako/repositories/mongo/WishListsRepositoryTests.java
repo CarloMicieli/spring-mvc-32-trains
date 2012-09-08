@@ -225,7 +225,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(WishList.class));
 		assertEquals("{ \"slug\" : \"bob-my-list\"}", queryObject(argQuery).toString());
-		assertEquals("{ \"$set\" : { \"name\" : \"My list\" , \"slug\" : \"bob-my-list\" , \"budget\" : { \"val\" : 100 , \"cur\" : \"USD\"} , "+
+		assertEquals("{ \"$set\" : { \"name\" : \"My list\" , \"slug\" : \"bob-my-list\" , \"notes\" : \"My notes\" , \"budget\" : { \"val\" : 100 , \"cur\" : \"USD\"} , "+
 				"\"visibility\" : \"public\" , \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}", 
 				updateObject(argUpdate).toString());
 	}
@@ -238,6 +238,6 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 	}
 
 	private WishList newWishList(String name) {
-		return new WishList(owner, name, Visibility.PUBLIC, new Money(100, "USD"));
+		return new WishList(owner, name, "My notes", Visibility.PUBLIC, new Money(100, "USD"));
 	}
 }

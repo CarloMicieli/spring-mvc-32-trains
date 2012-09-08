@@ -99,6 +99,9 @@ public class Money {
 	 * @return a {@code Money}
 	 */
 	public static Money newMoney(BigDecimal val, Account user) {
+		if (val == null) {
+			return null;
+		}
 		return new Money(val, user.getProfile().getCurrency());
 	}
 	
@@ -116,6 +119,10 @@ public class Money {
 	 */
 	public int getValue() {
 		return value;
+	}
+	
+	public BigDecimal getDecimalValue() {
+		return moneyValue(this);
 	}
 	
 	/**
@@ -171,6 +178,10 @@ public class Money {
 	
 	@Override
 	public String toString() {
+		if (this == EMPTY_VALUE) {
+			return "-";
+		}
+		
 		BigDecimal v = BigDecimal.valueOf(getValue()).divide(MONEY_VALUE_FACTOR);
 
 		NumberFormat nf = NumberFormat.getCurrencyInstance();

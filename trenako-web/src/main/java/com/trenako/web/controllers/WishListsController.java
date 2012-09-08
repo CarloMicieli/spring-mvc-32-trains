@@ -82,7 +82,7 @@ public class WishListsController {
 	
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public String newWishList(ModelMap model) {
-		model.addAttribute("newForm", WishListForm.newForm(new WishList(), messageSource));
+		model.addAttribute("newForm", WishListForm.newForm(messageSource));
 		return "wishlist/new";
 	}
 	
@@ -117,6 +117,7 @@ public class WishListsController {
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
 	public String showWishList(@ModelAttribute WishList wishList, ModelMap model) {
 		model.addAttribute("wishList", service.findBySlug(wishList.getSlug()));
+		model.addAttribute("editForm", WishListItemForm.jsForm(wishList, messageSource));
 		return "wishlist/show";
 	}
 
@@ -133,7 +134,7 @@ public class WishListsController {
 	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
 	public String editWishList(@PathVariable("slug") String slug, ModelMap model) {
 		WishList list = service.findBySlug(slug);
-		model.addAttribute("editForm", WishListForm.newForm(list, messageSource));
+		model.addAttribute("editForm", WishListForm.editForm(list, messageSource));
 		return "wishlist/edit";
 	}
 	
@@ -216,19 +217,19 @@ public class WishListsController {
 	}
 	
 	@RequestMapping(value = "/items", method = RequestMethod.PUT)
-	public String updateItem(@ModelAttribute @Valid WishListItemForm form, 
+	public String updateItem(@ModelAttribute @Valid WishListItemForm editForm, 
 		BindingResult bindingResult, 
 		ModelMap model, 
 		RedirectAttributes redirectAtts) {
 
 		if (bindingResult.hasErrors()) {
-			redirectAtts.addAttribute("slug", form.getSlug());
+			redirectAtts.addAttribute("slug", editForm.getSlug());
 			return "redirect:/wishlists/{slug}";
 		}
 
 		Account owner = userContext.getCurrentUser().getAccount();
-		WishList wishList = service.findBySlug(form.getSlug());
-		service.updateItem(wishList, form.newItem(owner), form.previousPrice(owner));
+		WishList wishList = service.findBySlug(editForm.getSlug());
+		service.updateItem(wishList, editForm.newItem(owner), editForm.previousPrice(owner));
 
 		WISH_LIST_ITEM_UPDATED_MSG.appendToRedirect(redirectAtts);
 		redirectAtts.addAttribute("slug", wishList.getSlug());

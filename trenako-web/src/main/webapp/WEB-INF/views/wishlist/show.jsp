@@ -31,12 +31,10 @@
 	
 		<div class="row-fluid">
 			<div class="page-header">
-				<h1>${wishList.name}
-				</h1>
+				<h1>${wishList.name} <small>(<tk:evalValue type="Visibility" expression="${wishList.visibility}"/>)</small></h1>
 			</div>
 		</div>
 		<div class="row-fluid">
-			
 			<div class="span2">
 				<p>
 					<s:url var="backUrl" value="/wishlists/owner/{slug}">
@@ -46,99 +44,206 @@
 						<i class="icon-arrow-left icon-white"></i> <s:message code="button.go.back.label"/>
 					</a>
 				</p>
-			
-				<s:message code="wishlist.lastModified.label"/>
-				<br/>
-				<tk:period since="${wishList.lastModified}"/>
 			</div>
-			<div class="span6">
+			<div class="span10">
 				<c:if test="${not empty message}">
 				<div class="alert alert-${message.type}">
 					<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
 				</div>
 				</c:if>
-			
-				<dl class="dl-horizontal">
-					<dt><s:message code="wishlist.name.label"/>:</dt>
-					<dd>${wishList.name}</dd>
-					<dt><s:message code="wishlist.numberOfItems.label"/>:</dt>
-					<dd>${wishList.numberOfItems}</dd>
-					<dt><s:message code="wishlist.visibility.label"/>:</dt>
-					<dd>${wishList.visibility}</dd>
-					<dt><s:message code="wishlist.notes.label"/>:</dt>
-					<dd>${wishList.notes}</dd>
-				</dl>
-			</div>
-			<div class="span4">
-				<s:url var="deleteUrl" value="/wishlists" />
-				<form:form cssClass="form-inline" method="DELETE" action="${deleteUrl}">
-					<input type="hidden" id="id" name="id" value="${wishList.id}"/>
-					<s:url var="editUrl" value="/wishlists/{slug}/edit">
-						<s:param name="slug" value="${wishList.slug}"/>
-					</s:url>
-					<a href="${editUrl}" class="btn btn-warning">Edit</a>
-					<button type="submit" class="btn btn-danger">Delete</button>
-				</form:form>
+				<div class="row-fluid">
+					<div class="span8">
+						<dl class="dl-horizontal">
+							<dt><s:message code="wishlist.name.label"/>:</dt>
+							<dd>${wishList.name}</dd>
+							<dt><s:message code="wishlist.numberOfItems.label"/>:</dt>
+							<dd>${wishList.numberOfItems}</dd>
+							<dt><s:message code="wishlist.visibility.label"/>:</dt>
+							<dd><tk:evalValue type="Visibility" expression="${wishList.visibility}"/></dd>
+							<dt><s:message code="wishlist.notes.label"/>:</dt>
+							<dd>${wishList.notes}</dd>
+							<dt><s:message code="wishlist.budget.label"/>:</dt>
+							<dd>${wishList.budget}</dd>
+						</dl>
+					</div>
+					<div class="span4">
+						<p>
+							<s:message code="wishlist.lastModified.label"/> <strong><tk:period since="${wishList.lastModified}"/></strong>
+						</p>
+						<s:url var="deleteUrl" value="/wishlists" />
+						<form:form cssClass="form-inline" method="DELETE" action="${deleteUrl}">
+							<input type="hidden" id="id" name="id" value="${wishList.id}"/>
+							<s:url var="editUrl" value="/wishlists/{slug}/edit">
+								<s:param name="slug" value="${wishList.slug}"/>
+							</s:url>
+							<a href="${editUrl}" class="btn btn-warning">Edit list</a>
+							<button type="submit" class="btn btn-danger">Delete list</button>
+						</form:form>						
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						<hr>
+						
+						<c:if test="${wishList.items.size() == 0}">
+							<div class="well">
+								<h4><s:message code="wishlist.empty.list.message"/></h4> 
+								<s:url var="rollingStocksUrl" value="/rs"/>
+								<a href="${rollingStocksUrl}" class="btn">Add rolling stocks</a>
+							</div>
+						</c:if>
+						
+						<!-- Remove item modal -->
+						<s:url var="removeItemUrl" value="/wishlists/items"/>
+						<form:form class="form-horizontal" method="DELETE" action="${removeItemUrl}" modelAttribute="editForm">
+							<input type="hidden" id="slug" name="slug" value="${wishList.slug}"/>
+							<form:hidden path="rsSlug"/>
+							<form:hidden path="rsLabel"/>
+							<form:hidden path="item.itemId"/>
+							<div id="removeItemModal" class="modal hide fade" tabindex="-1" role="dialog">
+						  		<div class="modal-header">
+						    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						    		<h3>Remove item</h3>
+						  		</div>
+						  		<div class="modal-body">
+						    		<p>Are you sure to remove this item from your wish list?</p>
+						  		</div>
+						  		<div class="modal-footer">
+						  			<button type="submit" class="btn btn-primary">Remove this item</button>
+						    		<a href="#" class="btn" data-dismiss="modal">Close</a>
+						  		</div>
+							</div>
+						</form:form>
+						
+						<!-- Edit modal -->
+						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h3 id="myModalLabel">Edit item</h3>
+							</div>
+							<s:url var="itemUrl" value="/wishlists/items"/>
+							<form:form class="form-horizontal" method="PUT" action="${itemUrl}" modelAttribute="editForm">
+								<input type="hidden" id="slug" name="slug" value="${wishList.slug}"/>
+								<form:hidden path="rsSlug"/>
+								<form:hidden path="rsLabel"/>
+								<form:hidden path="previousPrice"/>
+								<form:hidden path="item.itemId"/>
+		
+								<div class="modal-body">
+									<div class="control-group">
+		  								<form:label path="item.notes" class="control-label">Notes:&nbsp;&nbsp;</form:label>
+		  								<form:textarea path="item.notes" rows="3" maxlength="150"/>
+		  							</div>
+		  							<div class="control-group">
+		  								<form:label path="item.priority" class="control-label">Priority:&nbsp;&nbsp;</form:label>
+		  								<form:select path="item.priority">
+		  									<form:options items="${editForm.priorities}" itemLabel="label" itemValue="key"/>
+		  								</form:select>  				
+		  							</div>
+									<div class="control-group">
+										<form:label path="price" class="control-label">Price:&nbsp;&nbsp;</form:label>
+										<div class="controls">
+											<div class="input-prepend">
+			  									<span class="add-on">$</span>
+			  									<input id="price" name="price" class="span6" type="text"> 
+											</div>
+										</div>
+									</div>				
+								</div>
+								<div class="modal-footer">
+								    <button type="submit" class="btn btn-primary">Save changes</button>
+								    <button class="btn" data-dismiss="modal">Close</button>
+								</div>
+							</form:form>
+						</div>
+						
+						<c:forEach var="item" items="${wishList.items}">
+							<s:url var="rsUrl" value="/rollingstocks/{slug}">
+								<s:param name="slug" value="${item.rollingStock.slug}" />
+							</s:url>
+							<div class="row-fluid">
+								<div class="span3">
+									<s:url var="imgUrl" value="/images/th_rollingstock_{slug}">
+										<s:param name="slug" value="${item.rollingStock.slug}" />
+									</s:url>
+									<a href="${rsUrl}" class="thumbnail"><img src="${imgUrl}" alt="Not found"></a>
+								</div>
+								<div class="span9">
+									<a href="${rsUrl}"><strong>${item.rollingStock.label}</strong></a>
+									<p>
+										<small><em>Added</em> <strong><tk:period since="${item.addedAt}"/></strong></small>
+									</p>
+									
+									<dl class="dl-horizontal">
+										<dt>Priority:</dt>
+										<dd><tk:evalValue type="Priority" expression="${item.priority}"/></dd>
+										<dt>Price [<a class="priceHelp" href="#" rel="tooltip" data-placement="right">?</a>]:</dt>
+										<dd>${item.price}</dd>
+										<dt>Notes:</dt>
+										<dd>${item.notes}</dd>
+									</dl>	
+									
+									<p style="margin-top: 20px">
+										<a href="#" class="btn btn-warning">Move to collection</a> 
+										<a href="#editItemDialog" class="open-editItemDialog" role="button" 
+											data-toggle="modal" 
+											data-rs-slug="${item.rollingStock.slug}"
+											data-rs-label="${item.rollingStock.label}"
+											data-item-id="${item.itemId}" 
+											data-priority="${item.priority}" 
+											data-price="${item.price.decimalValue}" 
+											data-notes="${item.notes}">Edit this item</a> | 
+										<a href="#">Move to another list</a> |
+										<a href="#removeItemDialog" class="open-removeItemDialog" role="button" 
+											data-toggle="modal" 
+											data-rs-slug="${item.rollingStock.slug}"
+											data-rs-label="${item.rollingStock.label}"
+											data-item-id="${item.itemId}">Remove this item</a>
+									</p>
+								</div>
+							</div>
+							<hr/>
+						</c:forEach>
+					</div>
+				</div>
 			</div>
 		</div>
 		
-		<div class="row-fluid">
-			<div class="span2"></div>
-			<div class="span8">
-				<hr>
-				
-				<c:if test="${wishList.items.size() == 0}">
-					<div class="well">
-					<h4><s:message code="wishlist.empty.list.message"/></h4> 
-					
-					<s:url var="addItemUrl" value="/wishlists/items"/>
-					<form:form cssClass="form-inline" method="POST" action="${addItemUrl}">
-						<select class="input-large">
-							<option>--brand--</option>
-							<option>ACME</option>
-							<option>Roco</option>
-						</select>
-						
-						<input type="text" class="input-medium" maxlength="10" placeholder="Item number" required="required">
-						
-						<button type="submit" class="btn btn-primary">Add</button>
-					</form:form>
-					</div>
-				</c:if>
-				
-				<c:forEach var="item" items="${wishList.items}">
-					<div class="row-fluid">
-						<div class="span4">
-							<s:url value="/images/th_rollingstock_{slug}" var="imgUrl">
-								<s:param name="slug" value="${item.rollingStock.slug}" />
-							</s:url>
-							<img src="${imgUrl}" alt="Not found">
-						</div>
-						<div class="span8">
-							<h5>${item.rollingStock.label}</h5> (<a href="${item.rollingStock.slug}">View details...</a>)
-							<dl class="dl-horizontal">
-								<dt>priority</dt>
-								<dd>${item.priority}</dd>
-								<dt>updated</dt>
-								<dd><tk:period since="${item.addedAt}"/></dd>
-							</dl>	
-							
-							
-							<s:url var="deleteItemUrl" value="/wishlists/items"/>
-							<form:form method="DELETE" action="${deleteItemUrl}">
-								<input type="hidden" id="slug" name="slug" value="${wishList.slug}"/>
-								<input type="hidden" id="rsSlug" name="rsSlug" value="${item.rollingStock.slug}"/>
-								<input type="hidden" id="itemId" name="itemId" value="${item.itemId}"/>
-								<button type="submit" class="btn btn-danger">Delete</button>
-							</form:form>
-						</div>
-					</div>
-					<hr/>
-				</c:forEach>
+		<script type="text/javascript">
 
+			$(document).ready(function() {
+				$(".priceHelp").tooltip({title: 'This is the extimated price.'});
+			});
 
-			</div>
-			<div class="span2"></div>
-		</div>
+			$(document).on("click", ".open-removeItemDialog", function() {
+				var rsSlug = $(this).data('rs-slug');
+				var rsLabel = $(this).data('rs-label');
+				var itemId = $(this).data('item-id');
+				
+				$("#editForm #rsSlug").val(rsSlug);
+				$("#editForm #rsLabel").val(rsLabel);
+				$("#editForm #item\\.itemId").val(itemId);
+				
+				$('#removeItemModal').modal("show");
+			});
+			
+			$(document).on("click", ".open-editItemDialog", function() {
+				var rsSlug = $(this).data('rs-slug');
+				var rsLabel = $(this).data('rs-label');
+				var itemId = $(this).data('item-id');
+				var notes = $(this).data('notes');
+				var priority = $(this).data('priority');
+				var price = $(this).data('price');
+				
+				$("#editForm #rsSlug").val(rsSlug);
+				$("#editForm #rsLabel").val(rsLabel);
+				$("#editForm #price").val(price);
+				$("#editForm #previousPrice").val(price);
+				$("#editForm #item\\.itemId").val(itemId);
+				$("#editForm #item\\.notes").val(notes);
+				$("#editForm #item\\.priority").val(priority);
+				$('#myModal').modal("show");
+			});
+		</script>
 	</body>
 </html>

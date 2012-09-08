@@ -87,8 +87,8 @@
 							<div class="controls">
 								<c:forEach var="vis" items="${newForm.visibilities}"> 
 								<label class="radio">
-	  								<input type="radio" name="visibility" id="${vis.key}" value="${vis.key}" checked>
-	  								${vis.label} - ${vis.description}
+	  								<input type="radio" name="visibility" id="${vis.key.key}" value="${vis.key.key}" ${vis.value}>
+	  								${vis.key.label} - ${vis.key.description}
 								</label>
 								</c:forEach>
 							</div>

@@ -91,7 +91,7 @@ public class WishListsControllerTests {
 		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
 		when(mockResults.hasErrors()).thenReturn(false);
 
-		String viewName = controller.createWishList(form(), mockResults, model, mockRedirectAtts);
+		String viewName = controller.createWishList(postedForm(), mockResults, model, mockRedirectAtts);
 
 		assertEquals("redirect:/wishlists/{slug}", viewName);
 		verify(mockService, times(1)).createNew(eq(wishList()));
@@ -145,6 +145,7 @@ public class WishListsControllerTests {
 		WishList result = (WishList) model.get("wishList");
 		assertNotNull("Wish list is null", result);
 		assertEquals(wishList(), result);
+		assertTrue("Wish list item form not found", model.containsAttribute("editForm"));
 	}
 
 	@Test
@@ -240,7 +241,16 @@ public class WishListsControllerTests {
 	}
 	
 	WishListForm form() {
-		return WishListForm.newForm(wishList(), BigDecimal.valueOf(100), null);
+		return WishListForm.newForm(null);
+	}
+	
+	WishListForm postedForm() {
+		WishListForm form = WishListForm.newForm(null);
+		
+		form.setBudget(BigDecimal.valueOf(100));
+		form.setWishList(wishList());
+		
+		return form;
 	}
 	
 	WishListItemForm itemForm() {
@@ -253,7 +263,7 @@ public class WishListsControllerTests {
 	}
 
 	WishList wishList() {
-		return new WishList(owner(), "My List", Visibility.PUBLIC);
+		return new WishList(owner(), "My List", "My notes", Visibility.PUBLIC, null);
 	}
 
 	Account owner() {

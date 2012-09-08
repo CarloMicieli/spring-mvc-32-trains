@@ -58,25 +58,25 @@ public class WishListForm {
 	}
 	
 	/**
-	 * Creates a new {@code WishList} form the provided user.
-	 * @param wishList the {@code WishList}
-	 * @param messageSource the message source for localized labels
-	 * @return the form
+	 * Creates a new form for new {@code WishList} creation.
+	 * @param messageSource the message source
+	 * @return a new {@code WishListForm}.
 	 */
-	public static WishListForm newForm(WishList wishList, MessageSource messageSource) {
-		return WishListForm.newForm(wishList, budget(wishList.getBudget()), messageSource);
+	public static WishListForm newForm(MessageSource messageSource) {
+		return new WishListForm(new WishList(), 
+				BigDecimal.valueOf(0), 
+				LocalizedEnum.list(Visibility.class, messageSource, null));
 	}
 	
 	/**
-	 * Creates a new {@code WishList} form the provided user.
+	 * Creates a new editing {@code WishList} form the provided user.
 	 * @param wishList the {@code WishList}
-	 * @param budget the budget
 	 * @param messageSource the message source for localized labels
 	 * @return the form
 	 */
-	public static WishListForm newForm(WishList wishList, BigDecimal budget, MessageSource messageSource) {
-		return new WishListForm(wishList,
-				budget,
+	public static WishListForm editForm(WishList wishList, MessageSource messageSource) {
+		return new WishListForm(wishList, 
+				budget(wishList.getBudget()), 
 				LocalizedEnum.list(Visibility.class, messageSource, null));
 	}
 	
@@ -91,6 +91,7 @@ public class WishListForm {
 	public WishList wishListFor(Account owner) {
 		WishList wishList = new WishList(owner, 
 				getWishList().getName(), 
+				getWishList().getNotes(),
 				visibility(getWishList().getVisibility()),
 				budget(owner, getBudget()));
 		return wishList;

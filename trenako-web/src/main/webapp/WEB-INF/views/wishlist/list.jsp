@@ -56,7 +56,7 @@
 							</s:url>
 							<strong><a href="${viewUrl}">${wishList.name}</a></strong>
 							<br/> 
-							<em><small>updated <tk:period since="${wishList.lastModified}"/></small></em>
+							updated <strong><tk:period since="${wishList.lastModified}"/></strong>
 						</p>
 					</li>
 				</c:forEach>

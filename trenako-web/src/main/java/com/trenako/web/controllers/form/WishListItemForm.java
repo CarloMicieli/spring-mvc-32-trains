@@ -50,14 +50,36 @@ public class WishListItemForm {
 	private BigDecimal price;
 	
 	private BigDecimal previousPrice;
-	
 	private WishListItem item;
-	
 	private Iterable<LocalizedEnum<Priority>> priorities;
 	
+	private static final WishListItem DEFAULT_ITEM = new WishListItem();
+		
+	/**
+	 * Creates a new empty {@code WishListItemForm}.
+	 */
 	public WishListItemForm() {
+		this.item = new WishListItem();
 	}
 	
+	private WishListItemForm(String slug, 
+			WishListItem item,
+			Iterable<LocalizedEnum<Priority>> priorities) {
+		this.slug = slug;
+		this.priorities = priorities;
+		this.item = item;
+	}
+
+	/**
+	 * Creates a new {@code WishListItemForm}.
+	 * @param slug
+	 * @param rsSlug
+	 * @param rsLabel
+	 * @param item
+	 * @param price
+	 * @param previousPrice
+	 * @param priorities
+	 */
 	private WishListItemForm(String slug, 
 			String rsSlug, 
 			String rsLabel, 
@@ -89,7 +111,14 @@ public class WishListItemForm {
 				Money.moneyValue(item.getPrice()),
 				LocalizedEnum.list(Priority.class, messageSource, null));
 	}
-		
+	
+	public static WishListItemForm jsForm(WishList wishList, MessageSource messageSource) {
+		return new WishListItemForm(
+				wishList.getSlug(),
+				DEFAULT_ITEM,
+				LocalizedEnum.list(Priority.class, messageSource, null));
+	}
+	
 	public WishListItem newItem(Account owner) {
 		return new WishListItem(
 				getItem().getItemId(),
@@ -149,6 +178,9 @@ public class WishListItemForm {
 	}
 
 	public WishListItem getItem() {
+		if (item == null) {
+			return new WishListItem();
+		}
 		return item;
 	}
 

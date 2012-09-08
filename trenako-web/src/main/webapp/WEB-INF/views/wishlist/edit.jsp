@@ -19,8 +19,8 @@
 		<div class="row-fluid">
 			<div class="span2">
 				<p>
-					<s:url var="backUrl" value="/wishlists/owner/{slug}">
-						<s:param name="slug" value="${editForm.wishList.owner}" />
+					<s:url var="backUrl" value="/wishlists/{slug}">
+						<s:param name="slug" value="${editForm.wishList.slug}" />
 					</s:url>
 					<a href="${backUrl}" class="btn btn-info" style="width: 110px">
 						<i class="icon-arrow-left icon-white"></i> <s:message code="button.go.back.label"/>
@@ -83,8 +83,8 @@
 							<div class="controls">
 								<c:forEach var="vis" items="${editForm.visibilities}"> 
 								<label class="radio">
-	  								<input type="radio" name="visibility" id="${vis.key}" value="${vis.key}" checked>
-	  								${vis.label} - ${vis.description}
+	  								<input type="radio" name="wishList.visibility" id="${vis.key.key}" value="${vis.key.key}" ${vis.value}>
+	  								${vis.key.label} - ${vis.key.description}
 								</label>
 								</c:forEach>
 							</div>
