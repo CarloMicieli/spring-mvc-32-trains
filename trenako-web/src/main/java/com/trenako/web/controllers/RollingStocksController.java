@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.RollingStock;
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.FormValuesService;
@@ -106,7 +107,9 @@ public class RollingStocksController {
 	
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
 	public String show(@PathVariable("slug") String slug, ModelMap model) {
-		RollingStockView rsView = service.findViewBySlug(slug);
+		
+		Account loggedUser = UserContext.authenticatedUser(secContext);
+		RollingStockView rsView = service.findRollingStockView(slug, loggedUser);
 		if (rsView == null) {
 			throw new NotFoundException();
 		}

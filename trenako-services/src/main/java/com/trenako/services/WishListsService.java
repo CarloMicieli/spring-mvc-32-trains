@@ -35,7 +35,11 @@ public interface WishListsService {
 	 * This method is not loading the items for the {@code WishList}; just the 
 	 * header information are returned.
 	 * </p>
-	 *
+	 * <p>
+	 * The {@link WishList#defaultList(Account)} is always added to the results; 
+	 * this means this method will always return at least one {@code WishList}.
+	 * </p>
+	 * 
 	 * @param owner the owner
 	 * @return a {@code WishList} list
 	 */

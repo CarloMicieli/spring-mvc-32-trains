@@ -17,6 +17,7 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.RollingStock;
 import com.trenako.services.view.RollingStockView;
 
@@ -69,10 +70,16 @@ public interface RollingStocksService {
 	 * A {@code RollingStock} view contains also other information for the rolling 
 	 * stock like its comments, its reviews and so on.
 	 * </p>
+	 * <p>
+	 * If a logged user exists then the view includes the {@code WishList} list 
+	 * for the provided user.
+	 * </p>
+	 * 
 	 * @param slug the {@code RollingStock} slug
+	 * @param loggedUser the currently logged user; it might be {@code null}
 	 * @return a view if {@code RollingStock} if found; {@code null} otherwise
 	 */
-	RollingStockView findViewBySlug(String slug);
+	RollingStockView findRollingStockView(String slug, Account loggedUser);
 	
 	/**
 	 * Creates a new {@code RollingStock}.

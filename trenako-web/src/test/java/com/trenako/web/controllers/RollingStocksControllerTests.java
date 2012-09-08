@@ -109,8 +109,27 @@ public class RollingStocksControllerTests {
 	@Test
 	public void shouldRenderRollingStockViews() {
 		String slug = "acme-123456";
-		RollingStockView value = new RollingStockView(rollingStock(), null, null);
-		when(service.findViewBySlug(eq(slug))).thenReturn(value);
+		RollingStockView value = new RollingStockView(rollingStock(), null, null, null);
+		when(service.findRollingStockView(eq(slug), (Account) isNull())).thenReturn(value);
+		
+		ModelMap model = new ExtendedModelMap();
+
+		controller.setUserContext(null);
+		String viewName = controller.show(slug, model);
+		
+		assertEquals("rollingstock/show", viewName);
+		assertTrue(model.containsAttribute("result"));
+		assertEquals(value, model.get("result"));
+		
+		CommentForm commentForm = (CommentForm) model.get("commentForm");
+		assertNull("Comment is not null", commentForm);
+	}
+	
+	@Test
+	public void shouldShowRollingStockViewsForAuthenticatedUsers() {
+		String slug = "acme-123456";
+		RollingStockView value = new RollingStockView(rollingStock(), null, null, null);
+		when(service.findRollingStockView(eq(slug), eq(loggedUser()))).thenReturn(value);
 		
 		ModelMap model = new ExtendedModelMap();
 		
@@ -331,12 +350,15 @@ public class RollingStocksControllerTests {
 		return form;
 	}
 	
-	private UserContext mockSecurity() {
-		UserContext mockSecurity = mock(UserContext.class);
-		Account user = new Account.Builder("mail@mail.com")
+	private Account loggedUser() {
+		return new Account.Builder("mail@mail.com")
 			.displayName("Bob")
 			.build();
-		when(mockSecurity.getCurrentUser()).thenReturn(new AccountDetails(user));
+	}
+	
+	private UserContext mockSecurity() {
+		UserContext mockSecurity = mock(UserContext.class);
+		when(mockSecurity.getCurrentUser()).thenReturn(new AccountDetails(loggedUser()));
 		
 		return mockSecurity;
 	}

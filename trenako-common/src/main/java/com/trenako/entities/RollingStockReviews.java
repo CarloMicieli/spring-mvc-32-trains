@@ -15,6 +15,7 @@
  */
 package com.trenako.entities;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.bson.types.ObjectId;
 
 import java.util.Collections;
@@ -71,10 +72,27 @@ public class RollingStockReviews {
 	 * @param rollingStock the rolling stock under review
 	 */
 	public RollingStockReviews(RollingStock rollingStock) {
+		this(rollingStock, 0, 0);
+	}
+	
+	/**
+	 * Creates a {@code RollingStockReviews} for the 
+	 * provided rolling stock.
+	 * @param rollingStock the rolling stock under review
+	 * @param numberOfReviews the number of reviews
+	 * @param totalRating the total rating
+	 */
+	public RollingStockReviews(RollingStock rollingStock, int numberOfReviews, int totalRating) {
 		this.setRollingStock(rollingStock);
 		this.slug = reviewsSlug(getRollingStock());
+		this.numberOfReviews = numberOfReviews;
+		this.totalRating = totalRating;
 	}
 
+	/**
+	 * Returns the default instance of {@code RollingStockReviews}.
+	 * @return the default {@code RollingStockReviews}
+	 */
 	public static RollingStockReviews defaultRollingStockReviews() {
 		return DEFAULT;
 	}
@@ -211,6 +229,19 @@ public class RollingStockReviews {
 		}
 		return (new BigDecimal(getTotalRating()))
 				.divide(new BigDecimal(getNumberOfReviews()));
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof RollingStockReviews)) return false;
+		
+		RollingStockReviews other = (RollingStockReviews) obj;
+		return new EqualsBuilder()
+			.append(this.rollingStock, other.rollingStock)
+			.append(this.numberOfReviews, other.numberOfReviews)
+			.append(this.totalRating, other.totalRating)
+			.isEquals();
 	}
 	
 	@Override

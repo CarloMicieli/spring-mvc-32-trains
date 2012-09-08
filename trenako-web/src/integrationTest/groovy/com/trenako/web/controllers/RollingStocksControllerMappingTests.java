@@ -55,19 +55,21 @@ public class RollingStocksControllerMappingTests extends AbstractSpringControlle
 		when(mockValuesService.getRailway(eq("fs"))).thenReturn(fs());
 		when(mockValuesService.getScale(eq("h0"))).thenReturn(scaleH0());
 		
-		RollingStock rs = new RollingStock.Builder(acme(), "123456")
-			.scale(scaleH0())
-			.railway(fs())
-			.description("desc")
-			.build();
-		when(mockService.findViewBySlug(eq("acme-123456")))
-			.thenReturn(new RollingStockView(rs, null, null));
-
 		Account user = new Account.Builder("mail@mail.com")
 			.id(new ObjectId())
 			.displayName("bob")
 			.build();
 		when(mockUserContext.getCurrentUser()).thenReturn(new AccountDetails(user));
+		
+		RollingStock rs = new RollingStock.Builder(acme(), "123456")
+			.scale(scaleH0())
+			.railway(fs())
+			.description("desc")
+			.build();
+		when(mockService.findRollingStockView(eq("acme-123456"), (Account) isNull()))
+			.thenReturn(new RollingStockView(rs, null, null, null));
+		when(mockService.findRollingStockView(eq("acme-123456"), eq(user)))
+			.thenReturn(new RollingStockView(rs, null, null, null));
 	}
 	
 	@After

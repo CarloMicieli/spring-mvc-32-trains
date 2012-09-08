@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -63,14 +64,45 @@ public class WishListsServiceTests {
 	}
 
 	@Test
-	public void shouldFindWishListsByOwner() {
-		when(repo.findByOwner(eq(owner)))
-			.thenReturn(Arrays.asList(new WishList(), new WishList()));
+	public void shouldReturnOnlyTheDefaultWishListWhenUserHasNoListYet() {
+		WishList defaultList = WishList.defaultList(owner);
+		when(repo.findByOwner(eq(owner))).thenReturn(null);
 		
 		Iterable<WishList> results = service.findByOwner(owner);
-
+		
+		assertNotNull("Default Wish list was not found", results);
+		List<WishList> list = (List<WishList>) results;
+		assertEquals(defaultList.getName(), list.get(0).getName());
+	}
+	
+	@Test
+	public void shouldReturnTheWishListNamesByOwner() {
+		WishList defaultList = WishList.defaultList(owner);
+		when(repo.findByOwner(eq(owner)))
+			.thenReturn(Arrays.asList(newWishList("First list"), newWishList("Second list")));
+		
+		Iterable<WishList> results = service.findByOwner(owner);
+	
 		assertNotNull("Wish lists were not found", results);
 		verify(repo, times(1)).findByOwner(eq(owner));
+		
+		List<WishList> list = (List<WishList>) results;
+		assertEquals(3, list.size());
+		assertEquals(defaultList.getName(), list.get(2).getName());
+	}
+	
+	@Test
+	public void shouldReturnTheWishListNamesByOwnerWhenDefaultListIsUsed() {
+		when(repo.findByOwner(eq(owner)))
+			.thenReturn(Arrays.asList(WishList.defaultList(owner), newWishList("Second list")));
+		
+		Iterable<WishList> results = service.findByOwner(owner);
+	
+		assertNotNull("Wish lists were not found", results);
+		verify(repo, times(1)).findByOwner(eq(owner));
+		
+		List<WishList> list = (List<WishList>) results;
+		assertEquals(2, list.size());
 	}
 	
 	@Test
@@ -87,12 +119,13 @@ public class WishListsServiceTests {
 	
 	@Test
 	public void shouldReturnNullWhenTheProvidedOwnerHasNoWishLists() {
-		when(repo.findByOwner(eq(owner))).thenReturn(null);
+		int maxNumberOfItems = 10;
+		when(repo.findAllByOwner(eq(owner), eq(maxNumberOfItems))).thenReturn(null);
 		
-		Iterable<WishList> results = service.findByOwner(owner);
-
+		Iterable<WishList> results = service.findAllByOwner(owner, maxNumberOfItems);
+		
 		assertNull("Wish lists were found", results);
-		verify(repo, times(1)).findByOwner(eq(owner));
+		verify(repo, times(1)).findAllByOwner(eq(owner), eq(maxNumberOfItems));
 	}
 	
 	@Test
@@ -285,6 +318,10 @@ public class WishListsServiceTests {
 	
 	private WishList newWishList() {
 		return new WishList(owner, "My list", Visibility.PUBLIC);
+	}
+
+	private WishList newWishList(String name) {
+		return new WishList(owner, name, Visibility.PUBLIC);
 	}
 	
 	private WishList newWishList(Account owner, String name) {

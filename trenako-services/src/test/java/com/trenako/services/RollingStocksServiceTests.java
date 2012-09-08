@@ -20,6 +20,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Collections;
 
@@ -36,9 +37,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.RollingStockComments;
 import com.trenako.entities.RollingStockReviews;
+import com.trenako.entities.WishList;
 import com.trenako.repositories.RollingStocksRepository;
 import com.trenako.services.RollingStocksServiceImpl;
 import com.trenako.services.view.RollingStockView;
@@ -51,10 +54,18 @@ import com.trenako.services.view.RollingStockView;
 @RunWith(MockitoJUnitRunner.class)
 public class RollingStocksServiceTests {
 
+	Account loggedUser() {
+		return new Account.Builder("mail@mail.com")
+			.displayName("bob")
+			.build();
+	}
+	
 	private final static RollingStock RS = new RollingStock.Builder(acme(), "123456")
 		.railway(fs())
 		.scale(scaleH0())
 		.build();
+	
+	@Mock WishListsService wishlistsService;
 	
 	@Mock RollingStocksRepository repo;
 	@Mock CommentsService commentsService;
@@ -67,7 +78,7 @@ public class RollingStocksServiceTests {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		service = new RollingStocksServiceImpl(repo, commentsService, reviewsService);
+		service = new RollingStocksServiceImpl(repo, commentsService, reviewsService, wishlistsService);
 	}
 
 	@Test
@@ -109,7 +120,7 @@ public class RollingStocksServiceTests {
 		String slug = "not-found";
 		when(repo.findBySlug(eq(slug))).thenReturn(null);
 		
-		RollingStockView view = service.findViewBySlug(slug);
+		RollingStockView view = service.findRollingStockView(slug, null);
 		
 		assertNull("Rolling stock view is not null", view);
 	}
@@ -118,18 +129,31 @@ public class RollingStocksServiceTests {
 	public void shouldFillRollingStockViewsForTheProvidedSlug() {
 		RollingStockReviews reviews = new RollingStockReviews();
 		RollingStockComments comments = new RollingStockComments(RS);
+		Iterable<WishList> wishLists = Arrays.asList(new WishList(), new WishList());
 		String slug = "acme-123456";
 
 		when(repo.findBySlug(eq(slug))).thenReturn(RS);
 		when(commentsService.findByRollingStock(eq(RS))).thenReturn(comments);
 		when(reviewsService.findByRollingStock(eq(RS))).thenReturn(reviews);
+		when(wishlistsService.findByOwner(eq(loggedUser()))).thenReturn(wishLists);
 		
-		RollingStockView view = service.findViewBySlug(slug);
+		RollingStockView view = service.findRollingStockView(slug, loggedUser());
 		
 		assertNotNull("Rolling stock view is null", view);
 		assertEquals(RS, view.getRs());
 		assertEquals(comments.getItems(), view.getComments());
 		assertEquals(reviews, view.getReviews());
+		assertEquals(wishLists, view.getWishLists());
+	}
+	
+	@Test
+	public void shouldReturnEmptyWishListsWhenNoUserIsLogged() {
+		String slug = "acme-123456";
+		when(repo.findBySlug(eq(slug))).thenReturn(RS);
+		
+		RollingStockView view = service.findRollingStockView(slug, null);
+		
+		assertNull(view.getWishLists());
 	}
 
 	@Test

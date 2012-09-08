@@ -19,6 +19,7 @@ import com.trenako.entities.Comment;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.RollingStockComments;
 import com.trenako.entities.RollingStockReviews;
+import com.trenako.entities.WishList;
 
 /**
  * It represents a {@code RollingStock} view, that includes comments and reviews too.
@@ -30,13 +31,24 @@ public class RollingStockView {
 	private final RollingStock rs;
 	private final RollingStockComments comments;
 	private final RollingStockReviews reviews;
+	private final Iterable<WishList> wishLists;
 	
+	/**
+	 * Creates a new {@code RollingStockView}.
+	 * @param rs the rolling stock 
+	 * @param comments the comments
+	 * @param reviews the reviews
+	 * @param wishLists the wish lists
+	 */
 	public RollingStockView(RollingStock rs, 
 			RollingStockComments comments, 
-			RollingStockReviews reviews) {
+			RollingStockReviews reviews,
+			Iterable<WishList> wishLists) {
+		
 		this.rs = rs;
 		this.comments = comments;
 		this.reviews = reviews;
+		this.wishLists = wishLists;
 	}
 
 	/**
@@ -61,5 +73,13 @@ public class RollingStockView {
 	 */
 	public RollingStockReviews getReviews() {
 		return reviews;
+	}
+
+	/**
+	 * Returns the {@code WishList} list for the user.
+	 * @return the wish lists; {@code null} for anonymous users
+	 */
+	public Iterable<WishList> getWishLists() {
+		return wishLists;
 	}
 }

@@ -65,10 +65,9 @@
 					<a class="btn btn-primary" href="#" style="width: 110px"><i class="icon-gift icon-white"></i> Add wish list</a>
 					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a class="addWishList" href="george-stephenson-my-list"><i class="icon-list-alt"></i> My list</a></li>
-						<li><a class="addWishList" href="george-stephenson-novegro-2012"><i class="icon-list-alt"></i> Novegro 2012</a></li>
-						<li class="divider"></li>
-						<li><a href="#"><i class="i"></i> New wishlist</a></li>
+					<c:forEach var="wl" items="${result.wishLists}">
+						<li><a class="addWishList" href="${wl.slug}"><i class="icon-list-alt"></i> ${wl.name}</a></li>
+					</c:forEach>
 					</ul>
 					
 					<s:url var="wishListsUrl" value="/wishlists/items"/>

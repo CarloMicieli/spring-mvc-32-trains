@@ -15,12 +15,7 @@
  */
 package com.trenako.entities;
 
-import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collections;
 
 import org.junit.Test;
 
@@ -30,12 +25,6 @@ import org.junit.Test;
  *
  */
 public class ReviewTests {
-	
-	private RollingStockReviews rsReviews = new RollingStockReviews(
-			new RollingStock.Builder(acme(), "123456")
-				.scale(scaleH0())
-				.railway(db())
-				.build());
 
 	private Account bob = new Account.Builder("bob@mail.com")
 		.displayName("Bob")
@@ -44,50 +33,6 @@ public class ReviewTests {
 		.displayName("Alice")
 		.build();
 	
-	@Test
-	public void shouldProduceReviewsSlug() {
-		assertEquals("acme-123456", rsReviews.getSlug());
-	}
-	
-	@Test
-	public void shouldProduceStringRepresentations() {
-		assertEquals("review{rs: acme-123456, no of review(s): 0, total rating: 0}", 
-				rsReviews.toString());
-	}
-	
-	@Test
-	public void shouldCalculateNumberOfReviewsAndRatingForEmptyReview() {
-		assertEquals(0, rsReviews.getNumberOfReviews());
-		assertEquals(0, rsReviews.getTotalRating());
-		assertEquals(Collections.emptyList(), rsReviews.getItems());
-	}
-	
-	@Test
-	public void shouldFillRollingStockAndReviewAuthor() {
-		Review review1 = new Review(alice, "Review1 title", "Review1 content", 5, null);
-
-		rsReviews.setItems(Arrays.asList(review1));
-
-		assertEquals("{slug: acme-123456, label: ACME 123456}", rsReviews.getRollingStock().toCompleteString());
-		assertEquals("alice", rsReviews.getItems().get(0).getAuthor().toString());
-		
-	}
-	
-	@Test
-	public void shouldCalculateRollingStockRating() {
-		Review review1 = new Review(alice, "Review1 title", "Review1 content", 5, null);
-		Review review2 = new Review(bob, "Review2 title", "Review2 content", 4, null);
-		
-		rsReviews.setItems(Arrays.asList(review1, review2));
-		rsReviews.setNumberOfReviews(2);
-		rsReviews.setTotalRating(9);
-		
-		assertEquals(2, rsReviews.getItems().size());
-		assertEquals(2, rsReviews.getNumberOfReviews());
-		assertEquals(9, rsReviews.getTotalRating());
-		assertEquals(BigDecimal.valueOf(4.5), rsReviews.getRating());
-	}
-
 	@Test
 	public void shouldCheckWheterTwoReviewsAreEquals() {
 		Review x = new Review(alice, "Title", "Review content", 1, null);

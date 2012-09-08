@@ -82,4 +82,19 @@ public class WishListTests {
 		assertTrue("User is not the wish list owner", wl.isOwnedBy(bob));
 		assertFalse("User is the wish list owner", wl.isOwnedBy(alice));
 	}
+	
+	@Test
+	public void shouldImplementComparableInterface() {
+		WishList a = new WishList(bob, "My first list", Visibility.PUBLIC);
+		WishList b = new WishList(bob, "My first list", Visibility.PRIVATE);
+		assertEquals(0, a.compareTo(b));
+		
+		WishList c = new WishList(bob, "My second list", Visibility.PRIVATE);
+		assertTrue(a.compareTo(c) < 0);
+		assertTrue(c.compareTo(a) > 0);
+		
+		WishList d = new WishList(bob, "My awesome list", Visibility.PRIVATE);
+		assertTrue(a.compareTo(d) > 0);
+		assertTrue(d.compareTo(a) < 0);
+	}
 }

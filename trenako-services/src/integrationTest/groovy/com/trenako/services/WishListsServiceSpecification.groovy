@@ -132,14 +132,14 @@ class WishListsServiceSpecification extends MongoSpecification {
 		
 		then:
 		results != null
-		results.size() == 2
-		results.collect { it.slug }.sort() == ['bob-my-list', 'bob-my-list-2']
+		results.size() == 3
+		results.collect { it.slug }.sort() == ['bob-my-list', 'bob-my-list-2', 'bob-new-list']
 		
 		and: "the items are not loaded"
-		results.collect { it.items.size() } == [0, 0]
+		results.collect { it.items.size() } == [0, 0, 0]
 	}
 
-	def "should return empty results when the provided user has no wish list yet"() {
+	def "should return only the default wish list when the user has no other lists"() {
 		given:
 		def owner = new Account(slug: 'george')
 		
@@ -147,7 +147,8 @@ class WishListsServiceSpecification extends MongoSpecification {
 		def results = service.findByOwner(owner)
 		
 		then:
-		results.size() == 0
+		results.size() == 1
+		results[0].slug == 'george-new-list'
 	}
 	
 	def "should find wish lists loading the latest items"() {

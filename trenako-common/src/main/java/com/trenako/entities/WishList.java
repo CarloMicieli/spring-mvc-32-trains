@@ -51,7 +51,7 @@ import com.trenako.utility.Slug;
  * 
  */
 @Document(collection = "wishLists")
-public class WishList {
+public class WishList implements Comparable<WishList> {
 
 	static final String DEFAULT_LIST_NAME = "New list";
 
@@ -366,6 +366,23 @@ public class WishList {
 			.append(", visibility: ").append(getVisibility())
 			.append("}")
 			.toString();
+	}
+
+	@Override
+	public int compareTo(WishList other) {
+		int ret = 0;
+		
+		if (this.equals(other)) {
+			return 0;
+		}
+		
+		ret = String.CASE_INSENSITIVE_ORDER.compare(this.getOwner(), other.getOwner());
+		if (ret != 0) return ret;
+		
+		ret = String.CASE_INSENSITIVE_ORDER.compare(this.getName(), other.getName());
+		if (ret != 0) return ret;
+		
+		return 0;
 	}
 	
 	/**

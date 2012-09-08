@@ -23,9 +23,11 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.trenako.entities.Account;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.RollingStockComments;
 import com.trenako.entities.RollingStockReviews;
+import com.trenako.entities.WishList;
 import com.trenako.repositories.RollingStocksRepository;
 import com.trenako.services.view.RollingStockView;
 
@@ -40,21 +42,25 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	private final RollingStocksRepository rollingStocks;
 	private final CommentsService comments;
 	private final ReviewsService reviews;
+	private final WishListsService wishLists;
 	
 	/**
 	 * Creates a {@code RollingStocksServiceImpl}
-	 * @param rollingStocks the {@code RollingStock}s repository
-	 * @param comments the {@code Comment}s service
-	 * @param reviews the {@code Review}s service
+	 * @param rollingStocks the {@code RollingStock} repository
+	 * @param comments the {@code Comment} service
+	 * @param reviews the {@code Review} service
+	 * @param wishlistsService the {@code WishList} service
 	 */
 	@Autowired
 	public RollingStocksServiceImpl(RollingStocksRepository rollingStocks,
 			CommentsService comments,
-			ReviewsService reviews) {
+			ReviewsService reviews, 
+			WishListsService wishLists) {
 		
 		this.rollingStocks = rollingStocks;
 		this.comments = comments;
 		this.reviews = reviews;
+		this.wishLists = wishLists;
 	}
 	
 	@Override
@@ -68,7 +74,7 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 	}
 	
 	@Override
-	public RollingStockView findViewBySlug(String slug) {
+	public RollingStockView findRollingStockView(String slug, Account loggedUser) {
 		RollingStock rs = rollingStocks.findBySlug(slug);
 		if (rs == null) {		
 			return null;
@@ -76,10 +82,13 @@ public class RollingStocksServiceImpl implements RollingStocksService {
 		
 		RollingStockComments rsComments = comments.findByRollingStock(rs);
 		RollingStockReviews rsReviews = reviews.findByRollingStock(rs);
+		Iterable<WishList> wishlists = loggedUser != null ?
+				wishLists.findByOwner(loggedUser) : null;
 		
 		return new RollingStockView(rs, 
 				rsComments,
-				rsReviews);		
+				rsReviews,
+				wishlists);		
 	}
 
 	@Override

@@ -15,6 +15,10 @@
  */
 package com.trenako.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,9 +53,14 @@ public class WishListsServiceImpl implements WishListsService {
 	
 	@Override
 	public Iterable<WishList> findByOwner(Account owner) {
-		return repo.findByOwner(owner);
+		List<WishList> results = list(repo.findByOwner(owner));
+		
+		if (addDefaultWishList(results, owner) == true) {
+			results.add(WishList.defaultList(owner));
+		}
+		
+		return Collections.unmodifiableList(results);
 	}
-
 
 	@Override
 	public Iterable<WishList> findAllByOwner(Account owner, int maxNumberOfItems) {
@@ -137,5 +146,21 @@ public class WishListsServiceImpl implements WishListsService {
 	public void remove(WishList wishList) {
 		repo.remove(wishList);
 	}
+	
+	private List<WishList> list(Iterable<WishList> results) {
+		List<WishList> list = new ArrayList<WishList>();
+		if (results != null) {
+			list.addAll((List<WishList>) results);
+		}
+		
+		return list;
+	}
+	
+	private boolean addDefaultWishList(List<WishList> results, Account owner) {
+		if (results.size() == 0) {
+			return true;
+		}
 
+		return Collections.binarySearch(results, WishList.defaultList(owner)) < 0;
+	}
 }
