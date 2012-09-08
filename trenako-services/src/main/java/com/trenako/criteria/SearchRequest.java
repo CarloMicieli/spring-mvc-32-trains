@@ -72,7 +72,7 @@ public class SearchRequest {
 	 * Sets the {@code power method} search criteria.
 	 * @param powerMethod the {@code power method} 
 	 */
-	public void setPowerMethod(String powerMethod) {
+	public void setPowermethod(String powerMethod) {
 		powerMethod(powerMethod);
 	}
 

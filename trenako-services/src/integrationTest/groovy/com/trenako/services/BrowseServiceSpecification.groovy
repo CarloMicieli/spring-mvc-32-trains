@@ -473,7 +473,7 @@ class BrowseServiceSpecification extends MongoSpecification {
 	
 	def "should find the rolling stocks with a provided power method"() {
 		given:
-		def criteria = new SearchRequest(powerMethod: 'ac')
+		def criteria = new SearchRequest(powermethod: 'ac')
 		def range = new RangeRequest(size: 10)
 		
 		when:
@@ -506,7 +506,7 @@ class BrowseServiceSpecification extends MongoSpecification {
 		def criteria = new SearchRequest(brand: 'bemo', 
 			railway: 'mgb',
 			era: 'iv',
-			powerMethod: 'dc',
+			powermethod: 'dc',
 			scale: 'h0m',
 			category: 'electric-locomotives')
 		def range = new RangeRequest(size: 10)

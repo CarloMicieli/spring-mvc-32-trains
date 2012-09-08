@@ -69,7 +69,7 @@ public class SearchRequestTests {
 		sr.setCat("ac-electric-locomotives");
 		sr.setEra("III");
 		sr.setCategory("electric-locomotives");
-		sr.setPowerMethod("AC");
+		sr.setPowermethod("AC");
 		sr.setScale("H0");
 		sr.setRailway("Scnf");
 		
