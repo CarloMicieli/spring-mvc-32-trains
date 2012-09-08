@@ -34,20 +34,15 @@
 		</div>
 		
 		<div class="row-fluid">
-			<div class="span1"></div>
-			<div class="span11">
-				
+			<div class="span11 offset1">
 				<div class="row-fluid">
-					<div class="span2">
-					</div>
-					<div class="span10">
+					<div class="span11 offset1">
 						<h3><s:message code="you.count.collection.title"/>:</h3>
 						<hr>
 					</div>
 				</div>
 				<div class="row-fluid">
-					<div class="span2"></div>
-					<div class="span1">
+					<div class="span1 offset1">
 						<span style="font-size:24px;">${info.categoriesCount.steamLocomotives}</span> 
 						<p><s:message code="you.count.steam.locomotives.label"/></p>
 					</div>
@@ -101,6 +96,22 @@
 			<div class="span11">
 				<div class="row-fluid">
 					<div class="span4">
+						<h2><s:message code="you.recent.activity.title"/></h2>
+						<p>
+							<c:forEach var="act" items="${info.userActivity}">
+								<div class="row-fluid" style="border-left: thick solid ${act.color};">
+									<div class="span3 offset1">
+										<tk:avatar user="${act.actor}" size="48" showName="true"/>
+									</div>
+									<div class="span8">
+										<tk:activity activity="${act}"/> 
+									</div>
+								</div>
+								<hr/>
+							</c:forEach>
+						</p>			
+					</div>				
+					<div class="span4">
 						<h2><s:message code="you.from.collection.title"/></h2>
 						<p>
 							<a href="#" class="btn btn-danger">
@@ -130,19 +141,7 @@
 							<li>${item.itemSlug} ${item.itemName} ${item.addedAt}</li>
 						</c:forEach>
 						</ul>
-					</div>
-					<div class="span4">
-						<h2>Your recent activity</h2>
-						<p>
-							Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, 
-							egestas eget quam. Vestibulum id ligula porta felis euismod semper. 
-							Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum 
-							nibh, ut fermentum massa justo sit amet risus.
-						</p>
-						<p>
-							<a href="#" class="btn btn-danger">View all</a>
-						</p>				
-					</div>			
+					</div>		
 				</div>
 			</div>
 		</div>

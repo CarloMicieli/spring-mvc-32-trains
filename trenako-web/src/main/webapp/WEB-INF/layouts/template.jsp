@@ -122,19 +122,43 @@
 
 		<footer class="footer">
 			<div class="container">
-				<p></p>
-				<p class="pull-right"><a href="#top"><s:message code="footer.back.top.label"/></a></p>
-				<p>
-					<s:url var="devUrl" value="/home/developers"/>
-					<s:url var="privacyUrl" value="/home/privacy"/>
-					<s:url var="termsUrl" value="/home/terms"/>
-					<a href="#">About us</a> | <a href="${devUrl}">Developers</a> | <a href="${termsUrl}">Terms of use</a> | <a href="${privacyUrl}">Privacy</a>
-					<br/>
-					<s:message code="footer.designed.built.label"/> <a href="https://twitter.com/#!/chuckmiskyes" target="_blank">@chuckmiskyes</a>.
-					<s:message code="footer.source.code.label"/> <a href="https://github.com/CarloMicieli/trenako" target="_blank">GitHub</a>.
-					<br>
-					Theme based upon <strong>Twitter Bootstrap</strong>.
-				</p>
+				<div class="row-fluid" style="margin: 10px;">
+					<div class="span6">
+						<p>
+							<s:url var="aboutUrl" value="/home/explore"/>
+							<s:url var="devUrl" value="/home/developers"/>
+							<s:url var="privacyUrl" value="/home/privacy"/>
+							<s:url var="termsUrl" value="/home/terms"/>
+							<a href="${aboutUrl}">About us</a> | <a href="${devUrl}">Developers</a> | <a href="${termsUrl}">Terms of use</a> | <a href="${privacyUrl}">Privacy</a>
+							<br/>
+							<s:message code="footer.designed.built.label"/> <a href="https://twitter.com/#!/chuckmiskyes" target="_blank">@chuckmiskyes</a>.
+							<s:message code="footer.source.code.label"/> <a href="https://github.com/CarloMicieli/trenako" target="_blank">GitHub</a>.
+							<br>
+							Theme based upon <strong>Twitter Bootstrap</strong>.
+						</p>
+					</div>
+					<div class="span3">
+					<small>
+						<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.it">
+							<img alt="Licenza Creative Commons" 
+								style="border-width: 0" 
+								src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" />
+						</a>
+						<br />
+						Except where otherwise
+						<a class="subfoot" href="${termsUrl}">noted</a>,
+						content on
+						<span href="http://creativecommons.org" property="cc:attributionName" rel="cc:attributionURL">this site</span> 
+						is licensed under a 
+						<a rel="license" href="http://creativecommons.org/licenses/by/3.0/" class="subfoot">
+						Creative Commons Attribution 3.0 License
+						</a>.
+					</small>
+					</div>
+					<div class="span3">
+						<p class="pull-right"><a href="#top"><s:message code="footer.back.top.label"/></a></p>
+					</div>
+				</div>
 			</div>
 		</footer>
 	</body>
