@@ -29,6 +29,12 @@ import com.trenako.values.Category;
 public class CategoriesCountTests {
 
 	@Test
+	public void shouldReturnTheTotalCount() {
+		CategoriesCount x = new CategoriesCount(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		assertEquals(45, x.getTotalCount());
+	}
+	
+	@Test
 	public void shouldConvertCategoryToFieldName() {
 		String fieldName = CategoriesCount.getKey(Category.RAILCARS);
 		assertEquals("railcars", fieldName);

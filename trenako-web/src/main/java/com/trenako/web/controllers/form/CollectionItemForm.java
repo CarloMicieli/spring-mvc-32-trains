@@ -18,6 +18,8 @@ package com.trenako.web.controllers.form;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.context.MessageSource;
@@ -26,6 +28,7 @@ import com.trenako.entities.Account;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.Money;
 import com.trenako.entities.RollingStock;
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.values.Condition;
 import com.trenako.values.LocalizedEnum;
 
@@ -38,6 +41,9 @@ public class CollectionItemForm {
 
 	private CollectionItem item;
 	
+	@NotNull
+	private String rsSlug; 
+	
 	@Range(min = 0, max = 9999, message = "collectionItem.price.range.notmet")
 	private BigDecimal price;
 	
@@ -48,6 +54,11 @@ public class CollectionItemForm {
 	private Iterable<LocalizedEnum<Condition>> conditionsList;
 	
 	public CollectionItemForm() {
+		item = new CollectionItem();
+	}
+	
+	private CollectionItemForm(Iterable<LocalizedEnum<Condition>> conditionsList) {
+		this.conditionsList = conditionsList;
 	}
 	
 	public CollectionItemForm(
@@ -61,6 +72,11 @@ public class CollectionItemForm {
 		this.previousPrice = previousPrice;
 	}
 
+	public static CollectionItemForm jsForm(
+			MessageSource messageSource) {
+		return new CollectionItemForm(LocalizedEnum.list(Condition.class, messageSource, null));
+	}
+	
 	public static CollectionItemForm newForm(
 			RollingStock rs, 
 			MessageSource messageSource) {
@@ -80,14 +96,29 @@ public class CollectionItemForm {
 				LocalizedEnum.list(Condition.class, messageSource, null));
 	}
 
-	public CollectionItem collectionItem(Account owner) {
+	public CollectionItem deletedItem(RollingStock rs, Account owner) {
+		CollectionItem ci = new CollectionItem();
+		ci.setItemId(getItem().getItemId());
+		ci.setCategory(rs.getCategory());
+		return ci;
+	}
+	
+	public CollectionItem collectionItem(RollingStock rs, Account owner) {
 		return new CollectionItem(
-				getItem().getRollingStock(),
-				getItem().getCategory(),
+				WeakDbRef.buildRef(rs),
+				rs.getCategory(),
 				getItem().getAddedAt(),
 				getItem().getNotes(),
 				Money.newMoney(getPrice(), owner),
 				condition(getItem()));
+	}
+	
+	public String getRsSlug() {
+		return rsSlug;
+	}
+
+	public void setRsSlug(String rsSlug) {
+		this.rsSlug = rsSlug;
 	}
 
 	public void setItem(CollectionItem item) {	

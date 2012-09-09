@@ -25,8 +25,8 @@
 		<div class="row-fluid">
 			<div class="span2">
 				<div class="page-header">
-					<h1>${scale.name}</h1>
-					<small>(1:<s:eval expression="scale.ratio"/>)</small>
+					<h1>${scale.name}
+					<small>(1:<s:eval expression="scale.ratio"/>)</small></h1>
 				</div>
 			</div>
 			<div class="span9">

@@ -136,6 +136,22 @@ public class CategoriesCount {
 	public void setStarterSets(int starterSets) {
 		this.starterSets = starterSets;
 	}
+	
+	/**
+	 * Returns the total count for the {@code CategoriesCount}.
+	 * @return the total
+	 */
+	public int getTotalCount() {
+		return 	this.steamLocomotives +
+			this.dieselLocomotives +
+			this.electricLocomotives +
+			this.railcars +
+			this.electricMultipleUnit +
+			this.freightCars +
+			this.passengerCars +
+			this.trainSets +
+			this.starterSets;
+	}
 
 	/**
 	 * Returns the field name from the {@code Category} label. 
@@ -201,4 +217,5 @@ public class CategoriesCount {
 			.append(this.starterSets, other.starterSets)
 			.isEquals();
 	}
+
 }

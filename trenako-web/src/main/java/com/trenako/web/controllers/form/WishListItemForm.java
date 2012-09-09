@@ -179,7 +179,7 @@ public class WishListItemForm {
 
 	public WishListItem getItem() {
 		if (item == null) {
-			return new WishListItem();
+			return DEFAULT_ITEM;
 		}
 		return item;
 	}

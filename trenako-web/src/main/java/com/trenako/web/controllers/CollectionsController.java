@@ -36,8 +36,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Collection;
 import com.trenako.entities.CollectionItem;
 import com.trenako.entities.RollingStock;
+import com.trenako.services.AccountsService;
 import com.trenako.services.CollectionsService;
 import com.trenako.services.RollingStocksService;
 import com.trenako.web.controllers.form.CollectionItemForm;
@@ -56,15 +58,18 @@ public class CollectionsController {
 	
 	private final UserContext userContext;
 	private final CollectionsService service;
+	private final AccountsService usersService;
 	private final RollingStocksService rsService;
 	
 	@Autowired
 	public CollectionsController(CollectionsService service,
 			RollingStocksService rsService,
+			AccountsService usersService, 
 			UserContext userContext) {
 		this.service = service;
 		this.rsService = rsService;
 		this.userContext = userContext;
+		this.usersService = usersService;
 	}
 	
 	@InitBinder
@@ -74,6 +79,17 @@ public class CollectionsController {
 	    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 
 	    binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
+	}
+	
+	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
+	public String show(@PathVariable("slug") String slug, ModelMap model) {
+		Collection collection = service.findBySlug(slug);
+		Account owner = usersService.findBySlug(collection.getOwner());
+		
+		model.addAttribute("collection", collection);
+		model.addAttribute("owner", owner);
+		model.addAttribute("editForm", CollectionItemForm.jsForm(messageSource));
+		return "collection/show";
 	}
 	
 	@RequestMapping(value = "/add/{slug}", method = RequestMethod.GET)
@@ -87,22 +103,68 @@ public class CollectionsController {
 		return "collection/add";
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/items", method = RequestMethod.POST)
 	public String addItem(@Valid @ModelAttribute CollectionItemForm form, 
 			BindingResult bindingResult,
 			ModelMap model, 
 			RedirectAttributes redirectAtts) {
 		
+		RollingStock rs = rsService.findBySlug(form.getRsSlug());
+		
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("itemForm", form);
+			CollectionItemForm newForm = CollectionItemForm.newForm(rs, messageSource);
+			model.addAttribute("itemForm", newForm);
+			model.addAttribute("rs", rs);
 			return "collection/add";
 		}
 		
 		Account owner = userContext.getCurrentUser().getAccount();
-		CollectionItem newItem = form.collectionItem(owner);
+		CollectionItem newItem = form.collectionItem(rs, owner);
 		service.addRollingStock(owner, newItem);
 		
-		redirectAtts.addAttribute("slug", newItem.getRollingStock().getSlug());
-		return "redirect:/rollingstocks/{slug}";
+		redirectAtts.addAttribute("slug", owner.getSlug());
+		return "redirect:/collections/{slug}";
+	}
+	
+	@RequestMapping(value = "/items", method = RequestMethod.PUT)
+	public String editItem(@Valid @ModelAttribute CollectionItemForm form, 
+			BindingResult bindingResult,
+			ModelMap model, 
+			RedirectAttributes redirectAtts) {
+		
+		Account owner = userContext.getCurrentUser().getAccount();
+		
+		if (bindingResult.hasErrors()) {
+			redirectAtts.addAttribute("slug", owner.getSlug());
+			return "redirect:/collections/{slug}";
+		}
+		
+		RollingStock rs = rsService.findBySlug(form.getRsSlug());
+		CollectionItem item = form.collectionItem(rs, owner);
+		service.updateItem(owner, item);
+		
+		redirectAtts.addAttribute("slug", owner.getSlug());
+		return "redirect:/collections/{slug}";
+	}
+	
+	@RequestMapping(value = "/items", method = RequestMethod.DELETE)
+	public String removeItem(@Valid @ModelAttribute CollectionItemForm form, 
+			BindingResult bindingResult,
+			ModelMap model, 
+			RedirectAttributes redirectAtts) {
+		
+		Account owner = userContext.getCurrentUser().getAccount();
+		
+		if (bindingResult.hasErrors()) {
+			redirectAtts.addAttribute("slug", owner.getSlug());
+			return "redirect:/collections/{slug}";
+		}
+		
+		RollingStock rs = rsService.findBySlug(form.getRsSlug());
+		CollectionItem item = form.deletedItem(rs, owner);
+		service.removeRollingStock(owner, item);
+		
+		redirectAtts.addAttribute("slug", owner.getSlug());
+		return "redirect:/collections/{slug}";
 	}
 }

@@ -17,13 +17,15 @@
 		<link href="<c:url value="/resources/css/bootstrap.css" />" rel="stylesheet" />
 		<link href="<c:url value="/resources/css/bootstrap-responsive.css" />" rel="stylesheet" />
 		<link href="<c:url value="/resources/css/trenako.css" />" rel="stylesheet" />
+		<link href="<c:url value="/resources/css/jquery-ui-custom.css" />" rel="stylesheet" />
 		
 		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
 		  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 		
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
     	<script type="text/javascript" src="<c:url value="/resources/js/bootstrap.js" />"></script>
     	
     	<script type="text/javascript">
@@ -135,7 +137,7 @@
 						Except where otherwise
 						<a class="subfoot" href="${termsUrl}">noted</a>,
 						content on
-						<span href="http://creativecommons.org" property="cc:attributionName" rel="cc:attributionURL">this site</span> 
+						<strong>this site</strong> 
 						is licensed under a 
 						<a rel="license" href="http://creativecommons.org/licenses/by/3.0/" class="subfoot">
 						Creative Commons Attribution 3.0 License

@@ -112,17 +112,41 @@
 						</p>			
 					</div>				
 					<div class="span4">
+						<s:url var="collUrl" value="/collections/{slug}">
+							<s:param name="slug" value="${user.account.slug}"></s:param>
+						</s:url>
 						<h2><s:message code="you.from.collection.title"/></h2>
 						<p>
-							<a href="#" class="btn btn-danger">
+							<a href="${collUrl}" class="btn btn-danger">
 								<i class="icon-tags icon-white"></i> <s:message code="you.manage.collection.button"/>
 							</a>
 						</p>
-						<ul class="unstyled">
+						
+						<hr/>
+						<h4>Rolling stock in your collection</h4>						
+						
 						<c:forEach var="item" items="${info.collectionItems}">
-							<li>${item.itemSlug} ${item.itemName} ${item.addedAt}</li>
+						<div class="row-fluid" style="margin-bottom: 15px;">
+							<div class="span5 offset1">
+								<s:url value="/rollingstocks/{slug}" var="showUrl">
+									<s:param name="slug" value="${item.itemSlug}" />
+								</s:url>
+								<s:url value="/images/th_rollingstock_{slug}" var="imgUrl">
+									<s:param name="slug" value="${item.itemSlug}" />
+								</s:url>
+								<a href="${showUrl}" class="thumbnail">
+									<img src="${imgUrl}" alt="Not found" width="200px">
+							    </a>
+							</div>
+							<div class="span6">
+								<h5>${item.itemName}</h5>
+								
+								Added to your <a href="${collUrl}">${item.listName}</a>
+								<br/>
+								<strong><tk:period since="${item.addedAt}"/></strong>
+							</div>
+						</div>
 						</c:forEach>
-						</ul>
 
 					</div>
 					<div class="span4">
@@ -136,11 +160,34 @@
 							</a>
 						</p>
 
-						<ul class="unstyled">
+						<hr/>
+						<h4>Rolling stock in your wish lists</h4>						
+						
 						<c:forEach var="item" items="${info.wishListItems}">
-							<li>${item.itemSlug} ${item.itemName} ${item.addedAt}</li>
+						<div class="row-fluid" style="margin-bottom: 15px;">
+							<div class="span5 offset1">
+								<s:url value="/rollingstocks/{slug}" var="showUrl">
+									<s:param name="slug" value="${item.itemSlug}" />
+								</s:url>
+								<s:url value="/images/th_rollingstock_{slug}" var="imgUrl">
+									<s:param name="slug" value="${item.itemSlug}" />
+								</s:url>
+								<a href="${showUrl}" class="thumbnail">
+									<img src="${imgUrl}" alt="Not found" width="200px">
+							    </a>
+							</div>
+							<div class="span6">
+								<h5>${item.itemName}</h5>
+								<s:url var="listUrl" value="/wishlists/{slug}">
+									<s:param name="slug" value="${item.listSlug}"></s:param>
+								</s:url>
+								
+								Added to the wish list "<a href="${listUrl}">${item.listName}</a>"
+								<br/>
+								<strong><tk:period since="${item.addedAt}"/></strong>
+							</div>
+						</div>
 						</c:forEach>
-						</ul>
 					</div>		
 				</div>
 			</div>

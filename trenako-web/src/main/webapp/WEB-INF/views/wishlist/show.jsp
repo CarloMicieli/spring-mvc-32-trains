@@ -174,7 +174,7 @@
 										<small><em>Added</em> <strong><tk:period since="${item.addedAt}"/></strong></small>
 									</p>
 									
-									<dl class="dl-horizontal">
+									<dl>
 										<dt>Priority:</dt>
 										<dd><tk:evalValue type="Priority" expression="${item.priority}"/></dd>
 										<dt>Price [<a class="priceHelp" href="#" rel="tooltip" data-placement="right">?</a>]:</dt>

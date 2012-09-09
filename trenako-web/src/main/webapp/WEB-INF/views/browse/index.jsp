@@ -20,8 +20,8 @@
 		</ul>
 	
 		<div class="page-header">
-			<h1><s:message code="browse.index.header.title"/></h1>
-			<small><s:message code="browse.index.header.subtitle"/></small>
+			<h1><s:message code="browse.index.header.title"/>
+			<small><s:message code="browse.index.header.subtitle"/></small></h1>
 		</div>
 		<div class="row-fluid">
 			<div class="span1"></div>

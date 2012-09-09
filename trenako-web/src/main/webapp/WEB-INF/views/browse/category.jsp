@@ -24,8 +24,7 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="page-header">
-				<h1>${category.label}</h1>
-				<small>${category.description}</small>
+				<h1>${category.label} <small>${category.description}</small></h1>
 			</div>
 		</div>
 	</div>

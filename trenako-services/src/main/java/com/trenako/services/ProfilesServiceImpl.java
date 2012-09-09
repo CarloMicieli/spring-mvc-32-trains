@@ -32,7 +32,7 @@ import com.trenako.services.view.ProfileOptions;
 import com.trenako.services.view.ProfileView;
 
 /**
- * 
+ * It represents the concrete implementation for the {@code ProfileService} interface.
  * @author Carlo Micieli
  *
  */
@@ -63,7 +63,7 @@ public class ProfilesServiceImpl implements ProfilesService {
 			collection = new Collection(owner);
 		}
 		
-		List<WishList> lists = (List<WishList>) wishLists.findByOwner(owner);
+		List<WishList> lists = (List<WishList>) wishLists.findAllByOwner(owner, 10);
 		if (lists == null) {
 			lists = Collections.emptyList();
 		}

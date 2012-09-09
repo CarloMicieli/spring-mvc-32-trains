@@ -107,9 +107,6 @@ public class CollectionItem {
 	 * @return the id
 	 */
 	public String getItemId() {
-		if (itemId == null) {
-			itemId = itemId(getRollingStock(), getAddedAt());
-		}
 		return itemId;
 	}
 
@@ -174,6 +171,9 @@ public class CollectionItem {
 	 * @return the price
 	 */
 	public Money getPrice() {
+		if (price == null) {
+			return Money.nullMoney();
+		}
 		return price;
 	}
 

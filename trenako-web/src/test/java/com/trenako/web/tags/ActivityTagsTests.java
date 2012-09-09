@@ -90,7 +90,7 @@ public class ActivityTagsTests extends AbstractSpringTagsTest {
 		
 		String expected = "\n<a href=\"/trenako-web/users/bob\">Bob</a> add-collection "+ 
 				"\n<a href=\"/trenako-web/rollingstocks/acme-123456\">ACME 123456</a> collection"+
-				"\n<br/><strong>interval.years.more.label</strong>";
+				"\n<br/><strong>interval.minutes.one.label</strong>";
 		assertEquals(expected, output);
 	}
 	

@@ -168,7 +168,7 @@ public class Activity {
 				ActivityVerb.ADD_COLLECTION, 
 				ActivityObject.rsObject(item.getRollingStock()), 
 				ActivityContext.collectionContext(collection), 
-				item.getAddedAt());
+				new Date());
 	}
 	
 	/**

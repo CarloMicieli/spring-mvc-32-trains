@@ -31,8 +31,8 @@
 							<s:param name="iso" value="${railway.country}"></s:param>
 						</s:url>
 						<img src="${flagUrl}" alt="${railway.country}"/>
+						<small>${railway.companyName}</small>
 					</h1>
-					<small>${railway.companyName}</small>
 				</div>
 			</div>
 			<div class="span8">

@@ -98,7 +98,7 @@ public class ProfilesServiceTests {
 	@Test
 	public void shouldFillProfileViewForAccounts() {
 		when(collectionsRepo.findByOwner(eq(owner))).thenReturn(collection());
-		when(wishListsRepo.findByOwner(eq(owner))).thenReturn(wishLists());
+		when(wishListsRepo.findAllByOwner(eq(owner), eq(10))).thenReturn(wishLists());
 		when(activityStream.userActivity(eq(owner), eq(10))).thenReturn(userActivity());
 		
 		ProfileView pv = service.findProfileView(owner);

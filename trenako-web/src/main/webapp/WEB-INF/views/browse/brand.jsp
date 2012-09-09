@@ -25,8 +25,7 @@
 		<div class="row-fluid">
 			<div class="span2">
 				<div class="page-header">
-					<h1>${brand.name}</h1>
-					<small>${brand.companyName}</small>
+					<h1>${brand.name} <small>${brand.companyName}</small></h1>
 				</div>
 			</div>
 			<div class="span9">

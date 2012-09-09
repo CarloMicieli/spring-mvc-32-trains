@@ -24,8 +24,7 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="page-header">
-				<h1 style="font-family: verdana; font-size: 36px">${era.label}</h1>
-				<small>${era.description}</small>
+				<h1 style="font-family: verdana; font-size: 36px">${era.label} <small>${era.description}</small></h1>
 			</div>
 		</div>
 	</div>

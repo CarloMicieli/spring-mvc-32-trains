@@ -19,8 +19,8 @@
 		</ul>
 	
 		<div class="page-header">
-			<h1><s:message code="browse.railways.header.title" /></h1>
-			<small><s:message code="browse.railways.header.subtitle" /></small>
+			<h1><s:message code="browse.railways.header.title" />
+			<small><s:message code="browse.railways.header.subtitle" /></small></h1>
 		</div>
 	
 		<c:forEach var="railway" items="${railways}">

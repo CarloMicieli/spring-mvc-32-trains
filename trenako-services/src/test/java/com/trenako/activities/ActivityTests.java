@@ -61,9 +61,9 @@ public class ActivityTests {
 		assertEquals("ACME 123456", a.getObject().getDisplayName());
 		assertEquals("/rollingstocks/acme-123456", a.getObject().getUrl());
 		assertEquals("rollingStock", a.getObject().getObjectType());
-		assertEquals(date("2012/02/02"), a.getRecorded());
 		assertEquals("collection", a.getContext().getContextType());
 		assertEquals("bob", a.getContext().getName());
+		assertNotNull(a.getRecorded());
 	}
 	
 	@Test

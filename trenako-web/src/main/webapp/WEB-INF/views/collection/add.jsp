@@ -43,7 +43,7 @@
 				</div>
 
 				<div class="span9">
-					<s:url var="saveUrl" value="/collections"/>
+					<s:url var="saveUrl" value="/collections/items"/>
 					<form:form class="form-horizontal" modelAttribute="itemForm" method="POST" action="${saveUrl}">
 						<fieldset>
 							<c:if test="${not empty message}">
@@ -57,7 +57,9 @@
 							</div>
 							</c:if>
 
-							<input type="hidden" id="rs.slug" value="${rs.slug}" />
+							<input type="hidden" id="rsSlug" name="rsSlug" value="${rs.slug}" />
+							<input type="hidden" id="item.rollingStock.slug" value="${rs.slug}" />
+							<input type="hidden" id="item.rollingStock.label" value="${rs.label}" />
 
 							<s:bind path="itemForm.item.addedAt">
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
@@ -65,20 +67,20 @@
 									<s:message code="collection.addedAt.label"/>:
 								</form:label>
 								<div class="controls">
-									<form:input path="item.addedAt" type="date" cssClass="input-xlarge focused"/>
+									<form:input path="item.addedAt" cssClass="input-xlarge focused"/>
 									<form:errors path="item.addedAt" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
 							</s:bind>
 
-							<s:bind path="itemForm.item.price">
+							<s:bind path="itemForm.price">
 							<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-								<form:label path="item.price" cssClass="control-label">
+								<form:label path="price" cssClass="control-label">
 									<s:message code="collection.price.label"/>:
 								</form:label>
 								<div class="controls">
-									<form:input path="item.price" type="number" min="0" step="0.25" cssClass="input-xlarge focused" />
-									<form:errors path="item.price" element="span" cssClass="help-inline"/>
+									<form:input path="price" type="number" min="0" step="0.25" cssClass="input-xlarge focused" />
+									<form:errors path="price" element="span" cssClass="help-inline"/>
 								</div>
 							</div>
 							</s:bind>
@@ -91,8 +93,8 @@
 								<div class="controls">
 									<form:select path="item.condition">
 										<s:message code="collection.conditions.list.label" var="conditionsLabel"/>
-										<form:option value="-1" label="${conditionsLabel}"/>
-										<form:options items="${itemForm.conditionsList}" />
+										<form:option value="" label="${conditionsLabel}"/>
+										<form:options items="${itemForm.conditionsList}" itemValue="key" itemLabel="label" />
 									</form:select>
 									<form:errors path="item.condition" element="span" cssClass="help-inline"/>
 								</div>
@@ -126,5 +128,11 @@
 				</div>
 			</div>
 		</div>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#item\\.addedAt").datepicker({ dateFormat: "yy-mm-dd" });
+			});
+		</script>
 	</body>
 </html>

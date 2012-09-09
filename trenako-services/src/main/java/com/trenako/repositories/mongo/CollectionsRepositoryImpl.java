@@ -101,6 +101,8 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 		
 		Update upd = new Update()
 			.set("owner", collection.getOwner())
+			.set("slug", collection.getSlug())
+			.set("visibility", collection.getVisibility())
 			.set("lastModified", now())
 			.push("items", item)
 			.inc("categories." + CategoriesCount.getKey(item.getCategory()), 1);

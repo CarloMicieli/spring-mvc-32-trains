@@ -57,7 +57,7 @@ public class CollectionItemFormTests {
 		item.setCondition("new");
 		item.setAddedAt(date("2012/09/01"));
 		
-		CollectionItem newItem = form.collectionItem(georgeStephenson());
+		CollectionItem newItem = form.collectionItem(rollingStock(), georgeStephenson());
 		
 		assertEquals("My notes", newItem.getNotes());
 		assertEquals("new", newItem.getCondition());

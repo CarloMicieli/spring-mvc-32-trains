@@ -140,7 +140,8 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 		verify(mongo(), times(1)).upsert(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
 		assertEquals("{ \"owner\" : \"george-stephenson\"}", queryObject(argQuery).toString());
 		
-		String expected = "{ \"$set\" : { \"owner\" : \"george-stephenson\" , \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}} , "+
+		String expected = "{ \"$set\" : { \"owner\" : \"george-stephenson\" , \"slug\" : \"george-stephenson\" , \"visibility\" : \"public\" , "+
+				"\"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}} , "+
 				"\"$push\" : { \"items\" : { \"itemId\" : \"2012-01-01_acme-123456\" , "+
 				"\"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
 				"\"price\" : { \"val\" : 10000 , \"cur\" : \"USD\"} , \"condition\" : \"new\" , \"notes\" : \"My notes\" , "+

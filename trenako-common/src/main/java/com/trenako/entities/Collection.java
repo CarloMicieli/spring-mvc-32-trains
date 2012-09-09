@@ -72,6 +72,7 @@ public class Collection {
 	@Valid
 	private List<CollectionItem> items;
 
+	private String notes;
 	private CategoriesCount categories;
 	private String visibility;
 	private Date lastModified;
@@ -257,6 +258,14 @@ public class Collection {
 		return getOwner().equals(owner(user));
 	}
 	
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
 	@Override
 	public String toString() {
 		return new StringBuilder()
