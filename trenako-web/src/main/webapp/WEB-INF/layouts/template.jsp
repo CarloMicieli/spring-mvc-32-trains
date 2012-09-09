@@ -12,24 +12,11 @@
 		<meta name="author" content="">
 		
 		<title><decorator:title default="Trenako"/></title>	
+		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 		<link href="<c:url value="/resources/css/bootstrap.css" />" rel="stylesheet" />
 		<link href="<c:url value="/resources/css/bootstrap-responsive.css" />" rel="stylesheet" />
-		
-		<style>
-      	body {
-        	padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      	}
-      	.brand {
-      		color: orange;
-      		font: normal normal normal 24px/24px Lobster,Georgia,Times,'Times New Roman',serif;
-      	}
-      	.footer {
-     		border-top: 1px solid #E5E5E5;
-			background-color: #EEE;
-		}
-    	</style>
-		
+		<link href="<c:url value="/resources/css/trenako.css" />" rel="stylesheet" />
 		
 		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
@@ -122,7 +109,7 @@
 
 		<footer class="footer">
 			<div class="container">
-				<div class="row-fluid" style="margin: 10px;">
+				<div class="row-fluid">
 					<div class="span6">
 						<p>
 							<s:url var="aboutUrl" value="/home/explore"/>
