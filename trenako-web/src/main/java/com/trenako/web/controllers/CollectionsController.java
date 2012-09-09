@@ -77,7 +77,6 @@ public class CollectionsController {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	    dateFormat.setLenient(false);
 	    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
-
 	    binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
 	}
 	

@@ -20,6 +20,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import com.trenako.mapping.WeakDbRef;
@@ -66,8 +67,13 @@ public class CollectionItem {
 	 * @param rs the rolling stock
 	 * @param addedAt the date
 	 */
+	public CollectionItem(RollingStock rs) {
+		this.rollingStock = rollingStock(rs);
+		this.category = rs.getCategory();
+	}
+	
 	public CollectionItem(RollingStock rs, Date addedAt) {
-		this(rs, addedAt, null, null, null);
+		this(rollingStock(rs), rs.getCategory(), addedAt, null, null, null);
 	}
 	
 	/**
@@ -223,7 +229,11 @@ public class CollectionItem {
 		if (!(obj instanceof CollectionItem)) return false;
 
 		CollectionItem other = (CollectionItem) obj;
-		return this.getItemId().equals(other.getItemId());
+		return new EqualsBuilder()
+			.append(this.itemId, other.itemId)
+			.append(this.rollingStock, other.rollingStock)
+			.append(this.addedAt, other.addedAt)
+			.isEquals();
 	}
 	
 	private static String itemId(WeakDbRef<RollingStock> rs, Date addedAt) {

@@ -19,8 +19,6 @@ import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 import static com.trenako.test.TestDataBuilder.*;
 
-import java.math.BigDecimal;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -146,16 +144,19 @@ public class CollectionsControllerTests {
 	}
 	
 	CollectionItemForm newForm() {
-		return new CollectionItemForm(newItem(), BigDecimal.valueOf(0), BigDecimal.valueOf(0), null);
+		return CollectionItemForm.newForm(rollingStock(), null);
 	}
 	
 	CollectionItemForm postedForm() {
+		CollectionItemForm form = CollectionItemForm.newForm(rollingStock(), null);
 		CollectionItem item = new CollectionItem();
 		item.setItemId("item-id");
 		item.setAddedAt(date("2012/09/01"));
 		item.setCondition("new");
 		item.setNotes("My notes");
-		return new CollectionItemForm(item, BigDecimal.valueOf(0), BigDecimal.valueOf(0), null);
+		
+		form.setItem(item);
+		return form;
 	}
 	
 	CollectionItem newItem() {

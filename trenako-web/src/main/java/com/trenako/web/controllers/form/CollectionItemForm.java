@@ -16,7 +16,6 @@
 package com.trenako.web.controllers.form;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
@@ -33,7 +32,7 @@ import com.trenako.values.Condition;
 import com.trenako.values.LocalizedEnum;
 
 /**
- * 
+ * It represents a web form for {@code CollectionItem}s.
  * @author Carlo Micieli
  *
  */
@@ -46,13 +45,16 @@ public class CollectionItemForm {
 	
 	@Range(min = 0, max = 9999, message = "collectionItem.price.range.notmet")
 	private BigDecimal price;
-	
+
 	private BigDecimal previousPrice;
 	
 	private boolean alreadyInCollection;
 	
 	private Iterable<LocalizedEnum<Condition>> conditionsList;
 	
+	/**
+	 * Creates a new empty {@code CollectionItemForm}.
+	 */
 	public CollectionItemForm() {
 		item = new CollectionItem();
 	}
@@ -61,36 +63,44 @@ public class CollectionItemForm {
 		this.conditionsList = conditionsList;
 	}
 	
-	public CollectionItemForm(
+	private CollectionItemForm(
+			String rsSlug,
 			CollectionItem item, 
 			BigDecimal price,
 			BigDecimal previousPrice,
 			Iterable<LocalizedEnum<Condition>> conditionsList) {
+		this.rsSlug = rsSlug;
 		this.item = item;
 		this.conditionsList = conditionsList;
 		this.price = price;
 		this.previousPrice = previousPrice;
 	}
 
-	public static CollectionItemForm jsForm(
-			MessageSource messageSource) {
-		return new CollectionItemForm(LocalizedEnum.list(Condition.class, messageSource, null));
+	/**
+	 * Creates a new form for Javascript calls.
+	 * @param messageSource
+	 * @return
+	 */
+	public static CollectionItemForm jsForm(MessageSource messageSource) {
+		return new CollectionItemForm(
+				LocalizedEnum.list(Condition.class, messageSource, null));
 	}
 	
+	/**
+	 * Creates a new form for {@code CollectionItemForm} insertion.
+	 * @param rs the rolling stock
+	 * @param messageSource the message source
+	 * @return the new form
+	 */
 	public static CollectionItemForm newForm(
 			RollingStock rs, 
 			MessageSource messageSource) {
-		return newForm(rs, new Date(), messageSource);
-	}
-	
-	public static CollectionItemForm newForm(
-			RollingStock rs, 
-			Date addedAt,
-			MessageSource messageSource) {
-
-		CollectionItem newItem = new CollectionItem(rs, addedAt);	
+		
+		CollectionItem newItem = new CollectionItem(rs);
 		BigDecimal price = Money.moneyValue(newItem.getPrice());
-		return new CollectionItemForm(newItem,
+		return new CollectionItemForm(
+				rs.getSlug(),
+				newItem,
 				price,
 				price,
 				LocalizedEnum.list(Condition.class, messageSource, null));

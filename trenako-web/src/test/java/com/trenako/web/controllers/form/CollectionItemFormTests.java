@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 import java.math.BigDecimal;
 
 import org.junit.Test;
+import org.springframework.context.MessageSource;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.CollectionItem;
@@ -34,22 +35,27 @@ import com.trenako.entities.RollingStock;
  */
 public class CollectionItemFormTests {
 
+	private MessageSource messageSource;
+	
 	@Test
-	public void shouldInitializeFormForCollectionItemsCreation() {
-		CollectionItemForm form = CollectionItemForm.newForm(rollingStock(), fulldate("2012/07/12 21:12:44.002"), null);
+	public void shouldCreateFormsForCollectionItemsCreations() {
+		CollectionItemForm form = CollectionItemForm.newForm(rollingStock(), messageSource);
 		
 		assertEquals("[(new), (pre-owned)]", form.getConditionsList().toString());
+		assertEquals("acme-123456", form.getRsSlug());
 		assertEquals("{slug: acme-123456, label: ACME 123456}", form.getItem().getRollingStock().toCompleteString());
-		assertEquals("electric-locomotives", form.getItem().getCategory());
+		assertEquals(rollingStock().getCategory(), form.getItem().getCategory());
+		assertEquals(BigDecimal.valueOf(0), form.getPrice());
+		assertEquals(BigDecimal.valueOf(0), form.getPreviousPrice());
 		assertNull(form.getItem().getNotes());
 		assertNull(form.getItem().getCondition());
-		assertEquals(fulldate("2012/07/12 21:12:44.002"), form.getItem().getAddedAt());
-		assertEquals("2012-07-12_acme-123456", form.getItem().getItemId());
+		assertNull(form.getItem().getAddedAt());
+		assertNull(form.getItem().getItemId());
 	}
 	
 	@Test
 	public void shouldReturnCollectionItemsToBeAdded() {
-		CollectionItemForm form = CollectionItemForm.newForm(rollingStock(), fulldate("2012/07/12 21:12:44.002"), null);
+		CollectionItemForm form = CollectionItemForm.newForm(rollingStock(), messageSource);
 		
 		form.setPrice(BigDecimal.valueOf(100));
 		CollectionItem item = form.getItem();
@@ -66,6 +72,27 @@ public class CollectionItemFormTests {
 		assertEquals("$100.00", newItem.getPrice().toString());
 	}
 	
+	@Test
+	public void shouldReturnCollectionItemsToBeDeleted() {
+		CollectionItemForm form = CollectionItemForm.newForm(rollingStock(), messageSource);
+		CollectionItem item = new CollectionItem();
+		item.setItemId("2012-09-01_acme-123456");
+		form.setItem(item);
+		
+		CollectionItem deletedItem = form.deletedItem(rollingStock(), georgeStephenson());
+		
+		assertEquals("2012-09-01_acme-123456", deletedItem.getItemId());
+		assertEquals(rollingStock().getCategory(), deletedItem.getCategory());
+	}
+	
+	@Test
+	public void shuoldCreateFormsForJavascriptCalls() {
+		CollectionItemForm form = CollectionItemForm.jsForm(messageSource);
+		
+		assertEquals("[(new), (pre-owned)]", form.getConditionsList().toString());
+		assertNull("Rolling stock slug is not null", form.getRsSlug());
+		assertNull("Collection item is not null", form.getItem());
+	}
 	
 	RollingStock rollingStock() {
 		RollingStock rs = new RollingStock.Builder(acme(), "123456")
