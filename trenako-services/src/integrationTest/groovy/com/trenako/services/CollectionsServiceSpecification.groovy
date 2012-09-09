@@ -189,6 +189,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		def date = new GregorianCalendar(2010, Calendar.JULY, 22, 1, 30, 00).time
 		def rs = new WeakDbRef<RollingStock>(slug: 'acme-123457', label: 'ACME 123457')
 		def newItem = new CollectionItem(
+			itemId: '2010-07-22_acme-123457',
 			rollingStock: rs, 
 			price: new Money(1000, 'USD'), 
 			condition: 'new', 

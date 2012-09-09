@@ -132,7 +132,7 @@ public class CollectionsControllerTests {
 	@Test
 	public void shouldDeleteItemsFromCollections() {
 		ModelMap model = new ModelMap();
-		CollectionItem item = postedForm().collectionItem(rollingStock(), owner());
+		CollectionItem item = postedForm().deletedItem(rollingStock(), owner());
 		
 		when(mockResults.hasErrors()).thenReturn(false);
 		when(rsService.findBySlug(eq(postedForm().getRsSlug()))).thenReturn(rollingStock());
@@ -151,6 +151,7 @@ public class CollectionsControllerTests {
 	
 	CollectionItemForm postedForm() {
 		CollectionItem item = new CollectionItem();
+		item.setItemId("item-id");
 		item.setAddedAt(date("2012/09/01"));
 		item.setCondition("new");
 		item.setNotes("My notes");

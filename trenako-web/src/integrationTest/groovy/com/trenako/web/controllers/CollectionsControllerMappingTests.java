@@ -76,9 +76,10 @@ public class CollectionsControllerMappingTests extends AbstractSpringControllerT
 	public void shouldShowCollections() throws Exception {
 		mockMvc().perform(get("/collections/{slug}", "bob"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(2))
+			.andExpect(model().size(3))
 			.andExpect(model().attributeExists("collection"))
 			.andExpect(model().attributeExists("owner"))
+			.andExpect(model().attributeExists("editForm"))
 			.andExpect(forwardedUrl(view("collection", "show")));
 	}
 	
