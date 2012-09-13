@@ -249,6 +249,6 @@ task projectDoc(type: Javadoc, group: 'Documentation', description: 'Generates a
 
 // wrapper task to create the download script
 task wrapper(type: Wrapper, group: 'Gradle wrapper', description: 'Gradle will be automatically downloaded and used to run the build.') {
-	gradleVersion = '1.1'
+	gradleVersion = '1.2'
 }
 
