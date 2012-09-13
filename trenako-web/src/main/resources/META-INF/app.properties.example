@@ -1,0 +1,13 @@
+#
+# APPLICATION PROPERTIES FILE
+# Rename this file => "app.properties"
+#
+
+#
+# MongoDb settings
+#
+mongodb.dbname=trenako
+mongodb.host=127.0.0.1 
+mongodb.port=27017
+mongodb.username=admin
+mongodb.password=secret

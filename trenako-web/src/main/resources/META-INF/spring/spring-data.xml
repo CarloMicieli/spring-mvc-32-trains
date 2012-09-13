@@ -3,12 +3,17 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xmlns:cloud="http://schema.cloudfoundry.org/spring"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-3.1.xsd
 		http://www.springframework.org/schema/data/mongo
 	   	http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
 		http://schema.cloudfoundry.org/spring 
 		http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd">
+
+	<context:property-placeholder location="classpath:META-INF/app.properties"/>
 
 	<mongo:mapping-converter id="converter" db-factory-ref="mongoDbFactory" />
 	
@@ -23,8 +28,10 @@
 	</beans>
 	<beans profile="default">
 		<mongo:db-factory id="mongoDbFactory" 
-			dbname="trenakodb" 
-			host="127.0.0.1" 
-			port="27017" />
+			dbname="${mongodb.dbname}"
+			host="${mongodb.host}" 
+			port="${mongodb.port}"
+			username="${mongodb.username}"
+			password="${mongodb.password}"/>
 	</beans>
 </beans>
