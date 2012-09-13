@@ -50,7 +50,7 @@ public class OptionsServiceImpl implements OptionsService {
 	
 	@Override
 	public Iterable<Option> findByFamily(OptionFamily family) {
-		return repo.findByFamily(family);
+		return repo.findByFamily(family.label());
 	}
 	
 	@Override

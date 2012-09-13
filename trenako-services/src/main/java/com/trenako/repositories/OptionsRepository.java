@@ -19,7 +19,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.trenako.entities.Option;
-import com.trenako.values.OptionFamily;
 
 /**
  * The interface for the options repository.
@@ -40,5 +39,5 @@ public interface OptionsRepository extends MongoRepository<Option, ObjectId> {
 	 * @param family the family.
 	 * @return the option documents.
 	 */
-	Iterable<Option> findByFamily(OptionFamily family);
+	Iterable<Option> findByFamily(String family);
 }

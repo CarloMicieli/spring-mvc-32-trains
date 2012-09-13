@@ -156,7 +156,7 @@ public class RollingStockTests {
 			.option(new Option("NEM-651", OptionFamily.DCC_INTERFACE))
 			.build();
 		assertEquals(1, rs.getOptions().size());
-		assertEquals("{DCC_INTERFACE=NEM-651}", rs.getOptions().toString());
+		assertEquals("{dcc-interface=NEM-651}", rs.getOptions().toString());
 	}
 	
 	@Test

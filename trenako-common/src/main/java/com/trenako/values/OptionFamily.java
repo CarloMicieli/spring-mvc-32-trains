@@ -45,8 +45,8 @@ public enum OptionFamily {
 	 * Returns the key value for the current option family.
 	 * @return the key value
 	 */
-	public String keyValue() {
-		return name().toLowerCase().replace('_', '-');
+	public String label() {
+		return LocalizedEnum.buildKey(this);
 	}
 
 	/**
@@ -55,7 +55,6 @@ public enum OptionFamily {
 	 * @return a value from OptionFamily enumeration.
 	 */
 	public static OptionFamily parse(String family) {
-		String f = family.toUpperCase().replace('-', '_');
-		return OptionFamily.valueOf(f);
+		return LocalizedEnum.parseString(family, OptionFamily.class);
 	}	
 }

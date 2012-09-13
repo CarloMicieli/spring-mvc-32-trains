@@ -31,7 +31,7 @@ public class OptionFamilyTests {
 	@Test
 	public void shouldProduceKeyValues() {
 		OptionFamily of = OptionFamily.DCC_INTERFACE;
-		assertEquals("dcc-interface", of.keyValue());
+		assertEquals("dcc-interface", of.label());
 	}
 	
 	@Test

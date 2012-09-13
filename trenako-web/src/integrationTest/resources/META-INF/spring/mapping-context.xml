@@ -21,6 +21,10 @@
         <constructor-arg name="classToBeMocked" value="com.trenako.services.BrandsService" />
     </bean>
     
+     <bean id="optionsService" class="com.trenako.web.test.MockitoFactoryBean">
+        <constructor-arg name="classToBeMocked" value="com.trenako.services.OptionsService" />
+    </bean>
+    
  	<bean id="imagesService" class="com.trenako.web.test.MockitoFactoryBean">
         <constructor-arg name="classToBeMocked" value="com.trenako.web.images.WebImageService" />
     </bean>

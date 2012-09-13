@@ -39,8 +39,10 @@ public class Option {
 	@NotBlank(message = "option.name.required")
 	private String name;
 	
+	private byte[] image;
+	
 	@NotNull(message = "option.family.required")
-	private OptionFamily family;
+	private String family;
 	
 	/**
 	 * Creates an empty rolling stock {@code Option}.
@@ -55,7 +57,19 @@ public class Option {
 	 */
 	public Option(String name, OptionFamily family) {
 		this.name = name;
+		this.family = optionFamiliy(family);
+	}
+	
+	/**
+	 * Creates a new rolling stock {@code Option}.
+	 * @param name the option name
+	 * @param family the option family
+	 * @param image
+	 */
+	public Option(String name, String family, byte[] image) {
+		this.name = name;
 		this.family = family;
+		this.image = image;
 	}
 	
 	/**
@@ -94,7 +108,7 @@ public class Option {
 	 * Returns the option family.
 	 * @return the family
 	 */
-	public OptionFamily getFamily() {
+	public String getFamily() {
 		return family;
 	}
 
@@ -102,20 +116,26 @@ public class Option {
 	 * Sets the option family.
 	 * @param family the family
 	 */
-	public void setFamily(OptionFamily family) {
+	public void setFamily(String family) {
 		this.family = family;
 	}
+	
+	public OptionFamily getOptionFamily() {
+		return OptionFamily.parse(family);
+	}
+	
+	public byte[] getImage() {
+		return image;
+	}
 
-	/**
-	 * Indicates whether some other object is "equal to" this one.
-	 * @param obj the reference object with which to compare
-	 * @return {@code true} if this object is the same as the obj argument; 
-	 * {@code false} otherwise
-	 */
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
-		if( this==obj ) return true;
-		if( !(obj instanceof Option) ) return false;
+		if (this == obj) return true;
+		if (!(obj instanceof Option)) return false;
 		
 		Option other = (Option)obj;
 		return new EqualsBuilder()
@@ -124,10 +144,6 @@ public class Option {
 			.isEquals();
 	}
 	
-	/**
-	 * Converts the object to a string.
-	 * @return a string representation of this class object.
-	 */
 	@Override
 	public String toString() {
 		return new StringBuilder()
@@ -136,5 +152,9 @@ public class Option {
 			.append(family)
 			.append(")")
 			.toString();
-	}	
+	}
+	
+	private static String optionFamiliy(OptionFamily of) {
+		return of.label();
+	}
 }

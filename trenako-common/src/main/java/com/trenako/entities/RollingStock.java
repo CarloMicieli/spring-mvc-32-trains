@@ -260,7 +260,7 @@ public class RollingStock implements DbReferenceable {
 		}
 		
 		public Builder option(Option opt) {
-			return option(opt.getFamily().name(), opt.getName());
+			return option(opt.getFamily(), opt.getName());
 		}
 		
 		public Builder option(String family, String opt) {
@@ -836,6 +836,6 @@ public class RollingStock implements DbReferenceable {
 	}
 	
 	private String optionsKey(Option opt) {
-		return opt.getFamily().name();
+		return opt.getOptionFamily().name();
 	}
 }

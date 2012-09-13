@@ -63,7 +63,7 @@ public class OptionsServiceTests {
 	@Test
 	public void shouldFindByFamily() {
 		service.findByFamily(OptionFamily.DCC_INTERFACE);
-		verify(repo, times(1)).findByFamily(eq(OptionFamily.DCC_INTERFACE));
+		verify(repo, times(1)).findByFamily(eq(OptionFamily.DCC_INTERFACE.label()));
 	}
 
 	@Test
