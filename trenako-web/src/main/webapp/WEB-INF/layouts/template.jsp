@@ -134,7 +134,7 @@
 					</div>
 					<div class="span2" style="text-align: center">
 						<ul class="thumbnails">
-  							<li class="span4">
+  							<li class="span6">
 								<a href="https://openshift.redhat.com" class="thumbnail" target="_blank">
 									<img src="<c:url value="/resources/img/static/openshift.png" />" alt="OpenShift"/>
 								</a>
