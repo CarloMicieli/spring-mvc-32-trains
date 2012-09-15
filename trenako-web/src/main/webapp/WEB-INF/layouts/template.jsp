@@ -115,11 +115,16 @@
 				<div class="row-fluid">
 					<div class="span7">
 						<p>
-							<s:url var="aboutUrl" value="/home/explore"/>
+							<s:url var="aboutUrl" value="/home/about"/>
+							<s:url var="exploreUrl" value="/home/explore"/>
 							<s:url var="devUrl" value="/home/developers"/>
 							<s:url var="privacyUrl" value="/home/privacy"/>
 							<s:url var="termsUrl" value="/home/terms"/>
-							<a href="${aboutUrl}">About us</a> | <a href="${devUrl}">Developers</a> | <a href="${termsUrl}">Terms of use</a> | <a href="${privacyUrl}">Privacy</a>
+							<a href="${aboutUrl}"><s:message code="home.about.us.label"/></a> | 
+							<a href="${exploreUrl}"><s:message code="home.explore.label"/></a> | 
+							<a href="${devUrl}"><s:message code="home.developers.label"/></a> | 
+							<a href="${termsUrl}"><s:message code="home.terms.label"/></a> | 
+							<a href="${privacyUrl}"><s:message code="home.privacy.label"/></a>
 							<br/>
 							<s:message code="footer.designed.built.label"/> <a href="https://twitter.com/#!/chuckmiskyes" target="_blank">@chuckmiskyes</a>.
 							<s:message code="footer.source.code.label"/> <a href="https://github.com/CarloMicieli/trenako" target="_blank">GitHub</a>.

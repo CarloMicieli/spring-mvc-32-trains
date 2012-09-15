@@ -3,7 +3,7 @@
 
 <html>
 <head>
-	<title><s:message code="home.explore.title" text="explore"/></title>
+	<title><s:message code="home.explore.title"/></title>
 	<meta name="home" content="active"/>
 </head>
 
@@ -14,12 +14,12 @@
 			<s:url value="/home" var="homeUrl"/>
 	    	<a href="${homeUrl}"><s:message code="home.title" text="Home"/></a> <span class="divider">/</span>
 		</li>
-	  	<li class="active"><s:message code="home.explore.title" text="Explore"/></li>
+	  	<li class="active"><s:message code="home.explore.title"/></li>
 	</ul>
 
 	<div class="page-header">
 		<h1>
-			<s:message code="home.explore.header.title" text="explore" />
+			<s:message code="home.explore.header.title"/>
 			<small><s:message code="home.explore.header.subtitle" text="Discover trenako.com" /></small>
 		</h1>
 	</div>
@@ -95,7 +95,8 @@
 		<br>
 		<div class="well">
 			<h3>
-				Ready to start? Sign up <a href="#">here</a> (it is easy and free!)	
+				<s:url var="signupUrl" value="/auth/signup"/>
+				Ready to start? Sign up <a href="${signupUrl}">here</a> (it is easy and free!)	
 			</h3>
 		</div>
 	</div>

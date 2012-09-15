@@ -68,6 +68,11 @@ public class HomeController {
 		return "home/developers";
 	}
 	
+	@RequestMapping(value = "/home/about", method = RequestMethod.GET)
+	public String about() {
+		return "home/about";
+	}
+	
 	@RequestMapping(value = "/home/privacy", method = RequestMethod.GET)
 	public String privacy() {
 		return "home/privacy";
