@@ -29,9 +29,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -67,7 +69,7 @@ public class AdminBrandsControllerTests {
 	}
 	
 	@Test
-	public void shouldListBrands() {
+	public void shouldTheBrandsList() {
 		Pageable paging = mock(Pageable.class);
 		
 		ModelAndView mav = controller.list(paging);
@@ -97,12 +99,13 @@ public class AdminBrandsControllerTests {
 	
 	@Test
 	public void shouldCreateBrands() throws IOException {
+		ModelMap model = new ModelMap();
 		Brand brand = new Brand.Builder("ACME").build();
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
 		UploadRequest req = UploadRequest.create(brand, file);
 		when(mockResult.hasErrors()).thenReturn(false);
 		
-		String viewName = controller.create(brand, mockResult, file, mockRedirectAtts);
+		String viewName = controller.create(brand, mockResult, file, model, mockRedirectAtts);
 
 		assertEquals("redirect:/admin/brands", viewName);
 		verify(service, times(1)).save(eq(brand));
@@ -112,15 +115,32 @@ public class AdminBrandsControllerTests {
 	
 	@Test
 	public void shouldRedirectAfterValidationErrorsDuringBrandCreation() throws IOException {
+		ModelMap model = new ModelMap();
 		Brand brand = new Brand.Builder("ACME").build();
 		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
 		when(mockResult.hasErrors()).thenReturn(true);
 		
-		String viewName = controller.create(brand, mockResult, file, mockRedirectAtts);
+		String viewName = controller.create(brand, mockResult, file, model, mockRedirectAtts);
 		
 		assertEquals("brand/new", viewName);
+		assertEquals(brand, (Brand) model.get("brand"));
 		verify(service, times(0)).save(eq(brand));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq(brand));
+	}
+
+	@Test
+	public void shouldRedirectAfterDatabaseErrorsDuringBrandCreation() throws IOException {
+		ModelMap model = new ModelMap();
+		Brand brand = new Brand.Builder("ACME").build();
+		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		when(mockResult.hasErrors()).thenReturn(false);
+		doThrow(new DataIntegrityViolationException("duplicated key"))
+			.when(service).save(eq(brand));
+
+		String viewName = controller.create(brand, mockResult, file, model, mockRedirectAtts);
+		
+		assertEquals("brand/new", viewName);
+		assertEquals(brand, (Brand) model.get("brand"));
+		verify(mockResult, times(1)).reject("database.error");
 	}
 	
 	@Test
@@ -136,10 +156,11 @@ public class AdminBrandsControllerTests {
 	
 	@Test
 	public void shouldSaveBrandChanges() {
+		ModelMap model = new ModelMap();
 		Brand brand = new Brand.Builder("ACME").build();
 		when(mockResult.hasErrors()).thenReturn(false);
 		
-		String viewName = controller.save(brand, mockResult, mockRedirectAtts);
+		String viewName = controller.save(brand, mockResult, model, mockRedirectAtts);
 		assertEquals("redirect:/admin/brands", viewName);
 		verify(service, times(1)).save(eq(brand));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_SAVED_MSG));
@@ -147,14 +168,30 @@ public class AdminBrandsControllerTests {
 	
 	@Test
 	public void shouldRedirectAfterValidationErrorsDuringChangeSaving() {
+		ModelMap model = new ModelMap();
 		Brand brand = new Brand.Builder("ACME").build();
 		when(mockResult.hasErrors()).thenReturn(true);
 		
-		String viewName = controller.save(brand, mockResult, mockRedirectAtts);
+		String viewName = controller.save(brand, mockResult, model, mockRedirectAtts);
 		
 		assertEquals("brand/edit", viewName);
+		assertEquals(brand, (Brand) model.get("brand"));
 		verify(service, times(0)).save(eq(brand));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq(brand));
+	}
+	
+	@Test
+	public void shouldRedirectAfterDatabaseErrorsDuringChangeSaving() {
+		ModelMap model = new ModelMap();
+		Brand brand = new Brand.Builder("ACME").build();
+		when(mockResult.hasErrors()).thenReturn(false);
+		doThrow(new DataIntegrityViolationException("duplicated key"))
+			.when(service).save(eq(brand));
+		
+		String viewName = controller.save(brand, mockResult, model, mockRedirectAtts);
+		
+		assertEquals("brand/edit", viewName);
+		assertEquals(brand, (Brand) model.get("brand"));
+		verify(mockResult, times(1)).reject("database.error");
 	}
 	
 	@Test

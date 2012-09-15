@@ -20,10 +20,13 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,6 +58,7 @@ import static com.trenako.web.controllers.ControllerMessage.*;
 @RequestMapping("/admin/brands")
 public class AdminBrandsController {
 
+	private static final Logger log = LoggerFactory.getLogger("trenako.web");
 	private MultipartFileValidator fileValidator;
 	
 	private final BrandsService service;
@@ -147,6 +151,7 @@ public class AdminBrandsController {
 	public String create(@Valid @ModelAttribute("brand") Brand brand, 
 			BindingResult result, 
 			@RequestParam("file") MultipartFile file,
+			ModelMap model,
 			RedirectAttributes redirectAtts) throws IOException {
 
 		// validate the uploaded file
@@ -155,18 +160,25 @@ public class AdminBrandsController {
 		}
 		
 		if (result.hasErrors()) {
-			redirectAtts.addAttribute(brand);		
+			model.addAttribute(brand);
 			return "brand/new";	
 		}
 		
-		// save brand
-		service.save(brand);
-		if (!file.isEmpty()) {
-			imgService.saveImageWithThumb(UploadRequest.create(brand, file), 50);
+		try {
+			service.save(brand);
+			if (!file.isEmpty()) {
+				imgService.saveImageWithThumb(UploadRequest.create(brand, file), 50);
+			}
+			
+			redirectAtts.addFlashAttribute("message", BRAND_CREATED_MSG);
+			return "redirect:/admin/brands";
 		}
-		
-		redirectAtts.addFlashAttribute("message", BRAND_CREATED_MSG);
-		return "redirect:/admin/brands";		
+		catch (DataAccessException dae) {
+			log.error(dae.toString());
+			result.reject("database.error");
+			model.addAttribute(brand);
+			return "brand/new";
+		}
 	}
 
 	/**
@@ -201,10 +213,11 @@ public class AdminBrandsController {
 	@RequestMapping(method = RequestMethod.PUT)
 	public String save(@Valid @ModelAttribute Brand brand,
 		BindingResult result, 
+		ModelMap model,
 		RedirectAttributes redirectAtts) {
-	
+		
 		if (result.hasErrors()) {
-			redirectAtts.addAttribute(brand);
+			model.addAttribute(brand);
 			return "brand/edit";
 		}
 	
@@ -213,9 +226,10 @@ public class AdminBrandsController {
 			redirectAtts.addFlashAttribute("message", BRAND_SAVED_MSG);
 			return "redirect:/admin/brands";
 		}
-		catch (DataIntegrityViolationException dae) {
+		catch (DataAccessException dae) {
+			log.error(dae.toString());
 			result.reject("database.error");
-			redirectAtts.addAttribute(brand);
+			model.addAttribute(brand);
 			return "brand/edit";
 		}
 	}
