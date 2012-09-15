@@ -58,6 +58,9 @@ import com.trenako.web.security.UserContext;
 @RequestMapping("/collections")
 public class CollectionsController {
 
+	static final ControllerMessage COLLECTION_SAVED_MSG = ControllerMessage.success("collection.saved.message");
+	static final ControllerMessage COLLECTION_DELETED_MSG = ControllerMessage.success("collection.deleted.message");
+	
 	private @Autowired(required = false) MessageSource messageSource;
 	
 	private final UserContext userContext;
@@ -110,6 +113,33 @@ public class CollectionsController {
 		model.addAttribute("owner", owner);
 		model.addAttribute("visibilities", getVisibilities(collection));
 		return "collection/edit";
+	}
+	
+	@RequestMapping(method = RequestMethod.PUT)
+	public String update(@Valid @ModelAttribute Collection collection, 
+			BindingResult bindingResult, 
+			ModelMap model,
+			RedirectAttributes redirectAtts) {
+
+		if (bindingResult.hasErrors()) {
+			Account owner = UserContext.authenticatedUser(userContext);
+			model.addAttribute("owner", owner);
+			model.addAttribute("collection", collection);
+			model.addAttribute("visibilities", getVisibilities(collection));
+			return "collection/edit";
+		}
+		
+		service.saveChanges(collection);
+		redirectAtts.addAttribute("slug", collection.getSlug());
+		COLLECTION_SAVED_MSG.appendToRedirect(redirectAtts);
+		return "redirect:/collections/{slug}";
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE)
+	public String delete(@ModelAttribute Collection collection, RedirectAttributes redirectAtts) {
+		service.remove(collection);
+		COLLECTION_DELETED_MSG.appendToRedirect(redirectAtts);
+		return "redirect:/you";
 	}
 			
 	@RequestMapping(value = "/add/{slug}", method = RequestMethod.GET)
@@ -200,4 +230,5 @@ public class CollectionsController {
 		
 		return map;
 	}
+
 }

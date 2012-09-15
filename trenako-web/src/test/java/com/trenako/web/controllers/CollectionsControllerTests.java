@@ -110,6 +110,46 @@ public class CollectionsControllerTests {
 	}
 	
 	@Test
+	public void shouldSaveCollectionChanges() {
+		ModelMap model = new ModelMap();
+		Collection collection = new Collection(owner());
+		when(mockResults.hasErrors()).thenReturn(false);
+		
+		String viewName = controller.update(collection, mockResults, model, mockRedirectAtts);
+		
+		assertEquals("redirect:/collections/{slug}", viewName);
+		verify(service, times(1)).saveChanges(eq(collection));
+		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(owner().getSlug()));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(CollectionsController.COLLECTION_SAVED_MSG));
+	}
+	
+	@Test
+	public void shouldRedirectAfterValidationErrorsSavingCollectionChanges() {
+		ModelMap model = new ModelMap();
+		Collection collection = new Collection(owner());
+		when(mockResults.hasErrors()).thenReturn(true);
+		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
+		
+		String viewName = controller.update(collection, mockResults, model, mockRedirectAtts);
+		
+		assertEquals("collection/edit", viewName);
+		assertEquals(collection, (Collection) model.get("collection"));
+		assertEquals(owner(), (Account) model.get("owner"));
+		assertTrue(model.containsAttribute("visibilities"));
+	}
+	
+	@Test
+	public void shouldDeleteCollections() {
+		Collection collection = new Collection(owner());
+		
+		String viewName = controller.delete(collection, mockRedirectAtts);
+		
+		assertEquals("redirect:/you", viewName);
+		verify(service, times(1)).remove(eq(collection));
+		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(CollectionsController.COLLECTION_DELETED_MSG));	
+	}
+	
+	@Test
 	public void shouldRenderTheFormToAddCollectionItems() {
 		String slug = "acme-123456";
 		ModelMap model = new ModelMap();

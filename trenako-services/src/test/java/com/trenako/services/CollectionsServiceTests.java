@@ -138,6 +138,13 @@ public class CollectionsServiceTests {
 	}
 	
 	@Test
+	public void shouldSaveCollectionChanges() {
+		Collection collection = new Collection(owner);
+		service.saveChanges(collection);
+		verify(repo, times(1)).saveChanges(eq(collection));
+	}
+	
+	@Test
 	public void shouldSaveCollections() {
 		service.createNew(owner);
 		

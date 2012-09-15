@@ -116,8 +116,16 @@ public interface CollectionsRepository {
 	void createNew(Collection collection);
 	
 	/**
+	 * Saves the {@code Collection} changes.
+	 * @param collection the {@code Collection} to be updated
+	 */	
+	void saveChanges(Collection collection);
+	
+	/**
 	 * Removes the {@code Collection}.
 	 * @param collection the collection to be removed
 	 */ 
 	void remove(Collection collection);
+
+
 }

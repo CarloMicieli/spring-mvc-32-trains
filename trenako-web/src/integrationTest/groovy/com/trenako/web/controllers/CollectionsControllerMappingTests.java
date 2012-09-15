@@ -16,6 +16,7 @@
 package com.trenako.web.controllers;
 
 import static com.trenako.test.TestDataBuilder.*;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
@@ -92,6 +93,29 @@ public class CollectionsControllerMappingTests extends AbstractSpringControllerT
 			.andExpect(model().attributeExists("owner"))
 			.andExpect(model().attributeExists("visibilities"))
 			.andExpect(forwardedUrl(view("collection", "edit")));
+	}
+	
+	@Test
+	public void shouldSaveCollectionsChanges() throws Exception {
+		mockMvc().perform(put("/collections")
+				.param("slug", "bob")
+				.param("visibility", "private")
+				.param("notes", "My notes")
+				.param("owner", "bob"))
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(CollectionsController.COLLECTION_SAVED_MSG)))
+			.andExpect(status().isOk())
+			.andExpect(redirectedUrl("/collections/bob"));
+	}
+	
+	@Test
+	public void shouldDeleteCollections() throws Exception {
+		mockMvc().perform(delete("/collections")
+				.param("id", "47cc67093475061e3d95369d"))
+			.andExpect(flash().attributeCount(1))
+			.andExpect(flash().attribute("message", equalTo(CollectionsController.COLLECTION_DELETED_MSG)))
+			.andExpect(status().isOk())
+			.andExpect(redirectedUrl("/you"));
 	}
 	
 	@Test

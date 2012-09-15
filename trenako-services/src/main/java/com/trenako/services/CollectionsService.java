@@ -121,6 +121,12 @@ public interface CollectionsService
 	void createNew(Account owner);
 	
 	/**
+	 * Saves the {@code Collection} changes.
+	 * @param collection the {@code Collection} to be updated
+	 */
+	void saveChanges(Collection collection);
+	
+	/**
 	 * Deletes a {@code Collection}.
 	 * @param collection the {@code Collection} to be removed
 	 */

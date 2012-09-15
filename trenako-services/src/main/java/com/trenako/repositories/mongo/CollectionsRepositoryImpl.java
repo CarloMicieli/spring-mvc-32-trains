@@ -133,6 +133,16 @@ public class CollectionsRepositoryImpl implements CollectionsRepository {
 	}
 
 	@Override
+	public void saveChanges(Collection collection) {
+		Update upd = new Update()
+			.set("owner", collection.getOwner())
+			.set("visibility", collection.getVisibility())
+			.set("notes", collection.getNotes())
+			.set("lastModified", now());
+		mongo.upsert(query(where("slug").is(collection.getSlug())), upd, Collection.class);
+	}
+	
+	@Override
 	public void changeVisibility(Account owner, Visibility visibility) {
 		Update upd = new Update()
 			.set("visibility", visibility.label())

@@ -11,7 +11,8 @@ body {
     font: normal normal normal 24px/24px Lobster,Georgia,Times,'Times New Roman',serif;
 }
 .footer {
+	min-height: 150px;
 	border-top: 1px solid #E5E5E5;
-	background-color: #DDD;
+	background-color: #EEE;
 	padding: 10px;
 }

@@ -130,6 +130,27 @@ public class CollectionsRepositoryTests extends AbstractMongoRepositoryTests {
 	}
 	
 	@Test
+	public void shouldSaveCollectionChanges() {
+		Collection collection = new Collection();
+		collection.setSlug(georgeStephenson().getSlug());
+		collection.setOwner(georgeStephenson().getSlug());
+		collection.setNotes("My notes");
+		collection.setVisibility("private");
+		
+		repo.saveChanges(collection);
+		
+		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
+		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
+		verify(mongo(), times(1)).upsert(argQuery.capture(), argUpdate.capture(), eq(Collection.class));
+		assertEquals("{ \"slug\" : \"george-stephenson\"}", queryObject(argQuery).toString());
+		
+		String expected = "{ \"$set\" : { \"owner\" : \"george-stephenson\" , "+
+				"\"visibility\" : \"private\" , \"notes\" : \"My notes\" , "+
+				"\"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}"; 
+		assertEquals(expected, updateObject(argUpdate).toString());
+	}
+	
+	@Test
 	public void shouldAddNewItemsToCollection() {
 		CollectionItem item = new CollectionItem(rollingStock(), date("2012/1/1"), "My notes", USD100(), Condition.NEW);
 		

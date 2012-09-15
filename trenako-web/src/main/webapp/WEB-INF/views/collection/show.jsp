@@ -34,7 +34,7 @@
 			</div>
 		</div>
 		<div class="row-fluid" style="min-height: 450px">
-			<div class="span3" style="padding: 15px">
+			<div class="span3" style="padding: 0 20px 0 15px">
 				<h4><s:message code="collection.content.label"/></h4>
 				<ul class="unstyled">
 					<li>
@@ -102,8 +102,10 @@
 							<s:url var="editUrl" value="/collections/{slug}/edit">
 								<s:param name="slug" value="${owner.slug}"/>
 							</s:url>
-							<a href="${editUrl}" class="btn btn-warning">Edit collection</a>
-							<button type="submit" class="btn btn-danger">Delete collection</button>
+							<a href="${editUrl}" class="btn btn-warning"><s:message code="button.edit.collection.label"/></a>
+							<button type="submit" class="btn btn-danger" ${(empty collection.id) ? 'disabled="disabled"' : ''}>
+								<s:message code="button.remove.collection.label"/>
+							</button>
 						</form:form>		
 					</div>
 				</div>
@@ -197,6 +199,11 @@
 				<div class="row-fluid">
 					<div class="span12">
 						<hr>
+						
+						<c:if test="${empty collection.items}">
+							<h3><s:message code="collection.empty.label"/></h3>
+						</c:if>
+						
 						<c:forEach var="item" items="${collection.items}">
 							<s:url var="rsUrl" value="/rollingstocks/{slug}">
 								<s:param name="slug" value="${item.rollingStock.slug}" />

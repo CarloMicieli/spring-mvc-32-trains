@@ -37,7 +37,7 @@
 						</div>
 						</c:if>
 						
-						<form:hidden path="id" />
+						<input type="hidden" id="slug" name="slug" value="${owner.slug}" />
 						<input type="hidden" id="owner" name="owner" value="${owner.slug}" />
 			
 						<s:bind path="collection.notes">

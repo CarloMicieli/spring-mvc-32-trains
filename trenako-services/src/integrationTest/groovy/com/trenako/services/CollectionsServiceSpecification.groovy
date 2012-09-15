@@ -276,6 +276,46 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		doc.lastModified != null
 	}
 	
+	def "should save collection changes"() {
+		given:
+		def collection = new Collection(slug: 'the-rocket', 
+			owner: 'the-rocket',
+			notes: 'My notes',
+			visibility: 'private')
+		
+		when:
+		service.saveChanges(collection)
+		
+		then:
+		def doc = db.collections.findOne(slug: 'the-rocket')
+		doc != null
+		doc.slug == 'the-rocket'
+		doc.owner == 'the-rocket'
+		doc.notes == 'My notes'
+		doc.visibility == 'private'
+		doc.lastModified != now.time
+	}
+	
+	def "should create a new collection saving changes if the user hasn't a collection"() {
+		given:
+		def collection = new Collection(slug: 'george',
+			owner: 'george',
+			notes: 'My notes',
+			visibility: 'private')
+		
+		when:
+		service.saveChanges(collection)
+		
+		then:
+		def doc = db.collections.findOne(slug: 'george')
+		doc != null
+		doc.slug == 'george'
+		doc.owner == 'george'
+		doc.notes == 'My notes'
+		doc.visibility == 'private'
+		doc.lastModified != null
+	}
+	
 	def "should delete a user collection"() {
 		given:
 		def doc = db.collections.findOne(slug: 'the-rocket')

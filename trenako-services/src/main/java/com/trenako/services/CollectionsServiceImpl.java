@@ -97,6 +97,11 @@ public class CollectionsServiceImpl implements CollectionsService {
 	}
 	
 	@Override
+	public void saveChanges(Collection collection) {
+		repo.saveChanges(collection);
+	}
+	
+	@Override
 	public void remove(Collection collection) {
 		repo.remove(collection);
 	}
@@ -105,5 +110,4 @@ public class CollectionsServiceImpl implements CollectionsService {
 	public Iterable<LocalizedEnum<Condition>> conditionsList() {
 		return LocalizedEnum.list(Condition.class, messageSource, null);
 	}
-
 }
