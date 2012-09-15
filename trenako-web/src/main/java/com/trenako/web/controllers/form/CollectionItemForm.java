@@ -46,8 +46,6 @@ public class CollectionItemForm {
 	@Range(min = 0, max = 9999, message = "collectionItem.price.range.notmet")
 	private BigDecimal price;
 
-	private BigDecimal previousPrice;
-	
 	private boolean alreadyInCollection;
 	
 	private Iterable<LocalizedEnum<Condition>> conditionsList;
@@ -67,13 +65,11 @@ public class CollectionItemForm {
 			String rsSlug,
 			CollectionItem item, 
 			BigDecimal price,
-			BigDecimal previousPrice,
 			Iterable<LocalizedEnum<Condition>> conditionsList) {
 		this.rsSlug = rsSlug;
 		this.item = item;
 		this.conditionsList = conditionsList;
 		this.price = price;
-		this.previousPrice = previousPrice;
 	}
 
 	/**
@@ -102,7 +98,6 @@ public class CollectionItemForm {
 				rs.getSlug(),
 				newItem,
 				price,
-				price,
 				LocalizedEnum.list(Condition.class, messageSource, null));
 	}
 
@@ -113,8 +108,31 @@ public class CollectionItemForm {
 		return ci;
 	}
 	
-	public CollectionItem collectionItem(RollingStock rs, Account owner) {
+	/**
+	 * Returns the {@code CollectionItem} object for insertion filled with form values.
+	 * @param rs the rolling stock
+	 * @param owner the owner
+	 * @return the {@code CollectionItem}
+	 */
+	public CollectionItem newItem(RollingStock rs, Account owner) {
 		return new CollectionItem(
+				WeakDbRef.buildRef(rs),
+				rs.getCategory(),
+				getItem().getAddedAt(),
+				getItem().getNotes(),
+				Money.newMoney(getPrice(), owner),
+				condition(getItem()));
+	}
+	
+	/**
+	 * Returns the {@code CollectionItem} object for editing filled with form values.
+	 * @param rs the rolling stock
+	 * @param owner the owner
+	 * @return the {@code CollectionItem}
+	 */
+	public CollectionItem editItem(RollingStock rs, Account owner) {
+		return new CollectionItem(
+				getItem().getItemId(),
 				WeakDbRef.buildRef(rs),
 				rs.getCategory(),
 				getItem().getAddedAt(),
@@ -145,14 +163,6 @@ public class CollectionItemForm {
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
-	}
-
-	public BigDecimal getPreviousPrice() {
-		return previousPrice;
-	}
-
-	public void setPreviousPrice(BigDecimal previousPrice) {
-		this.previousPrice = previousPrice;
 	}
 
 	public Iterable<LocalizedEnum<Condition>> getConditionsList() {

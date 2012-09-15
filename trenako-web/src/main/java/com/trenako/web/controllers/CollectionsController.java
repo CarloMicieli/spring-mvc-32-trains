@@ -118,7 +118,7 @@ public class CollectionsController {
 		}
 		
 		Account owner = userContext.getCurrentUser().getAccount();
-		CollectionItem newItem = form.collectionItem(rs, owner);
+		CollectionItem newItem = form.newItem(rs, owner);
 		service.addRollingStock(owner, newItem);
 		
 		redirectAtts.addAttribute("slug", owner.getSlug());
@@ -139,7 +139,7 @@ public class CollectionsController {
 		}
 		
 		RollingStock rs = rsService.findBySlug(form.getRsSlug());
-		CollectionItem item = form.collectionItem(rs, owner);
+		CollectionItem item = form.editItem(rs, owner);
 		service.updateItem(owner, item);
 		
 		redirectAtts.addAttribute("slug", owner.getSlug());

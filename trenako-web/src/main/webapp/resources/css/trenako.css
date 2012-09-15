@@ -7,7 +7,7 @@ body {
 }
 .navbar .brand {
 	color: #66CCFF;
-	text-shadow: -1px 0 #336699, 0 1px #336699, 1px 0 #336699, 0 -1px #336699;
+	text-shadow: -1px 0 #000066, 0 1px #000066, 1px 0 #000066, 0 -1px #000066;
     font: normal normal normal 24px/24px Lobster,Georgia,Times,'Times New Roman',serif;
 }
 .footer {

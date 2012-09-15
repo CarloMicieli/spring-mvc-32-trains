@@ -95,7 +95,7 @@ public class CollectionsControllerTests {
 	@Test
 	public void shouldAddNewItemsToCollections() {
 		ModelMap model = new ModelMap();
-		CollectionItem newItem = postedForm().collectionItem(rollingStock(), owner());
+		CollectionItem newItem = postedForm().newItem(rollingStock(), owner());
 		
 		when(mockResults.hasErrors()).thenReturn(false);
 		when(rsService.findBySlug(eq(postedForm().getRsSlug()))).thenReturn(rollingStock());

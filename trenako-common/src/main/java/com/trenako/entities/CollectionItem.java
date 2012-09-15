@@ -15,6 +15,8 @@
  */
 package com.trenako.entities;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -22,6 +24,8 @@ import javax.validation.constraints.Past;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.trenako.mapping.WeakDbRef;
 import com.trenako.utility.Slug;
@@ -54,6 +58,7 @@ public class CollectionItem {
 
 	@NotNull(message = "item.addedAt.required")
 	@Past(message = "item.addedAt.past.notmet")
+	@DateTimeFormat(iso = ISO.DATE)
 	private Date addedAt;
 
 	/**
@@ -98,6 +103,10 @@ public class CollectionItem {
 	 * @param condition the item conditions
 	 */
 	public CollectionItem(WeakDbRef<RollingStock> rs, String category, Date addedAt, String notes, Money price, Condition condition) {
+		this(itemId(rs, addedAt), rs, category, addedAt, notes, price, condition);
+	}
+	
+	public CollectionItem(String itemId, WeakDbRef<RollingStock> rs, String category, Date addedAt, String notes, Money price, Condition condition) {
 		this.rollingStock = rs;
 		this.category = category;
 		this.addedAt = addedAt;
@@ -105,7 +114,7 @@ public class CollectionItem {
 		this.price = price;
 		this.condition = condition(condition);
 		
-		this.itemId = itemId(this.rollingStock, this.addedAt);
+		this.itemId = itemId;
 	}
 	
 	/**
@@ -156,6 +165,15 @@ public class CollectionItem {
 		this.category = category;
 	}
 
+	public String getAddedDay() {
+		if (addedAt == null) {
+			return "";
+		}
+		
+		DateFormat df = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM);
+		return df.format(addedAt);
+	}
+	
 	/**
 	 * Returns the date in which this rolling stock was purchased.
 	 * @return the purchasing date

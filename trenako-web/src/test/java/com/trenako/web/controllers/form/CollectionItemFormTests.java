@@ -46,7 +46,6 @@ public class CollectionItemFormTests {
 		assertEquals("{slug: acme-123456, label: ACME 123456}", form.getItem().getRollingStock().toCompleteString());
 		assertEquals(rollingStock().getCategory(), form.getItem().getCategory());
 		assertEquals(BigDecimal.valueOf(0), form.getPrice());
-		assertEquals(BigDecimal.valueOf(0), form.getPreviousPrice());
 		assertNull(form.getItem().getNotes());
 		assertNull(form.getItem().getCondition());
 		assertNull(form.getItem().getAddedAt());
@@ -63,13 +62,22 @@ public class CollectionItemFormTests {
 		item.setCondition("new");
 		item.setAddedAt(date("2012/09/01"));
 		
-		CollectionItem newItem = form.collectionItem(rollingStock(), georgeStephenson());
+		CollectionItem newItem = form.newItem(rollingStock(), georgeStephenson());
 		
 		assertEquals("My notes", newItem.getNotes());
 		assertEquals("new", newItem.getCondition());
 		assertEquals(date("2012/09/01"), newItem.getAddedAt());
 		assertEquals("2012-09-01_acme-123456", newItem.getItemId());
 		assertEquals("$100.00", newItem.getPrice().toString());
+	}
+	
+	@Test
+	public void shouldReturnCollectionItemsToBeUpdated() {
+		
+		CollectionItem item = postedForm().editItem(rollingStock(), georgeStephenson());
+		
+		assertEquals("2012-09-01_acme-123456", item.getItemId());
+		assertEquals("My notes", item.getNotes());
 	}
 	
 	@Test
@@ -92,6 +100,20 @@ public class CollectionItemFormTests {
 		assertEquals("[(new), (pre-owned)]", form.getConditionsList().toString());
 		assertNull("Rolling stock slug is not null", form.getRsSlug());
 		assertNull("Collection item is not null", form.getItem());
+	}
+	
+	CollectionItemForm postedForm() {
+		CollectionItem item = new CollectionItem();
+		item.setItemId("2012-09-01_acme-123456");
+		item.setAddedAt(date("2012-09-09"));
+		item.setNotes("My notes");
+		
+		CollectionItemForm form = new CollectionItemForm();
+		form.setPrice(BigDecimal.valueOf(100));
+		form.setItem(item);
+		form.setRsSlug("acme-123456");
+		
+		return form;
 	}
 	
 	RollingStock rollingStock() {
