@@ -113,7 +113,7 @@
 		<footer class="footer">
 			<div class="container">
 				<div class="row-fluid">
-					<div class="span7">
+					<div class="span6">
 						<p>
 							<s:url var="aboutUrl" value="/home/about"/>
 							<s:url var="exploreUrl" value="/home/explore"/>
@@ -132,7 +132,16 @@
 							Theme based upon <strong>Twitter Bootstrap</strong>.
 						</p>
 					</div>
-					<div class="span3">
+					<div class="span2" style="text-align: center">
+						<ul class="thumbnails">
+  							<li class="span4">
+								<a href="https://openshift.redhat.com" class="thumbnail" target="_blank">
+									<img src="<c:url value="/resources/img/static/openshift.png" />" alt="OpenShift"/>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="span2" style="text-align: center">
 					<small>
 						<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.it">
 							<img alt="Licenza Creative Commons" 
