@@ -113,7 +113,7 @@
 		<footer class="footer">
 			<div class="container">
 				<div class="row-fluid">
-					<div class="span6">
+					<div class="span7">
 						<p>
 							<s:url var="aboutUrl" value="/home/explore"/>
 							<s:url var="devUrl" value="/home/developers"/>
@@ -145,7 +145,7 @@
 						</a>.
 					</small>
 					</div>
-					<div class="span3">
+					<div class="span2">
 						<p class="pull-right"><a href="#top"><s:message code="footer.back.top.label"/></a></p>
 					</div>
 				</div>
