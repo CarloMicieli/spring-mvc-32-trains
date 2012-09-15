@@ -17,6 +17,8 @@ package com.trenako.web.controllers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.validation.Valid;
 
@@ -42,6 +44,8 @@ import com.trenako.entities.RollingStock;
 import com.trenako.services.AccountsService;
 import com.trenako.services.CollectionsService;
 import com.trenako.services.RollingStocksService;
+import com.trenako.values.LocalizedEnum;
+import com.trenako.values.Visibility;
 import com.trenako.web.controllers.form.CollectionItemForm;
 import com.trenako.web.security.UserContext;
 
@@ -82,8 +86,15 @@ public class CollectionsController {
 	
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
 	public String show(@PathVariable("slug") String slug, ModelMap model) {
+		Account owner = null;
 		Collection collection = service.findBySlug(slug);
-		Account owner = usersService.findBySlug(collection.getOwner());
+		
+		if (collection.equals(Collection.defaultCollection())) {
+			owner = usersService.findBySlug(slug);
+		}
+		else {
+			owner = usersService.findBySlug(collection.getOwner());
+		}
 		
 		model.addAttribute("collection", collection);
 		model.addAttribute("owner", owner);
@@ -91,6 +102,16 @@ public class CollectionsController {
 		return "collection/show";
 	}
 	
+	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
+	public String editForm(@PathVariable("slug") String slug, ModelMap model) {
+		Account owner = UserContext.authenticatedUser(userContext);
+		Collection collection = service.findBySlug(slug);
+		model.addAttribute("collection", collection);
+		model.addAttribute("owner", owner);
+		model.addAttribute("visibilities", getVisibilities(collection));
+		return "collection/edit";
+	}
+			
 	@RequestMapping(value = "/add/{slug}", method = RequestMethod.GET)
 	public String addItemForm(@PathVariable("slug") String slug, ModelMap model) {
 		
@@ -165,5 +186,18 @@ public class CollectionsController {
 		
 		redirectAtts.addAttribute("slug", owner.getSlug());
 		return "redirect:/collections/{slug}";
+	}
+	
+	private HashMap<LocalizedEnum<Visibility>, String> getVisibilities(Collection c) {
+		Iterable<LocalizedEnum<Visibility>> visibilities = LocalizedEnum.list(Visibility.class, messageSource, null);
+		HashMap<LocalizedEnum<Visibility>, String> map = 
+				new LinkedHashMap<LocalizedEnum<Visibility>, String>(Visibility.values().length);
+		
+		for (LocalizedEnum<Visibility> val : visibilities) {
+			String checked = val.getValue().equals(c.getVisibilityValue()) ? "checked" : "";
+			map.put(val, checked);
+		}
+		
+		return map;
 	}
 }

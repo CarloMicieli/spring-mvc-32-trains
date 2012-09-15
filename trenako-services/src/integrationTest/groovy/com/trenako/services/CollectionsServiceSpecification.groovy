@@ -113,12 +113,12 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		col.items.collect { it.itemId }.sort() == ['2012-01-01_acme-123456', '2012-01-01_acme-123457']
 	}
 	
-	def "should return null if no collection with the provided slug exists"() {
+	def "should return the default collection if no collection with the provided slug exists"() {
 		when:
 		def col = service.findBySlug('not-found')
 		
 		then:
-		col == null
+		col == Collection.defaultCollection()
 	}
 	
 	def "should find the collection with the provided owner"() {

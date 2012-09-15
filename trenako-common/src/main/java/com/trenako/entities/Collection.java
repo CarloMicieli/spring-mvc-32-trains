@@ -266,6 +266,14 @@ public class Collection {
 		this.notes = notes;
 	}
 
+	/**
+	 * Returns the default and empty {@code Collection}.
+	 * @return a {@code Collection}
+	 */
+	public static Collection defaultCollection() {
+		return DEFAULT;
+	}
+	
 	@Override
 	public String toString() {
 		return new StringBuilder()
@@ -299,4 +307,6 @@ public class Collection {
 	private static String owner(Account owner) {
 		return owner.getSlug();
 	}
+
+	private static final Collection DEFAULT = new Collection();
 }

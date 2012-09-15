@@ -84,6 +84,17 @@ public class CollectionsControllerMappingTests extends AbstractSpringControllerT
 	}
 	
 	@Test
+	public void shouldRenderTheFormToEditCollections() throws Exception {
+		mockMvc().perform(get("/collections/{slug}/edit", "bob"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(3))
+			.andExpect(model().attributeExists("collection"))
+			.andExpect(model().attributeExists("owner"))
+			.andExpect(model().attributeExists("visibilities"))
+			.andExpect(forwardedUrl(view("collection", "edit")));
+	}
+	
+	@Test
 	public void shouldRenderTheFormToAddItemsToCollections() throws Exception {
 		mockMvc().perform(get("/collections/add/{slug}", "acme-123456"))
 			.andExpect(status().isOk())

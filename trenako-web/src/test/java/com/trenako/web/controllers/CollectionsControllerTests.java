@@ -80,6 +80,36 @@ public class CollectionsControllerTests {
 	}
 	
 	@Test
+	public void shouldShowDefaultCollectionWhenOneWasNotCreatedYet() {
+		String slug = "not-found";
+		ModelMap model = new ModelMap();
+		when(service.findBySlug(eq(slug))).thenReturn(Collection.defaultCollection());
+		when(usersService.findBySlug(eq(slug))).thenReturn(new Account());
+		
+		String viewName = controller.show(slug, model);
+		
+		assertEquals("collection/show", viewName);
+		assertTrue("Collection not found", model.containsAttribute("collection"));
+		assertTrue("Owner not found", model.containsAttribute("owner"));
+	}
+	
+	@Test
+	public void shouldRenderCollectionEditingForms() {
+		String slug = "bob";
+		Collection coll = new Collection(owner());
+		ModelMap model = new ModelMap();
+		when(service.findBySlug(eq(slug))).thenReturn(coll);
+		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
+		
+		String viewName = controller.editForm(slug, model);
+		
+		assertEquals("collection/edit", viewName);
+		assertEquals(coll, (Collection) model.get("collection"));
+		assertEquals(owner(), (Account) model.get("owner"));
+		assertTrue(model.containsAttribute("visibilities"));
+	}
+	
+	@Test
 	public void shouldRenderTheFormToAddCollectionItems() {
 		String slug = "acme-123456";
 		ModelMap model = new ModelMap();

@@ -52,7 +52,11 @@ public class CollectionsServiceImpl implements CollectionsService {
 
 	@Override
 	public Collection findBySlug(String slug) {
-		return repo.findBySlug(slug);
+		Collection coll = repo.findBySlug(slug);
+		if (coll == null) {
+			return Collection.defaultCollection();
+		}
+		return coll;
 	}
 
 	@Override

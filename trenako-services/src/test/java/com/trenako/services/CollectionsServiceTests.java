@@ -69,6 +69,16 @@ public class CollectionsServiceTests {
 		
 		service = new CollectionsServiceImpl(repo);
 	}
+	
+	@Test
+	public void shouldReturnTheDefaultCollection() {
+		String slug = "not-found";
+		Collection coll = service.findBySlug(slug);
+		
+		assertNotNull(coll);
+		assertEquals(Collection.defaultCollection(), coll);
+		verify(repo, times(1)).findBySlug(eq(slug));
+	}
 
 	@Test
 	public void shouldFindCollectionsById() {

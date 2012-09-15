@@ -33,17 +33,8 @@
 				</h1>
 			</div>
 		</div>
-		<div class="row-fluid">
-			<div class="span3" style="padding-right: 15px">
-				<p>
-					<s:url var="backUrl" value="/you">
-					</s:url>
-					<a href="${backUrl}" class="btn btn-info" style="width: 110px">
-						<i class="icon-arrow-left icon-white"></i> <s:message code="button.go.back.label"/>
-					</a>
-				</p>
-				
-				<div style="margin-top: 20px"></div>
+		<div class="row-fluid" style="min-height: 450px">
+			<div class="span3" style="padding: 15px">
 				<h4><s:message code="collection.content.label"/></h4>
 				<ul class="unstyled">
 					<li>
@@ -109,7 +100,7 @@
 						<form:form cssClass="form-inline" method="DELETE" action="${deleteUrl}">
 							<input type="hidden" id="id" name="id" value="${collection.id}"/>
 							<s:url var="editUrl" value="/collections/{slug}/edit">
-								<s:param name="slug" value="${collection.slug}"/>
+								<s:param name="slug" value="${owner.slug}"/>
 							</s:url>
 							<a href="${editUrl}" class="btn btn-warning">Edit collection</a>
 							<button type="submit" class="btn btn-danger">Delete collection</button>
