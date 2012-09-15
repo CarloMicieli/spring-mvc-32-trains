@@ -21,8 +21,9 @@ import static org.springframework.data.mongodb.core.query.Query.*;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
@@ -43,6 +44,7 @@ import com.trenako.values.Visibility;
 @Repository("wishListsRepository")
 public class WishListsRepositoryImpl implements WishListsRepository {
 
+	private static final Sort NAME_SORT = new Sort(Direction.ASC, "name");
 	private final MongoTemplate mongoTemplate;
 	
 	// for testing
@@ -71,7 +73,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	public Iterable<WishList> findByOwner(Account owner) {
 		Query query = query(where("owner").is(owner.getSlug()));
 		query.fields().exclude("items");
-		query.sort().on("name", Order.ASCENDING);
+		query.with(NAME_SORT);
 		return mongoTemplate.find(query, WishList.class);
 	}
 
@@ -79,7 +81,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	public Iterable<WishList> findAllByOwner(Account owner, int maxNumberOfItems) {
 		Query query = query(where("owner").is(owner.getSlug()));
 		query.fields().slice("items", -1 * maxNumberOfItems);
-		query.sort().on("name", Order.ASCENDING);
+		query.with(NAME_SORT);
 		return mongoTemplate.find(query, WishList.class);
 	}
 	

@@ -22,9 +22,10 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -93,9 +94,10 @@ public class BrowseRepositoryImpl implements BrowseRepository {
 		return new RollingStockResults(results, sc, range);
 	}
 	
+	private static final Sort NAME_SORT = new Sort(Direction.ASC, "name");
 	private <T> Iterable<T> findAll(Class<T> clazz) {
 		Query query = new Query();
-		query.sort().on("name", Order.ASCENDING);
+		query.with(NAME_SORT);
 		return mongo.find(query, clazz);
 	}
 }

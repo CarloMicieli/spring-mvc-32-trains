@@ -19,7 +19,6 @@ import static org.springframework.data.mongodb.core.query.Query.*;
 
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.repository.query.QueryUtils;
 
 import com.trenako.results.RangeRequest;
 
@@ -53,7 +52,7 @@ public class RollingStockQueryBuilder {
 		
 		final Query q = query(criteria);
 		q.limit(range.getSize() + 1);
-		QueryUtils.applySorting(q, range.getSort());
+		q.with(range.getSort());
 		
 		return q;
 	}
