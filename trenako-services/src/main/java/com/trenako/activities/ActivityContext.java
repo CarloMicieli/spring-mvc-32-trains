@@ -50,10 +50,14 @@ public class ActivityContext {
 		this.description = description;
 	}
 
+	/**
+	 * Returns the {@code ActivityContext} type.
+	 * @return the type
+	 */
 	public String getContextType() {
 		return contextType;
 	}
-
+	
 	public void setContextType(String contextType) {
 		this.contextType = contextType;
 	}

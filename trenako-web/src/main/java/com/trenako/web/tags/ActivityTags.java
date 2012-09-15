@@ -98,7 +98,13 @@ public class ActivityTags extends SpringTagSupport {
 			.append("</a>");
 		
 		if (activity().getContext() != null) {
-			sb.append(" ").append(activity().getContext().getContextType());
+			String contextMsg = "activitycontext." + activity().getContext().getContextType() + ".label";
+			String contextLabel = messageSource().getMessage(contextMsg, 
+					null, 
+					contextMsg, 
+					getRequestContext().getLocale());
+			
+			sb.append(" ").append(contextLabel);
 		}
 		
 		Pair<String, Integer> p = periodUntilNow(activity().getRecorded());
