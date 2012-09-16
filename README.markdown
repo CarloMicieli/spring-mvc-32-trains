@@ -1,6 +1,8 @@
 Trenako
 ======
 
+[![Build Status](https://secure.travis-ci.org/CarloMicieli/trenako.png)](http://travis-ci.org/CarloMicieli/trenako)
+
 A java web application for model railways collectors.
 
 Functionality
@@ -43,6 +45,10 @@ to generate the project Javadoc an appropriate Gradle task exists:
 To run the application test suite:
 
     gradle check
+
+Before you can run the application the `app.properties` file is required.
+
+    cp trenako-web/src/main/resources/META-INF/app.properties.example trenako-web/src/main/resources/META-INF/app.properties
 
 License
 ------
