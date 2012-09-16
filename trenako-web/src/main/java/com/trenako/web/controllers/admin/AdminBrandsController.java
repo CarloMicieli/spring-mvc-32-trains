@@ -148,7 +148,7 @@ public class AdminBrandsController {
 	 *
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public String create(@Valid @ModelAttribute("brand") Brand brand, 
+	public String create(@Valid @ModelAttribute Brand brand, 
 			BindingResult result, 
 			@RequestParam("file") MultipartFile file,
 			ModelMap model,
