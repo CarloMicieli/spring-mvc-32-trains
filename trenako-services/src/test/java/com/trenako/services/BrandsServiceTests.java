@@ -25,7 +25,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.trenako.entities.Brand;
 import com.trenako.repositories.BrandsRepository;
@@ -38,8 +42,8 @@ import com.trenako.services.BrandsServiceImpl;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class BrandsServiceTests {
-
-	@Mock Pageable mockPaging;
+	private final Sort NAME_SORT = new Sort(Direction.ASC, "name");
+	
 	@Mock BrandsRepository repo;
 	@InjectMocks public BrandsServiceImpl service;
 	
@@ -48,10 +52,14 @@ public class BrandsServiceTests {
 		MockitoAnnotations.initMocks(this);
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	public void shouldListBrandsPaginated() {
-		service.findAll(mockPaging);
-		verify(repo, times(1)).findAll(eq(mockPaging));
+		Pageable pageable = new PageRequest(1, 10, NAME_SORT);
+		
+		Page<Brand> results = service.findAll(pageable);
+		
+		verify(repo, times(1)).findAll(eq(pageable));
 	}
 	
 	@Test

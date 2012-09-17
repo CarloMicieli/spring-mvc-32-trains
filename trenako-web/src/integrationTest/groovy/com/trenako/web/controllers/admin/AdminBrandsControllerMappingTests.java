@@ -64,7 +64,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	public void shouldShowABrand() throws Exception {
 		mockMvc().perform(get("/admin/brands/{slug}", ACME))
 			.andExpect(status().isOk())
-			.andExpect(model().size(2))
+			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brand"))
 			.andExpect(forwardedUrl(view("brand", "show")));
 	}
@@ -76,7 +76,7 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 		
 		mockMvc().perform(get("/admin/brands"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(2))
+			.andExpect(model().size(1))
 			.andExpect(model().attributeExists("brands"))
 			.andExpect(forwardedUrl(view("brand", "list")));
 	}
@@ -119,9 +119,8 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	public void shouldRenderBrandCreationForms() throws Exception {
 		mockMvc().perform(get("/admin/brands/new"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(2))
-			.andExpect(model().attributeExists("brand"))
-			.andExpect(model().attributeExists("countries"))
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("brandForm"))
 			.andExpect(forwardedUrl(view("brand", "new")));
 	}
 	
@@ -129,8 +128,8 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	public void shouldRedirectAfterBrandsWereCreated() throws Exception {
 		mockMvc().perform(fileUpload("/admin/brands")
 				.file("file", new byte[]{})
-				.param("name", "ACME")
-				.param("description['en']", "ACME description"))
+				.param("brand.name", "ACME")
+				.param("brand.description['en']", "ACME description"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_CREATED_MSG)))
@@ -141,18 +140,17 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	public void shouldRenderTheBrandEditingForms() throws Exception {
 		mockMvc().perform(get("/admin/brands/{slug}/edit", ACME))
 			.andExpect(status().isOk())
-			.andExpect(model().size(2))
-			.andExpect(model().attributeExists("brand"))
-			.andExpect(model().attributeExists("countries"))
+			.andExpect(model().size(1))
+			.andExpect(model().attributeExists("brandForm"))
 			.andExpect(forwardedUrl(view("brand", "edit")));
 	}
 
 	@Test
 	public void shouldSaveBrandChanges() throws Exception {
 		mockMvc().perform(put("/admin/brands")
-				.param("id", ID)
-				.param("name", "ACME")
-				.param("description['en']", "ACME description"))
+				.param("brand.id", ID)
+				.param("brand.name", "ACME")
+				.param("brand.description['en']", "ACME description"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_SAVED_MSG)))

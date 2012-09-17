@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.trenako.AppGlobals;
@@ -49,14 +50,27 @@ public class BrandForm {
 	 * Creates an empty {@code BrandForm}.
 	 */
 	public BrandForm() {
+		this(new Brand(), null);
 	}
 	
+	private BrandForm(Brand brand, FormValuesService formService) {
+		this.brand = brand;
+		this.service = formService;
+	}
 	
+	public static BrandForm newForm(Brand brand, FormValuesService formService) {
+		return new BrandForm(brand, formService);
+	}
+	
+	public static BrandForm rejectedForm(BrandForm form, FormValuesService formService) {
+		form.service = formService;
+		return form;
+	}
 	
 	public Brand getBrand() {
 		return brand;
 	}
-
+	
 	public void setBrand(Brand brand) {
 		this.brand = brand;
 	}
@@ -86,5 +100,16 @@ public class BrandForm {
 			return Collections.emptyList();
 		}
 		return service.scales();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (!(obj instanceof BrandForm)) return false;
+		
+		BrandForm other = (BrandForm) obj;
+		return new EqualsBuilder()
+			.append(this.brand, other.brand)
+			.isEquals();
 	}
 }

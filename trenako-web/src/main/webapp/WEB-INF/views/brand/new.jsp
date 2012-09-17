@@ -30,26 +30,35 @@
 					<h1><s:message code="brand.new.title.label" /></h1>
 				</div>
 				<s:url var="createUrl" value="/admin/brands" />
-				<html:uploadForm actionUrl="${createUrl}" model="brand">
-					<html:textBox bindContext="brand" name="name" label="brand.name.label" isRequired="true"/>
-					<html:textBox bindContext="brand" name="companyName" label="brand.companyName.label" isRequired="true"/>
+				
+				<html:uploadForm actionUrl="${createUrl}" model="brandForm">
+			
+					<html:textBox bindContext="brandForm" 
+						name="brand.name" 
+						label="brand.name.label" 
+						isRequired="true"/>
+								
+					<html:textBox bindContext="brandForm" 
+						name="brand.companyName" 
+						label="brand.companyName.label" 
+						isRequired="false"/>
 
-					<tk:localizedTextArea path="description" rows="4"/>
+					<tk:localizedTextArea path="brand.description" rows="4"/>
 
-					<html:url bindContext="brand" name="website" label="brand.website.label"/>
-					<html:email bindContext="brand" name="emailAddress" label="brand.emailAddress.label"/>
+					<html:url bindContext="brandForm" name="brand.website" label="brand.website.label"/>
+					<html:email bindContext="brandForm" name="brand.emailAddress" label="brand.emailAddress.label"/>
 
-					<html:checkBox bindContext="brand" name="industrial" 
+					<html:checkBox bindContext="brandForm" name="brand.industrial" 
 						label="brand.industrial.label"
 						helpLabel="brand.industrial.help.label" />
 
-					<html:upload bindContext="brand" name="logo" 
+					<html:upload bindContext="brandForm" name="file" 
 						label="brand.logo.label"
 						helpLabel="brand.logo.help.label" />
 
 					<html:address countries="${countries}" 
-						name="address" 
-						bindContext="brand" 
+						bindContext="brandForm"
+						name="brand.address" 
 						titleLabel="brand.address.label"/>
 				</html:uploadForm>
 			</div>

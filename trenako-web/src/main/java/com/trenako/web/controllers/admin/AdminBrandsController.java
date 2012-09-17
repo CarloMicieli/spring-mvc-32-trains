@@ -16,7 +16,6 @@
 package com.trenako.web.controllers.admin;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -24,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -34,17 +34,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.trenako.AppGlobals;
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
+import com.trenako.services.FormValuesService;
 import com.trenako.web.controllers.ControllerMessage;
+import com.trenako.web.controllers.form.BrandForm;
 import com.trenako.web.images.ImageRequest;
 import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
+import com.trenako.web.infrastructure.LogUtils;
 
 import static com.trenako.web.controllers.ControllerMessage.*;
 
@@ -58,11 +59,12 @@ import static com.trenako.web.controllers.ControllerMessage.*;
 @RequestMapping("/admin/brands")
 public class AdminBrandsController {
 
-	private static final Logger log = LoggerFactory.getLogger("trenako.web");
+	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
 	private MultipartFileValidator fileValidator;
 	
 	private final BrandsService service;
 	private final WebImageService imgService;
+	private final FormValuesService formService;
 	
 	final static ControllerMessage BRAND_CREATED_MSG = success("brand.created.message");
 	final static ControllerMessage BRAND_SAVED_MSG = success("brand.saved.message");
@@ -70,54 +72,67 @@ public class AdminBrandsController {
 	final static ControllerMessage BRAND_LOGO_UPLOADED_MSG = success("brand.logo.uploaded.message");
 	final static ControllerMessage BRAND_INVALID_UPLOAD_MSG = error("brand.invalid.file.message");
 	final static ControllerMessage BRAND_LOGO_DELETED_MSG = success("brand.logo.deleted.message");
+	final static ControllerMessage BRAND_DB_ERROR_MSG = error("brand.database.error.message");
+	final static ControllerMessage BRAND_NOT_FOUND_MSG = error("brand.not.found.message");
 	
 	/**
 	 * Creates a new {@code AdminBrandsController} controller.
+	 * @param formService 
 	 */
 	@Autowired
-	public AdminBrandsController(BrandsService service, WebImageService imgService) {
+	public AdminBrandsController(BrandsService service, FormValuesService formService, WebImageService imgService) {
 		this.service = service;
 		this.imgService = imgService;
+		this.formService = formService;
 	}
 	
 	@Autowired(required = false) 
 	public void setMultipartFileValidator(MultipartFileValidator validator) {
 		fileValidator = validator;
 	}
-	
-	@ModelAttribute("countries")
-	public Map<String, String> countries() {
-		return AppGlobals.countries();
-	}
-	
+
 	/**
-	 * This actions shows all the {@code Brand}s.
+	 * This actions shows the {@code Brand} list.
 	 * <p>
-	 * Maps the request to {@code GET /admin/brands}.
+	 * <pre><blockquote>
+	 * {@code GET /admin/brands}
+	 * </blockquote></pre>
 	 * </p>
 	 *
 	 * @param pageable the paging information
-	 * @return the model and view for the {@code Brand}s list
+	 * @param model the model
+	 * @return the view name
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView list(Pageable pageable) {
-		return new ModelAndView("brand/list", "brands", service.findAll(pageable));
+	public String list(Pageable pageable, ModelMap model) {
+		model.addAttribute("brands", service.findAll(pageable));
+		return "brand/list";
 	}
 	
 	/**
-	 * This actions shows a {@code Brand}.
+	 * This actions shows a {@code Brand}. If the {@code Brand} with the provided slug
+	 * is not found, this method will redirect to the brands list.
 	 * <p>
-	 * Maps the request to {@code GET /admin/brands/:slug}.
+	 * <pre><blockquote>
+	 * {@code GET /admin/brands/:slug}.
+	 * </blockquote></pre>	 
 	 * </p>
 	 *
 	 * @param slug the {@code Brand} slug
-	 * @return the model and view for the {@code Brand}
+	 * @param model the model
+	 * @param redirectAtts the redirect attributes	 
+	 * @return the view name
 	 */
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
-	public ModelAndView show(@PathVariable("slug") String slug) {
-		return new ModelAndView("brand/show", 
-				"brand", 
-				service.findBySlug(slug));
+	public String show(@PathVariable("slug") String slug, ModelMap model, RedirectAttributes redirectAtts) {
+		Brand brand = service.findBySlug(slug);
+		if (brand == null) {
+			BRAND_NOT_FOUND_MSG.appendToRedirect(redirectAtts);
+			return "redirect:/admin/brands";
+		}
+
+		model.addAttribute(brand);
+		return "brand/show";
 	}
 	
 	/**
@@ -129,8 +144,9 @@ public class AdminBrandsController {
 	 * @return the view and model
 	 */
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public ModelAndView newForm() {
-		return new ModelAndView("brand/new", "brand", new Brand());
+	public String newForm(ModelMap model) {
+		model.addAttribute(BrandForm.newForm(new Brand(), formService));
+		return "brand/new";
 	}
 
 	/**
@@ -148,35 +164,38 @@ public class AdminBrandsController {
 	 *
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public String create(@Valid @ModelAttribute Brand brand, 
+	public String create(@Valid @ModelAttribute BrandForm form, 
 			BindingResult result, 
-			@RequestParam("file") MultipartFile file,
 			ModelMap model,
 			RedirectAttributes redirectAtts) throws IOException {
 
-		// validate the uploaded file
-		if (fileValidator != null) {
-			fileValidator.validate(file, result);
-		}
-		
 		if (result.hasErrors()) {
-			model.addAttribute(brand);
+			LogUtils.logValidationErrors(log, result);
+			model.addAttribute(BrandForm.rejectedForm(form, formService));
 			return "brand/new";	
 		}
-		
+
+		Brand brand = form.getBrand();
+		MultipartFile file = form.getFile();
 		try {
 			service.save(brand);
 			if (!file.isEmpty()) {
 				imgService.saveImageWithThumb(UploadRequest.create(brand, file), 50);
 			}
 			
-			redirectAtts.addFlashAttribute("message", BRAND_CREATED_MSG);
+			BRAND_CREATED_MSG.appendToRedirect(redirectAtts);
 			return "redirect:/admin/brands";
 		}
+		catch (DuplicateKeyException dke) {
+			LogUtils.logException(log, dke);
+			result.rejectValue("brand.name", "brand.name.already.used");
+			model.addAttribute(BrandForm.rejectedForm(form, formService));
+			return "brand/new";
+		}
 		catch (DataAccessException dae) {
-			log.error(dae.toString());
-			result.reject("database.error");
-			model.addAttribute(brand);
+			LogUtils.logException(log, dae);
+			BRAND_DB_ERROR_MSG.appendToModel(model);
+			model.addAttribute(BrandForm.rejectedForm(form, formService));
 			return "brand/new";
 		}
 	}
@@ -192,10 +211,15 @@ public class AdminBrandsController {
 	 *
 	 */
 	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("slug") String slug) {
-		return new ModelAndView("brand/edit", 
-				"brand", 
-				service.findBySlug(slug));
+	public String editForm(@PathVariable("slug") String slug, ModelMap model, RedirectAttributes redirectAtts) {
+		Brand brand = service.findBySlug(slug);
+		if (brand == null) {
+			BRAND_NOT_FOUND_MSG.appendToRedirect(redirectAtts);
+			return "redirect:/admin/brands";
+		}
+
+		model.addAttribute(BrandForm.newForm(brand, formService));
+		return "brand/edit";
 	}
 	
 	/**
@@ -205,31 +229,34 @@ public class AdminBrandsController {
 	 * Maps the request to {@code PUT /brands}.
 	 * </p>
 	 *
-	 * @param brand the {@code Brand} to be saved
+	 * @param form the {@code Brand} form to be saved
 	 * @param result the validation results
 	 * @param redirectAtts the redirect attributes
 	 *
 	 */
 	@RequestMapping(method = RequestMethod.PUT)
-	public String save(@Valid @ModelAttribute Brand brand,
+	public String save(@Valid @ModelAttribute BrandForm form,
 		BindingResult result, 
 		ModelMap model,
 		RedirectAttributes redirectAtts) {
 		
 		if (result.hasErrors()) {
-			model.addAttribute(brand);
+			log.info(result.toString());
+			LogUtils.logValidationErrors(log, result);
+			model.addAttribute(BrandForm.rejectedForm(form, formService));
 			return "brand/edit";
 		}
-	
+		
+		Brand brand = form.getBrand();
 		try {
 			service.save(brand);
-			redirectAtts.addFlashAttribute("message", BRAND_SAVED_MSG);
+			BRAND_SAVED_MSG.appendToRedirect(redirectAtts);
 			return "redirect:/admin/brands";
 		}
 		catch (DataAccessException dae) {
-			log.error(dae.toString());
-			result.reject("database.error");
-			model.addAttribute(brand);
+			LogUtils.logException(log, dae);
+			BRAND_DB_ERROR_MSG.appendToModel(model);
+			model.addAttribute(BrandForm.rejectedForm(form, formService));
 			return "brand/edit";
 		}
 	}
@@ -248,7 +275,6 @@ public class AdminBrandsController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
 	public String delete(@ModelAttribute() Brand brand, RedirectAttributes redirectAtts) {
 		service.remove(brand);
-		
 		redirectAtts.addFlashAttribute("message", BRAND_DELETED_MSG);
 		return "redirect:/admin/brands";
 	}
@@ -288,4 +314,5 @@ public class AdminBrandsController {
 		redirectAtts.addFlashAttribute("message", BRAND_LOGO_DELETED_MSG);
 		return "redirect:/admin/brands/{slug}";
 	}
+
 }

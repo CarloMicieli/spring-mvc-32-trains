@@ -18,7 +18,10 @@ package com.trenako.services;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Brand;
@@ -32,6 +35,7 @@ import com.trenako.repositories.BrandsRepository;
 @Service("brandsService")
 public class BrandsServiceImpl implements BrandsService {
 	
+	private final Sort NAME_SORT = new Sort(Direction.ASC, "name");
 	private BrandsRepository repo;
 	
 	@Autowired
@@ -75,6 +79,9 @@ public class BrandsServiceImpl implements BrandsService {
 	
 	@Override
 	public Page<Brand> findAll(Pageable pageable) {
+		if (pageable.getSort() == null) {
+			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), NAME_SORT);
+		}
 		return repo.findAll(pageable);
 	}
 }

@@ -8,7 +8,7 @@
 <%@ attribute name="isRequired" required="true" rtexprvalue="true" type="java.lang.Boolean" %>
 <%@ attribute name="placeholder" required="false" rtexprvalue="false" %>
 
-<s:bind path="${bindContext}.${name}">
+<s:bind path="${name}">
 	<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
 		<form:label path="${name}" cssClass="control-label">
 			<s:message code="${label}" />:

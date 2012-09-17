@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<title>
-			<s:message code="brands.edit.title.label" arguments="${brand.name}" />
+			<s:message code="brands.edit.title.label" arguments="${brandForm.brand.name}" />
 		</title>
 	</head>
 	<body>
@@ -27,29 +27,32 @@
 			</div>
 			<div class="span9">
 				<div class="page-header">
-					<h1><s:message code="brand.edit.title.label" arguments="${brand.name}" /></h1>
+					<h1><s:message code="brand.edit.title.label" arguments="${brandForm.brand.name}" /></h1>
 				</div>
 				<s:url var="editUrl" value="/admin/brands"/>
 				
-				<html:form actionUrl="${editUrl}" model="brand" method="PUT">
-					<form:hidden path="id"/>
-					<form:hidden path="slug"/>
-					
-					<html:textBox bindContext="brand" name="name" label="brand.name.label" isRequired="true"/>
-					<html:textBox bindContext="brand" name="companyName" label="brand.companyName.label" isRequired="true"/>
-					
-					<tk:localizedTextArea path="description" rows="4"/>
-					
-					<html:url bindContext="brand" name="website" label="brand.website.label"/>
-					<html:email bindContext="brand" name="emailAddress" label="brand.emailAddress.label"/>
+				<html:form actionUrl="${editUrl}" model="brandForm" method="PUT">
+					<form:hidden path="brand.id"/>
+					<form:hidden path="brand.slug"/>
+					<form:hidden path="brand.name"/>
+										
+					<html:textBox bindContext="brandForm" 
+						name="brand.companyName" 
+						label="brand.companyName.label" 
+						isRequired="false"/>
 
-					<html:checkBox bindContext="brand" name="industrial" 
+					<tk:localizedTextArea path="brand.description" rows="4"/>
+
+					<html:url bindContext="brandForm" name="brand.website" label="brand.website.label"/>
+					<html:email bindContext="brandForm" name="brand.emailAddress" label="brand.emailAddress.label"/>
+
+					<html:checkBox bindContext="brandForm" name="brand.industrial" 
 						label="brand.industrial.label"
 						helpLabel="brand.industrial.help.label" />
 
 					<html:address countries="${countries}" 
-						name="address" 
-						bindContext="brand" 
+						bindContext="brandForm"
+						name="brand.address" 
 						titleLabel="brand.address.label"/>
 				</html:form>
 			</div>

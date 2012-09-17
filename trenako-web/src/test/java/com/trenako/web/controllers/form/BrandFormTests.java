@@ -15,10 +15,18 @@
  */
 package com.trenako.web.controllers.form;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import com.trenako.AppGlobals;
+import com.trenako.entities.Brand;
+import com.trenako.entities.Scale;
+import com.trenako.services.FormValuesService;
 
 /**
  * 
@@ -27,9 +35,44 @@ import com.trenako.AppGlobals;
  */
 public class BrandFormTests {
 
+	private final static Iterable<Scale> SCALES = Arrays.asList(new Scale(), new Scale());
+	FormValuesService mockService() {
+		FormValuesService service = mock(FormValuesService.class);
+		when(service.scales()).thenReturn(SCALES);
+		return service;
+	}
+	
 	@Test
 	public void shouldReturnTheCountriesList() {
 		BrandForm form = new BrandForm();
 		assertEquals(AppGlobals.countries(), form.getCountriesList());
+	}
+	
+	@Test
+	public void shouldBuildFormForNewBrands() {
+		BrandForm form = BrandForm.newForm(new Brand(), mockService());
+		assertNotNull(form);
+		assertEquals(new Brand(), form.getBrand());
+	}
+	
+	@Test
+	public void shouldReturnTheScalesList() {
+		BrandForm form = BrandForm.newForm(new Brand(), mockService());
+		assertEquals(SCALES, form.getScalesList());
+	}
+	
+	@Test
+	public void shouldCheckWhetherTwoBrandFormsAreEquals() {
+		BrandForm x = BrandForm.newForm(acme(), mockService());
+		BrandForm y = BrandForm.newForm(acme(), mockService());
+		assertTrue(x.equals(x));
+		assertTrue(x.equals(y));
+	}
+	
+	@Test
+	public void shouldCheckWhetherTwoBrandFormsAreDifferents() {
+		BrandForm x = BrandForm.newForm(acme(), mockService());
+		BrandForm y = BrandForm.newForm(roco(), mockService());
+		assertFalse(x.equals(y));
 	}
 }

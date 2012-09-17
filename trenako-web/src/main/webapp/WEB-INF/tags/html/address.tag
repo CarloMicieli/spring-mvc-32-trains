@@ -35,7 +35,7 @@
  		items="${countries}" 
  		label="address.country.label" 
  		optionsLabel="address.countries.label" 
- 		bindContext="brand"  
- 		name="address.country" /> 
+ 		bindContext="${bindContext}"  
+ 		name="${name}.country" /> 
 
 </fieldset>
