@@ -25,6 +25,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.trenako.entities.Account;
 import com.trenako.repositories.AccountsRepository;
@@ -47,6 +50,16 @@ public class AccountsServiceTests {
 	}
 
 	@Test
+	public void shouldFindTheAccountsList() {
+		Pageable pageable = new PageRequest(0, 10);
+		
+		@SuppressWarnings("unused")
+		Page<Account> results = service.findAll(pageable);
+		
+		verify(repo, times(1)).findAll(eq(pageable));
+	}
+	
+	@Test
 	public void shouldFindAccountsById() {
 		ObjectId id = new ObjectId();
 		service.findById(id);
@@ -65,6 +78,13 @@ public class AccountsServiceTests {
 		String slug = "user-slug";
 		service.findBySlug(slug);
 		verify(repo, times(1)).findBySlug(eq(slug));
+	}
+	
+	@Test
+	public void shouldUpdateAccounts() {
+		Account account = new Account.Builder("mail@mail.com").build();
+		service.updateChanges(account);
+		verify(repo, times(1)).updateChanges(eq(account));
 	}
 
 	@Test

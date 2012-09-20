@@ -17,6 +17,8 @@ package com.trenako.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Account;
@@ -60,6 +62,16 @@ public class AccountsServiceImpl implements AccountsService {
 	@Override
 	public void remove(Account account) {
 		repo.delete(account);
+	}
+
+	@Override
+	public void updateChanges(Account account) {
+		repo.updateChanges(account);
+	}
+
+	@Override
+	public Page<Account> findAll(Pageable pageable) {
+		return repo.findAll(pageable);
 	}
 
 }

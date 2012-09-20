@@ -86,7 +86,7 @@
 	     							<li><a href="<c:url value="/admin/scales" />"><s:message code="menu.scales.label"/></a></li>
 	     							<li><a href="<c:url value="/admin/options" />"><s:message code="menu.options.label"/></a></li>
 	     							<li class="divider"></li>
-	     							<li><a href="#"><s:message code="menu.users.label"/></a></li>
+	     							<li><a href="<c:url value="/admin/users" />"><s:message code="menu.users.label"/></a></li>
 	  		 					</ul>
 	  		 				</li>
 	  		 				</sec:authorize>

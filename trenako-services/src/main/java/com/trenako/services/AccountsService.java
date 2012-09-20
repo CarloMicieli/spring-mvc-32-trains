@@ -16,6 +16,8 @@
 package com.trenako.services;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.trenako.entities.Account;
 
@@ -37,6 +39,14 @@ import com.trenako.entities.Account;
  * @see com.trenako.repositories.AccountsRepository
  */
 public interface AccountsService {
+	
+	/**
+	 * Returns the {@code Account} list.
+	 * @param pageable the paging information
+	 * @return the {@code Account} list
+	 */
+	Page<Account> findAll(Pageable pageable);
+	
 	/**
 	 * Finds the {@link Account} with the provided id.
 	 * @param id the unique id
@@ -58,6 +68,12 @@ public interface AccountsService {
 	 * @see com.trenako.entities.Account#getSlug()
 	 */	
 	Account findBySlug(String slug);
+	
+	/**
+	 * This method will update only roles and flag for a given account. 
+	 * @param account the {@code Account} to be saved
+	 */
+	void updateChanges(Account account);
 	
 	/**
 	 * Persists the {@link Account} changes in the data store.

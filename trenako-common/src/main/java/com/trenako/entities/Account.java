@@ -450,6 +450,11 @@ public class Account implements Serializable {
 			.toString();
     }
 	
+	private static final List<String> ACCOUNT_ROLES = Arrays.asList("ROLE_USER", "ROLE_STAFF");
+	public static List<String> accountRoles() {
+		return ACCOUNT_ROLES;
+	}
+	
 	private static List<String> rolesList(List<String> roles) {
 		if (roles == null || roles.size() == 0)
 			return ROLES;
