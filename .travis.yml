@@ -1,3 +1,9 @@
 language: java
+
+# services
 services:
   - mongodb
+
+# drop db
+before_script:
+  - mongo trenako-testdb --eval 'db.dropDatabase();'
