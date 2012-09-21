@@ -15,8 +15,7 @@
  */
 package com.trenako.web.controllers.admin;
 
-import static com.trenako.web.controllers.ControllerMessage.error;
-import static com.trenako.web.controllers.ControllerMessage.success;
+import static com.trenako.web.controllers.ControllerMessage.*;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -25,11 +24,15 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -37,49 +40,51 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.AppGlobals;
 import com.trenako.entities.Railway;
 import com.trenako.services.RailwaysService;
 import com.trenako.web.controllers.ControllerMessage;
-import com.trenako.web.images.ImageRequest;
-import com.trenako.web.images.MultipartFileValidator;
+import com.trenako.web.controllers.form.RailwayForm;
+import com.trenako.web.controllers.form.UploadForm;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
+import com.trenako.web.infrastructure.LogUtils;
 
 /**
- * 
+ * The administration controller for {@code Railway}s.
  * @author Carlo Micieli
  *
  */
 @Controller
 @RequestMapping("/admin/railways")
 public class AdminRailwaysController {
+
+	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
+
 	private final RailwaysService service;
 	private final WebImageService imgService;
-	
-	private MultipartFileValidator fileValidator;
 	
 	final static ControllerMessage RAILWAY_CREATED_MSG = success("railway.created.message");
 	final static ControllerMessage RAILWAY_SAVED_MSG = success("railway.saved.message");
 	final static ControllerMessage RAILWAY_DELETED_MSG = success("railway.deleted.message");
+	final static ControllerMessage RAILWAY_NOT_FOUND_MSG = error("railway.not.found.message");
+	final static ControllerMessage RAILWAY_DB_ERROR_MSG = error("railway.db.error.message");
 	final static ControllerMessage RAILWAY_LOGO_UPLOADED_MSG = success("railway.logo.uploaded.message");
 	final static ControllerMessage RAILWAY_INVALID_UPLOAD_MSG = error("railway.invalid.file.message");
 	final static ControllerMessage RAILWAY_LOGO_DELETED_MSG = success("railway.logo.deleted.message");
 	
+	/**
+	 * Creates a new {@code AdminRailwaysController}.
+	 * @param service the railways service
+	 * @param imgService the images service
+	 */
 	@Autowired
 	public AdminRailwaysController(RailwaysService service, WebImageService imgService) {
 		this.service = service;
 		this.imgService = imgService;
-	}
-	
-	@Autowired(required = false) 
-	public void setMultipartFileValidator(MultipartFileValidator validator) {
-		fileValidator = validator;
 	}
 	
 	@InitBinder
@@ -91,150 +96,205 @@ public class AdminRailwaysController {
 	    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
 	
+	/**
+	 * Returns the countries list.
+	 * @return the countries list
+	 */
 	@ModelAttribute("countries")
 	public Map<String, String> countries() {
 		return AppGlobals.countries();
 	}
 
 	/**
-	 * This actions shows all the {@code Railway}s.
+	 * It shows the {@code Railway}s list.
+	 *
 	 * <p>
-	 * Maps the request to {@code GET /admin/railways}.
+	 * <pre><blockquote>
+	 * {@code GET /admin/railways}
+	 * </blockquote></pre>
 	 * </p>
-	 * @param paging 
 	 *
 	 * @param pageable the paging information
-	 * @return the model and view for the {@code Railway}s list
+	 * @param model the model 
+	 * @return the view name
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView list(Pageable paging) {
-		return new ModelAndView("railway/list", "railways", service.findAll(paging));
+	public String list(Pageable pageable, ModelMap model) {
+		model.addAttribute("railways", service.findAll(pageable));
+		return "railway/list";
 	}
 
 	/**
-	 * This actions shows all the {@code Railway}s.
+	 * It shows a {@code Railway}.
+	 *
 	 * <p>
-	 * Maps the request to {@code GET /admin/railways/:slug}.
+	 * </blockquote></pre>
+	 * {@code GET /admin/railways/:slug}
+	 * </blockquote></pre>
 	 * </p>
 	 *
 	 * @param slug the {@code Railway} slug
-	 * @return the model and view for the {@code Railway}
+	 * @param model the model
+	 * @param redirectAtts the redirect attributes
+	 * @return the view name
 	 */
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
-	public ModelAndView show(@PathVariable("slug") String slug) {
-		return new ModelAndView("railway/show", 
-				"railway",
-				service.findBySlug(slug));
+	public String show(@PathVariable("slug") String slug, ModelMap model, RedirectAttributes redirectAtts) {
+		Railway railway = service.findBySlug(slug);
+		if (railway == null) {
+			RAILWAY_NOT_FOUND_MSG.appendToRedirect(redirectAtts);
+			return "redirect:/admin/railways";
+		}
+
+		model.addAttribute("railway", railway);
+		return "railway/show";
 	}
 
 	/**
-	 * This action renders the form to create new {@code Railway}.
+	 * It shows the web form for new {@code Railway} creation.
+	 *
 	 * <p>
-	 * Maps the request to {@code GET /admin/railways/new}.
+	 * </blockquote></pre>
+	 * {@code GET /admin/railways/new}
+	 * </blockquote></pre>
 	 * </p>
 	 *
-	 * @return the model and view for the new {@code Railway} form
+	 * @param model the model
+	 * @return the view name
 	 */
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public ModelAndView newForm() {
-		return new ModelAndView("railway/new", "railway", new Railway());
+	public String newForm(ModelMap model) {
+		RailwayForm form = RailwayForm.newForm(new Railway());
+		model.addAttribute(form);
+		return "railway/new";
 	}
 	
-
 	/**
-	 * This action creates a new {@code Railway}.
+	 * It creates a new {@code Railway} using the posted form values.
 	 *
 	 * <p>
-	 * Maps the request to {@code POST /admin/railways}.
+	 * <pre><blockquote>
+	 * {@code POST /admin/railways}
+	 * </blockquote></pre>
 	 * </p>
 	 *
-	 * @param railway the {@code Railway} to be added
-	 * @param result the validation results
-	 * @param file the logo image
+	 * @param railwayForm the form for the {@code Railway} to be added
+	 * @param bindingResult the validation results
+	 * @param model the model
 	 * @param redirectAtts the redirect attributes
-	 * @throws IOException 
-	 *
+	 * @return the view name
+	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public String create(@Valid @ModelAttribute Railway railway, 
-			BindingResult result,
-			@RequestParam("file") MultipartFile file, 
+	public String create(@Valid @ModelAttribute RailwayForm railwayForm, 
+			BindingResult bindingResult,
+			ModelMap model,
 			RedirectAttributes redirectAtts) throws IOException {
 		
-		// validate the uploaded file
-		if (fileValidator != null) {
-			fileValidator.validate(file, result);
+		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
+			model.addAttribute(railwayForm);
+			return "railway/new";
 		}
 
-		if (result.hasErrors()) {
-			redirectAtts.addAttribute(railway);		
-			return "railway/new";	
-		}
+		Railway railway = railwayForm.getRailway();
+		MultipartFile file = railwayForm.getFile();
+		try {
+			service.save(railway);
+			if (file != null && !file.isEmpty()) {
+				imgService.saveImageWithThumb(UploadRequest.create(railway, file), 50);
+			}
 
-		// save brand
-		service.save(railway);
-		if (!file.isEmpty()) {
-			imgService.saveImageWithThumb(UploadRequest.create(railway, file), 50);
+			RAILWAY_CREATED_MSG.appendToRedirect(redirectAtts);
+			return "redirect:/admin/railways";
 		}
-
-		redirectAtts.addFlashAttribute("message", RAILWAY_CREATED_MSG);
-		return "redirect:/admin/railways";
+		catch (DuplicateKeyException dke) {
+			LogUtils.logException(log, dke);
+			bindingResult.rejectValue("railway.name", "railway.name.already.used");
+		}		
+		catch (DataAccessException dae) {
+			LogUtils.logException(log, dae);
+			RAILWAY_DB_ERROR_MSG.appendToModel(model);
+		}
+		
+		model.addAttribute(railwayForm);
+		return "railway/new";
 	}
 	
 	/**
-	 * This action renders the form to edit a {@code Railway}.
+	 * It shows the form for {@code Railway} editing.
 	 *
 	 * <p>
-	 * Maps the request to {@code GET /admin/railways/:slug/edit}.
-	 * </p>
+	 * <pre><blockquote>
+	 * {@code GET /admin/railways/:slug/edit}
+	 * </blockquote></pre>
+	 * </p>	 
 	 *
 	 * @param slug the {@code Railway} slug
+	 * @param model the model
+	 * @param redirectAtts the redirect attributes
+	 * @return the view name
 	 *
 	 */
 	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("slug") String slug) {
-		return new ModelAndView("railway/edit", "railway", service.findBySlug(slug));
+	public String editForm(@PathVariable("slug") String slug, ModelMap model, RedirectAttributes redirectAtts) {
+		Railway railway = service.findBySlug(slug);
+		if (railway == null) {
+			RAILWAY_NOT_FOUND_MSG.appendToRedirect(redirectAtts);
+			return "redirect:/admin/railways";
+		}
+		model.addAttribute(RailwayForm.newForm(railway));
+		return "railway/edit"; 
 	}
 
 	/**
-	 * This action saves a new {@code Railway}.
+	 * It saves the {@code Railway} changes using the posted form values.
 	 *
 	 * <p>
-	 * Maps the request to {@code POST /admin/railways}.
+	 * <pre><blockquote>
+	 * {@code PUT /admin/railways}
+	 * </blockquote></pre>
 	 * </p>
 	 *
-	 * @param railway the {@code Railway} to be updated
-	 * @param result the validation results
+	 * @param railwayForm the form for the {@code Railway} to be updated
+	 * @param bindingResult the validation results
+	 * @param model the model
 	 * @param redirectAtts the redirect attributes
 	 * @return the view name
 	 */
 	@RequestMapping(method = RequestMethod.PUT)
-	public String save(@Valid @ModelAttribute Railway railway,
-		BindingResult result,
+	public String save(@Valid @ModelAttribute RailwayForm railwayForm,
+		BindingResult bindingResult,
+		ModelMap model,
 		RedirectAttributes redirectAtts) {
 	
-		if (result.hasErrors()) {
-			redirectAtts.addAttribute("railway", railway);
+		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
+			model.addAttribute(railwayForm);
 			return "railway/edit";
 		}
 	
+		Railway railway = railwayForm.getRailway();
 		try {
 			service.save(railway);
-			redirectAtts.addFlashAttribute("message", RAILWAY_SAVED_MSG);
+			RAILWAY_SAVED_MSG.appendToRedirect(redirectAtts);
 			return "redirect:/admin/railways";
 		}
-		catch (DataIntegrityViolationException dae) {
-			result.reject("database.error");
-			redirectAtts.addAttribute("railway", railway);
+		catch (DataAccessException dae) {
+			LogUtils.logException(log, dae);
+			model.addAttribute(railwayForm);
+			RAILWAY_DB_ERROR_MSG.appendToModel(model);
 			return "railway/edit";
 		}
 	}
 
 	/**
-	 * This action deletes a {@code Railway}.
+	 * It deletes a {@code Railway}.
 	 *
 	 * <p>
-	 * Maps the request to {@code DELETE /admin/railways/:id}.
+	 * <pre><blockquote>
+	 * {@code DELETE /admin/railways/:id}
+	 * </blockquote></pre>	 
 	 * </p>
 	 *
 	 * @param railway the {@code Railway}
@@ -244,44 +304,67 @@ public class AdminRailwaysController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
 	public String delete(@ModelAttribute() Railway railway, RedirectAttributes redirectAtts) {
 		service.remove(railway);
-		
-		redirectAtts.addFlashAttribute("message", RAILWAY_DELETED_MSG);
+
+		RAILWAY_DELETED_MSG.appendToRedirect(redirectAtts);
 		return "redirect:/admin/railways";
 	}
 	
-	@RequestMapping(value = "/{slug}/upload", method = RequestMethod.POST)
-	public String uploadImage(@ModelAttribute Railway railway, 
-			BindingResult result, 
-			@RequestParam("file") MultipartFile file,
-			RedirectAttributes redirectAtts) throws IOException {
-
-		boolean hasErrors = (file == null || file.isEmpty());
-		
-		// validate the uploaded file
-		if (!hasErrors && fileValidator != null) {
-			fileValidator.validate(file, result);
-			hasErrors = result.hasErrors();
+	/**
+	 * This action is uploading a new picture for a {@code Railway}.
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code POST /admin/railways/upload}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 * @param uploadForm the form for the file upload
+	 * @param bindingResult the validation results
+	 * @param redirectAtts the redirect attributes
+	 * @return the view name
+	 */
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public String uploadImage(@Valid @ModelAttribute UploadForm uploadForm,
+		 BindingResult bindingResult, 
+		 RedirectAttributes redirectAtts) throws IOException {
+	
+		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
+			
+			RAILWAY_INVALID_UPLOAD_MSG.appendToRedirect(redirectAtts);
+			redirectAtts.addAttribute("slug", uploadForm.getSlug());
+			return "redirect:/admin/railways/{slug}";
 		}
 		
-		if (hasErrors) {
-			redirectAtts.addAttribute("slug", railway.getSlug());
-			redirectAtts.addFlashAttribute("message", RAILWAY_INVALID_UPLOAD_MSG);
-			return "redirect:/admin/railways/{slug}";			
+		if (!uploadForm.isEmpty()) {
+			UploadRequest uploadRequest = uploadForm.buildUploadRequest();
+			imgService.saveImageWithThumb(uploadRequest, 50);
+			RAILWAY_LOGO_UPLOADED_MSG.appendToRedirect(redirectAtts);
 		}
-		
-		imgService.saveImageWithThumb(UploadRequest.create(railway, file), 50);
-		
-		redirectAtts.addFlashAttribute("message", RAILWAY_LOGO_UPLOADED_MSG);
-		redirectAtts.addAttribute("slug", railway.getSlug());
+			
+		redirectAtts.addAttribute("slug", uploadForm.getSlug());
 		return "redirect:/admin/railways/{slug}";
 	}
 	
-	@RequestMapping(value = "/{slug}/upload", method = RequestMethod.DELETE)
-	public String deleteImage(@ModelAttribute Railway railway, RedirectAttributes redirectAtts) {
-		imgService.deleteImage(new ImageRequest("railway", railway.getSlug()));
-		
-		redirectAtts.addAttribute("slug", railway.getSlug());
-		redirectAtts.addFlashAttribute("message", RAILWAY_LOGO_DELETED_MSG);
+	/**
+	 * This action is deleting the picture from the {@code Railway}.
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code DELETE /admin/railways/upload}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 * @param uploadForm the form for the file upload
+	 * @param redirectAtts the redirect attributes
+	 * @return the view name
+	 */	
+	@RequestMapping(value = "/upload", method = RequestMethod.DELETE)
+	public String deleteImage(@ModelAttribute UploadForm uploadForm, RedirectAttributes redirectAtts) {
+		imgService.deleteImage(uploadForm.buildImageRequest());
+	
+		RAILWAY_LOGO_DELETED_MSG.appendToRedirect(redirectAtts);
+		redirectAtts.addAttribute("slug", uploadForm.getSlug());
 		return "redirect:/admin/railways/{slug}";
 	}
 }
