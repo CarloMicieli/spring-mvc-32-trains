@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 
 import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
@@ -168,8 +170,14 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	
 	@Test
 	public void shouldUploadNewBrandImages() throws Exception {
-		mockMvc().perform(fileUpload("/admin/brands/{slug}/upload", ACME)
-				.file("file", "file content".getBytes()))
+		MockMultipartFile mockFile = new MockMultipartFile("file", "image.jpg",
+				MediaType.IMAGE_JPEG.toString(), 
+				"file content".getBytes());
+		
+		mockMvc().perform(fileUpload("/admin/brands/upload")
+				.file(mockFile)
+				.param("entity", "brand")
+				.param("slug", ACME))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_LOGO_UPLOADED_MSG)))
@@ -178,17 +186,19 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	
 	@Test
 	public void shouldRedirectIfBrandImagesAreNotValid() throws Exception {
-		mockMvc().perform(fileUpload("/admin/brands/{slug}/upload", ACME)
-				.file("file", EMPTY_FILE))
+		mockMvc().perform(fileUpload("/admin/brands/upload")
+				.file("file", EMPTY_FILE)
+				.param("entity", "brand")
+				.param("slug", ACME))
 			.andExpect(status().isOk())
-			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_INVALID_UPLOAD_MSG)))
 			.andExpect(redirectedUrl("/admin/brands/acme"));
 	}
 
 	@Test
 	public void shouldDeleteBrandImages() throws Exception {
-		mockMvc().perform(delete("/admin/brands/{slug}/upload", ACME))
+		mockMvc().perform(delete("/admin/brands/upload")
+				.param("entity", "brand")
+				.param("slug", ACME))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(AdminBrandsController.BRAND_LOGO_DELETED_MSG)))

@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -41,8 +40,7 @@ import com.trenako.services.BrandsService;
 import com.trenako.services.FormValuesService;
 import com.trenako.web.controllers.ControllerMessage;
 import com.trenako.web.controllers.form.BrandForm;
-import com.trenako.web.images.ImageRequest;
-import com.trenako.web.images.MultipartFileValidator;
+import com.trenako.web.controllers.form.UploadForm;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 import com.trenako.web.infrastructure.LogUtils;
@@ -50,8 +48,7 @@ import com.trenako.web.infrastructure.LogUtils;
 import static com.trenako.web.controllers.ControllerMessage.*;
 
 /**
- * It represents the {@code controller} to manage the {@code Brand} elements.
- *
+ * It represents the administration controller for {@code Brand}s.
  * @author Carlo Micieli
  *
  */
@@ -60,7 +57,6 @@ import static com.trenako.web.controllers.ControllerMessage.*;
 public class AdminBrandsController {
 
 	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
-	private MultipartFileValidator fileValidator;
 	
 	private final BrandsService service;
 	private final WebImageService imgService;
@@ -86,13 +82,9 @@ public class AdminBrandsController {
 		this.formService = formService;
 	}
 	
-	@Autowired(required = false) 
-	public void setMultipartFileValidator(MultipartFileValidator validator) {
-		fileValidator = validator;
-	}
-
 	/**
-	 * This actions shows the {@code Brand} list.
+	 * It shows the {@code Brand}s list.
+	 *
 	 * <p>
 	 * <pre><blockquote>
 	 * {@code GET /admin/brands}
@@ -110,11 +102,11 @@ public class AdminBrandsController {
 	}
 	
 	/**
-	 * This actions shows a {@code Brand}. If the {@code Brand} with the provided slug
+	 * It shows a {@code Brand}. If the {@code Brand} with the provided slug
 	 * is not found, this method will redirect to the brands list.
 	 * <p>
 	 * <pre><blockquote>
-	 * {@code GET /admin/brands/:slug}.
+	 * {@code GET /admin/brands/:slug}
 	 * </blockquote></pre>	 
 	 * </p>
 	 *
@@ -136,12 +128,16 @@ public class AdminBrandsController {
 	}
 	
 	/**
-	 * This action renders the form to create new {@code Brand}.
+	 * It shows the web form for new {@code Brand} creation.
+	 *
 	 * <p>
-	 * Maps the request to {@code GET /brands/new}.
+	 * <pre><blockquote>
+	 * {@code GET /brands/new}
+	 * </blockquote></pre>
 	 * </p>
 	 *
-	 * @return the view and model
+	 * @param model the model
+	 * @return the view name
 	 */
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public String newForm(ModelMap model) {
@@ -150,27 +146,30 @@ public class AdminBrandsController {
 	}
 
 	/**
-	 * This action creates a new {@code Brand}.
+	 * It creates a new {@code Brand} using the posted form values.
 	 *
 	 * <p>
-	 * Maps the request to {@code POST /brands}.
+	 * <pre><blockquote>
+	 * {@code POST /brands}
+	 * </blockquote></pre>
 	 * </p>
 	 *
-	 * @param brand the {@code Brand} to be added
-	 * @param file the logo image
-	 * @param result the validation results
+	 * @param form the form for {@code Brand} to be created
+	 * @param bindingResult the validation results
+	 * @param model the model
 	 * @param redirectAtts the redirect attributes
-	 * @throws IOException 
+	 * @return the view name
+	 * @throws IOException
 	 *
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String create(@Valid @ModelAttribute BrandForm form, 
-			BindingResult result, 
+			BindingResult bindingResult, 
 			ModelMap model,
 			RedirectAttributes redirectAtts) throws IOException {
 
-		if (result.hasErrors()) {
-			LogUtils.logValidationErrors(log, result);
+		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
 			model.addAttribute(BrandForm.rejectedForm(form, formService));
 			return "brand/new";	
 		}
@@ -188,26 +187,30 @@ public class AdminBrandsController {
 		}
 		catch (DuplicateKeyException dke) {
 			LogUtils.logException(log, dke);
-			result.rejectValue("brand.name", "brand.name.already.used");
-			model.addAttribute(BrandForm.rejectedForm(form, formService));
-			return "brand/new";
+			bindingResult.rejectValue("brand.name", "brand.name.already.used");
 		}
 		catch (DataAccessException dae) {
 			LogUtils.logException(log, dae);
 			BRAND_DB_ERROR_MSG.appendToModel(model);
-			model.addAttribute(BrandForm.rejectedForm(form, formService));
-			return "brand/new";
 		}
+		
+		model.addAttribute(BrandForm.rejectedForm(form, formService));
+		return "brand/new";
 	}
 
 	/**
-	 * This action renders the form to edit a {@code Brand}.
+	 * It shows the web form for {@code Brand} editing.
 	 *
 	 * <p>
-	 * Maps the request to {@code GET /brands/:slug/edit}.
+	 * <pre><blockquote>
+	 * {@code GET /brands/:slug/edit}
+	 * </blockquote></pre>
 	 * </p>
 	 *
 	 * @param slug the {@code Brand} slug
+	 * @param model the model
+	 * @param redirectAtts the redirect attributes 
+	 * @return the view name
 	 *
 	 */
 	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
@@ -223,26 +226,29 @@ public class AdminBrandsController {
 	}
 	
 	/**
-	 * This action saves a new {@code Brand}.
+	 * It saves the {@code Brand} using the posted form values.
 	 *
 	 * <p>
-	 * Maps the request to {@code PUT /brands}.
+	 * <pre><blockquote>
+	 * {@code PUT /brands}
+	 * </blockquote></pre>
 	 * </p>
 	 *
 	 * @param form the {@code Brand} form to be saved
-	 * @param result the validation results
+	 * @param bindingResult the validation results
+	 * @param model the model
 	 * @param redirectAtts the redirect attributes
+	 * @return the view name
 	 *
 	 */
 	@RequestMapping(method = RequestMethod.PUT)
 	public String save(@Valid @ModelAttribute BrandForm form,
-		BindingResult result, 
+		BindingResult bindingResult, 
 		ModelMap model,
 		RedirectAttributes redirectAtts) {
 		
-		if (result.hasErrors()) {
-			log.info(result.toString());
-			LogUtils.logValidationErrors(log, result);
+		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
 			model.addAttribute(BrandForm.rejectedForm(form, formService));
 			return "brand/edit";
 		}
@@ -262,10 +268,12 @@ public class AdminBrandsController {
 	}
 	
 	/**
-	 * This action deletes a {@code Brand}.
+	 * It deletes a {@code Brand}.
 	 *
 	 * <p>
-	 * Maps the request to {@code DELETE /brands/:id}.
+	 * <pre><blockquote>
+	 * {@code DELETE /brands/:id}
+	 * </blockquote></pre>
 	 * </p>
 	 *
 	 * @param brand the {@code Brand}
@@ -273,46 +281,68 @@ public class AdminBrandsController {
 	 *
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) 
-	public String delete(@ModelAttribute() Brand brand, RedirectAttributes redirectAtts) {
+	public String delete(@ModelAttribute Brand brand, RedirectAttributes redirectAtts) {
 		service.remove(brand);
 		redirectAtts.addFlashAttribute("message", BRAND_DELETED_MSG);
 		return "redirect:/admin/brands";
 	}
 	
-	@RequestMapping(value = "/{slug}/upload", method = RequestMethod.POST)
-	public String uploadImage(@ModelAttribute("brand") Brand brand, 
-			BindingResult result, 
-			@RequestParam("file") MultipartFile file,
-			RedirectAttributes redirectAtts) throws IOException {
-
-		boolean hasErrors = (file == null || file.isEmpty());
-		
-		// validate the uploaded file
-		if (!hasErrors && fileValidator != null) {
-			fileValidator.validate(file, result);
-			hasErrors = result.hasErrors();
+	/**
+	 * This action is uploading a new logo picture for a {@code Brand}.
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code POST /admin/brands/upload}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 * @param uploadForm the form for the file upload
+	 * @param bindingResult the validation results
+	 * @param redirectAtts the redirect attributes
+	 * @return the view name
+	 */
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public String uploadImage(@Valid @ModelAttribute UploadForm uploadForm,
+		 BindingResult bindingResult, 
+		 RedirectAttributes redirectAtts) throws IOException {
+	
+		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
+			
+			BRAND_INVALID_UPLOAD_MSG.appendToRedirect(redirectAtts);
+			redirectAtts.addAttribute("slug", uploadForm.getSlug());
+			return "redirect:/admin/brands/{slug}";
 		}
 		
-		if (hasErrors) {
-			redirectAtts.addAttribute("slug", brand.getSlug());
-			redirectAtts.addFlashAttribute("message", BRAND_INVALID_UPLOAD_MSG);
-			return "redirect:/admin/brands/{slug}";			
+		if (!uploadForm.isEmpty()) {
+			UploadRequest uploadRequest = uploadForm.buildUploadRequest();
+			imgService.saveImageWithThumb(uploadRequest, 50);
+			BRAND_LOGO_UPLOADED_MSG.appendToRedirect(redirectAtts);
 		}
-		
-		imgService.saveImageWithThumb(UploadRequest.create(brand, file), 50);
-		
-		redirectAtts.addFlashAttribute("message", BRAND_LOGO_UPLOADED_MSG);
-		redirectAtts.addAttribute("slug", brand.getSlug());
+			
+		redirectAtts.addAttribute("slug", uploadForm.getSlug());
 		return "redirect:/admin/brands/{slug}";
 	}
 	
-	@RequestMapping(value = "/{slug}/upload", method = RequestMethod.DELETE)
-	public String deleteImage(@ModelAttribute("brand") Brand brand, RedirectAttributes redirectAtts) {
-		imgService.deleteImage(new ImageRequest("brand", brand.getSlug()));
-		
-		redirectAtts.addAttribute("slug", brand.getSlug());
-		redirectAtts.addFlashAttribute("message", BRAND_LOGO_DELETED_MSG);
+	/**
+	 * This action is deleting the logo picture from the {@code Brand}.
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code DELETE /admin/brands/upload}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 * @param uploadForm the form for the file upload
+	 * @param redirectAtts the redirect attributes
+	 * @return the view name
+	 */	
+	@RequestMapping(value = "/upload", method = RequestMethod.DELETE)
+	public String deleteImage(@ModelAttribute UploadForm uploadForm, RedirectAttributes redirectAtts) {
+		imgService.deleteImage(uploadForm.buildImageRequest());
+	
+		BRAND_LOGO_DELETED_MSG.appendToRedirect(redirectAtts);
+		redirectAtts.addAttribute("slug", uploadForm.getSlug());
 		return "redirect:/admin/brands/{slug}";
 	}
-
 }

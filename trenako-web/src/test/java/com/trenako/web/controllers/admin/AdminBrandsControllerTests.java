@@ -23,7 +23,6 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,8 +47,8 @@ import com.trenako.entities.Brand;
 import com.trenako.services.BrandsService;
 import com.trenako.services.FormValuesService;
 import com.trenako.web.controllers.form.BrandForm;
+import com.trenako.web.controllers.form.UploadForm;
 import com.trenako.web.images.ImageRequest;
-import com.trenako.web.images.MultipartFileValidator;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
 
@@ -70,16 +69,12 @@ public class AdminBrandsControllerTests {
 	@Mock FormValuesService formService;
 	
 	private ModelMap model = new ModelMap();
-	
-	MultipartFileValidator validator = new MultipartFileValidator();
-	
 	private AdminBrandsController controller;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		controller = new AdminBrandsController(service, formService, imgService);
-		controller.setMultipartFileValidator(validator);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -266,73 +261,83 @@ public class AdminBrandsControllerTests {
 		Brand value = new Brand();
 
 		String viewName = controller.delete(value, redirectAtts);
-		
+
 		assertEquals("redirect:/admin/brands", viewName);
 		verify(service, times(1)).remove(eq(value));		
 		verify(redirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_DELETED_MSG));
 	}
-	
-	@Test
-	public void shouldUploadNewBrandLogos() throws IOException {
-		Brand brand = new Brand.Builder("ACME").build();
-		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
-		UploadRequest req = UploadRequest.create(brand, file);
 		
-		String viewName = controller.uploadImage(brand, bindingResults, file, redirectAtts);
+	@Test
+	public void shouldUploadBrandLogos() throws IOException {
+		String entity = "brand";
+		String slug = "brand-slug";
+		UploadForm uploadForm = new UploadForm(entity, slug, jpegFile());
+		
+		String viewName = controller.uploadImage(uploadForm, bindingResults, redirectAtts);
 		
 		assertEquals("redirect:/admin/brands/{slug}", viewName);
-		verify(imgService, times(1)).saveImageWithThumb(eq(req), eq(50));
-		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq("acme"));
+		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq(slug));
 		verify(redirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_LOGO_UPLOADED_MSG));
+		
+		ArgumentCaptor<UploadRequest> arg = ArgumentCaptor.forClass(UploadRequest.class);
+		verify(imgService, times(1)).saveImageWithThumb(arg.capture(), eq(50));
+		UploadRequest req = (UploadRequest) arg.getValue();
+		assertEquals(entity, req.getEntity());
+		assertEquals(slug, req.getSlug());
+		assertEquals(jpegFile(), req.getFile());
 	}
 	
 	@Test
 	public void shouldRedirectAfterValidationErrorsDuringBrandLogoUploads() throws IOException {
-		Brand brand = new Brand.Builder("ACME")
-			.id(new ObjectId())
-			.build();
-		MultipartFile file = buildFile(MediaType.IMAGE_JPEG);
+		String entity = "brand";
+		String slug = "brand-slug";
+		UploadForm uploadForm = new UploadForm(entity, slug, jpegFile());
 		when(bindingResults.hasErrors()).thenReturn(true);
-		
-		String viewName = controller.uploadImage(brand, bindingResults, file, redirectAtts);
+				
+		String viewName = controller.uploadImage(uploadForm, bindingResults, redirectAtts);
 		
 		assertEquals("redirect:/admin/brands/{slug}", viewName);
-		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq(brand.getSlug()));
+		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq(slug));
 		verify(redirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_INVALID_UPLOAD_MSG));
 	}
 	
 	@Test
-	public void shouldReturnValidatioErrorWhenProvidedBrandLogoFileIsEmpty() throws IOException {
-		Brand brand = new Brand.Builder("ACME")
-			.id(new ObjectId())
-			.build();
-		MultipartFile file = mock(MultipartFile.class);
-		when(file.isEmpty()).thenReturn(true);
+	public void shouldReturnValidatioErrorWhenProvidedBrandFileIsEmpty() throws IOException {
+		String entity = "brand";
+		String slug = "brand-slug";
+		UploadForm uploadForm = new UploadForm(entity, slug, null);
+		when(bindingResults.hasErrors()).thenReturn(false);
 		
-		String viewName = controller.uploadImage(brand, bindingResults, file, redirectAtts);
+		String viewName = controller.uploadImage(uploadForm, bindingResults, redirectAtts);
 		
 		assertEquals("redirect:/admin/brands/{slug}", viewName);
-		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq(brand.getSlug()));
-		verify(redirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_INVALID_UPLOAD_MSG));
+		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq(slug));
 	}
 	
 	@Test
 	public void shouldDeleteBrandLogos() {
-		Brand brand = new Brand.Builder("ACME").build();
-		ImageRequest req = ImageRequest.create(brand);
+		String entity = "brand";
+		String slug = "brand-slug";
+		UploadForm uploadForm = new UploadForm(entity, slug, null);
 		
-		String viewName = controller.deleteImage(brand, redirectAtts);
+		String viewName = controller.deleteImage(uploadForm, redirectAtts);
 		
 		assertEquals("redirect:/admin/brands/{slug}", viewName);
-		verify(imgService, times(1)).deleteImage(eq(req));
-		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq("acme"));
+		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq("brand-slug"));
 		verify(redirectAtts, times(1)).addFlashAttribute(eq("message"), eq(AdminBrandsController.BRAND_LOGO_DELETED_MSG));
+		
+		ArgumentCaptor<ImageRequest> arg = ArgumentCaptor.forClass(ImageRequest.class);
+		verify(imgService, times(1)).deleteImage(arg.capture());
+		
+		ImageRequest req = (ImageRequest) arg.getValue();	
+		assertEquals(entity, req.getEntityName());
+		assertEquals(slug, req.getSlug());
 	}
 	
 	private BrandForm postedForm() {
 		return form;
 	}
-	
+
 	private static void assertBrandForm(ModelMap model, String key) {
 		assertNotNull("Brand form is null", model.containsKey(key));
 		BrandForm form = (BrandForm) model.get(key);
