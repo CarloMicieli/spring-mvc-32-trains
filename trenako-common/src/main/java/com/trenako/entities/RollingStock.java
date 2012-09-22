@@ -32,7 +32,6 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.util.Assert;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -192,9 +191,6 @@ public class RollingStock implements DbReferenceable {
 		}
 		
 		public RollingStock build() {
-			Assert.notNull(brand, "Brand is required");
-			Assert.notNull(railway, "Railway is required");
-			Assert.notNull(scale, "Scale is required");
 			return new RollingStock(this);
 		}
 		
@@ -400,7 +396,9 @@ public class RollingStock implements DbReferenceable {
 	 * @param brand the brand
 	 */
 	public void setBrand(Brand brand) {
-		this.brand = WeakDbRef.buildRef(brand);
+		if (brand != null) {
+			this.brand = WeakDbRef.buildRef(brand);
+		}
 	}
 
 	/**
@@ -476,8 +474,8 @@ public class RollingStock implements DbReferenceable {
 	 * @param railway the railway
 	 */
 	public void setRailway(Railway railway) {
-		this.railway = WeakDbRef.buildRef(railway);
 		if (railway != null) {
+			this.railway = WeakDbRef.buildRef(railway);
 			this.country = railway.getCountry();
 		}
 	}
@@ -503,7 +501,9 @@ public class RollingStock implements DbReferenceable {
 	 * @param scale the scale
 	 */
 	public void setScale(Scale scale) {
-		this.scale = WeakDbRef.buildRef(scale);
+		if (scale != null) {
+			this.scale = WeakDbRef.buildRef(scale);
+		}
 	}
 
 	/**

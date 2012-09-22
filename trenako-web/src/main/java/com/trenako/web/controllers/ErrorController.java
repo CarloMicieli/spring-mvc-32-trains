@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trenako.web.infrastructure.LogUtils;
@@ -38,12 +37,12 @@ public class ErrorController {
 
 	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
 	
-	@RequestMapping(value = "/denied", method = RequestMethod.GET)
+	@RequestMapping(value = "/denied")
 	public String denied() {
 		return "error/denied";
 	}
 	
-	@RequestMapping(value = "/server-error", method = RequestMethod.GET)
+	@RequestMapping(value = "/server-error")
 	public ModelAndView resolveException(HttpServletRequest request) {
 		Exception ex = (Exception) request.getAttribute("javax.servlet.error.exception");
 		LogUtils.logException(log, ex);

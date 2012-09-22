@@ -31,6 +31,7 @@ import com.trenako.entities.Brand;
 import com.trenako.entities.Railway;
 import com.trenako.entities.RollingStock;
 import com.trenako.entities.Scale;
+import com.trenako.mapping.WeakDbRef;
 import com.trenako.services.FormValuesService;
 import com.trenako.utility.Slug;
 import com.trenako.values.Category;
@@ -91,6 +92,11 @@ public class RollingStockForm {
 		return new RollingStockForm(rs, valuesService, null);
 	}	
 	
+	public static RollingStockForm rejectForm(RollingStockForm form, FormValuesService valuesService) {
+		form.valuesService = valuesService;
+		return form;
+	}
+	
 	/**
 	 * Builds a new {@code RollingStock} using the values posted with the form.
 	 * @param valuesService the values service
@@ -105,9 +111,11 @@ public class RollingStockForm {
 			return null;
 		}
 		
-		Brand brand = valuesService.getBrand(brandSlug());
-		Railway railway = valuesService.getRailway(railwaySlug());
-		Scale scale = valuesService.getScale(scaleSlug());
+		Brand brand = lookupBrand(valuesService, getRs().getBrand());
+		Railway railway = lookupRailway(valuesService, getRs().getRailway());
+		Scale scale = lookupScale(valuesService, getRs().getScale());
+		
+		String country = railway != null ? railway.getCountry() : null;
 
 		RollingStock rs = new RollingStock.Builder(brand, getRs().getItemNumber())
 			.id(getRs().getId())
@@ -115,11 +123,12 @@ public class RollingStockForm {
 			.scale(scale)
 			.description(getRs().getDescription())
 			.details(getRs().getDetails())
-			.country(railway.getCountry())
+			.country(country)
 			.era(getRs().getEra())
 			.category(getRs().getCategory())
 			.tags(getTagsSet())
 			.totalLength(getRs().getTotalLength())
+			.powerMethod(getRs().getPowerMethod())
 			.upcCode(getRs().getUpcCode())
 			.modifiedBy(user)
 			.lastModified(modifiedAt)
@@ -220,16 +229,29 @@ public class RollingStockForm {
 		}
 		return tagsList;
 	}
-
-	private String railwaySlug() {
-		return getRs().getRailway().getSlug();
+	
+	private Brand lookupBrand(FormValuesService valuesService, WeakDbRef<Brand> ref) {
+		if (!withValue(ref)) {
+			return null;
+		}
+		return valuesService.getBrand(ref.getSlug());
+	}
+	
+	private Scale lookupScale(FormValuesService valuesService, WeakDbRef<Scale> ref) {
+		if (!withValue(ref)) {
+			return null;
+		}
+		return valuesService.getScale(ref.getSlug());
+	}
+	
+	private Railway lookupRailway(FormValuesService valuesService, WeakDbRef<Railway> ref) {
+		if (!withValue(ref)) {
+			return null;
+		}
+		return valuesService.getRailway(ref.getSlug());
 	}
 
-	private String scaleSlug() {
-		return getRs().getScale().getSlug();
-	}
-
-	private String brandSlug() {
-		return getRs().getBrand().getSlug();
+	private boolean withValue(WeakDbRef<?> ref) {
+		return (ref != null && ref.getSlug() != null);
 	}
 }

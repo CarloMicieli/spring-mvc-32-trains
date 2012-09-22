@@ -139,7 +139,7 @@ public class RollingStocksController {
 		RollingStock rs = form.buildRollingStock(valuesService, secContext, new Date());
 		
 		if (bindingResult.hasErrors()) {
-			model.addAttribute(newForm(rs, valuesService));
+			model.addAttribute(rejectForm(form, valuesService));
 			return "rollingstock/new";
 		}
 		

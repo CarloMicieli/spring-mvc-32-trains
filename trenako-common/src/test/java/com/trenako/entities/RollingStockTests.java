@@ -196,6 +196,10 @@ public class RollingStockTests {
 		rs.setBrand(acme());
 		assertEquals(acme().getSlug(), rs.getBrand().getSlug());
 		assertEquals(acme().getLabel(), rs.getBrand().getLabel());
+		
+		RollingStock rs2 = new RollingStock();
+		rs2.setBrand((Brand) null);
+		assertNull(rs2.getBrand());
 	}
 	
 	@Test
@@ -204,6 +208,10 @@ public class RollingStockTests {
 		rs.setRailway(db());
 		assertEquals(db().getSlug(), rs.getRailway().getSlug());
 		assertEquals(db().getLabel(), rs.getRailway().getLabel());
+
+		RollingStock rs2 = new RollingStock();
+		rs2.setRailway((Railway) null);
+		assertNull(rs2.getRailway());
 	}
 	
 	@Test
@@ -212,6 +220,10 @@ public class RollingStockTests {
 		rs.setScale(scaleH0());
 		assertEquals(scaleH0().getSlug(), rs.getScale().getSlug());
 		assertEquals(scaleH0().getLabel(), rs.getScale().getLabel());
+
+		RollingStock rs2 = new RollingStock();
+		rs2.setScale((Scale) null);
+		assertNull(rs2.getScale());
 	}
 	
 	@Test

@@ -132,13 +132,22 @@ public class RollingStockFormTests {
 		assertEquals(date("2012/09/01"), newRs.getLastModified());
 		assertEquals("bob", newRs.getModifiedBy());
 		assertEquals("it", newRs.getCountry());
+		assertEquals("ac", newRs.getPowerMethod());
 	}
 
-	private RollingStockForm postedForm() {
-		RollingStockForm form = new RollingStockForm();
-		form.setRs(postedRs());
-		form.setTags("one, two");
-		return form;
+	@Test
+	public void shouldBuildRollingStocksWhenRequiredValuesWereNotProvided() {
+		when(userContext.getCurrentUser()).thenReturn(new AccountDetails(loggedUser()));
+		
+		RollingStockForm form = incompleteForm();
+		
+		RollingStock newRs = form.buildRollingStock(mockService, userContext, date("2012/09/01"));
+		
+		assertNotNull("New rolling stock is null", newRs);
+		assertNull(newRs.getBrand());
+		assertNull(newRs.getRailway());
+		assertNull(newRs.getScale());
+		assertNull(newRs.getCountry());
 	}
 	
 	@Test
@@ -151,12 +160,37 @@ public class RollingStockFormTests {
 		y.setTags("one , two two, three");
 		assertEquals("[one, three, two-two]", y.getTagsSet().toString());
 	}
+
+	private RollingStockForm postedForm() {
+		RollingStockForm form = new RollingStockForm();
+		form.setRs(postedRs());
+		form.setTags("one, two");
+		return form;
+	}
+	
+	private RollingStockForm incompleteForm() {
+		RollingStockForm form = new RollingStockForm();
+		form.setRs(incompleteRs());
+		form.setTags("one, two");
+		return form;
+	}
 	
 	RollingStock postedRs() {
 		RollingStock rs = new RollingStock();
 		rs.setBrand(WeakDbRef.buildFromSlug("acme", Brand.class));
 		rs.setScale(WeakDbRef.buildFromSlug("h0", Scale.class));
 		rs.setRailway(WeakDbRef.buildFromSlug("fs", Railway.class));
+		rs.setItemNumber("123456");
+		rs.setDescription(new LocalizedField<String>("Description"));
+		rs.setDetails(new LocalizedField<String>("Details"));
+		rs.setEra("iii");
+		rs.setPowerMethod("ac");
+		rs.setCategory("electric-locomotives");
+		return rs;
+	}
+	
+	RollingStock incompleteRs() {
+		RollingStock rs = new RollingStock();
 		rs.setItemNumber("123456");
 		rs.setDescription(new LocalizedField<String>("Description"));
 		rs.setDetails(new LocalizedField<String>("Details"));
