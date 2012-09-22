@@ -15,8 +15,11 @@
  */
 package com.trenako.web.controllers;
 
+import static org.springframework.test.web.ModelAndViewAssert.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 
@@ -26,10 +29,37 @@ import org.junit.Test;
 public class ErrorControllerTests {
 
 	ErrorController controller = new ErrorController();
+		
+	@Test
+	public void shouldShowJustTheErrorPageForRemoteClients() {
+		MockHttpServletRequest request = mockRequest("173.194.35.50", new Exception());
+		
+		ModelAndView mav = controller.resolveException(request);
+		
+		assertViewName(mav, "error/error");
+	}
+
+	@Test
+	public void shouldShowStackTraceForLocalhostClients() {
+		MockHttpServletRequest request = mockRequest("127.0.0.1", new Exception());
+		
+		ModelAndView mav = controller.resolveException(request);
+		
+		assertViewName(mav, "error/debug");
+		assertModelAttributeAvailable(mav, "error");
+	}
 	
 	@Test
 	public void shouldRenderDeniedPage() {
 		String viewName = controller.denied();
 		assertEquals("error/denied", viewName);
+	}
+
+
+	private MockHttpServletRequest mockRequest(String remoteAddress, Exception ex) {
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setRemoteAddr(remoteAddress);
+		request.setAttribute("javax.servlet.error.exception", ex);
+		return request;
 	}
 }

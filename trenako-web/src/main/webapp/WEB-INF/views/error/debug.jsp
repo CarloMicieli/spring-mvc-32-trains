@@ -1,3 +1,4 @@
+<%@ page isErrorPage = "true" %>
 <html>
 	<head>
 		<title>Error: Debug Page</title>
