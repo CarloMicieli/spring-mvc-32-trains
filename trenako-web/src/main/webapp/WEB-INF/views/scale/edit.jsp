@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+<%@ taglib tagdir="/WEB-INF/tags/html" prefix="html" %>
 
 <html>
 	<head>
@@ -26,106 +27,50 @@
 					</ul>
 				</div>
 			</div>
-			
+
 			<div class="span9">
 				<div class="page-header">
 					<h1><s:message code="scales.edit.title.label" arguments="${scale.name}" /></h1>
 				</div>
 				<s:url var="editUrl" value="/admin/scales" />
-				<form:form id="form" class="form-horizontal" method="PUT" action="${editUrl}" modelAttribute="scale">
+				<html:form actionUrl="${editUrl}" model="scale" method="PUT">
 					
 					<form:hidden path="id"/>
 					<form:hidden path="slug"/>
+				
+					<html:textBox label="scale.name.label" name="name" bindContext="scale" isRequired="true"/>
+					<tk:localizedTextArea path="description" rows="4"/>
 					
-					<fieldset>
-						<c:if test="${not empty message}">
-						<div class="alert alert-${message.type}">
-							<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
-						</div>
-						</c:if>
-    				
-    					<s:bind path="scale.name">
-    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="name" cssClass="control-label">
-								<s:message code="scale.name.label" />:
-							</form:label>
-							<div class="controls">
-								<form:input path="name" cssClass="input-xlarge focused" required="required"/>
-								<form:errors path="name" element="span" cssClass="help-inline"/>
-							</div>
-						</div>
-						</s:bind>
+					<html:spinner label="scale.ratio.label" 
+						bindContext="scale" 
+						name="ratio"
+						min="8" max="220" step="0.1"				
+						isRequired="true"/>
+					<html:spinner label="scale.gauge.label" 
+						bindContext="scale"
+						min="0" max="1000" step="0.01"
+						name="gauge"
+						isRequired="false"/>
+					
+					<html:checkBox label="scale.narrow.label" name="narrow" bindContext="scale" helpLabel="scale.narrow.help.label"/>	
 						
-						<tk:localizedTextArea path="description" rows="4"/>
-						
-						<s:bind path="scale.ratio">
-    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="ratio" cssClass="control-label">
-								<s:message code="scale.ratio.label" />:
-							</form:label>
-							<div class="controls">
-								<form:input path="ratio" type="number" min="8" max="220" step="0.1" cssClass="input-xlarge focused"/>
-								<form:errors path="ratio" element="span" cssClass="help-inline"/>
-							</div>
-						</div>
-						</s:bind>
-						
-						<s:bind path="scale.gauge">
-						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="gauge" cssClass="control-label">
-								<s:message code="scale.gauge.label" />:
-							</form:label>
-							<div class="controls">
-								<form:input path="gauge" type="number" min="0" max="200" step="0.01" cssClass="input-xlarge focused"/>
-								<form:errors path="gauge" element="span" cssClass="help-inline"/>
-							</div>
-						</div>
-						</s:bind>
-						
-						<div class="control-group">
-							<form:label path="narrow" cssClass="control-label">
-								<s:message code="scale.narrow.label" />:
-							</form:label>
-							<div class="controls">
-								<label class="checkbox">
-									<form:checkbox path="narrow"/>
-									<s:message code="scale.narrow.help.label" /> 
-								</label>
-							</div>
-						</div>
-						
-						<fieldset class="embedded standards">
-							<legend><s:message code="scale.standards.label" /></legend>
-						
-							<div class="control-group">
-								<label class="control-label" for="inlineCheckboxes">
-									<s:message code="scale.standards.label" />:
-								</label>
-								<div class="controls">
-									<c:forEach var="st" items="${standards}">
-										<label class="checkbox inline">
-											<form:checkbox path="standards" value="${st}"/>
-											${st}
-										</label>
-									</c:forEach>
-								</div>
-							</div>
-						</fieldset>
-						
-						<div class="form-actions">
-							<form:button class="btn btn-primary" type="submit" name="_action_save">
-								<i class="icon-check icon-white"></i>
-								<s:message code="button.save.label" />
-							</form:button>
-						
-							<form:button class="btn" type="reset" name="_action_reset">
-								<i class="icon-repeat icon-black"></i>
-								<s:message code="button.reset.label" />
-							</form:button>
-						</div>
-					</fieldset>
-				</form:form>
+					<html:multiCheckBox items="${standards}"
+						name="standards"  
+						title="scale.standards.label"
+						label="scale.standards.label"/>
+				</html:form>
 			</div>
-		</div>	
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var input = document.createElement('input');
+			    input.setAttribute('type', 'number');
+
+			    if (input.type == 'text') {
+			    	$("#ratio").spinner({min: 8, max: 220, step: 0.1});
+			    	$("#gauge").spinner({min: 0, max: 200, step: 0.01});	
+			    }
+			}); 
+		</script>
 	</body>
 </html>

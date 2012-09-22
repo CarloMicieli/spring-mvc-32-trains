@@ -18,6 +18,7 @@ package com.trenako.services;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.trenako.entities.Scale;
 
@@ -72,21 +73,6 @@ public interface ScalesService {
 	Scale findBySlug(String slug);
 	
 	/**
-	 * Returns all {@link Scale} object with the provided {@link Scale#isNarrow()} value.
-	 * @param isNarrow {@code true} will returns all the scales with narrow gauges; 
-	 * {@code false} will return the scales with standard gauges
-	 * @return a {@code Scale} list
-	 */
-	//Iterable<Scale> findAll(boolean isNarrow);
-	
-	/**
-	 * Returns the list of {@link Scale} with the same {@link Scale#getRatio()} value.
-	 * @param ratio the {@code Scale} ratio
-	 * @return a {@code Scale} list
-	 */
-	//Iterable<Scale> findByRatio(BigDecimal ratio);
-
-	/**
 	 * Returns all {@link Scale} objects.
 	 * <p>
 	 * This methods return all the scale, sort by name.
@@ -105,12 +91,14 @@ public interface ScalesService {
 	 * </p>	 
 	 * @param scale the {@code Scale} to be saved
 	 */
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
 	void save(Scale scale);
 
 	/**
 	 * Removes a {@link Scale} from the data store.
 	 * @param scale the scale {@code Scale} to be removed
 	 */
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
 	void remove(Scale scale);
 
 }

@@ -18,6 +18,7 @@
 		<link href="<c:url value="/resources/css/bootstrap-responsive.css" />" rel="stylesheet" />
 		<link href="<c:url value="/resources/css/trenako.css" />" rel="stylesheet" />
 		<link href="<c:url value="/resources/css/jquery-ui-custom.css" />" rel="stylesheet" />
+		<link href="<c:url value="/resources/css/ui-spinner.css" />" rel="stylesheet" />
 		
 		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
@@ -27,6 +28,7 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
     	<script type="text/javascript" src="<c:url value="/resources/js/bootstrap.js" />"></script>
+    	<script type="text/javascript" src="<c:url value="/resources/js/ui.spinner.js" />"></script>
     	
     	<script type="text/javascript">
     	$(document).ready(function() {

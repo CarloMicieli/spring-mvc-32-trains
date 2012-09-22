@@ -62,14 +62,21 @@
 							<td>${railway.operatingSince}</td>
 							<td>${railway.operatingUntil}</td>
 
-							<s:url var="showUrl" value="/admin/railways/{slug}">
-				            	<s:param name="slug" value="${railway.slug}" />
-							</s:url>
 							<td class="link">
+								<s:url var="showUrl" value="/admin/railways/{slug}">
+					            	<s:param name="slug" value="${railway.slug}" />
+								</s:url>
 								<a href="${showUrl}" class="btn btn-small">
 									<s:message code="button.show.label" />
 								</a>
-							</td>
+								
+								<s:url var="editUrl" value="/admin/railways/{slug}/edit">
+					            	<s:param name="slug" value="${railway.slug}" />
+								</s:url>								
+								<a href="${editUrl}" class="btn btn-small">
+									<s:message code="button.edit.label" />
+								</a>
+							</td>							
 						</tr>
 					</c:forEach>
 					</tbody>

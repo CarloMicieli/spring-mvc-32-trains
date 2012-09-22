@@ -30,7 +30,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +48,7 @@ import com.trenako.web.controllers.form.UploadForm;
 import com.trenako.web.images.ImageRequest;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
+import com.trenako.web.test.DatabaseError;
 
 /**
  * 
@@ -157,7 +157,7 @@ public class AdminRailwaysControllerTests {
 	@Test
 	public void shouldRedirectAfterDatabaseErrorsDuringRailwaysCreation() throws IOException {
 		when(bindingResult.hasErrors()).thenReturn(false);
-		doThrow(new FakeDataAccessException())
+		doThrow(new DatabaseError())
 			.when(service)
 			.save(eq(fs()));
 		
@@ -218,7 +218,7 @@ public class AdminRailwaysControllerTests {
 	@Test
 	public void shouldRedirectAfterDatabaseErrorsSavingRailways() {
 		when(bindingResult.hasErrors()).thenReturn(false);
-		doThrow(new FakeDataAccessException())
+		doThrow(new DatabaseError())
 			.when(service)
 			.save(eq(fs()));
 		
@@ -325,12 +325,5 @@ public class AdminRailwaysControllerTests {
 		String slug = "railway-slug";
 		UploadForm uploadForm = new UploadForm(entity, slug, null);
 		return uploadForm;
-	}
-
-	@SuppressWarnings("serial")
-	private static class FakeDataAccessException extends DataAccessException {
-		FakeDataAccessException() {
-			super("Db error");
-		}
 	}
 }

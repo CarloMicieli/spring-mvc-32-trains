@@ -70,15 +70,8 @@
 							<s:url var="editUrl" value="/admin/railways/{slug}/edit">
 					           	<s:param name="slug" value="${railway.slug}" />
 							</s:url>
-							<a href="${editUrl}" class="btn">
-								<i class="icon-pencil"></i>
-								<s:message code="button.edit.label" />
-							</a>
-
-							<button class="btn btn-danger" type="submit" name="_action_delete">
-								<i class="icon-trash icon-white"></i>
-								<s:message code="button.delete.label" />
-							</button>
+						<html:editButton editUrl="${editUrl}"/>
+						<html:deleteButton/>
 						</div>
 					</form:form>
 				</div>

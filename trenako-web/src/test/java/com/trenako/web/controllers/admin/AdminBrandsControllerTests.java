@@ -30,7 +30,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -51,6 +50,7 @@ import com.trenako.web.controllers.form.UploadForm;
 import com.trenako.web.images.ImageRequest;
 import com.trenako.web.images.UploadRequest;
 import com.trenako.web.images.WebImageService;
+import com.trenako.web.test.DatabaseError;
 
 /**
  * 
@@ -180,7 +180,7 @@ public class AdminBrandsControllerTests {
 	public void shouldRedirectAfterDatabaseErrorsDuringBrandCreation() throws IOException {
 		when(postedForm().getBrand()).thenReturn(acme());
 		when(bindingResults.hasErrors()).thenReturn(false);
-		doThrow(new FakeDataAccessException())
+		doThrow(new DatabaseError())
 			.when(service).save(eq(acme()));
 
 		String viewName = controller.create(postedForm(), bindingResults, model, redirectAtts);
@@ -246,7 +246,7 @@ public class AdminBrandsControllerTests {
 	public void shouldRedirectAfterDatabaseErrorsDuringChangeSaving() {
 		when(postedForm().getBrand()).thenReturn(acme());
 		when(bindingResults.hasErrors()).thenReturn(false);
-		doThrow(new FakeDataAccessException())
+		doThrow(new DatabaseError())
 			.when(service).save(eq(acme()));
 		
 		String viewName = controller.save(postedForm(), bindingResults, model, redirectAtts);
@@ -354,12 +354,5 @@ public class AdminBrandsControllerTests {
 	private static MultipartFile buildFile(MediaType mediaType) {
 		byte[] content = "file content".getBytes();
 		return new MockMultipartFile("image.jpg", "image.jpg", mediaType.toString(), content);
-	}
-
-	@SuppressWarnings("serial")
-	private static class FakeDataAccessException extends DataAccessException {
-		public FakeDataAccessException() {
-			super("Fake database error");
-		}
 	}
 }

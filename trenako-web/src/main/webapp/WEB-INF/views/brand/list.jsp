@@ -62,12 +62,19 @@
 							<td>${brand.emailAddress}</td>
 							<td>${brand.industrial}</td>
 
-							<s:url var="showUrl" value="/admin/brands/{slug}">
-				            	<s:param name="slug" value="${brand.slug}" />
-							</s:url>
 							<td class="link">
+								<s:url var="showUrl" value="/admin/brands/{slug}">
+					            	<s:param name="slug" value="${brand.slug}" />
+								</s:url>
 								<a href="${showUrl}" class="btn btn-small">
 									<s:message code="button.show.label" />
+								</a>
+								
+								<s:url var="editUrl" value="/admin/brands/{slug}/edit">
+					            	<s:param name="slug" value="${brand.slug}" />
+								</s:url>								
+								<a href="${editUrl}" class="btn btn-small">
+									<s:message code="button.edit.label" />
 								</a>
 							</td>
 						</tr>
