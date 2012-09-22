@@ -49,7 +49,11 @@ public class HomeController {
 		
 	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
 	public String home(ModelMap model) {
-		model.addAttribute("content", service.getHomeContent(loggedUser()));		
+		Account user = loggedUser();
+		model.addAttribute("content", service.getHomeContent(user));
+		if (user != null) {
+			model.addAttribute(user);
+		}
 		return "home/index";
 	}
 	

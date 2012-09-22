@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+<%@ taglib tagdir="/WEB-INF/tags/html" prefix="html" %>
 
 <html>
 	<head>
@@ -39,15 +40,6 @@
 					
 					<div class="span7" style="margin-bottom: 15px">
 						<h2><s:message code="home.rolling.stocks.title"/></h2>
-						<sec:authorize url="/rollingstocks/new">
-						<p>
-							<s:message code="home.rolling.stocks.text"/>
-						</p>
-						<p>
-							<a class="btn btn-info" href="<s:url value="/rollingstocks/new" />"><s:message code="button.new.rolling.stock.label"/></a>
-						</p>
-						<hr/>
-						</sec:authorize>
 						<p>
 							<c:forEach var="rs" items="${content.rollingStocks}">
 								<div class="row-fluid">
@@ -81,66 +73,74 @@
 						</p>
 						<div class="pull-right">
 							<s:url var="rsUrl" value="/rs"/>
-							<a class="btn" href="${rsUrl}">See more</a>
+							<a class="btn" href="${rsUrl}"><s:message code="home.see.more.label"/></a>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="span3">
-				<form id="form" class="form-vertical" action="<s:url value="/auth/signup"/>" method="POST">
-					<fieldset>
-						<legend><s:message code="signup.title.label" /></legend>
-					</fieldset>
+			<sec:authorize var="loggedIn" access="isAuthenticated()" />
+			<c:choose>
+			    <c:when test="${loggedIn}">
+			    	<h4>
+						<s:message code="home.welcome.message.label" arguments="${account.displayName}"/>
+						<br/>
+						<small>(<s:message code="home.welcome.member.since.label"/> <tk:period since="${account.memberSince}"/>)</small> 
+					</h4>
 
-					<div class="control-group">
-						<label for="emailAddress" class="control-label">
-							<s:message code="account.emailAddress.label" />:
-						</label>
-						<div class="controls">
-							<s:message var="email" code="account.emailAddress.help.label" />
-							<input id="emailAddress" name="emailAddress" class="input-xlarge focused" required="required" type="text" value="" placeholder="${email}"/>
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label for="displayName" class="control-label">
-							<s:message code="account.displayName.label" />:
-						</label>
-						<div class="controls">
-							<s:message var="name" code="account.displayName.help.label" />
-							<input id="displayName" name="displayName" class="input-xlarge focused" required="required" type="text" value="" placeholder="${name}"/>
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label for="password" class="control-label">
-							<s:message code="account.password.label" />:
-						</label>
-						<div class="controls">
-							<s:message var="pwd" code="account.password.help.label" text="At least 6 characters"/>
-							<input id="password" name="password" data-typetoggle="#show-password" class="input-xlarge focused" required="required" type="password" value="" placeholder="${pwd}"/>
-							<label class="checkbox">
-								<input id="show-password" type="checkbox"> <s:message code="account.showPassword.label" />
-							</label>
-						</div>
-					</div>
-
-					<div class="form-actions">
-						<button id="_action_save" name="_action_save" class="btn btn-primary" type="submit" type="submit" value="Submit">
-							<i class="icon-user icon-white"></i>
-							<s:message code="button.signup.label" />
-						</button>
-
-						<button id="_action_reset" name="_action_reset" class="btn" type="reset" type="submit" value="Submit">
-							<i class="icon-repeat icon-black"></i>
-							<s:message code="button.reset.label" />
-						</button>
-					</div>
-				</form>
+					<hr/>
+					
+					<p>
+						<s:message code="home.welcome.help.label"/>
+					</p>
+					<ul class="nav nav-list" style="padding: 0 15px 0 15px">
+						<s:url var="youUrl" value="/you"/>
+						<li class=""><a href="${youUrl}">
+							<i class="icon-chevron-right"></i> 
+							<s:message code="home.welcome.your.page.label"/>
+						</a></li>
+						
+						<s:url var="collectionsUrl" value="/collections/{slug}">
+							<s:param name="slug" value="${account.slug}"></s:param>
+						</s:url>
+						<li class=""><a href="${collectionsUrl}">
+							<i class="icon-chevron-right"></i> 
+							<s:message code="home.welcome.your.collection.label"/>
+						</a></li>
+						
+						<s:url var="wishlistsUrl" value="/wishlists/owner/{slug}">
+							<s:param name="slug" value="${account.slug}"></s:param>
+						</s:url>
+						<li class=""><a href="${wishlistsUrl}">
+							<i class="icon-chevron-right"></i> 
+							<s:message code="home.welcome.your.wishlists.label"/>
+						</a></li>
+						
+						<s:url var="rollingStocksUrl" value="/rs"/>
+						<li class=""><a href="${rollingStocksUrl}">
+							<i class="icon-chevron-right"></i> 
+							<s:message code="home.welcome.rolling.stocks.label"/>
+						</a></li>
+						
+						<s:url var="browseUrl" value="/browse"/>
+						<li class=""><a href="${browseUrl}">
+							<i class="icon-chevron-right"></i> 
+							<s:message code="home.welcome.browse.label"/>
+						</a></li>						
+			        </ul>
+			        <p>
+						<s:message code="home.welcome.undecided.label"/>
+					</p>
+					<p>
+						<a class="btn btn-info" href="<s:url value="/rollingstocks/new" />"><s:message code="button.new.rolling.stock.label"/></a>
+					</p>
+			    </c:when>
+			    <c:otherwise>
+			        <html:signUpForm/>
+			    </c:otherwise>
+			</c:choose>
 			</div>
 		</div>
-
-		
 
 		<script src="<c:url value="/resources/js/jquery.showpassword.js" />" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
