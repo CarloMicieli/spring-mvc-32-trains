@@ -15,9 +15,18 @@
  */
 package com.trenako.web.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.trenako.web.infrastructure.LogUtils;
 
 /**
  * 
@@ -28,8 +37,33 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/error")
 public class ErrorController {
 
+	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
+	
+	@ExceptionHandler(Throwable.class)
+	public ModelAndView handleRuntimeException(Throwable ex, HttpServletRequest request) {
+		LogUtils.logException(log, ex);
+		
+		if (isLocalhost(request)) {
+			String error = ExceptionUtils.getStackTrace(ex);
+			ModelAndView debugView = new ModelAndView("error/debug");
+			debugView.addObject("error", error);
+			debugView.addObject("request", request);
+			return debugView;
+		}
+		else {
+			return new ModelAndView("error/error");
+		}
+	}
+	
 	@RequestMapping(value = "/denied", method = RequestMethod.GET)
 	public String denied() {
 		return "error/denied";
+	}
+	
+	private final static boolean isLocalhost(HttpServletRequest request) {
+		if (request == null) return false;
+	
+		return request.getRemoteAddr().equals("localhost") || 
+			request.getRemoteAddr().equals("127.0.0.1");
 	}
 }

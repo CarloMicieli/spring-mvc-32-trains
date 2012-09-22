@@ -32,6 +32,7 @@
 		<intercept-url pattern="/auth/logout*" access="isAuthenticated()" />
 		<intercept-url pattern="/auth/**" access="permitAll" />
 		<intercept-url pattern="/images/**" access="permitAll" />
+		<intercept-url pattern="/error/**" access="permitAll" />
 		<intercept-url pattern="/rs/**" access="permitAll" />
 		<intercept-url pattern="/browse/**" access="permitAll" />
 		<intercept-url pattern="/default" access="isAuthenticated()" />
