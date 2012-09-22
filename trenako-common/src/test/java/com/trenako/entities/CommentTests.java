@@ -60,6 +60,6 @@ public class CommentTests {
 	@Test
 	public void shouldProduceStringRepresentationFromComments() {
 		Comment c = new Comment(author(), "Comment content", date("2012/1/1"));
-		assertEquals("comment{author: bob, content: Comment content, postedAt: Sun Jan 01 00:00:00 CET 2012}", c.toString());
+		assertEquals("comment{author: bob, content: Comment content, postedAt: 01/01/12 00:00:00}", c.toString());
 	}
 }

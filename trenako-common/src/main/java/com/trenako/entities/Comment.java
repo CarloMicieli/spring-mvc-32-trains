@@ -196,13 +196,16 @@ public class Comment {
 	
 	@Override
 	public String toString() {
+		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		String sDate = postedAt != null ? df.format(postedAt) : "";
+		
 		return new StringBuilder()
 			.append("comment{author: ")
 			.append(getAuthor())
 			.append(", content: ")
 			.append(getContent())
 			.append(", postedAt: ")
-			.append(getPostedAt())
+			.append(sDate)
 			.append("}")
 			.toString();	
 	}
