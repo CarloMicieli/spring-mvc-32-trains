@@ -19,19 +19,21 @@
 			</li>
 		</ul>
 	
-		<div class="page-header">
-			<h1><s:message code="browse.index.header.title"/>
-			<small><s:message code="browse.index.header.subtitle"/></small></h1>
-		</div>
 		<div class="row-fluid">
-			<div class="span1"></div>
-			<div class="span10">
+			<div class="page-header">
+				<h1>
+					<s:message code="browse.index.header.title"/>
+					<small>(<s:message code="browse.index.header.subtitle"/>)</small>
+				</h1>
+			</div>
+
+			<div class="span11 offset1">
 				<div class="row-fluid">
 					<div class="span4">
-						<h2><s:message code="browse.index.brands.label"/></h2>
-						<p><s:message code="browse.index.brands.description"/></p>
-						<a class="btn btn-info" href="<s:url value="/browse/brands"/>">
-							<s:message code="button.view.details.label"/>
+						<h3><s:message code="browse.index.brands.label"/></h3>
+						<s:message code="browse.index.brands.description"/>
+						<a href="<s:url value="/browse/brands"/>">
+							<s:message code="button.view.all.label"/>
 						</a>
 					</div>
 					<div class="span8">
@@ -48,13 +50,11 @@
 				<hr />
 				<div class="row-fluid">
 					<div class="span4">
-						<h2><s:message code="browse.index.railways.label"/></h2>
-						<p><s:message code="browse.index.railways.description"/></p>
-						<p>
-							<a class="btn btn-info" href="<s:url value="/browse/railways"/>">
-								<s:message code="button.view.details.label"/>
-							</a>
-						</p>
+						<h3><s:message code="browse.index.railways.label"/></h3>
+						<s:message code="browse.index.railways.description"/>
+						<a href="<s:url value="/browse/railways"/>">
+							<s:message code="button.view.all.label"/>
+						</a>
 					</div>
 					<div class="span8">
 						<ul class="unstyled">
@@ -70,13 +70,11 @@
 				<hr />
 				<div class="row-fluid">
 					<div class="span4">
-						<h2><s:message code="browse.index.scales.label"/></h2>
-						<p><s:message code="browse.index.scales.description"/></p>
-						<p>
-							<a class="btn btn-info" href="<s:url value="/browse/scales"/>">
-								<s:message code="button.view.details.label"/>
-							</a>
-						</p>
+						<h3><s:message code="browse.index.scales.label"/></h3>
+						<s:message code="browse.index.scales.description"/>
+						<a href="<s:url value="/browse/scales"/>">
+							<s:message code="button.view.all.label"/>
+						</a>
 					</div>
 					<div class="span8">
 						<ul class="unstyled">
@@ -92,13 +90,11 @@
 				<hr />
 				<div class="row-fluid">
 					<div class="span4">
-						<h2><s:message code="browse.index.eras.label"/></h2>
-						<p><s:message code="browse.index.eras.description"/></p>
-						<p>
-							<a class="btn btn-info" href="<s:url value="/browse/eras"/>">
-								<s:message code="button.view.details.label"/>
-							</a>
-						</p>
+						<h3><s:message code="browse.index.eras.label"/></h3>
+						<s:message code="browse.index.eras.description"/>
+						<a href="<s:url value="/browse/eras"/>">
+							<s:message code="button.view.all.label"/>
+						</a>
 					</div>
 					<div class="span8">
 						<ul class="unstyled">
@@ -114,13 +110,11 @@
 				<hr />
 				<div class="row-fluid">
 					<div class="span4">
-						<h2><s:message code="browse.index.categories.label"/></h2>
-						<p><s:message code="browse.index.categories.description"/></p>
-						<p>
-							<a class="btn btn-info" href="<s:url value="/browse/categories"/>">
-								<s:message code="button.view.details.label"/>
-							</a>
-						</p>
+						<h3><s:message code="browse.index.categories.label"/></h3>
+						<s:message code="browse.index.categories.description"/>
+						<a href="<s:url value="/browse/categories"/>">
+							<s:message code="button.view.all.label"/>
+						</a>
 					</div>
 					<div class="span8">
 						<ul class="unstyled">

@@ -18,24 +18,21 @@
 	</ul>
 
 	<div class="page-header">
-		<h1><s:message code="browse.eras.header.title" /></h1>
-		<small><s:message code="browse.eras.header.subtitle" /></small>
+		<h1>
+			<s:message code="browse.eras.header.title" />
+			<small><s:message code="browse.eras.header.subtitle" /></small>
+		</h1>
 	</div>
 
 	<c:forEach var="era" items="${eras}">
 	<div class="row-fluid">
-		<div class="span2"></div>
-		<div class="span2">
+		<div class="span2 offset1">
 			<span style="font-family: verdana; font-size: 36px">${era.label}</span>
 		</div>
 		<div class="span4">
-			<h3></h3>
-			<dl class="dl-horizontal">
-				<dt></dt>
-				<dd>${era.description}</dd>
-			</dl>
+			${era.description}
 		</div>
-		<div class="span4">
+		<div class="span5">
 			<s:url var="eraUrl" value="/browse/eras/{slug}">
 				<s:param name="slug" value="${era.key}"/>
 			</s:url>

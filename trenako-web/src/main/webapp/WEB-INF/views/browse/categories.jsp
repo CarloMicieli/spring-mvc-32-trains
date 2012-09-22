@@ -18,22 +18,19 @@
 	</ul>
 
 	<div class="page-header">
-		<h1><s:message code="browse.categories.header.title" /></h1>
-		<small><s:message code="browse.categories.header.subtitle" /></small>
+		<h1>
+			<s:message code="browse.categories.header.title" />
+			<small><s:message code="browse.categories.header.subtitle" /></small>
+		</h1>
 	</div>
 
 	<c:forEach var="cat" items="${categories}">
 	<div class="row-fluid">
-		<div class="span2"></div>
-		<div class="span2">
+		<div class="span3 offset2">
 			<span style="font-family: verdana; font-size: 18px">${cat.label}</span>
 		</div>
-		<div class="span4">
-			<h3></h3>
-			<dl class="dl-horizontal">
-				<dt></dt>
-				<dd>${cat.description}</dd>
-			</dl>
+		<div class="span3">
+			${cat.description}
 		</div>
 		<div class="span4">
 			<s:url var="catUrl" value="/browse/categories/{slug}">

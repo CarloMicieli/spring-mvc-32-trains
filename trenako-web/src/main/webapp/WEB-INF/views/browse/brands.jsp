@@ -18,8 +18,10 @@
 		</ul>
 
 		<div class="page-header">
-			<h1><s:message code="browse.brands.header.title" /></h1>
-			<small><s:message code="browse.brands.header.subtitle" /></small>
+			<h1>
+				<s:message code="browse.brands.header.title" />
+				<small><s:message code="browse.brands.header.subtitle" /></small>
+			</h1>
 		</div>
 
 		<c:forEach var="brand" items="${brands}">

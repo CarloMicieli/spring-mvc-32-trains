@@ -18,8 +18,10 @@
 	</ul>
 
 	<div class="page-header">
-		<h1><s:message code="browse.scales.header.title" /></h1>
-		<small><s:message code="browse.scales.header.subtitle" /></small>
+		<h1>
+			<s:message code="browse.scales.header.title" />
+			<small><s:message code="browse.scales.header.subtitle" /></small>
+		</h1>
 	</div>
 
 	<c:forEach var="scale" items="${scales}">
