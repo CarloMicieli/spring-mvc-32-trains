@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+<%@ taglib tagdir="/WEB-INF/tags/html" prefix="html" %>
 
 <html>
 	<head>
@@ -32,107 +33,48 @@
 					<h1><s:message code="railways.new.title.label" /></h1>
 				</div>
 				<s:url var="createUrl" value="/admin/railways" />
-				<form:form id="form" class="form-horizontal" method="POST" action="${createUrl}" modelAttribute="railway" enctype="multipart/form-data">
-					
-					<fieldset>    				
-						<c:if test="${not empty message}">
-						<div class="alert alert-${message.type}">
-							<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
-						</div>
-						</c:if>
-    				
-    					<s:bind path="railway.name">
-    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="name" cssClass="control-label">
-								<s:message code="railway.name.label" />:
-							</form:label>
-							<div class="controls">
-								<form:input path="name" cssClass="input-xlarge focused" required="required"/>
-								<form:errors path="name" element="span" cssClass="help-inline"/>
-							</div>
-						</div>
-						</s:bind>
-						
-						<s:bind path="railway.companyName">
-    					<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="companyName" cssClass="control-label">
-								<s:message code="railway.companyName.label" />:
-							</form:label>							
-							<div class="controls">
-								<form:input path="companyName" cssClass="input-xlarge focused"/>
-								<form:errors path="companyName" element="span" cssClass="help-inline"/>
-							</div>
-						</div>
-						</s:bind>
-						
-						<tk:localizedTextArea path="description" rows="4"/>
+				<html:uploadForm actionUrl="${createUrl}" model="railwayForm">
+					<html:textBox bindContext="railwayForm" 
+						name="railway.name" 
+						label="railway.name.label" 
+						isRequired="true"/>
+				
+					<html:textBox bindContext="railwayForm" 
+						name="railway.companyName" 
+						label="railway.companyName.label" 
+						isRequired="false"/>
 
-						<s:bind path="railway.country">
-						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="country" cssClass="control-label">
-								<s:message code="railway.country.label" />:
-							</form:label>
-							<div class="controls">
-							<form:select path="country">
-								<form:option value="" label="--countries--"/>
-								<form:options items="${countries}"/>
-							</form:select>
-							<form:errors path="country" element="span" cssClass="help-inline"/>
-							</div>
-						</div>
-						</s:bind>
+					<tk:localizedTextArea path="railway.description" rows="4"/>
 
-						<s:bind path="railway.operatingSince">
-						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="operatingSince" cssClass="control-label">
-								<s:message code="railway.operatingSince.label" />:
-							</form:label>
-							<div class="controls">
-								<form:input path="operatingSince" type="date" cssClass="input-xlarge focused"/>
-								<form:errors path="operatingSince" element="span" cssClass="help-inline"/>
-							</div>
-						</div>
-						</s:bind>
-						
-						<s:bind path="railway.operatingUntil">
-						<div class="control-group${(not empty status.errorMessage) ? ' error' : ''}">
-							<form:label path="operatingUntil" cssClass="control-label">
-								<s:message code="railway.operatingUntil.label" />:
-							</form:label>
-							<div class="controls">
-								<form:input path="operatingUntil" type="date" cssClass="input-xlarge focused"/>
-								<form:errors path="operatingUntil" element="span" cssClass="help-inline"/>
-							</div>
-						</div>
-						</s:bind>
-						
-						<div class="control-group">
-							<label class="control-label" for="file">
-								<s:message code="railway.logo.label" />:
-							</label>
-							<div class="controls">
-								<input class="input-file" id="file" name="file" type="file">
-								<form:errors element="span" cssClass="help-inline"/>
-								<p class="help-block">
-									<s:message code="railway.logo.help.label" />
-								</p>
-							</div>
-						</div>						
+					<html:dropdownList items="${countries}" 
+						label="railway.country.label"
+						bindContext="railwayForm"  
+						name="railway.country" 
+						optionsLabel="railway.countries.label"/>
 					
-						<div class="form-actions">
-							<form:button class="btn btn-primary" type="submit" name="_action_save">
-								<i class="icon-check icon-white"></i>
-								<s:message code="button.save.label" />
-							</form:button>
+					<html:textBox bindContext="railwayForm" 
+						name="railway.operatingSince" 
+						label="railway.operatingSince.label" 
+						isRequired="false"/>
+
+					<html:textBox bindContext="railwayForm" 
+						name="railway.operatingUntil" 
+						label="railway.operatingUntil.label" 
+						isRequired="false"/>
+					
+					<html:uploadFile label="railway.logo.label" 
+						bindContext="railwayForm" 
+						name="file" 
+						helpLabel="railway.logo.help.label"/>
 						
-							<form:button class="btn" type="reset" name="_action_reset">
-								<i class="icon-repeat icon-black"></i>
-								<s:message code="button.reset.label" />
-							</form:button>						
-						</div>				
-					</fieldset>
-				</form:form>
+				</html:uploadForm>
 			</div>
-		</div>	
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#railway\\.operatingSince").datepicker({ dateFormat: "yy-mm-dd" });
+				$("#railway\\.operatingUntil").datepicker({ dateFormat: "yy-mm-dd" });
+			});
+		</script>
 	</body>
 </html>

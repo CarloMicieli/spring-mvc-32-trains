@@ -124,6 +124,7 @@ public class AdminBrandsController {
 		}
 
 		model.addAttribute(brand);
+		model.addAttribute(new UploadForm("brand", slug, null));
 		return "brand/show";
 	}
 	

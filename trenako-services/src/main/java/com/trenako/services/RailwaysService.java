@@ -18,6 +18,7 @@ package com.trenako.services;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.trenako.entities.Railway;
 
@@ -100,12 +101,14 @@ public interface RailwaysService {
 	 * </p>	 
 	 * @param railway the {@code Railway} to be saved
 	 */
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
 	void save(Railway railway);
 
 	/**
 	 * Removes a {@link Railway} from the data store.
 	 * @param railway the {@code Railway} to be removed
 	 */
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
 	void remove(Railway railway);
 
 }

@@ -95,7 +95,7 @@ public interface BrandsService {
 	 * </p>	 
 	 * @param brand the {@code Brand} to be saved
 	 */
-	@PreAuthorize("hasRole('ROLE_STAFF')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
 	void save(Brand brand);
 
 	/**
@@ -106,6 +106,6 @@ public interface BrandsService {
 	 * </p>	 
 	 * @param brand the {@code Brand} to be saved
 	 */
-	@PreAuthorize("hasRole('ROLE_STAFF')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
 	void remove(Brand brand);
 }

@@ -40,6 +40,17 @@ public class RailwayForm {
 		this.railway = railway;
 	}
 	
+	/**
+	 * Creates a new empty {@code RailwayForm}.
+	 */
+	public RailwayForm() {
+	}
+
+	/**
+	 * Creates a empty {@code RailwayForm}.
+	 * @param railway the railway 
+	 * @param file the picture file
+	 */
 	public RailwayForm(Railway railway, MultipartFile file) {
 		this.railway = railway;
 		this.file = file;

@@ -147,6 +147,7 @@ public class AdminRailwaysController {
 		}
 
 		model.addAttribute("railway", railway);
+		model.addAttribute(new UploadForm("railway", slug, null));
 		return "railway/show";
 	}
 

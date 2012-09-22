@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 
 import com.trenako.entities.Railway;
 import com.trenako.services.RailwaysService;
@@ -64,8 +66,10 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 	public void shouldShowARailway() throws Exception {
 		mockMvc().perform(get("/admin/railways/{slug}", DB))
 			.andExpect(status().isOk())
-			.andExpect(model().size(2))
+			.andExpect(model().size(3))
 			.andExpect(model().attributeExists("railway"))
+			.andExpect(model().attributeExists("uploadForm"))
+			.andExpect(model().attributeExists("countries"))
 			.andExpect(forwardedUrl(view("railway", "show")));
 	}
 	
@@ -74,7 +78,7 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 		mockMvc().perform(get("/admin/railways/new"))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
-			.andExpect(model().attributeExists("railway"))
+			.andExpect(model().attributeExists("railwayForm"))
 			.andExpect(forwardedUrl(view("railway", "new")));
 	}
 	
@@ -82,9 +86,9 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 	public void shouldCreateNewRailways() throws Exception {
 		mockMvc().perform(fileUpload("/admin/railways")
 				.file("file", new byte[]{})
-				.param("name", "DB")
-				.param("country", "de")
-				.param("description['en']", "Railway description"))
+				.param("railway.name", "DB")
+				.param("railway.country", "de")
+				.param("railway.description['en']", "Railway description"))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_CREATED_MSG)))
@@ -96,7 +100,7 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 		mockMvc().perform(get("/admin/railways/{slug}/edit", DB))
 			.andExpect(status().isOk())
 			.andExpect(model().size(2))
-			.andExpect(model().attributeExists("railway"))
+			.andExpect(model().attributeExists("railwayForm"))
 			.andExpect(forwardedUrl(view("railway", "edit")));
 	}
 	
@@ -171,8 +175,14 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 	
 	@Test
 	public void shouldUploadNewRailwayImages() throws Exception {
-		mockMvc().perform(fileUpload("/admin/railways/{slug}/upload", DB)
-				.file("file", "file content".getBytes()))
+		MockMultipartFile mockFile = new MockMultipartFile("file", "image.jpg",
+				MediaType.IMAGE_JPEG.toString(), 
+				"file content".getBytes());
+		
+		mockMvc().perform(fileUpload("/admin/railways/upload")
+				.file(mockFile)
+				.param("entity", "railway")
+				.param("slug", DB))				
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_LOGO_UPLOADED_MSG)))
@@ -180,18 +190,20 @@ public class AdminRailwaysControllerMappingTests extends AbstractSpringControlle
 	}
 	
 	@Test
-	public void shouldRedirectIfRailwayImagesAreNotValid() throws Exception {
-		mockMvc().perform(fileUpload("/admin/railways/{slug}/upload", DB)
-				.file("file", EMPTY_FILE))
+	public void shouldRedirectIfRailwayImagesAreEmpty() throws Exception {
+		mockMvc().perform(fileUpload("/admin/railways/upload")
+				.file("file", EMPTY_FILE)
+				.param("entity", "railway")
+				.param("slug", DB))
 			.andExpect(status().isOk())
-			.andExpect(flash().attributeCount(1))
-			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_INVALID_UPLOAD_MSG)))
 			.andExpect(redirectedUrl("/admin/railways/db"));
 	}
 	
 	@Test
 	public void shouldDeleteRailwayImages() throws Exception {
-		mockMvc().perform(delete("/admin/railways/{slug}/upload", DB))
+		mockMvc().perform(delete("/admin/railways/upload")
+				.param("entity", "railway")
+				.param("slug", DB))
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(AdminRailwaysController.RAILWAY_LOGO_DELETED_MSG)))

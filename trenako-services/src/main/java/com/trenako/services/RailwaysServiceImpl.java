@@ -19,7 +19,6 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.trenako.entities.Railway;
@@ -56,13 +55,11 @@ public class RailwaysServiceImpl implements RailwaysService {
 	}
 	
 	@Override
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save(Railway railway) {
 		repo.save(railway);
 	}
 	
 	@Override
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void remove(Railway railway) {
 		repo.delete(railway);
 	}

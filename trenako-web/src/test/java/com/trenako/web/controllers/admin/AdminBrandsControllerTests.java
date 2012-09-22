@@ -96,6 +96,7 @@ public class AdminBrandsControllerTests {
 	@Test
 	public void shouldShowBrands() {
 		String slug = "acme";
+		UploadForm uploadForm = new UploadForm("brand", slug, null);
 		when(service.findBySlug(eq(slug))).thenReturn(acme());
 
 		String viewName = controller.show(slug, model, redirectAtts);
@@ -103,7 +104,8 @@ public class AdminBrandsControllerTests {
 		verify(service, times(1)).findBySlug(eq(slug));
 		assertEquals(viewName, "brand/show");
 		assertTrue(model.containsAttribute("brand"));
-		assertEquals(acme(), (Brand) model.get("brand"));
+		assertEquals(acme(), model.get("brand"));
+		assertEquals(uploadForm, model.get("uploadForm"));
 	}
 	
 	@Test

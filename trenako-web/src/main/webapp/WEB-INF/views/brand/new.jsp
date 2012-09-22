@@ -52,7 +52,7 @@
 						label="brand.industrial.label"
 						helpLabel="brand.industrial.help.label" />
 
-					<html:upload bindContext="brandForm" name="file" 
+					<html:uploadFile bindContext="brandForm" name="file" 
 						label="brand.logo.label"
 						helpLabel="brand.logo.help.label" />
 

@@ -66,8 +66,9 @@ public class AdminBrandsControllerMappingTests extends AbstractSpringControllerT
 	public void shouldShowABrand() throws Exception {
 		mockMvc().perform(get("/admin/brands/{slug}", ACME))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
+			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("brand"))
+			.andExpect(model().attributeExists("uploadForm"))
 			.andExpect(forwardedUrl(view("brand", "show")));
 	}
 	

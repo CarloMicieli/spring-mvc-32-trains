@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+<%@ taglib tagdir="/WEB-INF/tags/html" prefix="html" %>
 
 <html>
 	<head>
@@ -39,16 +40,8 @@
 					<s:message code="brand.lastModified.label" /> <strong><tk:period since="${brand.lastModified}"/></strong>
 				</div>
 				
-				<c:if test="${not empty message}">
-				<div class="row-fluid">
-					<div class="span12">
-						<div class="alert alert-${message.type}">
-							<s:message code="${message.message}" text="${message.message}" arguments="${message.args}"/>
-						</div>
-					</div>
-				</div>
-				</c:if>
-				
+				<html:alert msg="${message}"/>
+								
 				<div class="row-fluid">
 					<div class="span12">
 						<dl class="dl-horizontal">
@@ -88,69 +81,15 @@
 				</div>
 				
 				<hr/>
-				<!-- Modal -->
-				<div id="uploadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  				<s:url var="uploadUrl" value="/admin/brands/{slug}/upload">
-						<s:param name="slug" value="${brand.slug}"></s:param>
-					</s:url>
-	  				<form:form action="${uploadUrl}" method="POST" enctype="multipart/form-data" modelAttribute="brand">
-	  				<div class="modal-header">
-	    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-	    				<h3 id="myModalLabel">Upload file</h3>
-	  				</div>
-	  				<div class="modal-body">
-	    				<p>
-							<input class="input-file" id="file" name="file" type="file">
-							<form:errors element="span" cssClass="help-inline"/>
-						</p>
-						<p class="help-block">
-							<s:message code="brand.logo.help.label"/>
-						</p>
-					</div>
-	  				<div class="modal-footer">
-	    				<button class="btn btn-primary"><s:message code="button.upload.label"/></button>
-	    				<button class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="button.close.label"/></button>
-	  				</div>
-	  				</form:form>
-				</div>
-				<div class="row-fluid">
-					<div class="span10 offset1">
-						<ul class="thumbnails">
-            				<li class="span6">
-            					<s:message code="brand.logo.title.label" arguments="${brand.name}" />
-              					<a href="#" class="thumbnail">
-                					<s:url value="/images/brand_{slug}" var="imgUrl">
-										<s:param name="slug" value="${brand.slug}" />
-									</s:url>
-									
-									<img src="${imgUrl}" alt="Not found"/>
-              					</a>
-            				</li>
-               				<li class="span3">
-              					<s:message code="brand.thumbnail.title.label" arguments="${brand.name}" />
-              					<a href="#" class="thumbnail">
-                					<s:url value="/images/th_brand_{slug}" var="imgUrl">
-										<s:param name="slug" value="${brand.slug}" />
-									</s:url>
-									<img src="${imgUrl}" alt="Not found"/>
-              					</a>
-            				</li>
-            			</ul>
-					</div>
-				</div>
-				<div class="row-fluid" style="margin-bottom: 15px">
-					<div class="span10 offset1">
-						<s:url var="deleteImgUrl" value="/admin/brands/{slug}/upload">
-							<s:param name="slug" value="${brand.slug}"></s:param>
-						</s:url>
-              			<form:form id="deleteForm" action="${deleteImgUrl}" method="DELETE">
-							<a href="#uploadModal" class="open-uploadModal btn btn-warning" role="button" data-toggle="modal">
-								<s:message code="button.upload.file.label"/>
-							</a>&nbsp;&nbsp;or&nbsp;
-							<a id="deleteLink" href="#"><s:message code="button.upload.delete.label"/></a>
-						</form:form>
-					</div>
-				</div>
+				
+				<s:url var="uploadUrl" value="/admin/brands/upload"/>
+				<s:url value="/images/brand_{slug}" var="imgUrl">
+					<s:param name="slug" value="${brand.slug}" />
+				</s:url>
+				<s:url value="/images/th_brand_{slug}" var="thumbUrl">
+					<s:param name="slug" value="${brand.slug}" />
+				</s:url>
+				<html:upload uploadUrl="${uploadUrl}" name="${brand.name}" thumbUrl="${thumbUrl}" imgUrl="${imgUrl}"/>
 			</div>
     	</div>
     	<script type="text/javascript">

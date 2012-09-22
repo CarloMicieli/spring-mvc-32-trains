@@ -89,6 +89,7 @@ public class AdminRailwaysControllerTests {
 	@Test
 	public void shouldShowRailways() {
 		String slug = "railway-slug";
+		UploadForm uploadForm = new UploadForm("railway", slug, null);
 		Railway railway = new Railway();
 		when(service.findBySlug(eq(slug))).thenReturn(railway);
 		
@@ -97,6 +98,7 @@ public class AdminRailwaysControllerTests {
 		verify(service, times(1)).findBySlug(eq(slug));
 		assertEquals("railway/show", viewName);
 		assertEquals(railway, model.get("railway"));
+		assertEquals(uploadForm, model.get("uploadForm"));
 	}
 
 	@Test
@@ -281,7 +283,7 @@ public class AdminRailwaysControllerTests {
 	}
 	
 	@Test
-	public void shouldDeleteRailwayLogos() {
+	public void shouldDeleteRailwayImages() {
 		String entity = "railway";
 		String slug = "railway-slug";
 		UploadForm uploadForm = new UploadForm(entity, slug, null);
