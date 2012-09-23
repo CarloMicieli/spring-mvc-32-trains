@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
 
@@ -35,12 +36,15 @@
 						</div>
 						<div class="span10">
 							<div class="pull-right">
-								<select id="items" name="items">
-									<option value="10">10 items</option>
-									<option value="25">25 items</option>
-									<option value="50">50 items</option>
-									<option value="100">100 items</option>
-								</select>
+								<form:form method="get" modelAttribute="options" class="form-inline">
+									Items:&nbsp;
+									
+									<form:select path="size" class="input-mini">
+										<form:options items="${options.resultSizes}"/>
+									</form:select>
+									
+									<button type="submit" class="btn">change</button>
+								</form:form>
 							</div>
 						</div>
 					</div>

@@ -150,6 +150,10 @@ public class RangeRequest {
 		return getFirstOrder().getProperty();
 	}
 	
+	public String getDirection() {
+		return getFirstOrder().getDirection() == Direction.ASC ? "asc" : "desc";
+	}
+	
 	/**
 	 * Returns the sorting parameters.
 	 * @return the sorting
@@ -207,4 +211,5 @@ public class RangeRequest {
 		
 		return value;
 	}
+
 }

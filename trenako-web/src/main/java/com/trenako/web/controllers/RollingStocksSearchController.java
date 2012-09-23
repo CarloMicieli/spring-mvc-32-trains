@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.trenako.criteria.SearchRequest;
 import com.trenako.results.RangeRequest;
 import com.trenako.services.BrowseService;
+import com.trenako.web.controllers.form.ResultsOptionsForm;
 
 /**
  * It represents the controller to manage the requests to search
@@ -37,6 +38,7 @@ import com.trenako.services.BrowseService;
 @RequestMapping("/rs")
 public class RollingStocksSearchController {
 	
+
 	private final BrowseService service;
 	
 	/**
@@ -53,7 +55,7 @@ public class RollingStocksSearchController {
 		ModelAndView mav = new ModelAndView("browse/results");
 		
 		mav.addObject("results", service.findByCriteria(search, range));
+		mav.addObject("options", ResultsOptionsForm.buildFor(range));
 		return mav;
 	}
-	
 }

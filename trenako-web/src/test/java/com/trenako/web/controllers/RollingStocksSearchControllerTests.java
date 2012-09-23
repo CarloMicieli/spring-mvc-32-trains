@@ -30,6 +30,7 @@ import com.trenako.criteria.SearchRequest;
 import com.trenako.results.RangeRequest;
 import com.trenako.results.RollingStockResults;
 import com.trenako.services.BrowseService;
+import com.trenako.web.controllers.form.ResultsOptionsForm;
 
 /**
  * 
@@ -37,7 +38,7 @@ import com.trenako.services.BrowseService;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class RollingStockSearchControllerTests {
+public class RollingStocksSearchControllerTests {
 
 	@Mock BrowseService mockService;
 	RollingStocksSearchController controller;
@@ -49,9 +50,9 @@ public class RollingStockSearchControllerTests {
 	}
 
 	@Test
-	public void shouldSearchRollingStocks() {
+	public void shouldRenderTheRollingStockResultsView() {
 		SearchRequest search = mock(SearchRequest.class);
-		RangeRequest range = mock(RangeRequest.class);
+		RangeRequest range = new RangeRequest(RangeRequest.DEFAULT_SORT, 10, null, null);
 		
 		RollingStockResults value = mock(RollingStockResults.class);
 		when(mockService.findByCriteria(eq(search), eq(range))).thenReturn(value);
@@ -61,5 +62,6 @@ public class RollingStockSearchControllerTests {
 		verify(mockService, times(1)).findByCriteria(eq(search), eq(range));
 		assertViewName(mav, "browse/results");
 		assertModelAttributeValue(mav, "results", value);
+		assertModelAttributeValue(mav, "options", ResultsOptionsForm.buildFor(range));
 	}
 }
