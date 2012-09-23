@@ -28,7 +28,8 @@
 						bindContext="rollingStockForm"
 						name="rs.brand" 
 						label="rollingStock.brand.label" 
-						optionsLabel="rollingStock.brands.list.label"/>
+						optionsLabel="rollingStock.brands.list.label"
+						itemLabel="name" itemValue="slug"/>
 
 					<html:textBox 
 						label="rollingStock.itemNumber.label"  
@@ -40,7 +41,8 @@
 						bindContext="rollingStockForm"
 						name="rs.railway" 
 						label="rollingStock.railway.label" 
-						optionsLabel="rollingStock.railways.list.label"/>
+						optionsLabel="rollingStock.railways.list.label"
+						itemLabel="name" itemValue="slug"/>
 						
 					<html:dropdownList items="${rollingStockForm.scalesList}" 
 						bindContext="rollingStockForm"

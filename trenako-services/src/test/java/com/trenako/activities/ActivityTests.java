@@ -123,7 +123,7 @@ public class ActivityTests {
 		Activity a = new Activity(user(), 
 				ActivityVerb.RS_INSERT, 
 				ActivityObject.rsObject(rsRef()));
-		assertEquals("activity{actor: bob, verb: rs-insert, object: object{type: rollingStock, url: /rollingstocks/acme-123456, name: ACME 123456}, context: null}", a.toString());
+		assertEquals("activity{actor: bob, verb: rs-insert, object: object{type: rollingStock, slug: acme-123456, url: /rollingstocks/acme-123456, name: ACME 123456}, context: null}", a.toString());
 	}
 	
 	@Test
@@ -134,7 +134,7 @@ public class ActivityTests {
 		
 		assertEquals("bob", a.getActor());
 		assertEquals("rs-insert", a.getVerb());
-		assertEquals("object{type: rollingStock, url: /rollingstocks/acme-123456, name: ACME 123456}", a.getObject().toString());
+		assertEquals("object{type: rollingStock, slug: acme-123456, url: /rollingstocks/acme-123456, name: ACME 123456}", a.getObject().toString());
 		assertNull("Activity context is not null", a.getContext());
 	}
 	
@@ -147,7 +147,7 @@ public class ActivityTests {
 		
 		assertEquals("bob", a.getActor());
 		assertEquals("rs-insert", a.getVerb());
-		assertEquals("object{type: rollingStock, url: /rollingstocks/acme-123456, name: ACME 123456}", a.getObject().toString());
+		assertEquals("object{type: rollingStock, slug: acme-123456, url: /rollingstocks/acme-123456, name: ACME 123456}", a.getObject().toString());
 		assertEquals("activityContext{type: collection, name: bob, description: }", a.getContext().toString());
 	}
 	

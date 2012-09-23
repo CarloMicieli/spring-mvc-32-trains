@@ -31,14 +31,14 @@ public class ActivityObjectTests {
 	
 	@Test
 	public void shouldProduceStringRepresentationForActivityObjects() {
-		ActivityObject obj = new ActivityObject("type", "/localhost", "name");
-		assertEquals("object{type: type, url: /localhost, name: name}", obj.toString());
+		ActivityObject obj = new ActivityObject("type", "slug", "/localhost", "name");
+		assertEquals("object{type: type, slug: slug, url: /localhost, name: name}", obj.toString());
 	}
 	
 	@Test
 	public void shouldCheckWhetherTwoActivityObjectsAreEquals() {
-		ActivityObject x = new ActivityObject("type", "/localhost", "name");
-		ActivityObject y = new ActivityObject("type", "/localhost", "name");
+		ActivityObject x = new ActivityObject("type", "slug", "/localhost", "name");
+		ActivityObject y = new ActivityObject("type", "slug", "/localhost", "name");
 		
 		assertTrue("Activity objects are different", x.equals(x));
 		assertTrue("Activity objects are different", x.equals(y));
@@ -46,14 +46,14 @@ public class ActivityObjectTests {
 	
 	@Test
 	public void shouldCheckWhetherTwoActivityObjectsAreDifferent() {
-		ActivityObject x = new ActivityObject("type", "/localhost", "name");
-		ActivityObject y = new ActivityObject("type2", "/localhost", "name");
+		ActivityObject x = new ActivityObject("type", "slug", "/localhost", "name");
+		ActivityObject y = new ActivityObject("type2", "slug", "/localhost", "name");
 		assertFalse("Activity objects are equals", x.equals(y));
 		
-		ActivityObject z = new ActivityObject("type", "/localhost/2", "name");
+		ActivityObject z = new ActivityObject("type", "slug", "/localhost/2", "name");
 		assertFalse("Activity objects are equals", x.equals(z));
 		
-		ActivityObject t = new ActivityObject("type", "/localhost", "name2");
+		ActivityObject t = new ActivityObject("type", "slug", "/localhost", "name2");
 		assertFalse("Activity objects are equals", x.equals(t));
 	}
 	
@@ -76,5 +76,4 @@ public class ActivityObjectTests {
 			.railway(db())
 			.build();
 	}
-
 }

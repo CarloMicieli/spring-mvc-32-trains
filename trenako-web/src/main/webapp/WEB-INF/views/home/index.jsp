@@ -21,13 +21,13 @@
 					</div>
 				</div>
 				<div class="row-fluid">
-					<div class="span5">
+					<div class="span4">
 						<h2><s:message code="home.recent.activity.title"/></h2>
 						<p>
 							<c:forEach var="act" items="${content.activityStream}">
 								<div class="row-fluid" style="border-left: thick solid ${act.color};">
-									<div class="span3 offset1">
-										<tk:avatar user="${act.actor}" size="48" showName="true"/>
+									<div class="span4">
+										<html:thumb slug="${act.object.slug}"/>
 									</div>
 									<div class="span8">
 										<tk:activity activity="${act}"/> 
@@ -38,10 +38,15 @@
 						</p>
 					</div>
 					
-					<div class="span7" style="margin-bottom: 15px">
+					<div class="span8" style="margin-bottom: 15px">
 						<h2><s:message code="home.rolling.stocks.title"/></h2>
 						<p>
 							<c:forEach var="rs" items="${content.rollingStocks}">
+								<div class="row-fluid">
+									<div class="span11 offset1">
+										<h5><tk:eval expression="${rs.description}" maxLength="75" /></h5>
+									</div>
+								</div>
 								<div class="row-fluid">
 									<div class="span3 offset1">
 							       		<s:url value="/rollingstocks/{slug}" var="showUrl">
@@ -53,19 +58,26 @@
 											</s:url>
 											<img src="${imgUrl}" alt="Not found">
 									    </a>
-									    <br/>
-										<tk:period since="${rs.lastModified}"/>
 									</div>
 									<div class="span8">
-										<h5><tk:eval expression="${rs.description}" maxLength="50" /></h5>
-										<dl class="dl-horizontal">
-											<dt><s:message code="rollingStock.itemNumber.label" /></dt> 
-											<dd>${rs.brand.label} - ${rs.itemNumber}</dd>
-											<dt><s:message code="rollingStock.scale.label" />:</dt> 
-											<dd>${rs.scale.label}</dd>
-											<dt><s:message code="rollingStock.railway.label" />:</dt> 
-											<dd>${rs.railway.label}</dd>
-										</dl>
+										<div class="row-fluid">
+											<div class="span4">
+												<strong><s:message code="rollingStock.itemNumber.label" /></strong>
+												<br/>
+												${rs.brand.label} - ${rs.itemNumber}
+											</div>
+											<div class="span3">
+												<strong><s:message code="rollingStock.scale.label" /></strong>
+												<br/>
+												${rs.scale.label}
+											</div>
+											<div class="span5	">
+												<strong><s:message code="rollingStock.railway.label" /></strong>
+												<br/>
+												${rs.railway.label}
+											</div>
+										</div>
+										<em><tk:period since="${rs.lastModified}"/></em>
 									</div>
 								</div>
 								<hr/>

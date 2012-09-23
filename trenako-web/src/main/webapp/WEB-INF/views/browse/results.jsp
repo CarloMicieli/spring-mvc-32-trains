@@ -6,7 +6,7 @@
 
 <html>
 <head>
-	<title></title>
+	<title><s:message code="rolling.stock.title.label"/></title>
 	<meta name="rs" content="active"/>
 </head>
 
@@ -37,13 +37,15 @@
 						<div class="span10">
 							<div class="pull-right">
 								<form:form method="get" modelAttribute="options" class="form-inline">
-									Items:&nbsp;
+									<s:message code="rolling.stock.items.label"/>:&nbsp;
 									
 									<form:select path="size" class="input-mini">
 										<form:options items="${options.resultSizes}"/>
 									</form:select>
 									
-									<button type="submit" class="btn">change</button>
+									<button type="submit" class="btn">
+										<s:message code="rolling.stock.change.button"/>
+									</button>
 								</form:form>
 							</div>
 						</div>

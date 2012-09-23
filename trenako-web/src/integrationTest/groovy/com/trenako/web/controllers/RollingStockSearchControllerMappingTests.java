@@ -65,8 +65,9 @@ public class RollingStockSearchControllerMappingTests extends AbstractSpringCont
 		
 		mockMvc().perform(get("/rs/brand/{brand}", "acme"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
-			.andExpect(model().attributeExists("results"));
+			.andExpect(model().size(2))
+			.andExpect(model().attributeExists("results"))
+			.andExpect(model().attributeExists("options"));
 		
 		ArgumentCaptor<SearchRequest> arg = ArgumentCaptor.forClass(SearchRequest.class);
 		verify(mockService, times(1)).findByCriteria(arg.capture(), isA(RangeRequest.class));
@@ -80,8 +81,9 @@ public class RollingStockSearchControllerMappingTests extends AbstractSpringCont
 	public void shouldPerformSearchWithMoreCriteria() throws Exception {
 		mockMvc().perform(get("/rs/brand/{brand}/scale/{scale}/era/{era}", "acme", "h0", "iii"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(1))
-			.andExpect(model().attributeExists("results"));
+			.andExpect(model().size(2))
+			.andExpect(model().attributeExists("results"))
+			.andExpect(model().attributeExists("options"));
 		
 		ArgumentCaptor<SearchRequest> arg = ArgumentCaptor.forClass(SearchRequest.class);
 		verify(mockService, times(1)).findByCriteria(arg.capture(), isA(RangeRequest.class));

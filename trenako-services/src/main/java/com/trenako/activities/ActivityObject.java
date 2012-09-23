@@ -29,6 +29,7 @@ public class ActivityObject {
 	private String url;
 	private String objectType;
 	private String displayName;
+	private String slug;
 
 	/**
 	 * Creates an empty {@code ActivityObject}.
@@ -39,11 +40,13 @@ public class ActivityObject {
 	/**
 	 * Creates a new {@code ActivityObject}.
 	 * @param objectType the object type
+	 * @param slug the object slug
 	 * @param url the permalink url to this resource
 	 * @param displayName the resource display name
 	 */
-	public ActivityObject(String objectType, String url, String displayName) {
+	public ActivityObject(String objectType, String slug, String url, String displayName) {
 		this.objectType = objectType;
+		this.slug = slug;
 		this.url = url;
 		this.displayName = displayName;
 	}
@@ -54,6 +57,14 @@ public class ActivityObject {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getSlug() {
+		return slug;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
 	}
 
 	public String getObjectType() {
@@ -80,6 +91,7 @@ public class ActivityObject {
 		ActivityObject other = (ActivityObject) obj;
 		return this.objectType.equals(other.objectType) &&
 				this.url.equals(other.url) &&
+				this.slug.equals(other.slug) &&
 				this.displayName.equals(other.displayName);
 	}
 	
@@ -88,6 +100,8 @@ public class ActivityObject {
 		return new StringBuilder()
 			.append("object{type: ")
 			.append(getObjectType())
+			.append(", slug: ")
+			.append(getSlug())			
 			.append(", url: ")
 			.append(getUrl())
 			.append(", name: ")
@@ -102,6 +116,6 @@ public class ActivityObject {
 	 * @return a new {@code ActivityObject}
 	 */
 	public static ActivityObject rsObject(WeakDbRef<RollingStock> rs) {
-		return new ActivityObject("rollingStock", "/rollingstocks/" + rs.getSlug(), rs.getLabel());
+		return new ActivityObject("rollingStock", rs.getSlug(), "/rollingstocks/" + rs.getSlug(), rs.getLabel());
 	}
 }
