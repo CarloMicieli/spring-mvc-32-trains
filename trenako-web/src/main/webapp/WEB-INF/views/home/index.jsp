@@ -44,7 +44,7 @@
 							<c:forEach var="rs" items="${content.rollingStocks}">
 								<div class="row-fluid">
 									<div class="span11 offset1">
-										<h5><tk:eval expression="${rs.description}" maxLength="75" /></h5>
+										<h4><tk:eval expression="${rs.description}" maxLength="50" /></h4>
 									</div>
 								</div>
 								<div class="row-fluid">
