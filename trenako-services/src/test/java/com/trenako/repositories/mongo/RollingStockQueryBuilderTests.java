@@ -15,6 +15,7 @@
  */
 package com.trenako.repositories.mongo;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 import org.bson.types.ObjectId;
@@ -36,66 +37,80 @@ import static org.springframework.data.mongodb.core.query.Criteria.*;
  */
 public class RollingStockQueryBuilderTests {
 
-	private final ObjectId maxId = new ObjectId("50013ff884aef01777a8b316");
-	private final ObjectId sinceId = new ObjectId("50013ff884aef01777a8b317");
+	private final Object max = "maxValue";
+	private final Object since = "sinceValue";
 	private final Criteria where = where("brandName").is("ACME");
 	
 	@Test
+	public void shouldBuildQueryWithADateRange() {
+		Query query = RollingStockQueryBuilder.buildQuery(where, range(fulldate("2012/06/01 10:30:00.500"), fulldate("2012/06/30 10:30:00.500")));
+		assertQuery(query, "{ \"brandName\" : \"ACME\" , "+
+				"\"lastModified\" : { \"$gt\" : { \"$date\" : \"2012-06-01T08:30:00.500Z\"} , \"$lt\" : { \"$date\" : \"2012-06-30T08:30:00.500Z\"}}}");
+		assertSort(query, "{ \"lastModified\" : -1}");
+		assertLimit(query, 11);
+	}
+	
+	@Test
+	public void shouldBuildQueryWithAObjectIdRange() {
+		Query query = RollingStockQueryBuilder.buildQuery(where, range(new ObjectId("47cc67093475061e3d95369d"), new ObjectId("47cc67093475061e3d95389e")));
+		assertQuery(query, "{ \"brandName\" : \"ACME\" , "+
+				"\"lastModified\" : { \"$gt\" : { \"$oid\" : \"47cc67093475061e3d95369d\"} , \"$lt\" : { \"$oid\" : \"47cc67093475061e3d95389e\"}}}");
+		assertSort(query, "{ \"lastModified\" : -1}");
+		assertLimit(query, 11);
+	}
+	
+	@Test
 	public void shouldBuildAQueryWithDefaultSortingAndCompleteRange() {
-		
-		RangeRequest range = new RangeRequest();
-		range.setMax(maxId);
-		range.setSince(sinceId);
-		range.setSize(10);
-		
-		Query query = RollingStockQueryBuilder.buildQuery(where, range);
+		Query query = RollingStockQueryBuilder.buildQuery(where, range(since, max));
 		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
-				" \"id\" : { \"$gt\" : { \"$oid\" : \"50013ff884aef01777a8b317\"} ," +
-				" \"$lt\" : { \"$oid\" : \"50013ff884aef01777a8b316\"}}}");
+				" \"lastModified\" : { \"$gt\" : \"sinceValue\" ," +
+				" \"$lt\" : \"maxValue\"}}");
 		assertSort(query, "{ \"lastModified\" : -1}");
 		assertLimit(query, 11);
 	}
 	
 	@Test
 	public void shouldBuildQueryWithSinceValueOnly() {
-		
-		RangeRequest range = new RangeRequest();
-		range.setSince(sinceId);
-		range.setSize(10);
-		
-		Query query = RollingStockQueryBuilder.buildQuery(where, range);
+		Query query = RollingStockQueryBuilder.buildQuery(where, range(since, null));
 		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
-				" \"id\" : { \"$gt\" : { \"$oid\" : \"50013ff884aef01777a8b317\"}}}");
+				" \"lastModified\" : { \"$gt\" : \"sinceValue\"}}");
 		assertSort(query, "{ \"lastModified\" : -1}");
 		assertLimit(query, 11);
 	}
 	
 	@Test
 	public void shouldBuildQueryWithMaxValueOnly() {
-		
-		RangeRequest range = new RangeRequest();
-		range.setMax(maxId);
-		range.setSize(10);
-		
-		Query query = RollingStockQueryBuilder.buildQuery(where, range);
+		Query query = RollingStockQueryBuilder.buildQuery(where, range(null, max));
 		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
-				" \"id\" : { \"$lt\" : { \"$oid\" : \"50013ff884aef01777a8b316\"}}}");
+				" \"lastModified\" : { \"$lt\" : \"maxValue\"}}");
 		assertSort(query, "{ \"lastModified\" : -1}");
 		assertLimit(query, 11);
 	}
 
 	@Test
 	public void shouldBuildQueryWithSorting() {
-		RangeRequest range = new RangeRequest();
-		range.setMax(maxId);
-		range.setSize(10);
-		range.setSort(new Sort(Direction.ASC, "powerMethod"));
-		
-		Query query = RollingStockQueryBuilder.buildQuery(where, range);
+		Query query = RollingStockQueryBuilder.buildQuery(where, range(null, max, "powerMethod", Direction.ASC));
 		assertQuery(query, "{ \"brandName\" : \"ACME\" ," +
-				" \"id\" : { \"$lt\" : { \"$oid\" : \"50013ff884aef01777a8b316\"}}}");
+				" \"powerMethod\" : { \"$lt\" : \"maxValue\"}}");
 		assertSort(query, "{ \"powerMethod\" : 1}");
 		assertLimit(query, 11);
+	}
+	
+	private RangeRequest range(Object since, Object max) {
+		RangeRequest range = new RangeRequest();
+		range.setMax(max);
+		range.setSince(since);
+		range.setSize(10);
+		return range;
+	}
+	
+	private RangeRequest range(Object since, Object max, String sort, Direction dir) {
+		RangeRequest range = new RangeRequest();
+		range.setMax(max);
+		range.setSince(since);
+		range.setSize(10);
+		range.setSort(new Sort(dir, sort));
+		return range;
 	}
 	
 	private void assertLimit(Query query, int count) {

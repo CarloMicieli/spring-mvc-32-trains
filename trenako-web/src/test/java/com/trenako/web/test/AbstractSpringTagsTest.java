@@ -37,6 +37,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.util.WebUtils;
 
 import com.trenako.entities.RollingStock;
 import com.trenako.criteria.SearchCriteria;
@@ -76,6 +77,7 @@ public abstract class AbstractSpringTagsTest {
 		// mocking the servlet request
 		mockRequest = new MockHttpServletRequest();
 		mockRequest.setContextPath("/trenako-web");
+		mockRequest.setAttribute(WebUtils.FORWARD_REQUEST_URI_ATTRIBUTE, "/trenako-web");
 		mockPageContext = new MockPageContext(mockServletContext, mockRequest);
 				
 		// mocking the message source to always return the default value

@@ -15,9 +15,11 @@
  */
 package com.trenako.web.infrastructure;
 
+import static com.trenako.test.TestDataBuilder.*;
 import static com.trenako.web.infrastructure.RangeRequestQueryParamsBuilder.*;
 import static org.junit.Assert.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -65,7 +67,7 @@ public class RangeRequestQueryParamsBuilderTests {
 	}
 	
 	@Test
-	public void shouldBuildQueryParamsForNextPage() {
+	public void shouldBuildQueryParamsForNextPage() throws UnsupportedEncodingException {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("size", 25);
 		params.put("sort", "name");
@@ -78,15 +80,39 @@ public class RangeRequestQueryParamsBuilderTests {
 	}
 	
 	@Test
-	public void shouldBuildQueryParamsForPreviousPage() {
+	public void shouldBuildQueryParamsForPreviousPage() throws UnsupportedEncodingException {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("size", 25);
 		params.put("sort", "name");
 		params.put("dir", "DESC");
-		params.put("since", SINCE);
 		params.put("max", MAX);
 		
 		String queryParams = buildQueryParams(params, RangeRequest.MAX_NAME);
 		assertEquals("?dir=DESC&max=501190f0575eef87e33687d8&size=25&sort=name", queryParams);
+	}
+	
+	@Test
+	public void shouldEncodeBuildQueryParams() throws UnsupportedEncodingException {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("size", 25);
+		params.put("sort", "complete name");
+		params.put("dir", "<DESC>");
+		params.put("since", SINCE);
+		params.put("max", MAX);
+		
+		String queryParams = buildQueryParams(params, RangeRequest.MAX_NAME);
+		assertEquals("?dir=%3CDESC%3E&max=501190f0575eef87e33687d8&size=25&sort=complete+name", queryParams);
+	}
+	
+	@Test
+	public void shouldBuildQueryParamsForDates() throws UnsupportedEncodingException {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("size", 25);
+		params.put("sort", "name");
+		params.put("dir", "DESC");
+		params.put("max", fulldate("2012/06/01 11:00:00.000"));
+		
+		String queryParams = buildQueryParams(params, RangeRequest.MAX_NAME);
+		assertEquals("?dir=DESC&max=2012-06-01T11%3A00%3A00&size=25&sort=name", queryParams);
 	}
 }

@@ -17,7 +17,6 @@ package com.trenako.results;
 
 import java.util.Iterator;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
@@ -31,6 +30,12 @@ import com.trenako.AppGlobals;
  */
 public class RangeRequest {
 	
+	public enum RangeTypes {
+		STRINGS,
+		NUMBERS,
+		DATES
+	};
+		
 	/**
 	 * The {@code since} query parameter name.
 	 */
@@ -61,8 +66,8 @@ public class RangeRequest {
 	 */
 	public final static Sort DEFAULT_SORT = new Sort(Direction.DESC, "lastModified");
 	
-	private ObjectId sinceId;
-	private ObjectId maxId;
+	private Object since;
+	private Object max;
 	private Sort sort;
 	private int size;
 	
@@ -73,35 +78,55 @@ public class RangeRequest {
 	}
 
 	/**
+	 * Creates an {@code RangeRequest}.
+	 * @param sort the sort
+	 * @param size the max number of items
+	 * @param since
+	 * @param max
+	 */
+	public RangeRequest(Sort sort, int size, Object since, Object max) {
+		super();
+		this.sort = sort;
+		this.size = size;
+		this.since = since;
+		this.max = max;
+	}
+	
+	public RangeTypes getRangeType() {
+		if (getSortProperty().equals("lastModified")) return RangeTypes.DATES;
+		return RangeTypes.STRINGS;
+	}
+
+	/**
 	 * Returns the minimum {@code id} in the result page.
 	 * @return the minimum {@code id}
 	 */
-	public ObjectId getSince() {
-		return sinceId;
+	public Object getSince() {
+		return since;
 	}
-
+	
 	/**
 	 * Sets the minimum {@code id} in the result page.
 	 * @param sinceId the minimum {@code id}
 	 */
-	public void setSince(ObjectId sinceId) {
-		this.sinceId = sinceId;
+	public void setSince(Object sinceId) {
+		this.since = sinceId;
 	}
 
 	/**
 	 * Returns the maximum {@code id} in the result page.
 	 * @return the maximum {@code id}
 	 */
-	public ObjectId getMax() {
-		return maxId;
+	public Object getMax() {
+		return max;
 	}
 
 	/**
 	 * Sets the maximum {@code id} in the result page.
 	 * @param maxId the maximum {@code id}
 	 */
-	public void setMax(ObjectId maxId) {
-		this.maxId = maxId;
+	public void setMax(Object maxId) {
+		this.max = maxId;
 	}
 
 	/**
@@ -118,11 +143,19 @@ public class RangeRequest {
 	}
 	
 	/**
+	 * Returns the property name used to sort the results.
+	 * @return the property name for sorting
+	 */
+	public String getSortProperty() {
+		return getFirstOrder().getProperty();
+	}
+	
+	/**
 	 * Returns the sorting parameters.
 	 * @return the sorting
 	 */
 	public Sort getSort() {
-		if (sort==null) return DEFAULT_SORT;
+		if (sort == null) return DEFAULT_SORT;
 		return sort;
 	}
 

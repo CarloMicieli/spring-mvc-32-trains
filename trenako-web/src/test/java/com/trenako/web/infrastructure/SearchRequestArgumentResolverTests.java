@@ -15,6 +15,8 @@
  */
 package com.trenako.web.infrastructure;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
@@ -24,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.core.MethodParameter;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -38,9 +42,8 @@ import com.trenako.results.RangeRequest;
  * @author Carlo Micieli
  *
  */
-public class SearchCriteriaArgumentResolverTests {
-	SearchRequest searchRequest = new SearchRequest();
-	SearchRequestArgumentResolver resolver = new SearchRequestArgumentResolver(searchRequest);
+public class SearchRequestArgumentResolverTests {
+	SearchRequestArgumentResolver resolver = new SearchRequestArgumentResolver();
 	
 	MethodParameter parSearchRequest;
 	MethodParameter parRangeRequest;
@@ -67,7 +70,14 @@ public class SearchCriteriaArgumentResolverTests {
 		
 		WebDataBinderFactory binderFactory = mock(WebDataBinderFactory.class);
 		when(binderFactory.createBinder(eq(webRequest), isA(SearchRequest.class), eq("")))
-			.thenReturn(new ExtendedServletRequestDataBinder(searchRequest, ""));
+		.thenAnswer(new Answer<ExtendedServletRequestDataBinder>() {
+			@Override
+			public ExtendedServletRequestDataBinder answer(InvocationOnMock invocation) throws Throwable {
+				Object[] args = invocation.getArguments();
+				SearchRequest req = (SearchRequest) args[1];
+				return new ExtendedServletRequestDataBinder(req, "");				}
+		});
+		
 		
 		Object obj = resolver.resolveArgument(parSearchRequest,
 				null, 

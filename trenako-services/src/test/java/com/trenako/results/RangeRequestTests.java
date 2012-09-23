@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
 import com.trenako.AppGlobals;
+import com.trenako.results.RangeRequest.RangeTypes;
 
 /**
  * 
@@ -30,6 +31,16 @@ import com.trenako.AppGlobals;
  */
 public class RangeRequestTests {
 	RangeRequest range = new RangeRequest();
+	
+	@Test
+	public void shouldCreateDifferentRangeTypesAccordingTheSortCriteria() {
+		RangeRequest x = new RangeRequest();
+		x.setSort(RangeRequest.DEFAULT_SORT);
+		assertEquals(RangeTypes.DATES, x.getRangeType());
+		
+		x.setSort(new Sort("name"));
+		assertEquals(RangeTypes.STRINGS, x.getRangeType());
+	}
 	
 	@Test
 	public void shouldSetOnlyValidCountValues() {
@@ -53,5 +64,15 @@ public class RangeRequestTests {
 		range.setSort(new Sort(Direction.ASC, "name"));
 		assertEquals("name", range.getFirstOrder().getProperty());
 		assertEquals(Direction.ASC, range.getFirstOrder().getDirection());
+	}
+	
+	@Test
+	public void shouldReturnThePropertyNameUsedForSorting() {
+		RangeRequest r1 = new RangeRequest();
+		assertEquals("lastModified", r1.getSortProperty());
+
+		RangeRequest r2 = new RangeRequest();
+		r2.setSort(new Sort("name"));
+		assertEquals("name", r2.getSortProperty());
 	}
 }

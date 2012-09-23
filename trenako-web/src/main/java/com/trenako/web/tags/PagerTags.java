@@ -20,11 +20,13 @@ import static com.trenako.web.infrastructure.RangeRequestQueryParamsBuilder.*;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.web.util.UrlPathHelper;
 
 import com.trenako.results.RollingStockResults;
 import com.trenako.web.tags.html.HtmlTag;
@@ -64,11 +66,14 @@ public class PagerTags extends SpringTagSupport {
 			String prev = messageSource.getMessage("pages.previous.label", null, "&larr; Older", null);
 			String next = messageSource.getMessage("pages.next.label", null, "Newer &rarr;", null);
 			
+			HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+			String path = new UrlPathHelper().getOriginatingRequestUri(request);
+			
 			HtmlTag nextTag = li(a(next).href("#")).cssClass("next disabled");
 			if (getResults().getRange() != null) {
 				if (getResults().hasNextPage()) {
 					String nextParams = buildQueryParamsNext(getResults().getRange());
-					nextTag = li(a(next).href(contextPath, nextParams)).cssClass("next");
+					nextTag = li(a(next).href(path, nextParams)).cssClass("next");
 				}
 			}
 			
@@ -76,7 +81,7 @@ public class PagerTags extends SpringTagSupport {
 			if (getResults().getRange() != null) {
 				if (getResults().hasPreviousPage()) {
 					String nextParams = buildQueryParamsPrevious(getResults().getRange());
-					prevTag = li(a(prev).href(contextPath, nextParams)).cssClass("previous");
+					prevTag = li(a(prev).href(path, nextParams)).cssClass("previous");
 				}
 			}
 			

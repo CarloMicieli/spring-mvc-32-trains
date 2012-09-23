@@ -21,7 +21,7 @@ import com.trenako.criteria.SearchCriteria;
 import com.trenako.utility.Cat;
 
 /**
- * It converts a {@link SearchCriteria} object to mongodb criteria.
+ * It converts a {@link SearchCriteria} object to MongoDB criteria.
  * @author Carlo Micieli
  *
  */
@@ -31,9 +31,9 @@ public final class MongoSearchCriteria {
 	}
 
 	/**
-	 * Builds a mongo criteria for the provided {@code SearchCriteria}.
+	 * Builds a MongoDB criteria for the provided {@code SearchCriteria}.
 	 * @param sc the search criteria
-	 * @return a mongo criteria
+	 * @return a MongoDB criteria
 	 */
 	public static Criteria buildCriteria(SearchCriteria sc) {
 		Criteria c = new Criteria();

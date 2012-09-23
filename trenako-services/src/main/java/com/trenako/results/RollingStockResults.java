@@ -17,13 +17,14 @@ package com.trenako.results;
 
 import java.util.List;
 
-import org.bson.types.ObjectId;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.PropertyUtilsBean;
 
 import com.trenako.criteria.SearchCriteria;
 import com.trenako.entities.RollingStock;
 
 /**
- * The concrete implementation for mongodb of the {@code PaginatedResults}.
+ * The concrete implementation for MongoDB of the {@code PaginatedResults}.
  * <p>
  * It is expected the actual result list size will be 
  * {@code RollingStockResults#getPageSize() + 1}; the existence of this element
@@ -68,16 +69,16 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 		this.criteria = criteria;
 		
 		if (!isEmpty()) {
-			final RollingStock min = results.get(0);
-			final RollingStock max = results.get(size - 1);
+			final RollingStock minRs = results.get(0);
+			final RollingStock maxRs = results.get(size - 1);
 		
-			final ObjectId sinceId = min.getId();
-			final ObjectId maxId = max.getId();
+			final Object since = safeGetProperty(minRs, range.getSortProperty());
+			final Object max = safeGetProperty(maxRs, range.getSortProperty());
 			
 			this.hasPrevious = range.getSince() != null;
 			this.hasNext = results.size() > range.getSize();
-			
-			this.range = new SearchRange(range.getSize(), range.getSort(), sinceId, maxId); 
+
+			this.range = new SearchRange(range.getSize(), range.getSort(), since, max);
 		}
 		else {
 			this.range = null;
@@ -114,5 +115,14 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 	@Override
 	public boolean isEmpty() {
 		return (results == null || results.size() == 0);
+	}
+	
+	protected Object safeGetProperty(Object bean, String name) {
+		try {
+			PropertyUtilsBean pb = BeanUtilsBean.getInstance().getPropertyUtils();
+			return pb.getProperty(bean, name);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

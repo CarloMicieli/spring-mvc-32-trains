@@ -22,9 +22,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.core.MethodParameter;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -61,7 +64,7 @@ public class RangeRequestArgumentResolverTests {
 	}
 
 	@Test
-	public void shouldResolveRequestAsRangeRequest() throws Exception {
+	public void shouldResolveRequestForStringBasedRanges() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.addParameter("max", "47cc67093475061e3d95369d");
 		request.addParameter("since", "47cc67093475061e3d95369e");
@@ -74,7 +77,13 @@ public class RangeRequestArgumentResolverTests {
 		
 		WebDataBinderFactory binderFactory = mock(WebDataBinderFactory.class);
 		when(binderFactory.createBinder(eq(webRequest), isA(RangeRequest.class), eq("")))
-			.thenReturn(new ExtendedServletRequestDataBinder(rangeRequest, ""));
+			.thenAnswer(new Answer<ExtendedServletRequestDataBinder>() {
+				@Override
+				public ExtendedServletRequestDataBinder answer(InvocationOnMock invocation) throws Throwable {
+					Object[] args = invocation.getArguments();
+					RangeRequest req = (RangeRequest) args[1];
+					return new ExtendedServletRequestDataBinder(req, "");				}
+			});
 		
 		Object obj = resolver.resolveArgument(parRangeRequest,
 				null, 
@@ -86,6 +95,44 @@ public class RangeRequestArgumentResolverTests {
 		
 		assertEquals("max=47cc67093475061e3d95369d,since=47cc67093475061e3d95369e,size=50,sort=name: DESC", 
 				obj.toString());
+	}
+	
+	@Test
+	public void shouldResolveRequestForDateBasedRangeRequests() throws Exception {
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.addParameter("max", "2012-06-01T11:40:00");
+		request.addParameter("since", "2012-06-01T11:30:00");
+		request.addParameter("size", "50");
+		request.addParameter("sort", "lastModified");
+		request.addParameter("dir", "desc");
+		
+		NativeWebRequest webRequest = mock(NativeWebRequest.class);
+		when(webRequest.getNativeRequest()).thenReturn(request);
+		
+		WebDataBinderFactory binderFactory = mock(WebDataBinderFactory.class);
+		when(binderFactory.createBinder(eq(webRequest), isA(RangeRequest.class), eq("")))
+			.thenAnswer(new Answer<ExtendedServletRequestDataBinder>() {
+				@Override
+				public ExtendedServletRequestDataBinder answer(InvocationOnMock invocation) throws Throwable {
+					Object[] args = invocation.getArguments();
+					RangeRequest req = (RangeRequest) args[1];
+					return new ExtendedServletRequestDataBinder(req, "");				}
+			});
+		
+		Object obj = resolver.resolveArgument(parRangeRequest,
+				null, 
+				webRequest,
+				binderFactory);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		RangeRequest rangeRequest = (RangeRequest) obj;
+		assertNotNull(rangeRequest);
+		assertNotNull("Since date is null", rangeRequest.getSince());
+		assertNotNull("Max date is null", rangeRequest.getMax());
+		
+		assertEquals("01/06/2012 11:30:00", sdf.format(rangeRequest.getSince()));
+		assertEquals("01/06/2012 11:40:00", sdf.format(rangeRequest.getMax()));
+		
 	}
 	
 	// template method for testing

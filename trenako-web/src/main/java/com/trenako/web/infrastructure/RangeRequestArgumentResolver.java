@@ -16,11 +16,12 @@
 package com.trenako.web.infrastructure;
 
 import java.beans.PropertyEditorSupport;
+import java.util.Date;
 
 import javax.servlet.ServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
-import org.bson.types.ObjectId;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.PropertyValues;
 import org.springframework.core.MethodParameter;
@@ -34,6 +35,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.trenako.results.RangeRequest;
+import com.trenako.results.RangeRequest.RangeTypes;
 
 /**
  * It represents a web request resolver for {@code RangeRequest}.
@@ -68,7 +70,11 @@ public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolv
 
 		if (param.getParameterType().equals(RangeRequest.class)) {
 			
-			RangeRequest rangeRequest = this.failbackRequest;
+			RangeRequest rangeRequest = new RangeRequest(
+					this.failbackRequest.getSort(), 
+					this.failbackRequest.getSize(), 
+					null,
+					null);
 			ServletRequest request = 
 					(ServletRequest) webRequest.getNativeRequest();
 			
@@ -78,30 +84,45 @@ public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolv
 			WebDataBinder wdb = 
 					webBinder.createBinder(webRequest, rangeRequest, "");
 			wdb.registerCustomEditor(Sort.class, new SortPropertyEditor(propValues));
-			wdb.registerCustomEditor(ObjectId.class, new ObjectIdPropertyEditor());
 			wdb.bind(propValues);
 			
+			if (rangeRequest.getRangeType() == RangeTypes.DATES) {
+				parseSinceDate(rangeRequest);
+				parseMaxDate(rangeRequest);
+			}
+						
 			return rangeRequest;
 		}
 		
 		return UNRESOLVED;
 	}
 
+	private void parseSinceDate(RangeRequest rangeRequest) {
+		Object o = rangeRequest.getSince();
+		rangeRequest.setSince(parseDate(o)); 
+	}
+	
+	private void parseMaxDate(RangeRequest rangeRequest) {
+		Object o = rangeRequest.getMax();
+		rangeRequest.setMax(parseDate(o)); 
+	}
+	
+	private Date parseDate(Object since) {
+		if (since == null) return null;
+		
+		try {
+			return DateUtils.parseDate(since.toString(), 
+					DateFormatUtils.ISO_DATETIME_FORMAT.getPattern());
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+	
 	@Override
 	public boolean supportsParameter(MethodParameter par) {
 		Class<?> paramType = par.getParameterType();
 		return RangeRequest.class.isAssignableFrom(paramType);
-	}
-	
-	private static class ObjectIdPropertyEditor extends PropertyEditorSupport {
-		@Override
-		public void setAsText(String text) throws IllegalArgumentException {
-			if (StringUtils.isBlank(text)) {
-				setValue(null);
-			}
-			
-			setValue(new ObjectId(text));
-		}
 	}
 	
 	/**

@@ -15,10 +15,15 @@
  */
 package com.trenako.web.infrastructure;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import com.trenako.results.RangeRequest;
 import com.trenako.results.SearchRange;
@@ -39,7 +44,11 @@ public class RangeRequestQueryParamsBuilder {
 	 * @return the query parameters
 	 */
 	public static String buildQueryParamsNext(SearchRange searchRange) {
-		return buildQueryParams(searchRange.asMap(), RangeRequest.SINCE_NAME);
+		try {
+			return buildQueryParams(searchRange.asMap(), RangeRequest.SINCE_NAME);
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		}
 	}
 	
 	/**
@@ -48,7 +57,11 @@ public class RangeRequestQueryParamsBuilder {
 	 * @return the query parameters
 	 */
 	public static String buildQueryParamsPrevious(SearchRange searchRange) {
-		return buildQueryParams(searchRange.asMap(), RangeRequest.MAX_NAME);
+		try {
+			return buildQueryParams(searchRange.asMap(), RangeRequest.MAX_NAME);
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		}
 	}
 	
 	/**
@@ -56,8 +69,9 @@ public class RangeRequestQueryParamsBuilder {
 	 * @param params the parameters
 	 * @param range range id
 	 * @return the query parameters
+	 * @throws UnsupportedEncodingException 
 	 */
-	static String buildQueryParams(Map<String, Object> params, String range) {
+	static String buildQueryParams(Map<String, Object> params, String range) throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
 		
 		boolean first = true;
@@ -75,8 +89,14 @@ public class RangeRequestQueryParamsBuilder {
 				sb.append("&");
 			}
 			
-			
-			sb.append(entry.getKey()).append("=").append(entry.getValue().toString());
+			String val = ""; 
+			if (entry.getValue() instanceof Date) {
+				val = DateFormatUtils.format((Date) entry.getValue(), DateFormatUtils.ISO_DATETIME_FORMAT.getPattern());
+			}
+			else {
+				val = entry.getValue().toString();
+			}
+			sb.append(entry.getKey()).append("=").append(URLEncoder.encode(val, "UTF-8"));
 		}
 		
 		return sb.toString();

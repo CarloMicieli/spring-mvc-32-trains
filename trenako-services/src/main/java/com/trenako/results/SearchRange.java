@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
@@ -33,8 +32,8 @@ import com.trenako.AppGlobals;
  */
 public final class SearchRange {
 
-	private final ObjectId sinceId;
-	private final ObjectId maxId;
+	private final Object since;
+	private final Object max;
 	private final Sort sort;
 	private final int pageSize;
 	
@@ -45,27 +44,27 @@ public final class SearchRange {
 	 * @param since the first item in the result set
 	 * @param max the last item in the result set
 	 */
-	public SearchRange(int pageSize, Sort sort, ObjectId since, ObjectId max) {
+	public SearchRange(int pageSize, Sort sort, Object since, Object max) {
 		this.pageSize = pageSize;
 		this.sort = sort;
-		this.sinceId = since;
-		this.maxId = max;
+		this.since = since;
+		this.max = max;
 	}
 	
 	/**
 	 * Returns the minimum {@code id} in the result page.
 	 * @return the minimum {@code id}
 	 */
-	public ObjectId getSince() {
-		return sinceId;
+	public Object getSince() {
+		return since;
 	}
 
 	/**
 	 * Returns the maximum {@code id} in the result page.
 	 * @return the maximum {@code id}
 	 */
-	public ObjectId getMax() {
-		return maxId;
+	public Object getMax() {
+		return max;
 	}
 
 	/**
