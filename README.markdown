@@ -1,30 +1,33 @@
 Trenako
 ======
 
-[![Build Status](https://secure.travis-ci.org/CarloMicieli/trenako.png)](http://travis-ci.org/CarloMicieli/trenako)
-
-A java web application for model railways collectors.
+A Java web application for model railways collections
 
 Functionality
------------
+-------------
 
-* Create an entry for model railway rolling stocks;
-* Manage rolling stocks lists and wish lists;
-* Write reviews and comments;
-* Create groups;
-* Manage a calendar of railways events.
+* Manage a model rolling stocks database;
+* Manage rolling stock collections and wish lists;
+* Comments rolling stocks;
+* Write reviews.
 
 Powered by
 ----------
 
-* Spring 3.1
-* Jersey 1.8
+* Spring MVC 3.1
 * Mongodb 2.0
+
+Live demo
+---------
+
+A live demo for this application is currently running on OpenShift at
+
+    http://trenako-carlomicieli.rhcloud.com/web
 
 Usage
 -----
 
-The project build is managed using a `Gradle` script. 
+The project includes a `Gradle` building script. 
 
 To build the project:
 
@@ -37,21 +40,23 @@ To import the project in _Eclipse_:
 The only requirement is to have the `Java development kit 6`, the `Gradle wrapper` will download 
 all the required packages to build the application.
 
-to generate the project Javadoc an appropriate Gradle task exists:
+To generate the project Javadoc an appropriate Gradle task exists:
 
     gradle projectDoc
 
-`Mongo 2.0` must be already installed before the integration tests can run successfully.
-To run the application test suite:
+`Mongo 2.0` must be already installed before it will be possible to run the integration tests successfully.
+To run the tests suite:
 
     gradle check
 
-Before you can run the application the `app.properties` file is required.
+The `app.properties` file is required in order to run the application successfully. This file includes the
+database username and password, and for this reason is not committed to the Git repository.
+A suitable template file is available under:
 
-    cp trenako-web/src/main/resources/META-INF/app.properties.example trenako-web/src/main/resources/META-INF/app.properties
+    trenako-web/src/main/resources/META-INF/app.properties.example
 
 License
-------
+-------
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
