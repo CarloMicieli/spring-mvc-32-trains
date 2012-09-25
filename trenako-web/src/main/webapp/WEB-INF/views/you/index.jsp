@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="/WEB-INF/tlds/TrenakoTagLib.tld" prefix="tk" %>
+<%@ taglib tagdir="/WEB-INF/tags/html" prefix="html" %>
 
 <html>
 	<head>
@@ -26,9 +27,9 @@
 				</div>
 			</div>
 			<div class="span3">
-				<div class="pull-right">
-					<a href="#" class="btn btn-info"><s:message code="button.edit.profile.label"/></a>
-				</div>
+<!-- 				<div class="pull-right"> -->
+<%-- 					<a href="#" class="btn btn-info"><s:message code="button.edit.profile.label"/></a> --%>
+<!-- 				</div> -->
 			</div>
 			<hr />
 		</div>
@@ -100,8 +101,8 @@
 						<p>
 							<c:forEach var="act" items="${info.userActivity}">
 								<div class="row-fluid" style="border-left: thick solid ${act.color};">
-									<div class="span3 offset1">
-										<tk:avatar user="${act.actor}" size="48" showName="true"/>
+									<div class="span4">
+										<html:thumb slug="${act.object.slug}"/>
 									</div>
 									<div class="span8">
 										<tk:activity activity="${act}"/> 
@@ -123,7 +124,7 @@
 						</p>
 						
 						<hr/>
-						<h4>Rolling stock in your collection</h4>						
+						<h4><s:message code="you.collection.title.label"/></h4>						
 						
 						<c:forEach var="item" items="${info.collectionItems}">
 						<div class="row-fluid" style="margin-bottom: 15px;">
@@ -161,7 +162,7 @@
 						</p>
 
 						<hr/>
-						<h4>Rolling stock in your wish lists</h4>						
+						<h4><s:message code="you.wishlist.title.label"/></h4>						
 						
 						<c:forEach var="item" items="${info.wishListItems}">
 						<div class="row-fluid" style="margin-bottom: 15px;">

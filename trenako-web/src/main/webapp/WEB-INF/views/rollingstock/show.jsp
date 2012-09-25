@@ -40,7 +40,7 @@
 					<s:url var="editUrl" value="/rollingstocks/{slug}/edit">
 						<s:param name="slug" value="${result.rs.slug}"></s:param>
 					</s:url>
-					<a class="btn btn-primary" style="width: 110px" href="${editUrl}">
+					<a class="btn btn-success" style="width: 110px" href="${editUrl}">
 						<i class="icon-edit icon-white"></i> <s:message code="button.edit.label"/>
 					</a>
 				</p>
@@ -57,13 +57,13 @@
 	    			<s:url var="addCollUrl" value="/collections/add/{slug}">
 						<s:param name="slug" value="${result.rs.slug}"></s:param>
 					</s:url>				
-					<a class="btn btn-danger" href="${addCollUrl}" style="width: 110px"><i class="icon-tags icon-white">
+					<a class="btn btn-success" href="${addCollUrl}" style="width: 110px"><i class="icon-tags icon-white">
 						</i> <s:message code="button.add.collection.label"/>
 					</a>
 				</p>
 				<div class="btn-group">
-					<a class="btn btn-primary" href="#" style="width: 110px"><i class="icon-gift icon-white"></i> Add wish list</a>
-					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+					<a class="btn btn-success" href="#" style="width: 110px"><i class="icon-gift icon-white"></i> <s:message code="button.add.wish.list.label"/></a>
+					<a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 					<ul class="dropdown-menu">
 					<c:forEach var="wl" items="${result.wishLists}">
 						<li><a class="addWishList" href="${wl.slug}"><i class="icon-list-alt"></i> ${wl.name}</a></li>
@@ -156,7 +156,7 @@
 		   		<div class="row-fluid">
 	           		<c:forEach var="cmm" items="${result.comments}">
            			<div class="row-fluid">
-           				<div class="span3">
+           				<div class="span2 offset1">
            					<tk:avatar user="${cmm.author}" size="48" showName="true"/>
            				</div>
            				<div class="span9">
@@ -200,10 +200,10 @@
                         	<dl class="dl-horizontal">
                         		<dt><s:message code="rollingStock.totalLength.label" />:</dt>
 								<dd>${result.rs.totalLength} mm</dd>
-								<dt><s:message code="rollingStock.upcCode.label" />:</dt>
-								<dd>${result.rs.upcCode}</dd>
 								<dt><s:message code="rollingStock.deliveryDate.label" />:</dt>
 								<dd>${result.rs.deliveryDate}</dd>
+								<dt><s:message code="rollingStock.upcCode.label" />:</dt>
+								<dd>${result.rs.upcCode}</dd>
 							</dl>
 						</div>								
 					</div>

@@ -133,6 +133,7 @@ public class RollingStockFormTests {
 		assertEquals("bob", newRs.getModifiedBy());
 		assertEquals("it", newRs.getCountry());
 		assertEquals("ac", newRs.getPowerMethod());
+		assertEquals("2012/Q4", newRs.getDeliveryDate().toString());
 	}
 
 	@Test
@@ -186,6 +187,7 @@ public class RollingStockFormTests {
 		rs.setEra("iii");
 		rs.setPowerMethod("ac");
 		rs.setCategory("electric-locomotives");
+		rs.setDeliveryDate(new DeliveryDate(2012, 4));
 		return rs;
 	}
 	

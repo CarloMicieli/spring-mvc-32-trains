@@ -131,6 +131,7 @@ public class RollingStockForm {
 			.powerMethod(getRs().getPowerMethod())
 			.upcCode(getRs().getUpcCode())
 			.modifiedBy(user)
+			.deliveryDate(getRs().getDeliveryDate())
 			.lastModified(modifiedAt)
 			.build();
 		

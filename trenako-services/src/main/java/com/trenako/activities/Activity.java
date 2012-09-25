@@ -323,7 +323,7 @@ public class Activity {
 		colors.put(ActivityVerb.COMMENT.label(), "Darkorange");
 		colors.put(ActivityVerb.REVIEW.label(), "LimeGreen");
 		colors.put(ActivityVerb.RS_INSERT.label(), "SkyBlue");
-		colors.put(ActivityVerb.RS_UPDATE.label(), "StateBlue");
+		colors.put(ActivityVerb.RS_UPDATE.label(), "DeepSkyBlue");
 		colors.put(ActivityVerb.ADD_COLLECTION.label(), "MediumTurquoise");
 		colors.put(ActivityVerb.ADD_WISH_LIST.label(), "DarkOrchid");
 		

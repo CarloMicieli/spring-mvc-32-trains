@@ -61,7 +61,7 @@ public class ApplicationConfig extends AbstractMongoConfiguration {
 	
 	/**
 	 * Returns a {@code MongoTemplate} instance.
-	 * @return the mongodb template bean
+	 * @return the MongoDB template bean
 	 * @throws Exception
 	 */
 	public @Bean MongoTemplate mongoTemplate() throws Exception {
