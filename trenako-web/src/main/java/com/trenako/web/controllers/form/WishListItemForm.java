@@ -34,7 +34,7 @@ import com.trenako.values.LocalizedEnum;
 import com.trenako.values.Priority;
 
 /**
- * 
+ * It represents a web form for {@code WishList} items.
  * @author Carlo Micieli
  *
  */
@@ -70,16 +70,6 @@ public class WishListItemForm {
 		this.item = item;
 	}
 
-	/**
-	 * Creates a new {@code WishListItemForm}.
-	 * @param slug
-	 * @param rsSlug
-	 * @param rsLabel
-	 * @param item
-	 * @param price
-	 * @param previousPrice
-	 * @param priorities
-	 */
 	private WishListItemForm(String slug, 
 			String rsSlug, 
 			String rsLabel, 
@@ -96,7 +86,22 @@ public class WishListItemForm {
 		this.previousPrice = previousPrice;
 		this.priorities = priorities;		
 	}
-	
+
+	/**
+	 * Returns the rejected {@code WishListItemForm}.
+	 * @param form the original form
+	 * @param messageSource the message source
+	 * @return the rejected form
+	 */	
+	public static WishListItemForm rejectForm(WishListItemForm form, 
+			MessageSource messageSource) {
+
+		form.priorities = 
+			LocalizedEnum.list(Priority.class, messageSource, null);
+
+		return form;
+	}
+
 	public static WishListItemForm newForm(WishList wishList, 
 			RollingStock rs, 
 			WishListItem item, 
@@ -119,7 +124,12 @@ public class WishListItemForm {
 				LocalizedEnum.list(Priority.class, messageSource, null));
 	}
 	
-	public WishListItem newItem(Account owner) {
+	/**
+	 * Builds a new {@code WishListItem} using the form values.
+	 * @param owner the {@code WishList} owner
+	 * @return the new {@code WishList} item
+	 */
+	public WishListItem buildItem(Account owner) {
 		return new WishListItem(
 				getItem().getItemId(),
 				rollingStock(getRsSlug(), getRsLabel()), 
@@ -137,34 +147,66 @@ public class WishListItemForm {
 		return Money.newMoney(getPreviousPrice(), owner);
 	}
 	
+	/**
+	 * Returns the {@code WishListItem} slug.
+	 * @return the slug
+	 */
 	public String getSlug() {
 		return slug;
 	}
 
+	/**
+	 * Sets the {@code WishListItem} slug.
+	 * @param slug the slug
+	 */
 	public void setSlug(String slug) {
 		this.slug = slug;
 	}
 
+	/**
+	 * Returns the {@code RollingStock} slug for the {@code WishListItem}.
+	 * @return the {@code RollingStock} slug
+	 */
 	public String getRsSlug() {
 		return rsSlug;
 	}
 
+	/**
+	 * Sets the {@code RollingStock} slug for the {@code WishListItem}.
+	 * @param rsSlug the {@code RollingStock} slug
+	 */
 	public void setRsSlug(String rsSlug) {
 		this.rsSlug = rsSlug;
 	}
 	
+	/**
+	 * Returns the {@code RollingStock} label for the {@code WishListItem}.
+	 * @return the {@code RollingStock} label
+	 */	
 	public String getRsLabel() {
 		return rsLabel;
 	}
 
+	/**
+	 * Sets the {@code RollingStock} label for the {@code WishListItem}.
+	 * @param rsLabel the {@code RollingStock} label
+	 */
 	public void setRsLabel(String rsLabel) {
 		this.rsLabel = rsLabel;
 	}
 	
+	/**
+	 * Returns the {@code WishListItem} price.
+	 * @return the price
+	 */
 	public BigDecimal getPrice() {
 		return price;
 	}
 
+	/**
+	 * Sets the {@code WishListItem} price.
+	 * @param price the price
+	 */
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}

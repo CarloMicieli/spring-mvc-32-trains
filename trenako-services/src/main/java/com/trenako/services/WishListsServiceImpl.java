@@ -73,6 +73,17 @@ public class WishListsServiceImpl implements WishListsService {
 	}
 	
 	@Override
+	public WishList findBySlugOrDefault(Account owner, String slug) {
+		WishList wishList = repo.findBySlug(slug);
+
+		if (wishList == null && slug.equals(WishList.defaultListSlug(owner))) {
+			return WishList.defaultList(owner);
+		}
+
+		return wishList;
+	}
+	
+	@Override
 	public boolean containsRollingStock(WishList wishList, RollingStock rs) {
 		return repo.containsRollingStock(wishList, rs);
 	}

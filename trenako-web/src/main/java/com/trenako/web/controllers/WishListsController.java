@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -37,10 +38,12 @@ import com.trenako.services.AccountsService;
 import com.trenako.services.WishListsService;
 import com.trenako.web.controllers.form.WishListForm;
 import com.trenako.web.controllers.form.WishListItemForm;
+import com.trenako.web.errors.NotFoundException;
+import com.trenako.web.infrastructure.LogUtils;
 import com.trenako.web.security.UserContext;
 
 /**
- * 
+ * It represents the controller for the {@code WishList} management.
  * @author Carlo Micieli
  *
  */
@@ -59,6 +62,8 @@ public class WishListsController {
 	final static ControllerMessage WISH_LIST_VISIBILITY_CHANGED_MSG = ControllerMessage.success("wish.list.visibility.changed.message");
 	final static ControllerMessage WISH_LIST_NAME_CHANGED_MSG = ControllerMessage.success("wish.list.name.changed.message");
 	final static ControllerMessage WISH_LIST_DUPLICATED_KEY_MSG = ControllerMessage.error("wish.list.duplicated.key.message");
+	final static ControllerMessage WISH_LIST_DB_ERROR_MSG = ControllerMessage.error("wish.list.db.error.message");
+	final static ControllerMessage WISH_LIST_NOT_FOUND_MSG = ControllerMessage.error("wish.list.not.found.message");
 	
 	private final UserContext userContext;
 	private final WishListsService service;
@@ -80,25 +85,47 @@ public class WishListsController {
 		this.userContext = userContext;
 	}
 	
+	/**
+	 * It shows the web form to create new {@code WishList}s.
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code GET /wishlists/new}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 */
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public String newWishList(ModelMap model) {
 		model.addAttribute("newForm", WishListForm.newForm(messageSource));
 		return "wishlist/new";
 	}
 	
+	/**
+	 * Creates a new {@code WishList}.
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code POST /wishlists}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String createWishList(@ModelAttribute @Valid WishListForm form,
-			BindingResult bindingResults, 
+			BindingResult bindingResult, 
 			ModelMap model, 
 			RedirectAttributes redirectAtts) {
 
-		if (bindingResults.hasErrors()) {
-			model.addAttribute("newForm", form);
+		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
+			model.addAttribute("newForm", WishListForm.rejectForm(form, messageSource));
 			return "wishlist/new";
 		}
 
 		try {
-			WishList wishList = form.wishListFor(userContext.getCurrentUser().getAccount());
+			Account owner = UserContext.authenticatedUser(userContext);
+			WishList wishList = form.buildWishList(owner);
 			service.createNew(wishList);
 	
 			WISH_LIST_CREATED_MSG.appendToRedirect(redirectAtts);
@@ -106,17 +133,27 @@ public class WishListsController {
 			redirectAtts.addAttribute("slug", wishList.getSlug());
 			return "redirect:/wishlists/{slug}";
 		}
-		catch (DuplicateKeyException ex) {
-			log.error(ex.toString());
-			model.addAttribute("message", WISH_LIST_DUPLICATED_KEY_MSG);
-			model.addAttribute("newForm", form);
-			return "wishlist/new";
+		catch (DuplicateKeyException dke) {
+			LogUtils.logException(log, dke);
+			WISH_LIST_DUPLICATED_KEY_MSG.appendToModel(model);
 		}
+		catch (DataAccessException dae) {
+			LogUtils.logException(log, dae);
+			WISH_LIST_DB_ERROR_MSG.appendToModel(model);
+		}
+		
+		model.addAttribute("newForm", WishListForm.rejectForm(form, messageSource));
+		return "wishlist/new";
 	}
 	
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
-	public String showWishList(@ModelAttribute WishList wishList, ModelMap model) {
-		model.addAttribute("wishList", service.findBySlug(wishList.getSlug()));
+	public String showWishList(@PathVariable("slug") String slug, ModelMap model) {
+		WishList wishList = service.findBySlug(slug);
+		if (wishList == null) {
+			throw new NotFoundException();
+		}
+		
+		model.addAttribute("wishList", wishList);
 		model.addAttribute("editForm", WishListItemForm.jsForm(wishList, messageSource));
 		return "wishlist/show";
 	}
@@ -131,39 +168,84 @@ public class WishListsController {
 		return "wishlist/list";
 	}
 	
+	/**
+	 * 
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code GET /wishlists/:slug/edit}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 * @param slug the {@code WishList} slug
+	 * @param model the model
+	 * @param redirectAtts the redirect information
+	 * @return the view name
+	 */
 	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
-	public String editWishList(@PathVariable("slug") String slug, ModelMap model) {
+	public String editWishList(@PathVariable("slug") String slug, 
+		ModelMap model, 
+		RedirectAttributes redirectAtts) {
+
 		WishList list = service.findBySlug(slug);
-		model.addAttribute("editForm", WishListForm.editForm(list, messageSource));
+		if (list == null) {
+			Account owner = UserContext.authenticatedUser(userContext);
+			WISH_LIST_NOT_FOUND_MSG.appendToRedirect(redirectAtts);
+			redirectAtts.addAttribute("owner", owner.getSlug());
+			return "redirect:/wishlists/owner/{owner}";
+		}
+
+		model.addAttribute("editForm", WishListForm.newForm(list, messageSource));
 		return "wishlist/edit";
 	}
 	
+	/**
+	 * 
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code PUT /wishlists}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 * @param form the {@code WishListForm} form
+	 * @param bindingResult the validation results
+	 * @param model the model
+	 * @param redirectAtts the redirect information
+	 * @return the view name
+	 */
 	@RequestMapping(method = RequestMethod.PUT)
 	public String saveWishList(@ModelAttribute @Valid WishListForm form,
-			BindingResult bindingResults, 
+			BindingResult bindingResult, 
 			ModelMap model, 
 			RedirectAttributes redirectAtts) {
 
-		if (bindingResults.hasErrors()) {
-			model.addAttribute("editForm", form);
+		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
+			model.addAttribute("editForm", WishListForm.rejectForm(form, messageSource));
 			return "wishlist/edit";
 		}
 
 		try {
-			WishList wishList = form.wishListFor(userContext.getCurrentUser().getAccount());
+			Account owner = UserContext.authenticatedUser(userContext);
+			WishList wishList = form.buildWishList(owner);
 			service.saveChanges(wishList);
 	
 			WISH_LIST_SAVED_MSG.appendToRedirect(redirectAtts);
-			
 			redirectAtts.addAttribute("slug", wishList.getSlug());
 			return "redirect:/wishlists/{slug}";
 		}
-		catch (DuplicateKeyException ex) {
-			log.error(ex.toString());
-			model.addAttribute("message", WISH_LIST_DUPLICATED_KEY_MSG);
-			model.addAttribute("editForm", form);
-			return "wishlist/edit";
+		catch (DuplicateKeyException dke) {
+			LogUtils.logException(log, dke);
+			WISH_LIST_DUPLICATED_KEY_MSG.appendToModel(model);
 		}
+		catch (DataAccessException dae) {
+			LogUtils.logException(log, dae);
+			WISH_LIST_DB_ERROR_MSG.appendToModel(model);
+		}
+
+		model.addAttribute("editForm", WishListForm.rejectForm(form, messageSource));
+		return "wishlist/edit";
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE)
@@ -176,6 +258,21 @@ public class WishListsController {
 		return "redirect:/wishlists/owner/{owner}";
 	}
 	
+	/**
+	 * 
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code POST /wishlists/items}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 * @param form the {@code WishListItemForm} form
+	 * @param bindingResult the validation results
+	 * @param model the model
+	 * @param redirectAtts the redirect information
+	 * @return the view name
+	 */
 	@RequestMapping(value = "/items", method = RequestMethod.POST)
 	public String addItem(@ModelAttribute @Valid WishListItemForm form, 
 		BindingResult bindingResult, 
@@ -183,55 +280,109 @@ public class WishListsController {
 		RedirectAttributes redirectAtts) {
 
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("wishListForm", form);
+			LogUtils.logValidationErrors(log, bindingResult);
+			model.addAttribute("wishListForm", WishListItemForm.rejectForm(form, messageSource));
 			return "wishlist/addItem";
 		}
 
-		Account owner = userContext.getCurrentUser().getAccount();
-		WishList wishList = service.findBySlug(form.getSlug());
-		service.addItem(wishList, form.newItem(owner));
+		Account owner = UserContext.authenticatedUser(userContext);
+		WishList wishList = service.findBySlugOrDefault(owner, form.getSlug());
 
-		WISH_LIST_ITEM_ADDED_MSG.appendToRedirect(redirectAtts);
-		redirectAtts.addAttribute("slug", wishList.getSlug());
-		return "redirect:/wishlists/{slug}";
+		try {
+			service.addItem(wishList, form.buildItem(owner));
+
+			WISH_LIST_ITEM_ADDED_MSG.appendToRedirect(redirectAtts);
+			redirectAtts.addAttribute("slug", wishList.getSlug());
+			return "redirect:/wishlists/{slug}";
+		}
+		catch (DataAccessException dae) {
+			LogUtils.logException(log, dae);
+			WISH_LIST_DB_ERROR_MSG.appendToModel(model);
+		}
+
+		model.addAttribute("wishListForm", WishListItemForm.rejectForm(form, messageSource));
+		return "wishlist/addItem";
+	}
+		
+	/**
+	 * 
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code PUT /wishlists/items}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 * @param form the {@code WishListItemForm} form
+	 * @param bindingResult the validation results
+	 * @param model the model
+	 * @param redirectAtts the redirect information
+	 * @return the view name
+	 */	
+	@RequestMapping(value = "/items", method = RequestMethod.PUT)
+	public String updateItem(@ModelAttribute @Valid WishListItemForm form, 
+		BindingResult bindingResult, 
+		ModelMap model, 
+		RedirectAttributes redirectAtts) {
+
+		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
+			model.addAttribute("wishListForm", WishListItemForm.rejectForm(form, messageSource));
+			return "wishlist/editItem";
+		}
+
+		Account owner = UserContext.authenticatedUser(userContext);
+		WishList wishList = service.findBySlug(form.getSlug());
+
+		try {
+			service.updateItem(wishList, 
+				form.buildItem(owner), 
+				form.previousPrice(owner));
+
+			WISH_LIST_ITEM_UPDATED_MSG.appendToRedirect(redirectAtts);
+			redirectAtts.addAttribute("slug", wishList.getSlug());
+			return "redirect:/wishlists/{slug}";
+		}
+		catch (DataAccessException dae) {
+			LogUtils.logException(log, dae);
+			WISH_LIST_DB_ERROR_MSG.appendToModel(model);
+		}
+
+		model.addAttribute("wishListForm", WishListItemForm.rejectForm(form, messageSource));
+		return "wishlist/editItem";
 	}
 	
+	/**
+	 * 
+	 *
+	 * <p>
+	 * <pre><blockquote>
+	 * {@code DELETE /wishlists/items}
+	 * </blockquote></pre>
+	 * </p>
+	 *
+	 * @param form the {@code WishListItemForm} form
+	 * @param bindingResult the validation results
+	 * @param redirectAtts the redirect information
+	 * @return the view name
+	 */
 	@RequestMapping(value = "/items", method = RequestMethod.DELETE)
 	public String removeItem(@ModelAttribute @Valid WishListItemForm form, 
 		BindingResult bindingResult, 
 		RedirectAttributes redirectAtts) {
 
 		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
 			redirectAtts.addAttribute("slug", form.getSlug());
 			return "redirect:/wishlists/{slug}";
 		}
 		
 		WishList wishList = service.findBySlug(form.getSlug());
 		
-		Account owner = userContext.getCurrentUser().getAccount();
+		Account owner = UserContext.authenticatedUser(userContext);
 		service.removeItem(wishList, form.deletedItem(owner));
 
 		WISH_LIST_ITEM_DELETED_MSG.appendToRedirect(redirectAtts);
-		redirectAtts.addAttribute("slug", wishList.getSlug());
-		return "redirect:/wishlists/{slug}";
-	}
-	
-	@RequestMapping(value = "/items", method = RequestMethod.PUT)
-	public String updateItem(@ModelAttribute @Valid WishListItemForm editForm, 
-		BindingResult bindingResult, 
-		ModelMap model, 
-		RedirectAttributes redirectAtts) {
-
-		if (bindingResult.hasErrors()) {
-			redirectAtts.addAttribute("slug", editForm.getSlug());
-			return "redirect:/wishlists/{slug}";
-		}
-
-		Account owner = userContext.getCurrentUser().getAccount();
-		WishList wishList = service.findBySlug(editForm.getSlug());
-		service.updateItem(wishList, editForm.newItem(owner), editForm.previousPrice(owner));
-
-		WISH_LIST_ITEM_UPDATED_MSG.appendToRedirect(redirectAtts);
 		redirectAtts.addAttribute("slug", wishList.getSlug());
 		return "redirect:/wishlists/{slug}";
 	}

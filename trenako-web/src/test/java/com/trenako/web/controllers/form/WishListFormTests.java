@@ -64,7 +64,7 @@ public class WishListFormTests {
 		form.setBudget(BigDecimal.valueOf(150.50));
 		form.setWishList(wishList());
 
-		WishList wishList = form.wishListFor(owner());
+		WishList wishList = form.buildWishList(owner());
 		
 		assertEquals("bob-my-list", wishList.getSlug());
 		assertEquals("bob", wishList.getOwner());
@@ -77,10 +77,10 @@ public class WishListFormTests {
 		WishListForm form = WishListForm.newForm(messageSource);
 		form.setBudget(BigDecimal.valueOf(150.50));
 		
-		WishList wlUSD = form.wishListFor(owner("USD"));
+		WishList wlUSD = form.buildWishList(owner("USD"));
 		assertEquals("$150.50", wlUSD.getBudget().toString());
 		
-		WishList wlGBP = form.wishListFor(owner("GBP"));
+		WishList wlGBP = form.buildWishList(owner("GBP"));
 		assertEquals("GBP150.50", wlGBP.getBudget().toString());		
 	}
 	
@@ -89,16 +89,16 @@ public class WishListFormTests {
 		WishListForm newForm = WishListForm.newForm(messageSource);
 		assertEquals("{(public)=checked, (private)=}", newForm.getVisibilities().toString());
 		
-		WishListForm editFormPublic = WishListForm.editForm(wishList(), messageSource);
-		assertEquals("{(public)=checked, (private)=}", editFormPublic.getVisibilities().toString());
+		WishListForm newFormPublic = WishListForm.newForm(wishList(), messageSource);
+		assertEquals("{(public)=checked, (private)=}", newFormPublic.getVisibilities().toString());
 		
-		WishListForm editFormPrivate = WishListForm.editForm(privateWishList(), messageSource);
-		assertEquals("{(public)=, (private)=checked}", editFormPrivate.getVisibilities().toString());
+		WishListForm newFormPrivate = WishListForm.newForm(privateWishList(), messageSource);
+		assertEquals("{(public)=, (private)=checked}", newFormPrivate.getVisibilities().toString());
 	}
 	
 	@Test
 	public void shouldCreateEditingWishListForms() {
-		WishListForm form = WishListForm.editForm(privateWishList(), messageSource);
+		WishListForm form = WishListForm.newForm(privateWishList(), messageSource);
 		
 		assertNotNull("Editing form is null", form);
 		
@@ -109,11 +109,11 @@ public class WishListFormTests {
 	
 	@Test
 	public void shouldEditWishListUsingTheFormValues() {
-		WishListForm form = WishListForm.editForm(privateWishList(), messageSource);
+		WishListForm form = WishListForm.newForm(privateWishList(), messageSource);
 		form.setBudget(BigDecimal.valueOf(250.50));
 		form.setWishList(wishList());
 		
-		WishList wishList = form.wishListFor(owner());
+		WishList wishList = form.buildWishList(owner());
 		
 		assertEquals("bob-my-list", wishList.getSlug());
 		assertEquals("bob", wishList.getOwner());

@@ -66,6 +66,20 @@ public interface WishListsService {
 	WishList findBySlug(String slug);
 	
 	/**
+	 * Returns the {@code WishList} with the provided slug.
+	 *
+	 * <p>
+	 * If the provided slug is the same as {@link WishList#defaultList(Account owner)} 
+	 * then this method will return the default {@code WishList} instead of {@code null}.
+	 * </p>
+	 *
+	 * @param owner the {@code WishList} owner
+	 * @param slug the slug
+	 * @returns a {@code WishList} if found; {@code null} otherwise
+	 */
+	WishList findBySlugOrDefault(Account owner, String slug);
+	
+	/**
 	 * Checks whether the provided {@code WishList} contains a given rolling stock.
 	 * @param wishList the {@code WishList}
 	 * @param rs the rolling stock

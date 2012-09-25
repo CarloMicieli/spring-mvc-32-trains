@@ -77,6 +77,12 @@ public class WishListTests {
 	}
 	
 	@Test
+	public void shouldGetTheDefaultWishListSlug() {
+		String slug = WishList.defaultListSlug(bob);
+		assertEquals("bob-new-list", slug);
+	}
+	
+	@Test
 	public void shouldCheckWishListOwner() {
 		WishList wl = new WishList(bob, "My first list");
 		assertTrue("User is not the wish list owner", wl.isOwnedBy(bob));

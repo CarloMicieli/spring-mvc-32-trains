@@ -35,7 +35,7 @@ import com.trenako.values.Visibility;
 import com.trenako.utility.Slug;
 
 /**
- * It represents a rolling stocks {@code WishList}.
+ * It represents a user {@code WishList} of rolling stocks.
  * 
  * <p>
  * Users can have more than one wish list; each one of them has
@@ -122,6 +122,7 @@ public class WishList implements Comparable<WishList> {
 	 *
 	 * @param owner the wish list owner
 	 * @param name the name
+	 * @param notes the notes
 	 * @param visibility the visibility
 	 * @param budget the budget
 	 */
@@ -138,9 +139,19 @@ public class WishList implements Comparable<WishList> {
 	/**
 	 * Creates the default {@code WishList} for the provided user.
 	 * @param owner the {@code WishList} owner
+	 * @return the default {@code WishList}
 	 */
 	public static WishList defaultList(Account owner) {
 		return new WishList(owner, DEFAULT_LIST_NAME);
+	}
+	
+	/**
+	 * Returns the slug for the default {@code WishList} for the provided user.
+	 * @param owner the {@code WishList} owner
+	 * @return the slug for the default {@code WishList}	 
+	 */
+	public static String defaultListSlug(Account owner) {
+		return slug(owner(owner), DEFAULT_LIST_NAME);
 	}
 
 	/**
@@ -420,7 +431,7 @@ public class WishList implements Comparable<WishList> {
 		return getOwner().equals(owner(user));
 	}
 	
-	private String slug(String owner, String name) {
+	private static String slug(String owner, String name) {
 		String s = new StringBuilder()
 			.append(owner)
 			.append(" ")
@@ -429,11 +440,11 @@ public class WishList implements Comparable<WishList> {
 		return Slug.encode(s);
 	}
 	
-	private String visibility(Visibility visibility) {
+	private static String visibility(Visibility visibility) {
 		return visibility.label();
 	}
 
-	private String owner(Account owner) {
+	private static String owner(Account owner) {
 		return owner.getSlug();
 	}
 }

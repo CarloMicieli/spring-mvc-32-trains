@@ -66,7 +66,7 @@ public class WishListItemFormTests {
 		form.getItem().setNotes("My notes");
 		form.setPrice(BigDecimal.valueOf(100));
 		
-		WishListItem item = form.newItem(owner());
+		WishListItem item = form.buildItem(owner());
 		
 		assertEquals("acme-123456", item.getItemId());
 		assertEquals("normal", item.getPriority());
@@ -79,7 +79,7 @@ public class WishListItemFormTests {
 	public void shouldUseProfileCurrencyForWishListItems() {
 		WishListItemForm form = WishListItemForm.newForm(wishList(), rollingStock(), itemWithPrice(BigDecimal.valueOf(100)), null);
 		
-		WishListItem item = form.newItem(ownerWithUSD());
+		WishListItem item = form.buildItem(ownerWithUSD());
 		
 		assertEquals("$100.00", item.getPrice().toString());
 	}
@@ -89,7 +89,7 @@ public class WishListItemFormTests {
 		WishListItemForm form = WishListItemForm.newForm(wishList(), rollingStock(), itemWithPrice(BigDecimal.valueOf(100)), null);
 		form.getItem().setPriority("low");
 		
-		WishListItem item = form.newItem(ownerWithUSD());
+		WishListItem item = form.buildItem(ownerWithUSD());
 		
 		assertEquals("low", item.getPriority());
 	}

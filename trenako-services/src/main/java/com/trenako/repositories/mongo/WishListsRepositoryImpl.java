@@ -62,7 +62,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	
 	/**
 	 * Creates a new {@code WishListsRepositoryImpl}.
-	 * @param mongoTemplate the mongo template
+	 * @param mongoTemplate the MongoDB template
 	 */
 	@Autowired
 	public WishListsRepositoryImpl(MongoTemplate mongoTemplate) {
@@ -102,6 +102,9 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 	public void addItem(WishList wishList, WishListItem newItem) {
 		Update upd = new Update()
 			.set("lastModified", now())
+			.set("owner", wishList.getOwner())
+			.set("name", wishList.getName())
+			.set("visibility", wishList.getVisibility())
 			.inc("numberOfItems", 1)
 			.push("items", newItem);
 		mongoTemplate.updateFirst(query(where("slug").is(wishList.getSlug())), upd, WishList.class);

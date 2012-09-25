@@ -31,7 +31,7 @@ import com.trenako.values.LocalizedEnum;
 import com.trenako.values.Visibility;
 
 /**
- * 
+ * It represents a web form for {@code WishList}.
  * @author Carlo Micieli
  *
  */
@@ -51,44 +51,91 @@ public class WishListForm {
 	public WishListForm() {
 	}
 
-	private WishListForm(WishList wishList, BigDecimal budget, Iterable<LocalizedEnum<Visibility>> visibilities) {
+	private WishListForm(WishList wishList, 
+		BigDecimal budget, 
+		Iterable<LocalizedEnum<Visibility>> visibilities) {
+
 		this.wishList = wishList;
 		this.budget = budget;
 		this.visibilities = visibilities;
 	}
 	
 	/**
-	 * Creates a new form for new {@code WishList} creation.
+	 * Creates a new form for {@code WishList} creation.
 	 * @param messageSource the message source
 	 * @return a new {@code WishListForm}.
 	 */
 	public static WishListForm newForm(MessageSource messageSource) {
 		return new WishListForm(new WishList(), 
 				BigDecimal.valueOf(0), 
-				LocalizedEnum.list(Visibility.class, messageSource, null));
+				initVisibilities(messageSource));
 	}
 	
 	/**
-	 * Creates a new editing {@code WishList} form the provided user.
+	 * Creates a new web form using the values from the provided {@code WishList}.
 	 * @param wishList the {@code WishList}
-	 * @param messageSource the message source for localized labels
+	 * @param messageSource the message source for localized {@code Visibility} labels
 	 * @return the form
 	 */
-	public static WishListForm editForm(WishList wishList, MessageSource messageSource) {
+	public static WishListForm newForm(WishList wishList, MessageSource messageSource) {
 		return new WishListForm(wishList, 
 				budget(wishList.getBudget()), 
-				LocalizedEnum.list(Visibility.class, messageSource, null));
+				initVisibilities(messageSource));
 	}
-	
+
+	/**
+	 * Prepares the rejected form for the posted back.
+	 * @param form the original {@code WishListForm}
+	 * @param messageSource the message source for localized {@code Visibility} labels
+	 * @return the form
+	 */	
+	public static WishListForm rejectForm(WishListForm form, MessageSource messageSource) {
+		form.visibilities = initVisibilities(messageSource);
+		return form;
+	}
+
+	/**
+	 * Returns the {@code WishList} for the current form.
+	 * <p>
+	 * To get the correct value to be created or saved use the method
+	 * {@link WishListForm#buildWishList(Account owner)} instead.
+	 * </p>
+	 * @return the {@code WishList}
+	 */ 
 	public WishList getWishList() {
 		return wishList;
 	}
 
+	/**
+	 * Returns the {@code WishList} for the current form.
+	 * wishList the {@code WishList}
+	 */
 	public void setWishList(WishList wishList) {
 		this.wishList = wishList;
 	}
 
-	public WishList wishListFor(Account owner) {
+	/**
+	 * Returns the {@code WishList} budget value.
+	 * @return the budget
+	 */
+	public BigDecimal getBudget() {
+		return budget;
+	}
+	
+	/**
+	 * Sets the {@code WishList} budget value.
+	 * @param budget the budget
+	 */	
+	public void setBudget(BigDecimal budget) {
+		this.budget = budget;
+	}
+
+	/**
+ 	 * Creates a new {@code WishList} using the form values.
+ 	 * @param owner the {@code WishList} owner
+ 	 * @return the {@code WishList}
+ 	 */
+	public WishList buildWishList(Account owner) {
 		WishList wishList = new WishList(owner, 
 				getWishList().getName(), 
 				getWishList().getNotes(),
@@ -96,18 +143,10 @@ public class WishListForm {
 				budget(owner, getBudget()));
 		return wishList;
 	}
-	
-	public BigDecimal getBudget() {
-		return budget;
-	}
-	
-	public void setBudget(BigDecimal budget) {
-		this.budget = budget;
-	}
 
 	/**
 	 * Returns the {@code Visibility} list.
-	 * @return
+	 * @return the {@code Visibility} list
 	 */
 	public HashMap<LocalizedEnum<Visibility>, String> getVisibilities() {
 		
@@ -132,6 +171,10 @@ public class WishListForm {
 				this.budget.equals(other.budget);	
 	}
 	
+	private static Iterable<LocalizedEnum<Visibility>> initVisibilities(MessageSource messageSource) {
+		return LocalizedEnum.list(Visibility.class, messageSource, null);
+	}
+
 	private static BigDecimal budget(Money money) {
 		int budget = (money != null) ? money.getValue() : 0;
 		return 	BigDecimal.valueOf(budget).divide(Money.MONEY_VALUE_FACTOR);

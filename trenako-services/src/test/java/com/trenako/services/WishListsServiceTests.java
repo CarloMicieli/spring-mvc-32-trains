@@ -151,6 +151,17 @@ public class WishListsServiceTests {
 		assertNull("A wish list was found", result);
 		verify(repo, times(1)).findBySlug(eq(slug));
 	}
+	
+	@Test
+	public void shouldReturnTheDefaultWishListForTheUserAlsoWhenItWasNotFoundInTheDB() {
+		String slug = "list-slug";
+		WishList result = service.findBySlugOrDefault(owner, slug);
+		assertNull("A wish list was found", result);
+		verify(repo, times(1)).findBySlug(eq(slug));
+		
+		WishList wl2 = service.findBySlugOrDefault(owner, "bob-new-list");
+		assertNotNull("A wish list was not found", wl2);
+	}
 
 	@Test
 	public void shouldCheckWhetherWishListContainsTheProvidedRollingStock() {

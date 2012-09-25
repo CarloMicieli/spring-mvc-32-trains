@@ -28,6 +28,7 @@ import org.junit.After;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.trenako.entities.Account;
+import com.trenako.entities.Profile;
 import com.trenako.entities.WishList;
 import com.trenako.security.AccountDetails;
 import com.trenako.services.AccountsService;
@@ -40,13 +41,16 @@ import com.trenako.web.test.AbstractSpringControllerTests;
  * @author Carlo Micieli
  *
  */
-public class WishListControllerMappingTests extends AbstractSpringControllerTests {
+public class WishListsControllerMappingTests extends AbstractSpringControllerTests {
 	
 	private @Autowired WishListsService service;
 	private @Autowired UserContext userContext;
 	private @Autowired AccountsService accountsService;
 	
-	private final Account owner = new Account.Builder("mail@mail.com").displayName("Bob").build(); 
+	private final Account owner = new Account.Builder("mail@mail.com")
+		.displayName("Bob")
+		.profile(new Profile("EUR"))
+		.build(); 
 	
 	@Override
 	protected void init() {
@@ -151,7 +155,7 @@ public class WishListControllerMappingTests extends AbstractSpringControllerTest
 	
 	@Test
 	public void shouldAddItemsToWishLists() throws Exception {
-		when(service.findBySlug(eq("bob-my-list"))).thenReturn(new WishList("bob-my-list"));
+		when(service.findBySlugOrDefault(eq(owner), eq("bob-my-list"))).thenReturn(new WishList("bob-my-list"));
 		
 		mockMvc().perform(post("/wishlists/items")
 				.param("slug", "bob-my-list")
