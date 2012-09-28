@@ -71,13 +71,13 @@
 												<br/>
 												${rs.scale.label}
 											</div>
-											<div class="span5	">
+											<div class="span5">
 												<strong><s:message code="rollingStock.railway.label" /></strong>
 												<br/>
 												${rs.railway.label}
 											</div>
 										</div>
-										<em><tk:period since="${rs.lastModified}"/></em>
+										<strong><tk:period since="${rs.lastModified}"/></strong>
 									</div>
 								</div>
 								<hr/>

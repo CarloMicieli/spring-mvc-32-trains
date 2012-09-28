@@ -29,41 +29,29 @@
         	<div class="page-header">
 				<h1>
 					${result.rs.brand.label} ${result.rs.itemNumber}
-					<small><tk:evalValue type="Category" expression="${result.rs.category}"/></small>
+					<small>(<tk:evalValue type="Category" expression="${result.rs.category}"/>)</small>
 				</h1>
 			</div>
 		</div>
 	    <div class="row-fluid">
 	    	<div class="span2">
 	    		<sec:authorize access="isAuthenticated()">
-	    		<p>
-					<s:url var="editUrl" value="/rollingstocks/{slug}/edit">
-						<s:param name="slug" value="${result.rs.slug}"></s:param>
-					</s:url>
-					<a class="btn btn-success" style="width: 110px" href="${editUrl}">
-						<i class="icon-edit icon-white"></i> <s:message code="button.edit.label"/>
-					</a>
-				</p>
-				
-	    		<p>
-	    			<s:url var="postReviewUrl" value="/rollingstocks/{slug}/reviews/new">
-						<s:param name="slug" value="${result.rs.slug}"></s:param>
-					</s:url>
-	    			<a class="btn btn-success" href="${postReviewUrl}" style="width: 110px">
-						<i class="icon-comment icon-white"></i> <s:message code="button.write.review.label"/>
-					</a>
-				</p>
 				<p>
 	    			<s:url var="addCollUrl" value="/collections/add/{slug}">
 						<s:param name="slug" value="${result.rs.slug}"></s:param>
 					</s:url>				
-					<a class="btn btn-success" href="${addCollUrl}" style="width: 110px"><i class="icon-tags icon-white">
+					<a class="btn btn-info" href="${addCollUrl}" style="width: 130px"><i class="icon-tags icon-white">
 						</i> <s:message code="button.add.collection.label"/>
 					</a>
 				</p>
+				
+				<p>
+				-- or --
+				</p>
+				
 				<div class="btn-group">
-					<a class="btn btn-success" href="#" style="width: 110px"><i class="icon-gift icon-white"></i> <s:message code="button.add.wish.list.label"/></a>
-					<a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+					<a class="btn btn-info" href="#" style="width: 110px"><i class="icon-gift icon-white"></i> <s:message code="button.add.wish.list.label"/></a>
+					<a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 					<ul class="dropdown-menu">
 					<c:forEach var="wl" items="${result.wishLists}">
 						<li><a class="addWishList" href="${wl.slug}"><i class="icon-list-alt"></i> ${wl.name}</a></li>
@@ -87,21 +75,53 @@
 						});
 					</script>
 				</div>
-
 				<hr>
+	    		<p>
+	    			<s:url var="postReviewUrl" value="/rollingstocks/{slug}/reviews/new">
+						<s:param name="slug" value="${result.rs.slug}"></s:param>
+					</s:url>
+	    			<a class="btn btn-info" href="${postReviewUrl}" style="width: 130px">
+						<i class="icon-comment icon-white"></i> <s:message code="button.write.review.label"/>
+					</a>
+				</p>
 				</sec:authorize>
 				<p>
 					<s:message code="rollingStock.review.info.label" arguments="${result.reviews.numberOfReviews}, ${result.reviews.rating}"/>
 					<s:url var="reviewsUrl" value="/rollingstocks/{slug}/reviews">
 						<s:param name="slug" value="${result.rs.slug}"></s:param>
 					</s:url>
-	    			<a class="btn btn-success" href="${reviewsUrl}" style="width: 110px">
-						<i class="icon-comment icon-white"></i> <s:message code="button.all.reviews.label"/>
+					<br/>
+	    			<a href="${reviewsUrl}">
+						<i class="icon-comment icon-black"></i> <s:message code="button.all.reviews.label"/>
 					</a>
 				</p>
 			</div>
 	    	<div class="span6">
 	    		<div class="row-fluid">
+	    			<sec:authorize access="isAuthenticated()">
+	    			<s:url var="deleteUrl" value="/rollingstocks"/>
+	    			<form:form method="DELETE" action="${deleteUrl}">
+	    				<input type="hidden" id="id" name="id" value="${result.rs.id}"/>
+		    			<div class="btn-toolbar pull-right">
+			    			<div class="btn-group">
+								<s:url var="editUrl" value="/rollingstocks/{slug}/edit">
+									<s:param name="slug" value="${result.rs.slug}"></s:param>
+								</s:url>
+							  	<a class="btn" href="#">
+							  		<i class="icon-folder-open icon-black"></i> <s:message code="rollingStock.change.image.button.label"/>
+							  	</a>
+							  	<a class="btn" href="${editUrl}">
+							  		<i class="icon-edit icon-black"></i> <s:message code="button.edit.label"/>
+							  	</a>
+							</div>
+							<div class="btn-group">
+							  	<button class="btn btn-danger">
+							  		<i class="icon-remove-sign icon-white"></i> <s:message code="rollingStock.delete.button.label"/>
+							  	</button>
+							</div>
+						</div>
+					</form:form>
+					</sec:authorize>
 					<s:url value="/images/rollingstock_{slug}" var="imgUrl">
 						<s:param name="slug" value="${result.rs.slug}" />
 					</s:url>
@@ -140,15 +160,18 @@
 	           			<form:hidden path="rsLabel"/>
 	           			<form:hidden path="comment.author"/>
 	           			
+	           			<div class="control-group">
 	           			<s:message var="placeholder" code="comment.content.placeholder"/>
 	           			<form:textarea path="comment.content" 
-		           			class="input-small" 
-		           			style="width:400px" 
+		           			class="span12" 
 		           			rows="3" 
 		           			placeholder="${placeholder}" required="required"/>
-	           			<form:button type="submit" class="btn btn-primary">
-	           				<i class="icon-envelope icon-white"></i> <s:message code="button.send.label"/>
-	           			</form:button>
+		           		</div>
+		           		<div class="control-group">
+	           				<form:button type="submit" class="btn btn-primary">
+	           					<i class="icon-envelope icon-white"></i> <s:message code="button.send.label"/>
+		           			</form:button>
+	           			</div>
 	           		</form:form>
 	           		<hr/>
 	           		</sec:authorize>

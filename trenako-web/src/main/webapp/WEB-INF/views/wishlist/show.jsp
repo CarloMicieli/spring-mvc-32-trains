@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<title>
-			<s:message code="wishlist.page.new.title"/>
+			<s:message code="wishlist.page.show.title" arguments="${wishList.name}"/>
 		</title>
 		<meta name="you" content="active"/>
 	</head>
@@ -76,8 +76,11 @@
 							<s:url var="editUrl" value="/wishlists/{slug}/edit">
 								<s:param name="slug" value="${wishList.slug}"/>
 							</s:url>
-							<a href="${editUrl}" class="btn btn-warning">Edit list</a>
-							<button type="submit" class="btn btn-danger">Delete list</button>
+							<a href="${editUrl}" class="btn"><i class="icon-edit icon-black"></i> <s:message code="wishlist.edit.button.label"/></a>
+							<button type="submit" class="btn btn-danger">
+								<i class="icon-remove-sign icon-white"></i>
+								<s:message code="wishlist.delete.button.label"/>
+							</button>
 						</form:form>						
 					</div>
 				</div>
@@ -89,7 +92,7 @@
 							<div class="well">
 								<h4><s:message code="wishlist.empty.list.message"/></h4> 
 								<s:url var="rollingStocksUrl" value="/rs"/>
-								<a href="${rollingStocksUrl}" class="btn">Add rolling stocks</a>
+								<a href="${rollingStocksUrl}" class="btn"><s:message code="wishlist.add.rolling.stocks.label"/></a>
 							</div>
 						</c:if>
 						
@@ -103,14 +106,14 @@
 							<div id="removeItemModal" class="modal hide fade" tabindex="-1" role="dialog">
 						  		<div class="modal-header">
 						    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						    		<h3>Remove item</h3>
+						    		<h3><s:message code="wishlist.remove.item.label"/></h3>
 						  		</div>
 						  		<div class="modal-body">
-						    		<p>Are you sure to remove this item from your wish list?</p>
+						    		<p><s:message code="wishlist.remove.item.confirm.message"/></p>
 						  		</div>
 						  		<div class="modal-footer">
-						  			<button type="submit" class="btn btn-primary">Remove this item</button>
-						    		<a href="#" class="btn" data-dismiss="modal">Close</a>
+						    		<a href="#" class="btn" data-dismiss="modal"><s:message code="button.remove.label"/></a>
+						  			<button type="submit" class="btn btn-primary"><s:message code="button.close.label"/></button>
 						  		</div>
 							</div>
 						</form:form>
@@ -119,7 +122,7 @@
 						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h3 id="myModalLabel">Edit item</h3>
+								<h3 id="myModalLabel"><s:message code="wishlist.edit.item.label"/></h3>
 							</div>
 							<s:url var="itemUrl" value="/wishlists/items"/>
 							<form:form class="form-horizontal" method="PUT" action="${itemUrl}" modelAttribute="editForm">
@@ -131,17 +134,23 @@
 		
 								<div class="modal-body">
 									<div class="control-group">
-		  								<form:label path="item.notes" class="control-label">Notes:&nbsp;&nbsp;</form:label>
+		  								<form:label path="item.notes" class="control-label">
+		  									<s:message code="wishlist.item.notes.label"/>:&nbsp;&nbsp;
+		  								</form:label>
 		  								<form:textarea path="item.notes" rows="3" maxlength="150"/>
 		  							</div>
 		  							<div class="control-group">
-		  								<form:label path="item.priority" class="control-label">Priority:&nbsp;&nbsp;</form:label>
+		  								<form:label path="item.priority" class="control-label">
+		  									<s:message code="wishlist.item.priority.label"/>:&nbsp;&nbsp;
+		  								</form:label>
 		  								<form:select path="item.priority">
 		  									<form:options items="${editForm.priorities}" itemLabel="label" itemValue="key"/>
 		  								</form:select>  				
 		  							</div>
 									<div class="control-group">
-										<form:label path="price" class="control-label">Price:&nbsp;&nbsp;</form:label>
+										<form:label path="price" class="control-label">
+											<s:message code="wishlist.item.price.label"/>:&nbsp;&nbsp;
+										</form:label>
 										<div class="controls">
 											<div class="input-prepend">
 			  									<span class="add-on">$</span>
@@ -151,8 +160,8 @@
 									</div>				
 								</div>
 								<div class="modal-footer">
-								    <button type="submit" class="btn btn-primary">Save changes</button>
-								    <button class="btn" data-dismiss="modal">Close</button>
+								    <button type="submit" class="btn btn-primary"><s:message code="button.save.label"/></button>
+								    <button class="btn" data-dismiss="modal"><s:message code="button.close.label"/></button>
 								</div>
 							</form:form>
 						</div>
@@ -171,20 +180,20 @@
 								<div class="span9">
 									<a href="${rsUrl}"><strong>${item.rollingStock.label}</strong></a>
 									<p>
-										<small><em>Added</em> <strong><tk:period since="${item.addedAt}"/></strong></small>
+										<small><em><s:message code="wishlist.item.added.label"/></em> <strong><tk:period since="${item.addedAt}"/></strong></small>
 									</p>
 									
 									<dl>
-										<dt>Priority:</dt>
+										<dt><s:message code="wishlist.item.priority.label"/>:</dt>
 										<dd><tk:evalValue type="Priority" expression="${item.priority}"/></dd>
-										<dt>Price [<a class="priceHelp" href="#" rel="tooltip" data-placement="right">?</a>]:</dt>
+										<dt><s:message code="wishlist.item.price.label"/> [<a class="priceHelp" href="#" rel="tooltip" data-placement="right">?</a>]:</dt>
 										<dd>${item.price}</dd>
-										<dt>Notes:</dt>
+										<dt><s:message code="wishlist.item.notes.label"/>:</dt>
 										<dd>${item.notes}</dd>
 									</dl>	
 									
 									<p style="margin-top: 20px">
-										<a href="#" class="btn btn-warning">Move to collection</a> 
+										<a href="#" class="btn btn-warning"><s:message code="wishlist.item.move.collection.label"/></a> 
 										<a href="#editItemDialog" class="open-editItemDialog" role="button" 
 											data-toggle="modal" 
 											data-rs-slug="${item.rollingStock.slug}"
@@ -192,13 +201,13 @@
 											data-item-id="${item.itemId}" 
 											data-priority="${item.priority}" 
 											data-price="${item.price.decimalValue}" 
-											data-notes="${item.notes}">Edit this item</a> | 
-										<a href="#">Move to another list</a> |
+											data-notes="${item.notes}"><s:message code="wishlist.item.edit.label"/></a> | 
+										<a href="#"><s:message code="wishlist.item.move.another.list.label"/></a> |
 										<a href="#removeItemDialog" class="open-removeItemDialog" role="button" 
 											data-toggle="modal" 
 											data-rs-slug="${item.rollingStock.slug}"
 											data-rs-label="${item.rollingStock.label}"
-											data-item-id="${item.itemId}">Remove this item</a>
+											data-item-id="${item.itemId}"><s:message code="wishlist.item.remove.label"/></a>
 									</p>
 								</div>
 							</div>

@@ -107,7 +107,7 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 			.set("visibility", wishList.getVisibility())
 			.inc("numberOfItems", 1)
 			.push("items", newItem);
-		mongoTemplate.updateFirst(query(where("slug").is(wishList.getSlug())), upd, WishList.class);
+		mongoTemplate.upsert(query(where("slug").is(wishList.getSlug())), upd, WishList.class);
 	}
 
 	@Override

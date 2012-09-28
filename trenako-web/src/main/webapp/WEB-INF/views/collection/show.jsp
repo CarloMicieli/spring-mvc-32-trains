@@ -102,8 +102,9 @@
 							<s:url var="editUrl" value="/collections/{slug}/edit">
 								<s:param name="slug" value="${owner.slug}"/>
 							</s:url>
-							<a href="${editUrl}" class="btn btn-warning"><s:message code="button.edit.collection.label"/></a>
+							<a href="${editUrl}" class="btn"><i class="icon-edit icon-black"></i> <s:message code="button.edit.collection.label"/></a>
 							<button type="submit" class="btn btn-danger" ${(empty collection.id) ? 'disabled="disabled"' : ''}>
+								<i class="icon-remove-sign icon-white"></i>
 								<s:message code="button.remove.collection.label"/>
 							</button>
 						</form:form>		
@@ -237,7 +238,7 @@
 											data-added-at="<s:eval expression="item.addedAt"/>"
 											data-condition="${item.condition}"
 											data-price="${item.price.decimalValue}"
-											data-item-id="${item.itemId}"><s:message code="collection.edit.item.label"/></a>&nbsp;&nbsp;OR&nbsp;&nbsp;
+											data-item-id="${item.itemId}"><s:message code="collection.edit.item.label"/></a>&nbsp;&nbsp;
 										<a href="#removeItemDialog" class="open-removeItemDialog" role="button" 
 											data-toggle="modal" 
 											data-rs-slug="${item.rollingStock.slug}"
