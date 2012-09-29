@@ -9,18 +9,31 @@
 		<meta name="home" content="active"/>
 	</head>
 	<body>
+		<div class="page-header">
+			<h1><s:message code="login.title.label"/></h1>
+		</div>
+
 		<div class="row-fluid">
-			<div class="span6">
-				<div class="page-header">
-					<h1>Sign in with Trenako.com...</h1>
-				</div>
+			<div class="span8 offset1 well">
+				<h3>
+					<s:url var="signupUrl" value="/auth/signup" />
+					<s:message code="signup.new.user.label"/> 
+					<a href="${signupUrl}"><s:message code="signup.sign.up.here.label"/></a>
+					<s:message code="signup.easy.free.label"/>
+				</h3>
+			</div>		
+		</div>
+
+		<div class="row-fluid">
+			<div class="span8 offset1">
 				<s:url var="loginUrl" value="/j_spring_security_check" />
 				<form:form id="form" class="form-horizontal" method="POST" action="${loginUrl}" >
-					<p>
-						<s:url var="signupUrl" value="/auth/signup" />
-						New user? Sign up <a href="${signupUrl}">here</a>.
-					</p>
-					
+					<c:if test="${param.login_error != null}">
+					<div class="alert alert-error">
+						<s:message code="login.error.message"></s:message>
+					</div>
+					</c:if>
+				
 				    <div class="control-group">
 						<label for="j_username" class="control-label">
 							<s:message code="account.emailAddress.label" />:
@@ -46,12 +59,6 @@
 					</label>
 					</div>
 					
-					<c:if test="${param.login_error != null}">
-					<div class="alert alert-error">
-						<s:message code="login.error.message"></s:message>
-					</div>
-					</c:if>
-					
 					<div class="form-actions">
 						<button type="submit" class="btn btn-primary" name="_action_save">
 							<i class="icon-check icon-white"></i>
@@ -65,41 +72,6 @@
 					</div>
 				</form:form>
 			</div>
-			<div class="span6">
-				<div class="page-header pull-right">
-					<h1>...or use your account for one of these sites</h1>
-				</div>
-				<div class="row-fluid">
-					<div class="span12">
-						Do you already have an account on one of these sites? Click the logo to log in with it here:
-					</div>
-				</div>
-				<div>
-					<div class="span2"></div>
-					<div class="span10">
-						<ul class="unstyled">
-							<li>
-								<a href="#">
-									<img width="64" height="64" src="<s:url value="/resources/img/social/google.png"/>" />
-									Sign in with Google
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<img width="64" height="64" src="<s:url value="/resources/img/social/yahoo.png"/>" />
-									Sign in with Yahoo
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<img width="64" height="64" src="<s:url value="/resources/img/social/twitter.png"/>" />
-									Sign in with Twitter
-								</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>		
 		</div>
 	</body>
 </html>

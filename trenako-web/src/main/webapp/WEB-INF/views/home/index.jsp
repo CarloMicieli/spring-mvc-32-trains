@@ -116,17 +116,13 @@
 							<s:message code="home.welcome.your.page.label"/>
 						</a></li>
 						
-						<s:url var="collectionsUrl" value="/collections/{slug}">
-							<s:param name="slug" value="${account.slug}"></s:param>
-						</s:url>
+						<s:url var="collectionsUrl" value="/you/collection"/>
 						<li class=""><a href="${collectionsUrl}">
 							<i class="icon-chevron-right"></i> 
 							<s:message code="home.welcome.your.collection.label"/>
 						</a></li>
-						
-						<s:url var="wishlistsUrl" value="/wishlists/owner/{slug}">
-							<s:param name="slug" value="${account.slug}"></s:param>
-						</s:url>
+
+						<s:url var="wishlistsUrl" value="/you/wishlists"/>
 						<li class=""><a href="${wishlistsUrl}">
 							<i class="icon-chevron-right"></i> 
 							<s:message code="home.welcome.your.wishlists.label"/>

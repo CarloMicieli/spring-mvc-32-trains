@@ -194,8 +194,7 @@
 									</dl>	
 									
 									<p style="margin-top: 20px">
-										<a href="#" class="btn btn-warning"><s:message code="wishlist.item.move.collection.label"/></a> 
-										<a href="#editItemDialog" class="open-editItemDialog" role="button" 
+										<a href="#editItemDialog" class="btn btn-warning open-editItemDialog" role="button" 
 											data-toggle="modal" 
 											data-rs-slug="${item.rollingStock.slug}"
 											data-rs-label="${item.rollingStock.label}"
@@ -203,7 +202,6 @@
 											data-priority="${item.priority}" 
 											data-price="${item.price.decimalValue}" 
 											data-notes="${item.notes}"><s:message code="wishlist.item.edit.label"/></a> | 
-										<a href="#"><s:message code="wishlist.item.move.another.list.label"/></a> |
 										<a href="#removeItemDialog" class="open-removeItemDialog" role="button" 
 											data-toggle="modal" 
 											data-rs-slug="${item.rollingStock.slug}"

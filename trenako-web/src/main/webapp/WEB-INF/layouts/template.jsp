@@ -12,8 +12,6 @@
 		<meta name="author" content="">
 		
 		<title><decorator:title default="Trenako"/></title>	
-		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 		<link href="<c:url value="/resources/css/bootstrap.css" />" rel="stylesheet" />
 		<link href="<c:url value="/resources/css/bootstrap-responsive.css" />" rel="stylesheet" />
 		<link href="<c:url value="/resources/css/trenako.css" />" rel="stylesheet" />

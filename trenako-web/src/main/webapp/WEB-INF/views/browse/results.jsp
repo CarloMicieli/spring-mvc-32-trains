@@ -28,13 +28,15 @@
 			<div class="row-fluid">
 				<form class="well form-inline">
 					<div class="row-fluid">
-						<div class="span2">
+						<div class="span4">
 							<sec:authorize url="/rollingstocks/new">
 								<s:url var="createUrl" value="/rollingstocks/new" />
-								<a href="${createUrl}" class="btn btn-info"><s:message code="button.create.new.label"/></a>
+								<a href="${createUrl}" class="btn btn-info">
+									<i class="icon-file icon-white"></i> <s:message code="button.new.rolling.stock.label"/>
+								</a>
 							</sec:authorize>
 						</div>
-						<div class="span10">
+						<div class="span6">
 							<div class="pull-right">
 								<form:form method="get" modelAttribute="options" class="form-inline">
 									<s:message code="rolling.stock.items.label"/>:&nbsp;
