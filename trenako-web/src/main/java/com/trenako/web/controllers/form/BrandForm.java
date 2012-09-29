@@ -15,8 +15,10 @@
  */
 package com.trenako.web.controllers.form;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -95,11 +97,16 @@ public class BrandForm {
 	 * Returns the scales list.
 	 * @return the scale list
 	 */
-	public Iterable<Scale> getScalesList() {
+	public Iterable<String> getScalesList() {
 		if (service == null) {
 			return Collections.emptyList();
 		}
-		return service.scales();
+		
+		List<String> scaleNames = new ArrayList<String>();
+		for (Scale s : service.scales()) {
+			scaleNames.add(s.getSlug());
+		}
+		return scaleNames;
 	}
 	
 	@Override

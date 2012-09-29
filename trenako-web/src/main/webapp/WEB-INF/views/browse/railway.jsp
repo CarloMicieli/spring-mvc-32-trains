@@ -22,79 +22,69 @@
 		  	<li class="active">${railway.name}</li>
 		</ul>
 	
+		<div class="page-header">
+			<h1>
+				<s:url var="flagUrl" value="/resources/img/flags/32/{iso}.png">
+					<s:param name="iso" value="${railway.country}"></s:param>
+				</s:url>
+				<img src="${flagUrl}" alt="${railway.country}"/>
+				${railway.name}
+				<small>(${railway.companyName})</small>
+			</h1>
+		</div>
+	
 		<div class="row-fluid">
 			<div class="span3">
-				<div class="page-header">
-					<h1>
-						${railway.name}
-						<s:url var="flagUrl" value="/resources/img/flags/32/{iso}.png">
-							<s:param name="iso" value="${railway.country}"></s:param>
-						</s:url>
-						<img src="${flagUrl}" alt="${railway.country}"/>
-						<small>${railway.companyName}</small>
-					</h1>
-				</div>
+				<s:url value="/images/railway_{slug}" var="logoUrl">
+					<s:param name="slug" value="${railway.slug}" />
+				</s:url>
+				<img src="${logoUrl}" alt="Not found"/>
 			</div>
-			<div class="span8">
-				<div class="row-fluid">
-					<div class="span3">
-						<s:url value="/images/railway_{slug}" var="logoUrl">
-							<s:param name="slug" value="${railway.slug}" />
-						</s:url>
-						<img src="${logoUrl}" alt="Not found"/>
-					</div>
-					<div class="span9">
-						<tk:eval expression="${railway.description}"/>
-					</div>
-				</div>
-				<hr/>
+			<div class="span9">
+				<tk:eval expression="${railway.description}"/>
 			</div>
-			<div class="span1"></div>
 		</div>
+
+		<hr/>
 	
 		<div class="row-fluid">
-			<div class="span3"></div>
-			<div class="span8">
-				<div class="row-fluid">
-					<div class="span4">
-						<h3><s:message code="browse.railway.eras.label"/></h3>
-						<p><s:message code="browse.railway.eras.subtitle" arguments="${railway.name}"/></p>
-					</div>
-					<div class="span8">
-						<ul class="unstyled">
-						<c:forEach var="era" items="${eras}">
-							<s:url var="eraUrl" value="/rs/railway/{railway}/era/{era}">
-								<s:param name="railway" value="${railway.slug}"/>
-								<s:param name="era" value="${era.key}"/>
-							</s:url>
-							<li><a class="browse" href="${eraUrl}" title="${era.description}">${era.label}</a></li> 
-						</c:forEach>
-						</ul>
-					</div>
-				</div>
-				<hr />
-				<div class="row-fluid">
-					<div class="span4">
-						<h3><s:message code="browse.railway.categories.label"/></h3>
-						<p><s:message code="browse.railway.categories.subtitle" arguments="${railway.name}"/></p>
-					</div>
-					<div class="span8">
-						<ul class="unstyled">
-						<c:forEach var="cat" items="${categories}">
-							<s:url var="categoryUrl" value="/rs/railway/{railway}/category/{category}">
-								<s:param name="railway" value="${railway.slug}"/>
-								<s:param name="category" value="${cat.key}"/>
-							</s:url>
-							<li><a class="browse" href="${categoryUrl}" title="${cat.description}">${cat.label}</a></li> 
-						</c:forEach>
-						</ul>
-					</div>
-				</div>
+			<div class="span3 offset1">
+				<strong><s:message code="browse.railway.eras.label"/></strong>
+				<p><s:message code="browse.railway.eras.subtitle" arguments="${railway.name}"/></p>
 			</div>
-			<div class="span1"></div>
+			<div class="span8">
+				<ul class="unstyled">
+				<c:forEach var="era" items="${eras}">
+					<s:url var="eraUrl" value="/rs/railway/{railway}/era/{era}">
+						<s:param name="railway" value="${railway.slug}"/>
+						<s:param name="era" value="${era.key}"/>
+					</s:url>
+					<li><a class="browse" href="${eraUrl}" title="${era.description}">${era.label}</a></li> 
+				</c:forEach>
+				</ul>
+			</div>
+		
 		</div>
-	
-		<p/>
+		
+		<hr />
+		
+		<div class="row-fluid">
+			<div class="span3 offset1">
+				<strong><s:message code="browse.railway.categories.label"/></strong>
+				<p><s:message code="browse.railway.categories.subtitle" arguments="${railway.name}"/></p>
+			</div>
+			<div class="span8">
+				<ul class="unstyled">
+				<c:forEach var="cat" items="${categories}">
+					<s:url var="categoryUrl" value="/rs/railway/{railway}/category/{category}">
+						<s:param name="railway" value="${railway.slug}"/>
+						<s:param name="category" value="${cat.key}"/>
+					</s:url>
+					<li><a class="browse" href="${categoryUrl}" title="${cat.description}">${cat.label}</a></li> 
+				</c:forEach>
+				</ul>
+			</div>
+		</div>
 		
 	</body>
 </html>

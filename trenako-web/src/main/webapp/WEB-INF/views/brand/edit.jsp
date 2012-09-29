@@ -50,6 +50,11 @@
 						label="brand.industrial.label"
 						helpLabel="brand.industrial.help.label" />
 
+					<html:multiCheckBox items="${brandForm.scalesList}" 
+						label="brand.scales.label" 
+						name="brand.scales" 
+						title="brand.scales.label"/>
+
 					<html:address countries="${countries}" 
 						bindContext="brandForm"
 						name="brand.address" 
