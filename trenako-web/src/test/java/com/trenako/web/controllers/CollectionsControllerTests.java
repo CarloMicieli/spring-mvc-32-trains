@@ -40,6 +40,7 @@ import com.trenako.services.RollingStocksService;
 import com.trenako.values.Condition;
 import com.trenako.values.LocalizedEnum;
 import com.trenako.web.controllers.form.CollectionItemForm;
+import com.trenako.web.errors.NotFoundException;
 import com.trenako.web.security.UserContext;
 
 /**
@@ -50,6 +51,7 @@ import com.trenako.web.security.UserContext;
 @RunWith(MockitoJUnitRunner.class)
 public class CollectionsControllerTests {
 
+	private ModelMap model = new ModelMap();
 	@Mock RedirectAttributes mockRedirectAtts;
 	@Mock BindingResult mockResults;
 
@@ -68,7 +70,6 @@ public class CollectionsControllerTests {
 	@Test
 	public void shouldShowCollections() {
 		String slug = "bob";
-		ModelMap model = new ModelMap();
 		when(service.findBySlug(eq(slug))).thenReturn(new Collection(owner()));
 		when(usersService.findBySlug(eq(slug))).thenReturn(new Account());
 		
@@ -76,28 +77,21 @@ public class CollectionsControllerTests {
 		
 		assertEquals("collection/show", viewName);
 		assertTrue("Collection not found", model.containsAttribute("collection"));
-		assertTrue("Owner not found", model.containsAttribute("owner"));
 	}
 	
-	@Test
-	public void shouldShowDefaultCollectionWhenOneWasNotCreatedYet() {
+	@Test(expected = NotFoundException.class)
+	public void shouldReturnNotFoundIfTheCollectionDoesntExist() {
 		String slug = "not-found";
-		ModelMap model = new ModelMap();
-		when(service.findBySlug(eq(slug))).thenReturn(Collection.defaultCollection());
-		when(usersService.findBySlug(eq(slug))).thenReturn(new Account());
+		when(service.findBySlug(eq(slug))).thenReturn(null);
 		
+		@SuppressWarnings("unused")
 		String viewName = controller.show(slug, model);
-		
-		assertEquals("collection/show", viewName);
-		assertTrue("Collection not found", model.containsAttribute("collection"));
-		assertTrue("Owner not found", model.containsAttribute("owner"));
 	}
 	
 	@Test
 	public void shouldRenderCollectionEditingForms() {
 		String slug = "bob";
 		Collection coll = new Collection(owner());
-		ModelMap model = new ModelMap();
 		when(service.findBySlug(eq(slug))).thenReturn(coll);
 		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
 		
@@ -111,21 +105,18 @@ public class CollectionsControllerTests {
 	
 	@Test
 	public void shouldSaveCollectionChanges() {
-		ModelMap model = new ModelMap();
 		Collection collection = new Collection(owner());
 		when(mockResults.hasErrors()).thenReturn(false);
 		
 		String viewName = controller.update(collection, mockResults, model, mockRedirectAtts);
 		
-		assertEquals("redirect:/collections/{slug}", viewName);
+		assertEquals("redirect:/you/collection", viewName);
 		verify(service, times(1)).saveChanges(eq(collection));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq(owner().getSlug()));
 		verify(mockRedirectAtts, times(1)).addFlashAttribute(eq("message"), eq(CollectionsController.COLLECTION_SAVED_MSG));
 	}
 	
 	@Test
 	public void shouldRedirectAfterValidationErrorsSavingCollectionChanges() {
-		ModelMap model = new ModelMap();
 		Collection collection = new Collection(owner());
 		when(mockResults.hasErrors()).thenReturn(true);
 		when(mockUserContext.getCurrentUser()).thenReturn(ownerDetails());
@@ -152,7 +143,6 @@ public class CollectionsControllerTests {
 	@Test
 	public void shouldRenderTheFormToAddCollectionItems() {
 		String slug = "acme-123456";
-		ModelMap model = new ModelMap();
 		when(rsService.findBySlug(eq(slug))).thenReturn(rollingStock());
 		
 		String viewName = controller.addItemForm(slug, model);
@@ -164,7 +154,6 @@ public class CollectionsControllerTests {
 	
 	@Test
 	public void shouldAddNewItemsToCollections() {
-		ModelMap model = new ModelMap();
 		CollectionItem newItem = postedForm().newItem(rollingStock(), owner());
 		
 		when(mockResults.hasErrors()).thenReturn(false);
@@ -173,14 +162,12 @@ public class CollectionsControllerTests {
 		
 		String redirect = controller.addItem(postedForm(), mockResults, model, mockRedirectAtts);
 
-		assertEquals("redirect:/collections/{slug}", redirect);
+		assertEquals("redirect:/you/collection", redirect);
 		verify(service, times(1)).addRollingStock(eq(owner()), eq(newItem));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("bob"));
 	}
 	
 	@Test
 	public void shouldRedirectAfterValidationErrorsDuringNewItemsAreAdded() {
-		ModelMap model = new ModelMap();
 		CollectionItemForm newForm = CollectionItemForm.newForm(rollingStock(), null);
 		
 		when(rsService.findBySlug(eq(postedForm().getRsSlug()))).thenReturn(rollingStock());
@@ -199,7 +186,6 @@ public class CollectionsControllerTests {
  	
 	@Test
 	public void shouldDeleteItemsFromCollections() {
-		ModelMap model = new ModelMap();
 		CollectionItem item = postedForm().deletedItem(rollingStock(), owner());
 		
 		when(mockResults.hasErrors()).thenReturn(false);
@@ -208,9 +194,8 @@ public class CollectionsControllerTests {
 		
 		String redirect = controller.removeItem(postedForm(), mockResults, model, mockRedirectAtts);
 
-		assertEquals("redirect:/collections/{slug}", redirect);
+		assertEquals("redirect:/you/collection", redirect);
 		verify(service, times(1)).removeRollingStock(eq(owner()), eq(item));
-		verify(mockRedirectAtts, times(1)).addAttribute(eq("slug"), eq("bob"));
 	}
 	
 	CollectionItemForm newForm() {

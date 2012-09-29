@@ -62,6 +62,10 @@
         <exception-type>java.lang.Exception</exception-type>
         <location>/error/server-error</location>
     </error-page>
+    <error-page>
+    	<error-code>404</error-code>
+    	<location>/error/notfound</location>
+    </error-page>
 
 	<!-- Bootstrap the root application context as usual using ContextLoaderListener -->
 	<listener>

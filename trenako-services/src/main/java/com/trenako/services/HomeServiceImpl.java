@@ -52,9 +52,7 @@ public class HomeServiceImpl implements HomeService {
 		boolean isLogged = loggedUser != null;
 		
 		Iterable<RollingStock> rollingStocks = rsService.findLatestModified(options.getNumberOfRollingStocks());
-		Iterable<Activity> stream = isLogged ?
-				activityStream.userActivity(loggedUser, options.getActivityStreamSize()) :
-				activityStream.recentActivity(options.getActivityStreamSize());
+		Iterable<Activity> stream = activityStream.recentActivity(options.getActivityStreamSize());
 		
 		return new HomeView(isLogged, rollingStocks, stream);
 	}

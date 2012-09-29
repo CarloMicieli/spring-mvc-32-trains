@@ -61,8 +61,13 @@ public interface CollectionsService
 	
 	/**
 	 * Finds the {@code Collection} with the provided owner.
+	 * <p>
+	 * If the provided user has no collection yet then this method will
+	 * return the {@link Collection#defaultCollection()} instead of {@code null}.
+	 * </p>
+	 * 
 	 * @param owner the collection's owner
-	 * @return a {@code Collection} if found; {@code null} otherwise
+	 * @return a {@code Collection} if found; the default collection otherwise
 	 */
 	Collection findByOwner(Account owner);
 	

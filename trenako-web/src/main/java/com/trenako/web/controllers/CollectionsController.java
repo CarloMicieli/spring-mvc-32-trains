@@ -22,6 +22,8 @@ import java.util.LinkedHashMap;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -47,6 +49,8 @@ import com.trenako.services.RollingStocksService;
 import com.trenako.values.LocalizedEnum;
 import com.trenako.values.Visibility;
 import com.trenako.web.controllers.form.CollectionItemForm;
+import com.trenako.web.errors.NotFoundException;
+import com.trenako.web.infrastructure.LogUtils;
 import com.trenako.web.security.UserContext;
 
 /**
@@ -58,6 +62,8 @@ import com.trenako.web.security.UserContext;
 @RequestMapping("/collections")
 public class CollectionsController {
 
+	private final static Logger log = LoggerFactory.getLogger("com.trenako.web");
+	
 	static final ControllerMessage COLLECTION_SAVED_MSG = ControllerMessage.success("collection.saved.message");
 	static final ControllerMessage COLLECTION_DELETED_MSG = ControllerMessage.success("collection.deleted.message");
 	
@@ -89,19 +95,15 @@ public class CollectionsController {
 	
 	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
 	public String show(@PathVariable("slug") String slug, ModelMap model) {
-		Account owner = null;
 		Collection collection = service.findBySlug(slug);
-		
-		if (collection.equals(Collection.defaultCollection())) {
-			owner = usersService.findBySlug(slug);
+		if (collection == null) {
+			throw new NotFoundException();
 		}
-		else {
-			owner = usersService.findBySlug(collection.getOwner());
-		}
-		
+
+		Account owner = usersService.findBySlug(collection.getOwner());
+
 		model.addAttribute("collection", collection);
 		model.addAttribute("owner", owner);
-		model.addAttribute("editForm", CollectionItemForm.jsForm(messageSource));
 		return "collection/show";
 	}
 	
@@ -122,6 +124,7 @@ public class CollectionsController {
 			RedirectAttributes redirectAtts) {
 
 		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
 			Account owner = UserContext.authenticatedUser(userContext);
 			model.addAttribute("owner", owner);
 			model.addAttribute("collection", collection);
@@ -130,9 +133,8 @@ public class CollectionsController {
 		}
 		
 		service.saveChanges(collection);
-		redirectAtts.addAttribute("slug", collection.getSlug());
 		COLLECTION_SAVED_MSG.appendToRedirect(redirectAtts);
-		return "redirect:/collections/{slug}";
+		return "redirect:/you/collection";
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE)
@@ -162,6 +164,7 @@ public class CollectionsController {
 		RollingStock rs = rsService.findBySlug(form.getRsSlug());
 		
 		if (bindingResult.hasErrors()) {
+			LogUtils.logValidationErrors(log, bindingResult);
 			CollectionItemForm newForm = CollectionItemForm.newForm(rs, messageSource);
 			model.addAttribute("itemForm", newForm);
 			model.addAttribute("rs", rs);
@@ -172,8 +175,7 @@ public class CollectionsController {
 		CollectionItem newItem = form.newItem(rs, owner);
 		service.addRollingStock(owner, newItem);
 		
-		redirectAtts.addAttribute("slug", owner.getSlug());
-		return "redirect:/collections/{slug}";
+		return "redirect:/you/collection";
 	}
 	
 	@RequestMapping(value = "/items", method = RequestMethod.PUT)
@@ -185,16 +187,15 @@ public class CollectionsController {
 		Account owner = userContext.getCurrentUser().getAccount();
 		
 		if (bindingResult.hasErrors()) {
-			redirectAtts.addAttribute("slug", owner.getSlug());
-			return "redirect:/collections/{slug}";
+			LogUtils.logValidationErrors(log, bindingResult);
+			return "redirect:/you/collection";
 		}
 		
 		RollingStock rs = rsService.findBySlug(form.getRsSlug());
 		CollectionItem item = form.editItem(rs, owner);
 		service.updateItem(owner, item);
 		
-		redirectAtts.addAttribute("slug", owner.getSlug());
-		return "redirect:/collections/{slug}";
+		return "redirect:/you/collection";
 	}
 	
 	@RequestMapping(value = "/items", method = RequestMethod.DELETE)
@@ -206,16 +207,15 @@ public class CollectionsController {
 		Account owner = userContext.getCurrentUser().getAccount();
 		
 		if (bindingResult.hasErrors()) {
-			redirectAtts.addAttribute("slug", owner.getSlug());
-			return "redirect:/collections/{slug}";
+			LogUtils.logValidationErrors(log, bindingResult);
+			return "redirect:/you/collection";
 		}
 		
 		RollingStock rs = rsService.findBySlug(form.getRsSlug());
 		CollectionItem item = form.deletedItem(rs, owner);
 		service.removeRollingStock(owner, item);
 		
-		redirectAtts.addAttribute("slug", owner.getSlug());
-		return "redirect:/collections/{slug}";
+		return "redirect:/you/collection";
 	}
 	
 	private HashMap<LocalizedEnum<Visibility>, String> getVisibilities(Collection c) {

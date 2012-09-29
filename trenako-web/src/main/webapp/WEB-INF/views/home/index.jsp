@@ -17,7 +17,11 @@
 						<h1><s:message code="home.hero.title.label"/></h1>
 						<p><s:message code="home.hero.par1.text"/></p>
 						<p><s:message code="home.hero.par2.text"/></p>
-						<p><a class="btn btn-primary btn-large" href="<s:url value="/home/explore"/>"><s:message code="button.learn.more.label"/></a></p>
+						<p>
+							<a class="btn btn-primary btn-large" href="<s:url value="/home/explore"/>">
+								<i class="icon-info-sign icon-white"></i> <s:message code="button.learn.more.label"/>
+							</a>
+						</p>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -144,7 +148,9 @@
 						<s:message code="home.welcome.undecided.label"/>
 					</p>
 					<p>
-						<a class="btn btn-info" href="<s:url value="/rollingstocks/new" />"><s:message code="button.new.rolling.stock.label"/></a>
+						<a class="btn btn-info" href="<s:url value="/rollingstocks/new" />">
+							<i class="icon-file icon-white"></i> <s:message code="button.new.rolling.stock.label"/>
+						</a>
 					</p>
 			    </c:when>
 			    <c:otherwise>

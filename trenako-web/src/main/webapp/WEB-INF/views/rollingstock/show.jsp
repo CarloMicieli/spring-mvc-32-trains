@@ -126,18 +126,17 @@
 						<s:param name="slug" value="${result.rs.slug}" />
 					</s:url>
 					<img src="${imgUrl}" alt="Not found">
-					<hr>
 				</div>
 				<div class="row-fluid">
-					<p>
-						<c:forEach var="tag" items="${result.rs.tags}">
-							<s:url var="tagUrl" value="/tag/{tagName}">
-								<s:param name="tagName" value="${tag}"></s:param>
-							</s:url>
-							<a class="label label-info" href="${tagUrl}" title="Tag: ${tag}">${tag}</a>
-						</c:forEach>
-					</p>
+					<c:forEach var="tag" items="${result.rs.tags}">
+						<s:url var="tagUrl" value="/tag/{tagName}">
+							<s:param name="tagName" value="${tag}"></s:param>
+						</s:url>
+						<a class="label label-info" href="#" title="Tag: ${tag}">${tag}</a>
+					</c:forEach>
 		   		</div>
+		   		
+		   		<hr/>
 		   		
 		   		<div class="row-fluid">
 	        		<sec:authorize access="isAnonymous()">

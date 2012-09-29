@@ -30,7 +30,9 @@ import com.trenako.entities.Account;
 import com.trenako.entities.Collection;
 import com.trenako.entities.WishList;
 import com.trenako.security.AccountDetails;
+import com.trenako.services.CollectionsService;
 import com.trenako.services.ProfilesService;
+import com.trenako.services.WishListsService;
 import com.trenako.services.view.ProfileOptions;
 import com.trenako.services.view.ProfileView;
 import com.trenako.web.security.UserContext;
@@ -43,6 +45,8 @@ import com.trenako.web.test.AbstractSpringControllerTests;
  */
 public class YouControllerMappingTests extends AbstractSpringControllerTests {
 
+	private @Autowired CollectionsService collectionsService;
+	private @Autowired WishListsService wishListsService;
 	private @Autowired ProfilesService service;
 	private @Autowired UserContext secContext;
 	
@@ -60,12 +64,17 @@ public class YouControllerMappingTests extends AbstractSpringControllerTests {
 				wishLists(), 
 				ProfileOptions.DEFAULT);
 		when(service.findProfileView(eq(account))).thenReturn(value);
+		when(collectionsService.findByOwner(eq(account))).thenReturn(collection(account));
+		when(wishListsService.findByOwner(eq(account))).thenReturn(wishLists());
+		when(wishListsService.findBySlugOrDefault(eq(account), eq("bob-new-list"))).thenReturn(wishList(account));
 	}
 	
 	@After
 	public void cleanup() {
 		reset(service);
 		reset(secContext);
+		reset(collectionsService);
+		reset(wishListsService);
 	}
 	
 	@Test
@@ -78,8 +87,43 @@ public class YouControllerMappingTests extends AbstractSpringControllerTests {
 			.andExpect(forwardedUrl(view("you", "index")));
 	}
 	
+	@Test
+	public void shouldRenderTheCollectionManagementPage() throws Exception {
+		mockMvc().perform(get("/you/collection"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(3))
+			.andExpect(model().attributeExists("collection"))
+			.andExpect(model().attributeExists("owner"))
+			.andExpect(model().attributeExists("editForm"))
+			.andExpect(forwardedUrl(view("collection", "manage")));
+	}
+	
+	@Test
+	public void shouldRenderTheWishListsPage() throws Exception {
+		mockMvc().perform(get("/you/wishlists"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(2))
+			.andExpect(model().attributeExists("results"))
+			.andExpect(model().attributeExists("owner"))
+			.andExpect(forwardedUrl(view("wishlist", "list")));
+	}
+	
+	@Test
+	public void shouldRenderTheWishListManagementPage() throws Exception {
+		mockMvc().perform(get("/you/wishlists/{slug}", "bob-new-list"))
+			.andExpect(status().isOk())
+			.andExpect(model().size(2))
+			.andExpect(model().attributeExists("wishList"))
+			.andExpect(model().attributeExists("editForm"))
+			.andExpect(forwardedUrl(view("wishlist", "manage")));
+	}
+	
 	Collection collection(Account account) {
 		return new Collection(account);
+	}
+	
+	WishList wishList(Account account) {
+		return  new WishList(account, "New list");
 	}
 	
 	Iterable<WishList> wishLists() {

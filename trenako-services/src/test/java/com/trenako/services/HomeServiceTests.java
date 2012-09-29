@@ -72,7 +72,6 @@ public class HomeServiceTests {
 		assertEquals(activities, homeContent.getActivityStream());
 		
 		verify(mockActivityStream, times(1)).recentActivity(eq(options.getActivityStreamSize()));
-		verify(mockActivityStream, times(0)).userActivity(isA(Account.class), eq(options.getActivityStreamSize()));
 	}
 	
 	@Test
@@ -81,7 +80,7 @@ public class HomeServiceTests {
 		
 		when(mockRsService.findLatestModified(eq(defaultOpts.getNumberOfRollingStocks())))
 			.thenReturn(rollingStocks);
-		when(mockActivityStream.userActivity(eq(loggedUser()), eq(defaultOpts.getActivityStreamSize())))
+		when(mockActivityStream.recentActivity(eq(defaultOpts.getActivityStreamSize())))
 			.thenReturn(activities);
 		
 		HomeView homeContent = service.getHomeContent(loggedUser());
@@ -90,8 +89,7 @@ public class HomeServiceTests {
 		assertEquals(rollingStocks, homeContent.getRollingStocks());
 		assertEquals(activities, homeContent.getActivityStream());
 		
-		verify(mockActivityStream, times(0)).recentActivity(eq(defaultOpts.getActivityStreamSize()));
-		verify(mockActivityStream, times(1)).userActivity(eq(loggedUser()), eq(defaultOpts.getActivityStreamSize()));
+		verify(mockActivityStream, times(1)).recentActivity(eq(defaultOpts.getActivityStreamSize()));
 	}
 	
 	Account loggedUser() {

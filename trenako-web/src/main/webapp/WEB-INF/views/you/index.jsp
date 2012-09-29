@@ -20,18 +20,10 @@
 		</ul>
 		
 		<div class="row-fluid">
-			<div class="span9">
-				<tk:avatar user="${user.account.slug}" size="64" showGravatarLink="true"/>
-				<div class="page-header">
-					<h1>${user.username} <small>(${user.displayName})</small></h1>
-				</div>
+			<tk:avatar user="${user.slug}" size="64" showGravatarLink="true"/>
+			<div class="page-header">
+				<h1>${user.emailAddress} <small>(${user.displayName})</small></h1>
 			</div>
-			<div class="span3">
-<!-- 				<div class="pull-right"> -->
-<%-- 					<a href="#" class="btn btn-info"><s:message code="button.edit.profile.label"/></a> --%>
-<!-- 				</div> -->
-			</div>
-			<hr />
 		</div>
 		
 		<div class="row-fluid">
@@ -39,7 +31,6 @@
 				<div class="row-fluid">
 					<div class="span11 offset1">
 						<h3><s:message code="you.count.collection.title"/>:</h3>
-						<hr>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -81,117 +72,101 @@
 					</div>
 					<div class="span3"></div>
 				</div>
-				<div class="row-fluid">
-					<div class="span2">
-					</div>
-					<div class="span10">
-						<hr>
-					</div>
-				</div>			
-							
 			</div>
 		</div>
 		
+		<hr/>
+		
 		<div class="row-fluid">
-			<div class="span1"></div>
-			<div class="span11">
-				<div class="row-fluid">
-					<div class="span4">
-						<h2><s:message code="you.recent.activity.title"/></h2>
-						<p>
-							<c:forEach var="act" items="${info.userActivity}">
-								<div class="row-fluid" style="border-left: thick solid ${act.color};">
-									<div class="span4">
-										<html:thumb slug="${act.object.slug}"/>
-									</div>
-									<div class="span8">
-										<tk:activity activity="${act}"/> 
-									</div>
-								</div>
-								<hr/>
-							</c:forEach>
-						</p>			
-					</div>				
-					<div class="span4">
-						<s:url var="collUrl" value="/collections/{slug}">
-							<s:param name="slug" value="${user.account.slug}"></s:param>
-						</s:url>
-						<h2><s:message code="you.from.collection.title"/></h2>
-						<p>
-							<a href="${collUrl}" class="btn btn-danger">
-								<i class="icon-tags icon-white"></i> <s:message code="you.manage.collection.button"/>
-							</a>
-						</p>
-						
-						<hr/>
-						<h4><s:message code="you.collection.title.label"/></h4>						
-						
-						<c:forEach var="item" items="${info.collectionItems}">
-						<div class="row-fluid" style="margin-bottom: 15px;">
-							<div class="span5 offset1">
-								<s:url value="/rollingstocks/{slug}" var="showUrl">
-									<s:param name="slug" value="${item.itemSlug}" />
-								</s:url>
-								<s:url value="/images/th_rollingstock_{slug}" var="imgUrl">
-									<s:param name="slug" value="${item.itemSlug}" />
-								</s:url>
-								<a href="${showUrl}" class="thumbnail">
-									<img src="${imgUrl}" alt="Not found" width="200px">
-							    </a>
-							</div>
-							<div class="span6">
-								<h5>${item.itemName}</h5>
-								
-								Added to your <a href="${collUrl}">${item.listName}</a>
-								<br/>
-								<strong><tk:period since="${item.addedAt}"/></strong>
-							</div>
+			<div class="span4">
+				<h2><s:message code="you.recent.activity.title"/></h2>
+				<p>
+					<c:forEach var="act" items="${info.userActivity}">
+					<div class="row-fluid" style="border-left: thick solid ${act.color};">
+						<div class="span4">
+							<html:thumb slug="${act.object.slug}"/>
 						</div>
-						</c:forEach>
-
+						<div class="span8">
+							<tk:activity activity="${act}"/> 
+						</div>
 					</div>
-					<div class="span4">
-						<h2><s:message code="you.from.wish.lists.title"/></h2>
-						<p>
-							<s:url var="wishListsUrl" value="/wishlists/owner/{slug}">
-								<s:param name="slug" value="${user.account.slug}"/>
-							</s:url>
-							<a href="${wishListsUrl}" class="btn btn-primary">
-								<i class="icon-gift icon-white"></i> <s:message code="you.manage.wish.lists.button"/>
-							</a>
-						</p>
-
-						<hr/>
-						<h4><s:message code="you.wishlist.title.label"/></h4>						
+					<hr/>
+					</c:forEach>
+				</p>			
+			</div>				
+			<div class="span4">
+				<s:url var="collUrl" value="/you/collection"/>
+				<h2><s:message code="you.from.collection.title"/></h2>
+				<p>
+					<a href="${collUrl}" class="btn btn-primary">
+						<i class="icon-tags icon-white"></i> <s:message code="you.manage.collection.button"/>
+					</a>
+				</p>
+				
+				<hr/>
+				<h4><s:message code="you.collection.title.label"/></h4>						
+				
+				<c:forEach var="item" items="${info.collectionItems}">
+				<div class="row-fluid" style="margin-bottom: 15px;">
+					<div class="span5 offset1">
+						<s:url value="/rollingstocks/{slug}" var="showUrl">
+							<s:param name="slug" value="${item.itemSlug}" />
+						</s:url>
+						<s:url value="/images/th_rollingstock_{slug}" var="imgUrl">
+							<s:param name="slug" value="${item.itemSlug}" />
+						</s:url>
+						<a href="${showUrl}" class="thumbnail">
+							<img src="${imgUrl}" alt="Not found" width="200px">
+					    </a>
+					</div>
+					<div class="span6">
+						<h5>${item.itemName}</h5>
 						
-						<c:forEach var="item" items="${info.wishListItems}">
-						<div class="row-fluid" style="margin-bottom: 15px;">
-							<div class="span5 offset1">
-								<s:url value="/rollingstocks/{slug}" var="showUrl">
-									<s:param name="slug" value="${item.itemSlug}" />
-								</s:url>
-								<s:url value="/images/th_rollingstock_{slug}" var="imgUrl">
-									<s:param name="slug" value="${item.itemSlug}" />
-								</s:url>
-								<a href="${showUrl}" class="thumbnail">
-									<img src="${imgUrl}" alt="Not found" width="200px">
-							    </a>
-							</div>
-							<div class="span6">
-								<h5>${item.itemName}</h5>
-								<s:url var="listUrl" value="/wishlists/{slug}">
-									<s:param name="slug" value="${item.listSlug}"></s:param>
-								</s:url>
-								
-								Added to the wish list "<a href="${listUrl}">${item.listName}</a>"
-								<br/>
-								<strong><tk:period since="${item.addedAt}"/></strong>
-							</div>
-						</div>
-						</c:forEach>
-					</div>		
+						<s:message code="you.added.to.label"/> <a href="${collUrl}">${item.listName}</a>.
+						<br/>
+						<strong><tk:period since="${item.addedAt}"/></strong>
+					</div>
 				</div>
+				</c:forEach>
 			</div>
+			<div class="span4">
+				<h2><s:message code="you.from.wish.lists.title"/></h2>
+				<p>
+					<s:url var="wishListsUrl" value="/you/wishlists"/>
+					<a href="${wishListsUrl}" class="btn btn-primary">
+						<i class="icon-gift icon-white"></i> <s:message code="you.manage.wish.lists.button"/>
+					</a>
+				</p>
+	
+				<hr/>
+				<h4><s:message code="you.wishlist.title.label"/></h4>						
+				
+				<c:forEach var="item" items="${info.wishListItems}">
+				<div class="row-fluid" style="margin-bottom: 15px;">
+					<div class="span5 offset1">
+						<s:url value="/rollingstocks/{slug}" var="showUrl">
+							<s:param name="slug" value="${item.itemSlug}" />
+						</s:url>
+						<s:url value="/images/th_rollingstock_{slug}" var="imgUrl">
+							<s:param name="slug" value="${item.itemSlug}" />
+						</s:url>
+						<a href="${showUrl}" class="thumbnail">
+							<img src="${imgUrl}" alt="Not found" width="200px">
+					    </a>
+					</div>
+					<div class="span6">
+						<h5>${item.itemName}</h5>
+						<s:url var="listUrl" value="/you/wishlists/{slug}">
+							<s:param name="slug" value="${item.listSlug}"></s:param>
+						</s:url>
+						
+						<s:message code="you.added.to.label"/> <a href="${listUrl}">${item.listName}</a>.
+						<br/>
+						<strong><tk:period since="${item.addedAt}"/></strong>
+					</div>
+				</div>
+				</c:forEach>
+			</div>		
 		</div>
 		
 		<p />

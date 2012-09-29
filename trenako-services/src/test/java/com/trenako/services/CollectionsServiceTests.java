@@ -71,16 +71,6 @@ public class CollectionsServiceTests {
 	}
 	
 	@Test
-	public void shouldReturnTheDefaultCollection() {
-		String slug = "not-found";
-		Collection coll = service.findBySlug(slug);
-		
-		assertNotNull(coll);
-		assertEquals(Collection.defaultCollection(), coll);
-		verify(repo, times(1)).findBySlug(eq(slug));
-	}
-
-	@Test
 	public void shouldFindCollectionsById() {
 		Collection coll = service.findById(id);
 		
@@ -102,6 +92,17 @@ public class CollectionsServiceTests {
 		Collection coll = service.findByOwner(owner);
 
 		assertNotNull(coll);
+		verify(repo, times(1)).findByOwner(eq(owner));
+	}
+	
+	@Test
+	public void shouldReturnTheDefaultCollectionForTheUser() {
+		when(repo.findByOwner(eq(owner))).thenReturn(null);
+		
+		Collection coll = service.findByOwner(owner);
+		
+		assertNotNull(coll);
+		assertEquals(Collection.defaultCollection(), coll);
 		verify(repo, times(1)).findByOwner(eq(owner));
 	}
 	

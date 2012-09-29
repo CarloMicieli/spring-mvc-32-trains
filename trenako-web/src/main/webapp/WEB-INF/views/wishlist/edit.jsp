@@ -19,7 +19,7 @@
 		<div class="row-fluid">
 			<div class="span2">
 				<p>
-					<s:url var="backUrl" value="/wishlists/{slug}">
+					<s:url var="backUrl" value="/you/wishlists/{slug}">
 						<s:param name="slug" value="${editForm.wishList.slug}" />
 					</s:url>
 					<a href="${backUrl}" class="btn btn-info" style="width: 110px">

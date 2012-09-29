@@ -42,6 +42,11 @@ public class ErrorController {
 		return "error/denied";
 	}
 	
+	@RequestMapping(value = "/notfound")
+	public String notFound() {
+		return "error/notfound";
+	}
+	
 	@RequestMapping(value = "/server-error")
 	public ModelAndView resolveException(HttpServletRequest request) {
 		Exception ex = (Exception) request.getAttribute("javax.servlet.error.exception");

@@ -113,12 +113,12 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		col.items.collect { it.itemId }.sort() == ['2012-01-01_acme-123456', '2012-01-01_acme-123457']
 	}
 	
-	def "should return the default collection if no collection with the provided slug exists"() {
+	def "should return null if no collection with the provided slug exists"() {
 		when:
 		def col = service.findBySlug('not-found')
 		
 		then:
-		col == Collection.defaultCollection()
+		col == null
 	}
 	
 	def "should find the collection with the provided owner"() {
@@ -133,7 +133,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		col.owner == 'the-rocket'
 	}
 	
-	def "should return null if no collection with the provided owner exists"() {
+	def "should return the default collection if no collection with the provided owner exists"() {
 		given:
 		def owner = new Account(slug: 'not-exists')
 		
@@ -141,7 +141,7 @@ class CollectionsServiceSpecification extends MongoSpecification {
 		def col = service.findByOwner(owner)
 		
 		then:
-		col == null
+		col == Collection.defaultCollection()
 	}
 	
 	def "should check whether the collection contains the provided rolling stock"() {

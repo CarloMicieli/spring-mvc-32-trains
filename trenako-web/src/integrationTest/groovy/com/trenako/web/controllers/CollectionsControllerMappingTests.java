@@ -77,10 +77,9 @@ public class CollectionsControllerMappingTests extends AbstractSpringControllerT
 	public void shouldShowCollections() throws Exception {
 		mockMvc().perform(get("/collections/{slug}", "bob"))
 			.andExpect(status().isOk())
-			.andExpect(model().size(3))
+			.andExpect(model().size(2))
 			.andExpect(model().attributeExists("collection"))
 			.andExpect(model().attributeExists("owner"))
-			.andExpect(model().attributeExists("editForm"))
 			.andExpect(forwardedUrl(view("collection", "show")));
 	}
 	
@@ -105,7 +104,7 @@ public class CollectionsControllerMappingTests extends AbstractSpringControllerT
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(CollectionsController.COLLECTION_SAVED_MSG)))
 			.andExpect(status().isOk())
-			.andExpect(redirectedUrl("/collections/bob"));
+			.andExpect(redirectedUrl("/you/collection"));
 	}
 	
 	@Test
@@ -138,6 +137,6 @@ public class CollectionsControllerMappingTests extends AbstractSpringControllerT
 				.param("item.notes", "My notes")
 				.param("price", "100.50"))
 			.andExpect(status().isOk())
-			.andExpect(redirectedUrl("/collections/bob"));
+			.andExpect(redirectedUrl("/you/collection"));
 	}
 }

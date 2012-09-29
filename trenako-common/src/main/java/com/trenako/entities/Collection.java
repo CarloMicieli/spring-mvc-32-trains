@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.bson.types.ObjectId;
 
 import org.springframework.data.annotation.Id;
@@ -293,7 +294,9 @@ public class Collection {
 		if (!(obj instanceof Collection)) return false;
 		
 		Collection other = (Collection) obj;
-		return getOwner().equals(other.getOwner());
+		return new EqualsBuilder()
+			.append(this.owner, other.owner)
+			.isEquals();
 	}
 
 	private static String visibility(Visibility visibility) {

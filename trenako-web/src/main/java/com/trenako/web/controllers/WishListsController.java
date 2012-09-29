@@ -34,7 +34,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trenako.entities.Account;
 import com.trenako.entities.WishList;
-import com.trenako.services.AccountsService;
 import com.trenako.services.WishListsService;
 import com.trenako.web.controllers.form.WishListForm;
 import com.trenako.web.controllers.form.WishListItemForm;
@@ -67,7 +66,6 @@ public class WishListsController {
 	
 	private final UserContext userContext;
 	private final WishListsService service;
-	private final AccountsService accountsService;
 	
 	private @Autowired(required = false) MessageSource messageSource;
 
@@ -78,10 +76,8 @@ public class WishListsController {
 	 */
 	@Autowired
 	public WishListsController(WishListsService service, 
-			AccountsService accountsService,
 			UserContext userContext) {
 		this.service = service;
-		this.accountsService = accountsService;
 		this.userContext = userContext;
 	}
 	
@@ -131,7 +127,7 @@ public class WishListsController {
 			WISH_LIST_CREATED_MSG.appendToRedirect(redirectAtts);
 			
 			redirectAtts.addAttribute("slug", wishList.getSlug());
-			return "redirect:/wishlists/{slug}";
+			return "redirect:/you/wishlists/{slug}";
 		}
 		catch (DuplicateKeyException dke) {
 			LogUtils.logException(log, dke);
@@ -158,16 +154,6 @@ public class WishListsController {
 		return "wishlist/show";
 	}
 
-	@RequestMapping(value = "/owner/{owner}", method = RequestMethod.GET)
-	public String showOwnerWishLists(@PathVariable("owner") String owner, ModelMap model) {
-		
-		Account user = accountsService.findBySlug(owner);
-		
-		model.addAttribute("owner", user);
-		model.addAttribute("results", service.findByOwner(user));
-		return "wishlist/list";
-	}
-	
 	/**
 	 * 
 	 *
@@ -189,10 +175,8 @@ public class WishListsController {
 
 		WishList list = service.findBySlug(slug);
 		if (list == null) {
-			Account owner = UserContext.authenticatedUser(userContext);
 			WISH_LIST_NOT_FOUND_MSG.appendToRedirect(redirectAtts);
-			redirectAtts.addAttribute("owner", owner.getSlug());
-			return "redirect:/wishlists/owner/{owner}";
+			return "redirect:/you/wishlists";
 		}
 
 		model.addAttribute("editForm", WishListForm.newForm(list, messageSource));
@@ -233,7 +217,7 @@ public class WishListsController {
 	
 			WISH_LIST_SAVED_MSG.appendToRedirect(redirectAtts);
 			redirectAtts.addAttribute("slug", wishList.getSlug());
-			return "redirect:/wishlists/{slug}";
+			return "redirect:/you/wishlists/{slug}";
 		}
 		catch (DuplicateKeyException dke) {
 			LogUtils.logException(log, dke);
@@ -253,9 +237,7 @@ public class WishListsController {
 		service.remove(wishList);
 
 		WISH_LIST_REMOVED_MSG.appendToRedirect(redirectAtts);
-		
-		redirectAtts.addAttribute("owner", userContext.getCurrentUser().getAccount().getSlug());
-		return "redirect:/wishlists/owner/{owner}";
+		return "redirect:/you/wishlists";
 	}
 	
 	/**
@@ -293,7 +275,7 @@ public class WishListsController {
 
 			WISH_LIST_ITEM_ADDED_MSG.appendToRedirect(redirectAtts);
 			redirectAtts.addAttribute("slug", wishList.getSlug());
-			return "redirect:/wishlists/{slug}";
+			return "redirect:/you/wishlists/{slug}";
 		}
 		catch (DataAccessException dae) {
 			LogUtils.logException(log, dae);
@@ -341,7 +323,7 @@ public class WishListsController {
 
 			WISH_LIST_ITEM_UPDATED_MSG.appendToRedirect(redirectAtts);
 			redirectAtts.addAttribute("slug", wishList.getSlug());
-			return "redirect:/wishlists/{slug}";
+			return "redirect:/you/wishlists/{slug}";
 		}
 		catch (DataAccessException dae) {
 			LogUtils.logException(log, dae);
@@ -374,7 +356,7 @@ public class WishListsController {
 		if (bindingResult.hasErrors()) {
 			LogUtils.logValidationErrors(log, bindingResult);
 			redirectAtts.addAttribute("slug", form.getSlug());
-			return "redirect:/wishlists/{slug}";
+			return "redirect:/you/wishlists/{slug}";
 		}
 		
 		WishList wishList = service.findBySlug(form.getSlug());
@@ -384,6 +366,6 @@ public class WishListsController {
 
 		WISH_LIST_ITEM_DELETED_MSG.appendToRedirect(redirectAtts);
 		redirectAtts.addAttribute("slug", wishList.getSlug());
-		return "redirect:/wishlists/{slug}";
+		return "redirect:/you/wishlists/{slug}";
 	}
 }

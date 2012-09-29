@@ -20,23 +20,22 @@
 	<div class="page-header">
 		<h1>
 			<s:message code="home.developers.header.title" text="Developers" />
-			<small><s:message code="home.developers.header.subtitle" text="How trenako.com is build" /></small>
+			<small><s:message code="home.developers.header.subtitle" text="a backstage pass" /></small>
 		</h1>
 	</div>
 	
 	<div class="row-fluid offset1">
+		Highlight for the application:
 		<ul>
-			<li>Java/Groovy web application;</li>
-			<li>Application built with Gradle;</li>
-			<li>Spring MVC;</li>
-			<li>Spring Framework;</li>
-			<li>Spring data for MongoDB;</li>
-			<li>Spring security;</li>
-			<li>Source code stored in a GitHub repository;</li>
-			<li>Testing with JUnit, Mockito and Spock framework.</li>
+			<li>Java web application;</li>
+			<li>built using Gradle;</li>
+			<li>extensively use of the Spring framework 3.1 (MVC, security, data for Mongodb);</li>
+			<li>MongoDb database;</li>
+			<li>stored in a public GitHub repository;</li>
+			<li>tested using JUnit, Mockito and the Spock framework.</li>
 		</ul>
 		
-		<a href="https://github.com/CarloMicieli/trenako">Source code</a> released under the <strong>Apache 2.0 license</strong>.
+		<a href="https://github.com/CarloMicieli/trenako" target="_blank">Source code</a> is released under the <strong>Apache 2.0 license</strong>.
 	</div>
 	
 	<hr/>

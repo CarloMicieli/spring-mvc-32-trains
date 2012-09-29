@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<title>
-			<s:message code="wishlist.page.new.title"/>
+			<s:message code="wishlist.page.list.label" arguments="${owner.displayName}"/>
 		</title>
 		<meta name="you" content="active"/>
 	</head>
@@ -20,11 +20,11 @@
 				<s:url value="/you" var="youUrl"/>
 		    	<a href="${youUrl}"><s:message code="nav.you.label"/></a> <span class="divider">/</span>
 			</li>
-		  	<li class="active"><s:message code="nav.wish.lists.label"/></li>
+		  	<li class="active"><s:message code="nav.you.wish.lists.label" arguments="${owner.displayName}"/></li>
 		</ul>
 		
 		<div class="page-header">
-        	<h1>Wish lists <small>(${owner.displayName})</small></h1>
+        	<h1><s:message code="wishlist.you.title.label"/></h1>
         </div>
 		<div class="row-fluid">
 			<div class="span2">
@@ -39,7 +39,9 @@
 			
 				<p>
 					<s:url var="createUrl" value="/wishlists/new"/>
-					<a href="${createUrl}" class="btn btn-info">New wish list</a>
+					<a href="${createUrl}" class="btn btn-info">
+						<i class="icon-file icon-white"></i> <s:message code="wishlist.new.button.label"/>
+					</a>
 				</p>
 				
 				<hr/>
@@ -48,15 +50,15 @@
 				<c:forEach var="wishList" items="${results}">
 					<li>
 						<p>
-							<span class="badge badge-info">${wishList.numberOfItems} items</span>
+							<span class="badge badge-info"><s:message code="wishlist.item.count.label" arguments="${wishList.numberOfItems}"/></span>
 							[<tk:evalValue type="Visibility" expression="${wishList.visibility}"/>] 
 							
-							<s:url var="viewUrl" value="/wishlists/{slug}">
+							<s:url var="viewUrl" value="/you/wishlists/{slug}">
 								<s:param name="slug" value="${wishList.slug}"></s:param>
 							</s:url>
 							<strong><a href="${viewUrl}">${wishList.name}</a></strong>
 							<br/> 
-							updated <strong><tk:period since="${wishList.lastModified}"/></strong>
+							<s:message code="wishlist.lastModified.label"/> <strong><tk:period since="${wishList.lastModified}"/></strong>
 						</p>
 					</li>
 				</c:forEach>

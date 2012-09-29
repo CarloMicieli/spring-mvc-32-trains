@@ -15,8 +15,6 @@
  */
 package com.trenako.web.controllers;
 
-import java.util.Arrays;
-
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
@@ -80,19 +78,6 @@ public class WishListsControllerMappingTests extends AbstractSpringControllerTes
 	}
 	
 	@Test
-	public void shouldShowWishListsByOwner() throws Exception {
-		when(service.findByOwner(eq(owner))).thenReturn(Arrays.asList(new WishList(), new WishList()));
-		when(accountsService.findBySlug(eq("bob"))).thenReturn(owner);
-		
-		mockMvc().perform(get("/wishlists/owner/{owner}", "bob"))
-			.andExpect(status().isOk())
-			.andExpect(model().size(2))
-			.andExpect(model().attributeExists("results"))
-			.andExpect(model().attributeExists("owner"))
-			.andExpect(forwardedUrl(view("wishlist", "list")));	
-	}
-	
-	@Test
 	public void shouldRenderWishListCreationForm() throws Exception {
 		mockMvc().perform(get("/wishlists/new"))
 			.andExpect(status().isOk())
@@ -114,7 +99,7 @@ public class WishListsControllerMappingTests extends AbstractSpringControllerTes
 			.andExpect(model().attributeExists("slug"))
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(WishListsController.WISH_LIST_CREATED_MSG)))
-			.andExpect(redirectedUrl("/wishlists/bob-my-list"));
+			.andExpect(redirectedUrl("/you/wishlists/bob-my-list"));
 	}
 		
 	@Test
@@ -141,7 +126,7 @@ public class WishListsControllerMappingTests extends AbstractSpringControllerTes
 			.andExpect(model().attributeExists("slug"))
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(WishListsController.WISH_LIST_SAVED_MSG)))
-			.andExpect(redirectedUrl("/wishlists/bob-my-list"));
+			.andExpect(redirectedUrl("/you/wishlists/bob-my-list"));
 	}
 	
 	@Test
@@ -150,7 +135,7 @@ public class WishListsControllerMappingTests extends AbstractSpringControllerTes
 			.andExpect(status().isOk())
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(WishListsController.WISH_LIST_REMOVED_MSG)))
-			.andExpect(redirectedUrl("/wishlists/owner/bob"));
+			.andExpect(redirectedUrl("/you/wishlists"));
 	}
 	
 	@Test
@@ -170,7 +155,7 @@ public class WishListsControllerMappingTests extends AbstractSpringControllerTes
 			.andExpect(model().attributeExists("slug"))
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(WishListsController.WISH_LIST_ITEM_ADDED_MSG)))
-			.andExpect(redirectedUrl("/wishlists/bob-my-list"));
+			.andExpect(redirectedUrl("/you/wishlists/bob-my-list"));
 	}
 	
 	@Test
@@ -192,7 +177,7 @@ public class WishListsControllerMappingTests extends AbstractSpringControllerTes
 			.andExpect(model().attributeExists("slug"))
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(WishListsController.WISH_LIST_ITEM_UPDATED_MSG)))
-			.andExpect(redirectedUrl("/wishlists/bob-my-list"));
+			.andExpect(redirectedUrl("/you/wishlists/bob-my-list"));
 	}
 	
 	@Test
@@ -209,6 +194,6 @@ public class WishListsControllerMappingTests extends AbstractSpringControllerTes
 			.andExpect(model().attributeExists("slug"))
 			.andExpect(flash().attributeCount(1))
 			.andExpect(flash().attribute("message", equalTo(WishListsController.WISH_LIST_ITEM_DELETED_MSG)))
-			.andExpect(redirectedUrl("/wishlists/bob-my-list"));
+			.andExpect(redirectedUrl("/you/wishlists/bob-my-list"));
 	}
 }

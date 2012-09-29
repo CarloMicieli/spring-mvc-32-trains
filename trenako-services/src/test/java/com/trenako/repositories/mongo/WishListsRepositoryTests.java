@@ -120,7 +120,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 		
 		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
-		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(WishList.class));
+		verify(mongo(), times(1)).upsert(argQuery.capture(), argUpdate.capture(), eq(WishList.class));
 		assertEquals("{ \"slug\" : \"bob-my-list\"}", queryObject(argQuery).toString());
 		
 		String expected = "{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"} , "+

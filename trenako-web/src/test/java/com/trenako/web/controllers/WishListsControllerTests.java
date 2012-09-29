@@ -22,8 +22,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +41,6 @@ import com.trenako.entities.RollingStock;
 import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
 import com.trenako.security.AccountDetails;
-import com.trenako.services.AccountsService;
 import com.trenako.services.WishListsService;
 import com.trenako.values.Visibility;
 import com.trenako.web.controllers.form.WishListForm;
@@ -62,7 +59,6 @@ public class WishListsControllerTests {
 	@Mock UserContext mockUserContext;
 	@Mock RedirectAttributes redirectAtts;
 	@Mock WishListsService wishListsService;
-	@Mock AccountsService mockUsersService;
 	@Mock BindingResult bindingResults;
 	
 	private ModelMap model = new ModelMap();
@@ -71,7 +67,7 @@ public class WishListsControllerTests {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		controller = new WishListsController(wishListsService, mockUsersService, mockUserContext);
+		controller = new WishListsController(wishListsService, mockUserContext);
 	}
 	
 	@Test
@@ -94,7 +90,7 @@ public class WishListsControllerTests {
 
 		String viewName = controller.createWishList(postedForm(), bindingResults, model, redirectAtts);
 
-		assertEquals("redirect:/wishlists/{slug}", viewName);
+		assertEquals("redirect:/you/wishlists/{slug}", viewName);
 		verify(wishListsService, times(1)).createNew(eq(wishList()));
 		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
 		verify(redirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_CREATED_MSG));
@@ -161,23 +157,6 @@ public class WishListsControllerTests {
 	}
 
 	@Test
-	public void shouldShowWishListsForTheProvidedOwner() {
-		when(mockUsersService.findBySlug(eq("bob"))).thenReturn(owner());
-		when(wishListsService.findByOwner(eq(owner()))).thenReturn(Arrays.asList(new WishList(), new WishList()));
-
-		String viewName = controller.showOwnerWishLists("bob", model);
-
-		assertEquals("wishlist/list", viewName);
-
-		assertEquals(owner(), model.get("owner"));
-		
-		@SuppressWarnings("unchecked")
-		Iterable<WishList> results = (Iterable<WishList>) model.get("results");
-		assertNotNull("Wish lists result is null", results);
-		assertEquals(2, ((List<WishList>) results).size());
-	}
-	
-	@Test
 	public void shouldRenderTheEditingFormForWishLists() {
 		when(wishListsService.findBySlug(eq("bob-my-list"))).thenReturn(wishList());
 		
@@ -195,8 +174,7 @@ public class WishListsControllerTests {
 		
 		String viewName = controller.editWishList("bob-my-list", model, redirectAtts);
 		
-		assertEquals("redirect:/wishlists/owner/{owner}", viewName);
-		verify(redirectAtts, times(1)).addAttribute(eq("owner"), eq("bob"));
+		assertEquals("redirect:/you/wishlists", viewName);
 		verify(redirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_NOT_FOUND_MSG));
 		verify(wishListsService, times(1)).findBySlug(eq("bob-my-list"));
 	}
@@ -208,7 +186,7 @@ public class WishListsControllerTests {
 		
 		String viewName = controller.saveWishList(postedForm(), bindingResults, model, redirectAtts);
 		
-		assertEquals("redirect:/wishlists/{slug}", viewName);
+		assertEquals("redirect:/you/wishlists/{slug}", viewName);
 		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
 		verify(redirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_SAVED_MSG));
 		verify(wishListsService, times(1)).saveChanges(eq(wishList()));
@@ -262,9 +240,8 @@ public class WishListsControllerTests {
 		
 		String viewName = controller.removeWishList(wishList(), redirectAtts);
 
-		assertEquals("redirect:/wishlists/owner/{owner}", viewName);
+		assertEquals("redirect:/you/wishlists", viewName);
 		verify(wishListsService, times(1)).remove(eq(wishList()));
-		verify(redirectAtts, times(1)).addAttribute(eq("owner"), eq("bob"));
 		verify(redirectAtts, times(1)).addFlashAttribute(eq("message"), eq(WishListsController.WISH_LIST_REMOVED_MSG));
 	}
 	
@@ -278,7 +255,7 @@ public class WishListsControllerTests {
 		
 		String viewName = controller.addItem(itemForm(), bindingResults, model, redirectAtts);
 
-		assertEquals("redirect:/wishlists/{slug}", viewName);
+		assertEquals("redirect:/you/wishlists/{slug}", viewName);
 		verify(wishListsService, times(1)).findBySlugOrDefault(eq(owner()), eq(itemForm().getSlug()));
 		verify(wishListsService, times(1)).addItem(eq(wishList()), eq(item));
 		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
@@ -295,7 +272,7 @@ public class WishListsControllerTests {
 		
 		String viewName = controller.addItem(defaultItemForm(), bindingResults, model, redirectAtts);
 
-		assertEquals("redirect:/wishlists/{slug}", viewName);
+		assertEquals("redirect:/you/wishlists/{slug}", viewName);
 		verify(wishListsService, times(1)).findBySlugOrDefault(eq(owner()), eq(defaultItemForm().getSlug()));
 		verify(wishListsService, times(1)).addItem(eq(wishList()), eq(item));
 	}
@@ -331,7 +308,7 @@ public class WishListsControllerTests {
 
 		String viewName = controller.updateItem(itemForm(), bindingResults, model, redirectAtts);
 
-		assertEquals("redirect:/wishlists/{slug}", viewName);
+		assertEquals("redirect:/you/wishlists/{slug}", viewName);
 		verify(wishListsService, times(1)).findBySlug(eq(itemForm().getSlug()));
 		verify(wishListsService, times(1)).updateItem(eq(wishList()), eq(item), eq(new Money(0, "EUR")));
 		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
@@ -369,7 +346,7 @@ public class WishListsControllerTests {
 
 		String viewName = controller.removeItem(deleteItemForm(), bindingResults, redirectAtts);
 
-		assertEquals("redirect:/wishlists/{slug}", viewName);
+		assertEquals("redirect:/you/wishlists/{slug}", viewName);
 		verify(wishListsService, times(1)).findBySlug(eq(deleteItemForm().getSlug()));
 		verify(wishListsService, times(1)).removeItem(eq(wishList()), eq(deletedItem));
 		verify(redirectAtts, times(1)).addAttribute(eq("slug"), eq("bob-my-list"));
