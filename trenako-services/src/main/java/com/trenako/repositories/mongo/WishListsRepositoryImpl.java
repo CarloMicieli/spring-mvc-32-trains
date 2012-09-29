@@ -92,9 +92,8 @@ public class WishListsRepositoryImpl implements WishListsRepository {
 
 	@Override
 	public boolean containsRollingStock(WishList wishList, RollingStock rs) {
-		WishListItem item = new WishListItem(rs);
 		Query query = query(where("slug").is(wishList.getSlug())
-				.and("items.itemId").is(item.getItemId()));
+				.and("items.rollingStock.slug").is(rs.getSlug()));
 		return mongoTemplate.count(query, WishList.class) > 0;
 	}
 

@@ -15,9 +15,9 @@
  */
 package com.trenako.utility;
 
-import java.util.GregorianCalendar;
-
 import org.junit.Test;
+
+import static com.trenako.test.TestDataBuilder.*;
 import static org.junit.Assert.*;
 
 /**
@@ -53,8 +53,13 @@ public class SlugTests {
 
 	@Test
 	public void shouldEncodeDates() {
-		String slug = Slug.encode(new GregorianCalendar(1976, 6, 4).getTime()); // month + 1
-		assertEquals("1976-07-04", slug);
+		String slug = Slug.encode(date("2012/1/1"));
+		assertEquals("2012-01-01", slug);
 	}
 	
+	@Test
+	public void shouldEncodeFullDates() {
+		String slug = Slug.encodeFull(fulldate("2012/1/1 10:11:22.000"));
+		assertEquals("2012-01-01_10-11-22", slug);
+	}
 }

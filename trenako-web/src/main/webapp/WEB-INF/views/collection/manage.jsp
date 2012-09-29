@@ -201,7 +201,11 @@
 						<hr>
 						
 						<c:if test="${empty collection.items}">
-							<h3><s:message code="collection.empty.label"/></h3>
+							<div class="well">
+								<h4><s:message code="collection.empty.label"/></h4> 
+								<s:url var="rollingStocksUrl" value="/rs"/>
+								<a href="${rollingStocksUrl}" class="btn"><s:message code="collection.add.rolling.stocks.label"/></a>
+							</div>
 						</c:if>
 						
 						<c:forEach var="item" items="${collection.items}">

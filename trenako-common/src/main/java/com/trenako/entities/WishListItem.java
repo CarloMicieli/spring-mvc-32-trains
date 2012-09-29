@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import com.trenako.mapping.WeakDbRef;
+import com.trenako.utility.Slug;
 import com.trenako.values.Priority;
 
 /**
@@ -66,7 +67,7 @@ public class WishListItem implements Comparable<WishListItem> {
 	 */
 	public WishListItem(RollingStock rollingStock) {
 		this.setRollingStock(rollingStock);
-		this.itemId = rollingStock.getSlug();
+		this.itemId = itemId(itemId, rollingStock, new Date());
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class WishListItem implements Comparable<WishListItem> {
 		this.addedAt = addedAt;
 		this.price = price;
 		
-		this.itemId = itemId(itemId, rollingStock);
+		this.itemId = itemId(itemId, rollingStock, addedAt);
 	}
 	
 	/**
@@ -250,9 +251,21 @@ public class WishListItem implements Comparable<WishListItem> {
 		return o.getAddedAt().compareTo(this.getAddedAt());
 	}
 
-	private String itemId(String id, WeakDbRef<RollingStock> rs) {
+	private String itemId(String id, WeakDbRef<RollingStock> rs, Date addedAt) {
+		return itemId(itemId, rs.getSlug(), addedAt);
+	}
+	
+	private String itemId(String itemId, RollingStock rs, Date addedAt) {
+		return itemId(itemId, rs.getSlug(), addedAt);
+	}
+	
+	private String itemId(String id, String rsSlug, Date addedAt) {
 		if (StringUtils.isBlank(id)) {
-			return rs.getSlug();
+			return new StringBuilder()
+				.append(rsSlug)
+				.append("_")
+				.append(Slug.encodeFull(addedAt))
+				.toString();
 		}
 		else {
 			return id;

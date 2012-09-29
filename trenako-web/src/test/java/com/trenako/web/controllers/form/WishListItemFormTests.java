@@ -68,7 +68,7 @@ public class WishListItemFormTests {
 		
 		WishListItem item = form.buildItem(owner());
 		
-		assertEquals("acme-123456", item.getItemId());
+		assertEquals("acme-123456_2012-09-09_10-00-00", item.getItemId());
 		assertEquals("normal", item.getPriority());
 		assertEquals("EUR100.00", item.getPrice().toString());
 		assertEquals("My notes", item.getNotes());
@@ -113,19 +113,23 @@ public class WishListItemFormTests {
 	}
 	
 	WishListItem item() {
-		return new WishListItem();
+		WishListItem item = new WishListItem();
+		item.setAddedAt(fulldate("2012/09/09 10:00:00.000"));
+		return item;
 	}
 	
 	WishListItem item(String itemId, double d) {
 		WishListItem item = new WishListItem();
 		item.setItemId(itemId);
 		item.setPrice(new Money(BigDecimal.valueOf(d), "EUR"));
+		item.setAddedAt(fulldate("2012/09/09 10:00:00.000"));
 		return item;
 	}
 	
 	WishListItem itemWithPrice(BigDecimal d) {
 		WishListItem item = new WishListItem();
 		item.setPrice(new Money(d, "EUR"));
+		item.setAddedAt(fulldate("2012/09/09 10:00:00.000"));
 		return item;
 	}
 	

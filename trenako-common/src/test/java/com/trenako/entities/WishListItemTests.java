@@ -51,6 +51,12 @@ public class WishListItemTests {
 	}
 	
 	@Test
+	public void shouldGetItemId() {
+		WishListItem x = new WishListItem(rollingStock("123456"), "my notes", Priority.LOW, fulldate("2012/1/1 10:11:22.000"));
+		assertEquals("acme-123456_2012-01-01_10-11-22", x.getItemId());
+	}
+	
+	@Test
 	public void shouldImplementsComparableInterface() {
 		WishListItem a = new WishListItem(rollingStock("123456"), "my notes", Priority.HIGH, now());
 		WishListItem b = new WishListItem(rollingStock("123457"), "my notes", Priority.LOW, now());

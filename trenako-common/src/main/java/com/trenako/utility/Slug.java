@@ -58,4 +58,9 @@ public class Slug {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return new StringBuilder(sdf.format(date)).toString();
 	}
+	
+	public static String encodeFull(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
+		return new StringBuilder(sdf.format(date)).toString();
+	}
 }

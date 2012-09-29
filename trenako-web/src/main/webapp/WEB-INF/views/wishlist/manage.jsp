@@ -67,18 +67,18 @@
 								<s:param name="slug" value="${wishList.slug}"/>
 							</s:url>
 							<a href="${editUrl}" class="btn"><i class="icon-edit icon-black"></i> <s:message code="wishlist.edit.button.label"/></a>
-							<button type="submit" class="btn btn-danger">
+							<button type="submit" class="btn btn-danger" ${(empty wishList.id) ? 'disabled="disabled"' : ''}>
 								<i class="icon-warning-sign icon-white"></i>
 								<s:message code="wishlist.delete.button.label"/>
 							</button>
-						</form:form>						
+						</form:form>
 					</div>
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
 						<hr>
 						
-						<c:if test="${wishList.items.size() == 0}">
+						<c:if test="${empty wishList.items}">
 							<div class="well">
 								<h4><s:message code="wishlist.empty.list.message"/></h4> 
 								<s:url var="rollingStocksUrl" value="/rs"/>

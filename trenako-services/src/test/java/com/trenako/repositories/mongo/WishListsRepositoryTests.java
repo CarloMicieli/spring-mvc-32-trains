@@ -107,7 +107,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 		WishList wishList = newWishList("My list");
 		boolean ret = repo.containsRollingStock(wishList, rollingStock);
 		
-		assertEquals("{ \"slug\" : \"bob-my-list\" , \"items.itemId\" : \"acme-123456\"}", 
+		assertEquals("{ \"slug\" : \"bob-my-list\" , \"items.rollingStock.slug\" : \"acme-123456\"}", 
 				verifyCount(WishList.class).toString());
 	}
 	
@@ -126,7 +126,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 		String expected = "{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"} , "+
 				"\"owner\" : \"bob\" , \"name\" : \"My list\" , \"visibility\" : \"public\"} , "+
 				"\"$inc\" : { \"numberOfItems\" : 1} , \"$push\" : { \"items\" : "+
-				"{ \"itemId\" : \"acme-123456\" , \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
+				"{ \"itemId\" : \"acme-123456_2012-07-01_10-00-00\" , \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
 				"\"notes\" : \"My notes\" , \"priority\" : \"low\" , \"addedAt\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
@@ -141,10 +141,10 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 		ArgumentCaptor<Query> argQuery = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Update> argUpdate = ArgumentCaptor.forClass(Update.class);
 		verify(mongo(), times(1)).updateFirst(argQuery.capture(), argUpdate.capture(), eq(WishList.class));
-		assertEquals("{ \"slug\" : \"bob-my-list\" , \"items.itemId\" : \"acme-123456\"}", queryObject(argQuery).toString());
+		assertEquals("{ \"slug\" : \"bob-my-list\" , \"items.itemId\" : \"acme-123456_2012-07-01_10-00-00\"}", queryObject(argQuery).toString());
 		
 		String expected = "{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"} , "+
-			"\"items.$\" : { \"itemId\" : \"acme-123456\" , \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
+			"\"items.$\" : { \"itemId\" : \"acme-123456_2012-07-01_10-00-00\" , \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
 			"\"notes\" : \"My notes\" , \"priority\" : \"low\" , \"addedAt\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
@@ -162,7 +162,7 @@ public class WishListsRepositoryTests extends AbstractMongoRepositoryTests {
 		assertEquals("{ \"slug\" : \"bob-my-list\"}", queryObject(argQuery).toString());
 		
 		String expected = "{ \"$set\" : { \"lastModified\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}} , "+
-			"\"$inc\" : { \"numberOfItems\" : -1} , \"$pull\" : { \"items\" : { \"itemId\" : \"acme-123456\" , \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
+			"\"$inc\" : { \"numberOfItems\" : -1} , \"$pull\" : { \"items\" : { \"itemId\" : \"acme-123456_2012-07-01_10-00-00\" , \"rollingStock\" : { \"slug\" : \"acme-123456\" , \"label\" : \"ACME 123456\"} , "+
 			"\"notes\" : \"My notes\" , \"priority\" : \"low\" , \"addedAt\" : { \"$date\" : \"2012-07-01T08:00:00.000Z\"}}}}";
 		assertEquals(expected, updateObject(argUpdate).toString());
 	}
