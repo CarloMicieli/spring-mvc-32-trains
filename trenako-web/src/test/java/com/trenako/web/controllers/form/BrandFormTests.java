@@ -35,7 +35,7 @@ import com.trenako.services.FormValuesService;
  */
 public class BrandFormTests {
 
-	private final static Iterable<Scale> SCALES = Arrays.asList(new Scale(), new Scale());
+	private final static Iterable<Scale> SCALES = Arrays.asList(scaleH0(), scaleN());
 	FormValuesService mockService() {
 		FormValuesService service = mock(FormValuesService.class);
 		when(service.scales()).thenReturn(SCALES);
@@ -58,7 +58,7 @@ public class BrandFormTests {
 	@Test
 	public void shouldReturnTheScalesList() {
 		BrandForm form = BrandForm.newForm(new Brand(), mockService());
-		assertEquals(SCALES, form.getScalesList());
+		assertEquals("[h0, n]", form.getScalesList().toString());
 	}
 	
 	@Test

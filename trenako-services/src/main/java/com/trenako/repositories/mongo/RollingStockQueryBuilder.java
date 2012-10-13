@@ -42,13 +42,13 @@ public class RollingStockQueryBuilder {
 		String prop = range.getSortProperty();
 		
 		if (range.getSince() != null && range.getMax() != null) {
-			criteria.and(prop).gt(range.getSince()).lt(range.getMax());
+			criteria.and(prop).lt(range.getSince()).gt(range.getMax());
 		}
 		else if (range.getSince() != null) {
-			criteria.and(prop).gt(range.getSince());
+			criteria.and(prop).lt(range.getSince());
 		}
 		else if (range.getMax() != null) {
-			criteria.and(prop).lt(range.getMax());
+			criteria.and(prop).gt(range.getMax());
 		}
 		
 		final Query q = query(criteria);

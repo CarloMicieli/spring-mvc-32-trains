@@ -72,8 +72,15 @@ public class RollingStockResults implements PaginatedResults<RollingStock> {
 			final RollingStock minRs = results.get(0);
 			final RollingStock maxRs = results.get(size - 1);
 		
-			final Object since = safeGetProperty(minRs, range.getSortProperty());
-			final Object max = safeGetProperty(maxRs, range.getSortProperty());
+			Object since, max;
+			if (range.getDirection().equals("desc")) { 
+				since = safeGetProperty(maxRs, range.getSortProperty());
+				max = safeGetProperty(minRs, range.getSortProperty());
+			}
+			else {
+				since = safeGetProperty(minRs, range.getSortProperty());
+				max = safeGetProperty(maxRs, range.getSortProperty());
+			}
 			
 			this.hasPrevious = range.getSince() != null;
 			this.hasNext = results.size() > range.getSize();
