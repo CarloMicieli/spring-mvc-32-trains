@@ -18,8 +18,8 @@ body {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .navbar .brand {
-	color: #99FFFF;
-	text-shadow: -1px 0 #0066FF, 0 1px #0066FF, 1px 0 #0066FF, 0 -1px #0066FF;
+	color: #00CCFF;
+	text-shadow: -1px 0 #000099, 0 1px #000099, 1px 0 #000099, 0 -1px #000099;
     font: normal normal normal 24px/24px Lobster,Georgia,Times,'Times New Roman',serif;
 }
 .footer {
