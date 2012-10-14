@@ -77,7 +77,7 @@ public class RollingStockResultsTests {
 				new RollingStockResults(results, null, range);
 		
 		assertEquals(10, ((List<RollingStock>)pagResults.getItems()).size());
-		assertEquals(since, pagResults.getRange().getSince());
+		assertTrue("Since date is different", since.equals(pagResults.getRange().getSince()));
 		assertEquals(max, pagResults.getRange().getMax());
 	}
 	
