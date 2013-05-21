@@ -202,7 +202,8 @@ project("trenako-web") {
 		// spring mvc
 		compile "org.springframework:spring-web:${springVersion}"
 		compile "org.springframework:spring-webmvc:${springVersion}"
-
+		compile "org.springframework.hateoas:spring-hateoas:0.5.0.RELEASE"
+		
 		compile("org.springframework.security:spring-security-web:${securityVersion}") {
 			exclude group: "commons-logging", module: "commons-logging"
 		}

@@ -3,37 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="fb7c5c88-7e0d-4cdc-8945-201ede6d9e6d" name="Default" comment="Updated gradle">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/test/AbstractSpringControllerTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/test/AbstractSpringControllerTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminBrandsControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminBrandsControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminOptionsControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminOptionsControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminRailwaysControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminRailwaysControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminScalesControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminScalesControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/AuthControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/AuthControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/BrowseControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/BrowseControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/CollectionsControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/CollectionsControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/CommentsControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/CommentsControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/ErrorControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/ErrorControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/HomeControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/HomeControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/ReviewsControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/ReviewsControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/RollingStockSearchControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/RollingStockSearchControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/RollingStocksControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/RollingStocksControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/WishListsControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/WishListsControllerMappingTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/YouControllerMappingTests.java" afterPath="$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/YouControllerMappingTests.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-common/trenako-common.iml" afterPath="$PROJECT_DIR$/trenako-common/trenako-common.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-services/trenako-services.iml" afterPath="$PROJECT_DIR$/trenako-services/trenako-services.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-test/trenako-test.iml" afterPath="$PROJECT_DIR$/trenako-test/trenako-test.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako-web/trenako-web.iml" afterPath="$PROJECT_DIR$/trenako-web/trenako-web.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako.iml" afterPath="$PROJECT_DIR$/trenako.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako.ipr" afterPath="$PROJECT_DIR$/trenako.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trenako.iws" afterPath="$PROJECT_DIR$/trenako.iws" />
     </list>
     <ignored path="trenako.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="fb7c5c88-7e0d-4cdc-8945-201ede6d9e6d" time="1369159457063" ignored="false" />
+    <file path="/Dummy.txt" changelist="fb7c5c88-7e0d-4cdc-8945-201ede6d9e6d" time="1369164246085" ignored="false" />
     <file path="/CloudEnvironment.java" changelist="fb7c5c88-7e0d-4cdc-8945-201ede6d9e6d" time="1369156665984" ignored="false" />
     <file path="/logback.xml" changelist="fb7c5c88-7e0d-4cdc-8945-201ede6d9e6d" time="1369156978899" ignored="false" />
     <file path="/fragment.java" changelist="fb7c5c88-7e0d-4cdc-8945-201ede6d9e6d" time="1369157062043" ignored="false" />
-    <file path="/AbstractSpringControllerTests.java" changelist="fb7c5c88-7e0d-4cdc-8945-201ede6d9e6d" time="1369159520099" ignored="false" />
+    <file path="/AbstractSpringControllerTests.java" changelist="fb7c5c88-7e0d-4cdc-8945-201ede6d9e6d" time="1369166515664" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +28,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -84,8 +65,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <line_breakpoints>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint url="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminBrandsControllerMappingTests.java" line="17" class="AdminBrandsControllerMappingTests.java" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
@@ -111,12 +91,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ReviewsControllerMappingTests.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/ReviewsControllerMappingTests.java">
+      <file leaf-file-name="AbstractSpringControllerTests.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/test/AbstractSpringControllerTests.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="50" selection-start="876" selection-end="876" vertical-scroll-proportion="0.0">
+            <state line="40" column="20" selection-start="1556" selection-end="1556" vertical-scroll-proportion="0.59599334">
               <folding>
-                <element signature="e#0#4063#0" expanded="true" />
+                <element signature="e#0#2184#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -125,98 +106,20 @@
       <file leaf-file-name="RollingStocksControllerMappingTests.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/RollingStocksControllerMappingTests.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="50" selection-start="921" selection-end="921" vertical-scroll-proportion="0.0">
+            <state line="58" column="31" selection-start="2161" selection-end="2161" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="e#0#6255#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RollingStockSearchControllerMappingTests.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/RollingStockSearchControllerMappingTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="50" selection-start="860" selection-end="860" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#3228#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WishListsControllerMappingTests.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/WishListsControllerMappingTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="50" selection-start="889" selection-end="889" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#7033#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="YouControllerMappingTests.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/YouControllerMappingTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="50" selection-start="826" selection-end="826" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#4477#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AdminBrandsControllerMappingTests.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminBrandsControllerMappingTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="50" selection-start="932" selection-end="932" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#6989#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AdminOptionsControllerMappingTests.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminOptionsControllerMappingTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="50" selection-start="877" selection-end="877" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#2941#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AdminRailwaysControllerMappingTests.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminRailwaysControllerMappingTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="50" selection-start="932" selection-end="932" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#7161#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AdminScalesControllerMappingTests.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminScalesControllerMappingTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="0" selection-start="770" selection-end="770" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#5493#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AbstractSpringControllerTests.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/test/AbstractSpringControllerTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="41" selection-start="2279" selection-end="2279" vertical-scroll-proportion="0.7780269">
-              <folding>
-                <element signature="e#0#2313#0" expanded="true" />
                 <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TestConfig.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/test/TestConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="0" selection-start="708" selection-end="769" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#0#991#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -428,8 +331,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="49" />
     <option name="y" value="24" />
-    <option name="width" value="1871" />
-    <option name="height" value="1056" />
+    <option name="width" value="1317" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -464,7 +367,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -536,6 +439,18 @@
               <option name="myItemId" value="integrationTest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="META-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="spring" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -618,173 +533,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako-web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="integrationTest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="groovy" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako-test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako-services" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako-services" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako-common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako-common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trenako-common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.lastSelected" value="copyright" />
     <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/build.gradle" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="GoToClass.includeJavaFiles" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
@@ -924,7 +698,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="49" y="24" width="1871" height="1056" extended-state="6" />
+    <frame x="49" y="24" width="1317" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -932,13 +706,13 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="SBT Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21878335" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -946,13 +720,13 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16821918" sideWeight="0.7812166" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28638867" sideWeight="0.6704" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977587" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="SBT Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977587" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1021,146 +795,116 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/BrowseControllerMappingTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="50" selection-start="853" selection-end="853" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#6180#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/CollectionsControllerMappingTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="50" selection-start="960" selection-end="960" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#5004#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/CommentsControllerMappingTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="50" selection-start="986" selection-end="986" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#2902#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/ErrorControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="50" selection-start="704" selection-end="704" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#1550#0" expanded="true" />
-          </folding>
-        </state>
+        <state line="17" column="50" selection-start="704" selection-end="704" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/HomeControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="50" selection-start="789" selection-end="789" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#3255#0" expanded="true" />
-          </folding>
-        </state>
+        <state line="18" column="50" selection-start="789" selection-end="789" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/ImagesControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#2005#0" expanded="true" />
-          </folding>
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/ReviewsControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="50" selection-start="876" selection-end="876" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#4063#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/RollingStocksControllerMappingTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="50" selection-start="921" selection-end="921" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#6255#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/RollingStockSearchControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="50" selection-start="860" selection-end="860" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#3228#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/WishListsControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="22" column="50" selection-start="889" selection-end="889" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#7033#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/YouControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="19" column="50" selection-start="826" selection-end="826" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#4477#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminBrandsControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="50" selection-start="932" selection-end="932" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#6989#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminOptionsControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="50" selection-start="877" selection-end="877" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#2941#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminRailwaysControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="50" selection-start="932" selection-end="932" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#7161#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/admin/AdminScalesControllerMappingTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="0" selection-start="770" selection-end="770" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trenako-services/src/test/java/com/trenako/results/RollingStockResultsTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-2.9283276">
           <folding>
-            <element signature="e#0#5493#0" expanded="true" />
+            <element signature="e#0#6384#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/resources/META-INF/spring/mapping-context.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="75" column="25" selection-start="3599" selection-end="3610" vertical-scroll-proportion="0.60784316">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/test/TestConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="0" selection-start="708" selection-end="769" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#0#991#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/controllers/RollingStocksControllerMappingTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="31" selection-start="2161" selection-end="2161" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trenako-web/src/integrationTest/groovy/com/trenako/web/test/AbstractSpringControllerTests.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="41" selection-start="2279" selection-end="2279" vertical-scroll-proportion="0.7780269">
+        <state line="40" column="20" selection-start="1556" selection-end="1556" vertical-scroll-proportion="0.59599334">
           <folding>
-            <element signature="e#0#2313#0" expanded="true" />
+            <element signature="e#0#2184#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -1177,16 +921,26 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
         </settings>
       </state>
-      <state key="Copyright.UI" />
+      <state key="Copyright.UI">
+        <settings>
+          <last-edited>apache20</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>No facets are configured</last-edited>
+          <last-edited>Spring</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1198,7 +952,7 @@
       </state>
       <state key="GlobalLibrariesConfigurable.UI">
         <settings>
-          <last-edited>grails-2.2.1</last-edited>
+          <last-edited>scala-compiler</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1235,6 +989,7 @@
       <state key="ProjectJDKs.UI" />
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
+          <last-edited>antlr-2.7.7</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
