@@ -192,5 +192,631 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
+  <component name="libraryTable">
+    <library name="antlr-2.7.7">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/antlr/antlr/2.7.7/jar/83cd2cd674a217ade95a4bb83a8a14f351f48bd0/antlr-2.7.7.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="aopalliance-1.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/aopalliance/aopalliance/1.0/jar/235ba8b489512805ac13a8f9ea77a1ca5ebe3e8/aopalliance-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/aopalliance/aopalliance/1.0/source/4a4b6d692e17846a9f3da036438a7ac491d3c814/aopalliance-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="asm-4.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm/4.0/jar/659add6efc75a4715d738e73f07505246edf4d66/asm-4.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm/4.0/source/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-4.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="asm-analysis-4.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm-analysis/4.0/jar/1c45d52b6f6c638db13cf3ac12adeb56b254cdd7/asm-analysis-4.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm-analysis/4.0/source/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-analysis-4.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="asm-commons-4.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm-commons/4.0/jar/a839ec6737d2b5ba7d1878e1a596b8f58aa545d9/asm-commons-4.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm-commons/4.0/source/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-commons-4.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="asm-tree-4.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm-tree/4.0/jar/67bd266cd17adcee486b76952ece4cc85fe248b8/asm-tree-4.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm-tree/4.0/source/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-tree-4.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="asm-util-4.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm-util/4.0/jar/d7a65f54cda284f9706a750c23d64830bb740c39/asm-util-4.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.ow2.asm/asm-util/4.0/source/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-util-4.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="aspectjrt-1.7.0.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.aspectj/aspectjrt/1.7.0.RELEASE/jar/c64a0e2045058263b28e53dcc4f9abaaf259c173/aspectjrt-1.7.0.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.aspectj/aspectjrt/1.7.0.RELEASE/source/7d5c1533b046491c78661d98b794a02ca401b546/aspectjrt-1.7.0.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="aspectjweaver-1.7.0.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.aspectj/aspectjweaver/1.7.0.RELEASE/jar/cae712e9794b184640bdb15e6fc1ace8b5483e0a/aspectjweaver-1.7.0.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.aspectj/aspectjweaver/1.7.0.RELEASE/source/49df78c613bfa4c57e1b5e9448e3a066f7c15527/aspectjweaver-1.7.0.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="cglib-nodep-2.2.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/cglib/cglib-nodep/2.2.2/jar/d456bb230c70c0b95c76fb28e429d42f275941/cglib-nodep-2.2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/cglib/cglib-nodep/2.2.2/source/fc1558bebc50419cdb55fbffd81c290e21f058c1/cglib-nodep-2.2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="commons-beanutils-core-1.8.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/commons-beanutils/commons-beanutils-core/1.8.3/jar/75812698e5e859f2cb587c622c4cdfcd61676426/commons-beanutils-core-1.8.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="commons-codec-1.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/commons-codec/commons-codec/1.5/jar/cf993e250ff71804754ec2734a16f23c0be99f70/commons-codec-1.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/commons-codec/commons-codec/1.5/source/1100638866461d41fbed0e89d722b161c579fe23/commons-codec-1.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="commons-fileupload-1.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/commons-fileupload/commons-fileupload/1.3/jar/c89e540e4a12cb034fb973e12135839b5de9a87e/commons-fileupload-1.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/commons-fileupload/commons-fileupload/1.3/source/fc5dcb277589b169c7a10966782ca49d57a4be86/commons-fileupload-1.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="commons-io-2.4">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/commons-io/commons-io/2.4/jar/b1b6ea3b7e4aa4f492509a4952029cd8e48019ad/commons-io-2.4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/commons-io/commons-io/2.4/source/f2d8698c46d1167ff24b06a840a87d91a02db891/commons-io-2.4-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="commons-lang3-3.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.apache.commons/commons-lang3/3.1/jar/905075e6c80f206bbe6cf1e809d2caa69f420c76/commons-lang3-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.apache.commons/commons-lang3/3.1/source/8d30b90ae8bda4fbac8363161c8a9b5a99e23baf/commons-lang3-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="commons-logging-1.1.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/commons-logging/commons-logging/1.1.1/jar/5043bfebc3db072ed80fbd362e7caf00e885d8ae/commons-logging-1.1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/commons-logging/commons-logging/1.1.1/source/f3f156cbff0e0fb0d64bfce31a352cce4a33bc19/commons-logging-1.1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="gravatar4java-1.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/de.bripkens/gravatar4java/1.1/jar/ee60f818ecc9960100a5161bddffa4d5556324ff/gravatar4java-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/de.bripkens/gravatar4java/1.1/source/a7c8cb1ab7a485b6bd01853f6bbd3b8c3156a140/gravatar4java-1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="groovy-2.0.8">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.codehaus.groovy/groovy/2.0.8/jar/c4e59e82deb7a40d618818ab4b01ab3b4ffdaae6/groovy-2.0.8.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.codehaus.groovy/groovy/2.0.8/source/fb8dcf7c191729d45892267ac93a888b2c5723f8/groovy-2.0.8-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="groovy-all-2.0.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.codehaus.groovy/groovy-all/2.0.5/jar/caef1126e5358bf1327e8b4381a827da9accbb47/groovy-all-2.0.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.codehaus.groovy/groovy-all/2.0.5/source/77c137f40bebfc3d9c49f6bf819840b613f60d18/groovy-all-2.0.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="hamcrest-core-1.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.hamcrest/hamcrest-core/1.3/jar/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.hamcrest/hamcrest-core/1.3/source/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="hamcrest-library-1.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.hamcrest/hamcrest-library/1.3/jar/4785a3c21320980282f9f33d0d1264a69040538f/hamcrest-library-1.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.hamcrest/hamcrest-library/1.3/source/47a7ee46628ab7133129cd7cef1e92657bc275e/hamcrest-library-1.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="hibernate-validator-4.3.1.Final">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.hibernate/hibernate-validator/4.3.1.Final/jar/49b31d8ea51fa21cc78a89e9d4ddb11d6bfb4669/hibernate-validator-4.3.1.Final.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.hibernate/hibernate-validator/4.3.1.Final/source/baa1c6895a34d8d6423da93d09cb3bed665b1b24/hibernate-validator-4.3.1.Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="hibernate-validator-annotation-processor-4.3.1.Final">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.hibernate/hibernate-validator-annotation-processor/4.3.1.Final/jar/1c8d36899a1aa6a830f8e158d8658581e8a88a77/hibernate-validator-annotation-processor-4.3.1.Final.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.hibernate/hibernate-validator-annotation-processor/4.3.1.Final/source/c86e2545a35d0fd5d124ace3bc7067ee73278f1a/hibernate-validator-annotation-processor-4.3.1.Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="javassist-3.16.1-GA">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.javassist/javassist/3.16.1-GA/jar/315891b371395271977af518d4db5cee1a0bc9bf/javassist-3.16.1-GA.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.javassist/javassist/3.16.1-GA/source/8f95b972246d57bca63f7a715af2aa9f61bf7f34/javassist-3.16.1-GA-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="javax.servlet-api-3.0.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/javax.servlet/javax.servlet-api/3.0.1/jar/6bf0ebb7efd993e222fc1112377b5e92a13b38dd/javax.servlet-api-3.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/javax.servlet/javax.servlet-api/3.0.1/source/1952f91d84016a39e31346c9d18bd8c9c4a128a/javax.servlet-api-3.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="javax.servlet.jsp-api-2.2.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/javax.servlet.jsp/javax.servlet.jsp-api/2.2.1/jar/9d0dbbc445b3d8f83d837622a4e0c824679b40a7/javax.servlet.jsp-api-2.2.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/javax.servlet.jsp/javax.servlet.jsp-api/2.2.1/source/d61758018d7447c54d4800ce256605230dd808eb/javax.servlet.jsp-api-2.2.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="jboss-logging-3.1.0.CR2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.jboss.logging/jboss-logging/3.1.0.CR2/jar/28725380c07f917ace4e511db21cc45e9ae5a72b/jboss-logging-3.1.0.CR2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.jboss.logging/jboss-logging/3.1.0.CR2/source/53dd1691828c99b7e7b353c9b0ad374fe7d73ef5/jboss-logging-3.1.0.CR2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="jcl-over-slf4j-1.7.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.slf4j/jcl-over-slf4j/1.7.1/jar/a11c000cf26e42ba30b7fb5bd60630a57783fe2d/jcl-over-slf4j-1.7.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.slf4j/jcl-over-slf4j/1.7.1/source/9dca585b262f7b8befc070e5f1d972dda96202eb/jcl-over-slf4j-1.7.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="jcl-over-slf4j-1.7.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.slf4j/jcl-over-slf4j/1.7.5/jar/cd5970bd13fa85f7bed41ca606d6daf7cbf1365/jcl-over-slf4j-1.7.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.slf4j/jcl-over-slf4j/1.7.5/source/92082dc61252ea28d770c32c969ce809949526fc/jcl-over-slf4j-1.7.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="joda-time-2.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/joda-time/joda-time/2.2/jar/a5f29a7acaddea3f4af307e8cf2d0cc82645fd7d/joda-time-2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/joda-time/joda-time/2.2/source/ad622e3cfe39319ea53b183aa5615f96ff346584/joda-time-2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="jstl-1.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/javax.servlet/jstl/1.2/jar/74aca283cd4f4b4f3e425f5820cda58f44409547/jstl-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/javax.servlet/jstl/1.2/source/2f5877ef15adb721421e80f5aa2b6fe069eec8ed/jstl-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="junit-4.11">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/junit/junit/4.11/jar/4e031bb61df09069aeb2bffb4019e7a5034a4ee0/junit-4.11.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/junit/junit/4.11/source/28e0ad201304e4a4abf999ca0570b7cffc352c3c/junit-4.11-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="junit-dep-4.10">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/junit/junit-dep/4.10/jar/64417b3bafdecd366afa514bd5beeae6c1f85ece/junit-dep-4.10.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/junit/junit-dep/4.10/source/2c7dad0a5eb1602c6fe6b43abec8ea35805b3ae4/junit-dep-4.10-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="log4j-1.2.17">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/log4j/log4j/1.2.17/bundle/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/log4j/log4j/1.2.17/source/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="logback-classic-1.0.13">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/ch.qos.logback/logback-classic/1.0.13/jar/6b56ec752b42ccfa1415c0361fb54b1ed7ca3db6/logback-classic-1.0.13.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/ch.qos.logback/logback-classic/1.0.13/source/63fcf702193934c1aa1ea606093f75ac08b283ee/logback-classic-1.0.13-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="logback-core-1.0.13">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/ch.qos.logback/logback-core/1.0.13/jar/dc6e6ce937347bd4d990fc89f4ceb469db53e45e/logback-core-1.0.13.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/ch.qos.logback/logback-core/1.0.13/source/c353276a7cee7e2271c4a4115f1d2948ff5adb0a/logback-core-1.0.13-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="mockito-all-1.9.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.mockito/mockito-all/1.9.0/jar/d13863fbd7c0bc32845c9d8a261d03b61bf28194/mockito-all-1.9.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.mockito/mockito-all/1.9.0/source/3cdbb5d11e1cf6c98b4d3697d9eeaa71ad59ef47/mockito-all-1.9.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="mockito-core-1.9.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.mockito/mockito-core/1.9.5/jar/c3264abeea62c4d2f367e21484fbb40c7e256393/mockito-core-1.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.mockito/mockito-core/1.9.5/source/46f703fb4266140c544d48a189cb25947eb6333e/mockito-core-1.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="mongo-java-driver-2.10.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.mongodb/mongo-java-driver/2.10.1/jar/9e2c2835b0126a48183ed42129e53b6eb6e259b/mongo-java-driver-2.10.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.mongodb/mongo-java-driver/2.10.1/source/92391e55a05231445df1bda19d3c0faa1b45e684/mongo-java-driver-2.10.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="objenesis-1.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.objenesis/objenesis/1.0/jar/9b473564e792c2bdf1449da1f0b1b5bff9805704/objenesis-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.objenesis/objenesis/1.0/source/b10c90e57b7bb985a7b6a704769428fe5c2a732c/objenesis-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="objenesis-1.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.objenesis/objenesis/1.2/jar/bfcb0539a071a4c5a30690388903ac48c0667f2a/objenesis-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.objenesis/objenesis/1.2/source/71909ee0264af468fe26f0a2467d01bcb85f6fa9/objenesis-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="powermock-api-mockito-1.4.12">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-api-mockito/1.4.12/jar/c4fcc4db329eedab9c4f4b4e5875b41c828bb81a/powermock-api-mockito-1.4.12.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-api-mockito/1.4.12/source/76314a2a462fe8526f8d3e2ddb2176a11a195c6d/powermock-api-mockito-1.4.12-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="powermock-api-support-1.4.12">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-api-support/1.4.12/jar/32a56f15ce597602825b2001b0bfe4e15526d82e/powermock-api-support-1.4.12.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-api-support/1.4.12/source/6272447011918b456a132048bb2a9e55534123f/powermock-api-support-1.4.12-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="powermock-core-1.4.12">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-core/1.4.12/jar/bdc462352888e0dded228e424fda30f0228f1277/powermock-core-1.4.12.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-core/1.4.12/source/1b5a7c11765840f7911f1d9a377d0f93d2111c52/powermock-core-1.4.12-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="powermock-module-junit4-1.4.12">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-module-junit4/1.4.12/jar/34d55daa3971868c3eafb566e86ac93585ef4922/powermock-module-junit4-1.4.12.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-module-junit4/1.4.12/source/ae8e21aa5145733d06dedd73500420c9d27937e2/powermock-module-junit4-1.4.12-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="powermock-module-junit4-common-1.4.12">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-module-junit4-common/1.4.12/jar/1fd8c79f017ca11d73273d094bcece238c83637a/powermock-module-junit4-common-1.4.12.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-module-junit4-common/1.4.12/source/f825cb3be83d155d50e25db4c4097bc57718513a/powermock-module-junit4-common-1.4.12-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="powermock-reflect-1.4.12">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-reflect/1.4.12/jar/58ae2a81c83977c287b57aacd423a0a395578557/powermock-reflect-1.4.12.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.powermock/powermock-reflect/1.4.12/source/7ece11d0b332e806fd256d548b3c7358e031f30a/powermock-reflect-1.4.12-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="sitemesh-2.4.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/opensymphony/sitemesh/2.4.2/jar/4cb3b08c96553b0f4595a80917838ca302f67f3f/sitemesh-2.4.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="slf4j-api-1.7.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.slf4j/slf4j-api/1.7.5/jar/6b262da268f8ad9eff941b25503a9198f0a0ac93/slf4j-api-1.7.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.slf4j/slf4j-api/1.7.5/source/654135274d4c27132ea208a4ec07f344bdb83bcb/slf4j-api-1.7.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spock-core-0.7-groovy-2.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.spockframework/spock-core/0.7-groovy-2.0/jar/4de0b428de0c14b6eb6375d8174f71848cbfc1d7/spock-core-0.7-groovy-2.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.spockframework/spock-core/0.7-groovy-2.0/source/19f1e62a5094604766f83e55a693b9cdac3b271a/spock-core-0.7-groovy-2.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spock-spring-0.7-groovy-2.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.spockframework/spock-spring/0.7-groovy-2.0/jar/8297fc66ffabd6943d5bda003ecd94cfaaac408e/spock-spring-0.7-groovy-2.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.spockframework/spock-spring/0.7-groovy-2.0/source/80ddb567126884744a9237241c8db7224eddc15/spock-spring-0.7-groovy-2.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-aop-3.2.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-aop/3.2.3.RELEASE/jar/a70bec95e45a29cad126d250699d0ed0fedfe28a/spring-aop-3.2.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-aop/3.2.3.RELEASE/source/5f6558e10e092670a9d42bf86185938535049616/spring-aop-3.2.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-beans-3.2.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-beans/3.2.3.RELEASE/jar/a48eb92ef51e0aed7d23dcaa54225b8f24808db4/spring-beans-3.2.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-beans/3.2.3.RELEASE/source/3a9f1fb6f5b5da1189c5da7673bf11738ffa956f/spring-beans-3.2.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-context-3.2.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-context/3.2.3.RELEASE/jar/12ad5920647556704f79cc579d4e133430741c5/spring-context-3.2.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-context/3.2.3.RELEASE/source/e10159a6d919b677a0b85d5b19afae0856c665fa/spring-context-3.2.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-core-3.2.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-core/3.2.3.RELEASE/jar/accdd65db57e79e49f2af037bb76f5a55a580f00/spring-core-3.2.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-core/3.2.3.RELEASE/source/c923c5360b7bba4209020a4796c6d53f68063d0f/spring-core-3.2.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-data-commons-1.5.1.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.data/spring-data-commons/1.5.1.RELEASE/jar/dc8c66340d6b1e7c44c6a4c093e0da8b3bf41314/spring-data-commons-1.5.1.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.data/spring-data-commons/1.5.1.RELEASE/source/ba20696fb747dfe46560492c11a651331b20375c/spring-data-commons-1.5.1.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-data-mongodb-1.2.1.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.data/spring-data-mongodb/1.2.1.RELEASE/jar/71dfaa363e5d01291ebcfef08e5e1168fba1e0fd/spring-data-mongodb-1.2.1.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.data/spring-data-mongodb/1.2.1.RELEASE/source/5a9379179f9d54399ac1eb9eebb9eb44cdde9180/spring-data-mongodb-1.2.1.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-expression-3.2.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-expression/3.2.3.RELEASE/jar/51e4c94a79892c0a2d15c5efda8c5b336ebf5c37/spring-expression-3.2.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-expression/3.2.3.RELEASE/source/a89bdcdf4582c89ba9152f02aee5951b02885be2/spring-expression-3.2.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-jdbc-3.0.7.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-jdbc/3.0.7.RELEASE/jar/c53d9bf4e6a6a6cf49c7d7630e612042364295a1/spring-jdbc-3.0.7.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-jdbc/3.0.7.RELEASE/source/f8d21447241bc7a5298ea838135c7de68eac2f4f/spring-jdbc-3.0.7.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-security-acl-3.1.4.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-acl/3.1.4.RELEASE/jar/bf39103d297ec55b60e868b77c83377f44e661df/spring-security-acl-3.1.4.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-acl/3.1.4.RELEASE/source/ea1e100509348736445d0de098342824c6b6ba65/spring-security-acl-3.1.4.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-security-config-3.1.4.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-config/3.1.4.RELEASE/jar/196e312b9c05118c814de71eafa9c603bef3617b/spring-security-config-3.1.4.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-config/3.1.4.RELEASE/source/ccbdeed20bf2a9ac89b11603217733a167310b64/spring-security-config-3.1.4.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-security-core-3.1.4.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-core/3.1.4.RELEASE/jar/41af4a10d7e31722bd8ef2c101f60afb6c24e04b/spring-security-core-3.1.4.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-core/3.1.4.RELEASE/source/3c7d209bcc32fc6f2242f58295a9789a870d59f9/spring-security-core-3.1.4.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-security-taglibs-3.1.4.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-taglibs/3.1.4.RELEASE/jar/38a741ecaf4c698624e3a7f2c636755e6deeff1f/spring-security-taglibs-3.1.4.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-taglibs/3.1.4.RELEASE/source/9d6af9e90077b662eab68ed8e865d0189dc0f7b0/spring-security-taglibs-3.1.4.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-security-web-3.1.4.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-web/3.1.4.RELEASE/jar/56d52794df838d0bc3ccbc149a62ea019946f82a/spring-security-web-3.1.4.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework.security/spring-security-web/3.1.4.RELEASE/source/2b929ad26ad779af343590ac6227821f9aa69e9a/spring-security-web-3.1.4.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-test-3.2.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-test/3.2.3.RELEASE/jar/b431cc81467f229346d23ea6d3f7a17558b1e368/spring-test-3.2.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-test/3.2.3.RELEASE/source/2754a321d827c01045f29a8ca2c6f66122be393/spring-test-3.2.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-tx-3.1.4.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-tx/3.1.4.RELEASE/jar/e7cd40e53940e26f24f5500a084b45f57fabaa01/spring-tx-3.1.4.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-tx/3.1.4.RELEASE/source/6dbe85fc2fdeb5c0ae472852860aaeddacf35fa9/spring-tx-3.1.4.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-web-3.2.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-web/3.2.3.RELEASE/jar/833c5e9a60f82209a3f669a5026dfa8de57c1df3/spring-web-3.2.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-web/3.2.3.RELEASE/source/913394ac47d255c3473d48619102255599845695/spring-web-3.2.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="spring-webmvc-3.2.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-webmvc/3.2.3.RELEASE/jar/6d6d1b53c53dbefd0d8c15f2d5c194ced1f8d53c/spring-webmvc-3.2.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.springframework/spring-webmvc/3.2.3.RELEASE/source/35f1ac5640cac763d74681d16544cb77f40765f5/spring-webmvc-3.2.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="thumbnailator-0.4.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/net.coobird/thumbnailator/0.4.3/jar/5b9e102f9a90f00e3d131592dc71ff243b48dba8/thumbnailator-0.4.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/net.coobird/thumbnailator/0.4.3/source/182b5195f03e5401344f9fe55b4ec259ee05fe35/thumbnailator-0.4.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="validation-api-1.0.0.GA">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/javax.validation/validation-api/1.0.0.GA/jar/b6bd7f9d78f6fdaa3c37dae18a4bd298915f328e/validation-api-1.0.0.GA.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/javax.validation/validation-api/1.0.0.GA/source/7a561191db2203550fbfa40d534d4997624cd369/validation-api-1.0.0.GA-sources.jar!/" />
+      </SOURCES>
+    </library>
+  </component>
 </project>
 
