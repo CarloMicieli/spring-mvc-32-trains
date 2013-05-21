@@ -15,7 +15,6 @@
  */
 package com.trenako.web.config;
 
-import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
@@ -33,7 +32,7 @@ public class ContextProfileInitializer
 	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
 	
 	private CloudEnvironment cloudFoundryEnvironment;
-	
+
 	public ContextProfileInitializer() {
 		this.cloudFoundryEnvironment = new CloudEnvironment();
 	}
@@ -42,7 +41,7 @@ public class ContextProfileInitializer
 	public void initialize(ConfigurableWebApplicationContext context) {
 		ConfigurableEnvironment environment = context.getEnvironment();
 
-		if (cloudFoundryEnvironment.isCloudFoundry()) {
+		if (cloudFoundryEnvironment.isOpenShift()) {
 			environment.setActiveProfiles("cloud");
 		}
 		else {

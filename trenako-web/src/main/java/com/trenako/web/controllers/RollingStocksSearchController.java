@@ -43,7 +43,7 @@ public class RollingStocksSearchController {
 	
 	/**
 	 * Creates a new {@code RollingStockSearchController}.
-	 * @param rsService
+	 * @param service
 	 */
 	@Autowired
 	public RollingStocksSearchController(BrowseService service) {

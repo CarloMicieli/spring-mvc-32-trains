@@ -14,8 +14,8 @@ Functionality
 Powered by
 ----------
 
-* Spring MVC 3.1
-* Mongodb 2.0
+* Spring MVC 3.2
+* Mongodb 2.4
 
 Live demo
 ---------
@@ -36,18 +36,22 @@ To build the project:
 To import the project in _Eclipse_:
 
     ./gradlew eclipse
+
+To import the project in _Intellij IDEA_:
+
+    ./gradlew idea
     
 The only requirement is to have the `Java development kit 6`, the `Gradle wrapper` will download 
 all the required packages to build the application.
 
 To generate the project Javadoc an appropriate Gradle task exists:
 
-    gradle projectDoc
+    ./gradlew projectDoc
 
-`Mongo 2.0` must be already installed before it will be possible to run the integration tests successfully.
+`Mongo 2.4` must be already installed before it will be possible to run the integration tests successfully.
 To run the tests suite:
 
-    gradle check
+    ./gradlew check
 
 The `app.properties` file is required in order to run the application successfully. This file includes the
 database username and password, and for this reason is not committed to the Git repository.

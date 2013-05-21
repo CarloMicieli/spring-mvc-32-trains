@@ -27,7 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.trenako.web.images.UploadRenderingException;
 import com.trenako.web.images.WebImageService;
@@ -41,7 +42,7 @@ import com.trenako.web.images.WebImageService;
 @RequestMapping("/images")
 public class ImagesController {
 
-	private static final Logger log = Logger.getLogger("com.trenako.web");
+	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
 	private final WebImageService imgService;
 
 	/**
