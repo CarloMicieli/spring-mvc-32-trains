@@ -19,8 +19,8 @@ import static com.trenako.test.TestDataBuilder.acme;
 import static com.trenako.test.TestDataBuilder.fs;
 import static com.trenako.test.TestDataBuilder.scaleH0;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.After;

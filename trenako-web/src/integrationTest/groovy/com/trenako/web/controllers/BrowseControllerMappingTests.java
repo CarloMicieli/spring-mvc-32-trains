@@ -19,8 +19,8 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.After;
 import org.junit.Test;

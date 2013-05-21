@@ -15,7 +15,7 @@
  */
 package com.trenako.web.test;
 
-import static org.springframework.test.web.server.setup.MockMvcBuilders.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.server.MockMvc;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.trenako.web.config.WebConfig;
@@ -69,7 +69,7 @@ public abstract class AbstractSpringControllerTests {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		this.mockMvc = webApplicationContextSetup(this.wac).build();
+		this.mockMvc = webAppContextSetup(this.wac).build();
 		init();
 	}
 }

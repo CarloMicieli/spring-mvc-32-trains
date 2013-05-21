@@ -19,8 +19,8 @@ import org.junit.Test;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.After;
 import org.springframework.beans.factory.annotation.Autowired;
