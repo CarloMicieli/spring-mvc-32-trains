@@ -27,72 +27,81 @@ import com.trenako.values.PowerMethod;
 /**
  * It represents the public interface for the values required by
  * {@code RollingStock} creation / editing forms.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface FormValuesService {
 
-	/**
-	 * Returns the list of {@code Brand}s.
-	 * @return the {@code Brand} list
-	 */
-	Iterable<Brand> brands();
+    /**
+     * Returns the list of {@code Brand}s.
+     *
+     * @return the {@code Brand} list
+     */
+    Iterable<Brand> brands();
 
-	/**
-	 * Returns the list of {@code Railway}s.
-	 * @return the {@code Railway} list
-	 */
-	Iterable<Railway> railways();
+    /**
+     * Returns the list of {@code Railway}s.
+     *
+     * @return the {@code Railway} list
+     */
+    Iterable<Railway> railways();
 
-	/**
-	 * Returns the list of {@code Scale}s.
-	 * @return the {@code Scale} list
-	 */
-	Iterable<Scale> scales();
+    /**
+     * Returns the list of {@code Scale}s.
+     *
+     * @return the {@code Scale} list
+     */
+    Iterable<Scale> scales();
 
-	/**
-	 * Returns the list of categories.
-	 * @return the {@code Category} list
-	 */
-	Iterable<LocalizedEnum<Category>> categories();
-	
-	/**
-	 * Returns the list of eras.
-	 * @return the {@code Era} list
-	 */
-	Iterable<LocalizedEnum<Era>> eras();
-	
-	/**
-	 * Returns the list of power methods.
-	 * @return the {@code power method} list
-	 */
-	Iterable<LocalizedEnum<PowerMethod>> powerMethods();
-	
-	/**
-	 * Returns the list of delivery dates.
-	 * @return the {@code delivery dates} list
-	 */
-	Iterable<DeliveryDate> deliveryDates();
+    /**
+     * Returns the list of categories.
+     *
+     * @return the {@code Category} list
+     */
+    Iterable<LocalizedEnum<Category>> categories();
 
-	/**
-	 * Returns the {@code Brand} with the provided slug.
-	 * @param brandSlug the {@code Brand} slug
-	 * @return a {@code Brand} if found; {@code null} otherwise
-	 */
-	Brand getBrand(String brandSlug);
-	
-	/**
-	 * Returns the {@code Scale} with the provided slug.
-	 * @param brandSlug the {@code Scale} slug
-	 * @return a {@code Scale} if found; {@code null} otherwise
-	 */
-	Scale getScale(String scaleSlug);
-	
-	/**
-	 * Returns the {@code Railway} with the provided slug.
-	 * @param brandSlug the {@code Railway} slug
-	 * @return a {@code Railway} if found; {@code null} otherwise
-	 */
-	Railway getRailway(String railwaySlug);
+    /**
+     * Returns the list of eras.
+     *
+     * @return the {@code Era} list
+     */
+    Iterable<LocalizedEnum<Era>> eras();
+
+    /**
+     * Returns the list of power methods.
+     *
+     * @return the {@code power method} list
+     */
+    Iterable<LocalizedEnum<PowerMethod>> powerMethods();
+
+    /**
+     * Returns the list of delivery dates.
+     *
+     * @return the {@code delivery dates} list
+     */
+    Iterable<DeliveryDate> deliveryDates();
+
+    /**
+     * Returns the {@code Brand} with the provided slug.
+     *
+     * @param brandSlug the {@code Brand} slug
+     * @return a {@code Brand} if found; {@code null} otherwise
+     */
+    Brand getBrand(String brandSlug);
+
+    /**
+     * Returns the {@code Scale} with the provided slug.
+     *
+     * @param brandSlug the {@code Scale} slug
+     * @return a {@code Scale} if found; {@code null} otherwise
+     */
+    Scale getScale(String scaleSlug);
+
+    /**
+     * Returns the {@code Railway} with the provided slug.
+     *
+     * @param brandSlug the {@code Railway} slug
+     * @return a {@code Railway} if found; {@code null} otherwise
+     */
+    Railway getRailway(String railwaySlug);
 }

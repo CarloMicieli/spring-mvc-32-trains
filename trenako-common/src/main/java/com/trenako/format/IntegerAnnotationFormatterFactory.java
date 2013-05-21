@@ -30,60 +30,57 @@ import org.springframework.util.StringValueResolver;
 import com.trenako.format.annotations.IntegerFormat;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class IntegerAnnotationFormatterFactory
-	implements AnnotationFormatterFactory<IntegerFormat>, EmbeddedValueResolverAware {
+        implements AnnotationFormatterFactory<IntegerFormat>, EmbeddedValueResolverAware {
 
-	private StringValueResolver resolver;
-	
-	@SuppressWarnings("unchecked")
-	private final static Set<Class<?>> TYPES =
-			new HashSet<Class<?>>(Arrays.asList(Integer.class));
-	
-	@Override
-	public void setEmbeddedValueResolver(StringValueResolver resolver) {
-		this.resolver = resolver;
-	}
+    private StringValueResolver resolver;
 
-	@Override
-	public Set<Class<?>> getFieldTypes() {
-		return TYPES;
-	}
+    @SuppressWarnings("unchecked")
+    private final static Set<Class<?>> TYPES =
+            new HashSet<Class<?>>(Arrays.asList(Integer.class));
 
-	@Override
-	public Printer<?> getPrinter(IntegerFormat annotation, Class<?> fieldType) {
-		return getFormatter(annotation);
-	}
+    @Override
+    public void setEmbeddedValueResolver(StringValueResolver resolver) {
+        this.resolver = resolver;
+    }
 
-	@Override
-	public Parser<?> getParser(IntegerFormat annotation, Class<?> fieldType) {
-		return getFormatter(annotation);
-	}
-	
-	private Formatter<Number> getFormatter(IntegerFormat annotation) {
-		String pattern = annotation.pattern();
-		if (pattern != null && !pattern.isEmpty()) {
-			return new NumberFormatter(resolveEmbeddedValue(pattern));
-		}
-		else {
-			switch(annotation.style()) {
-			case SCALE_GAUGE:
-				return new GaugeFormatter();
-			case CURRENCY:
-				return new CurrencyFormatter();				
-			case SCALE_RATIO:
-				return new RatioFormatter();
-			default:
-				return new NumberFormatter();					
-			}
-		}
-	}
-	
-	protected String resolveEmbeddedValue(String value) {
-		return (resolver != null ? resolver.resolveStringValue(value) : value);
-	}
+    @Override
+    public Set<Class<?>> getFieldTypes() {
+        return TYPES;
+    }
+
+    @Override
+    public Printer<?> getPrinter(IntegerFormat annotation, Class<?> fieldType) {
+        return getFormatter(annotation);
+    }
+
+    @Override
+    public Parser<?> getParser(IntegerFormat annotation, Class<?> fieldType) {
+        return getFormatter(annotation);
+    }
+
+    private Formatter<Number> getFormatter(IntegerFormat annotation) {
+        String pattern = annotation.pattern();
+        if (pattern != null && !pattern.isEmpty()) {
+            return new NumberFormatter(resolveEmbeddedValue(pattern));
+        } else {
+            switch (annotation.style()) {
+                case SCALE_GAUGE:
+                    return new GaugeFormatter();
+                case CURRENCY:
+                    return new CurrencyFormatter();
+                case SCALE_RATIO:
+                    return new RatioFormatter();
+                default:
+                    return new NumberFormatter();
+            }
+        }
+    }
+
+    protected String resolveEmbeddedValue(String value) {
+        return (resolver != null ? resolver.resolveStringValue(value) : value);
+    }
 
 }

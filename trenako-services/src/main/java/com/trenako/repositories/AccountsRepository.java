@@ -22,23 +22,24 @@ import com.trenako.entities.Account;
 
 /**
  * The interface for the user {@code Account}s repository.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface AccountsRepository extends MongoRepository<Account, ObjectId>, AccountsCustomRepository {
-		
-	/**
-	 * Returns the {@code Account} with the provided email address.
-	 * @param emailAddress the email address
-	 * @return an {@code Account} if found; {@code null} otherwise
-	 */
-	Account findByEmailAddress(String emailAddress);
-	
-	/**
-	 * Returns the {@code Account} with the provided slug.
-	 * @param slug the slug
-	 * @return an {@code Account} if found; {@code null} otherwise
-	 */
-	Account findBySlug(String slug);
+
+    /**
+     * Returns the {@code Account} with the provided email address.
+     *
+     * @param emailAddress the email address
+     * @return an {@code Account} if found; {@code null} otherwise
+     */
+    Account findByEmailAddress(String emailAddress);
+
+    /**
+     * Returns the {@code Account} with the provided slug.
+     *
+     * @param slug the slug
+     * @return an {@code Account} if found; {@code null} otherwise
+     */
+    Account findBySlug(String slug);
 }

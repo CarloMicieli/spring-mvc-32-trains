@@ -35,70 +35,69 @@ import com.trenako.web.controllers.form.WishListItemForm;
 import com.trenako.web.security.UserContext;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Controller
 @RequestMapping("/you")
 public class YouController {
 
-	private @Autowired(required = false) MessageSource messageSource;
-	private final CollectionsService collections;
-	private final WishListsService wishListsService;
-	private final ProfilesService service;
-	private final UserContext secContext;
-	
-	@Autowired
-	public YouController(ProfilesService service, 
-			CollectionsService collections, 
-			WishListsService wishListsService,
-			UserContext secContext) {
-		this.service = service;
-		this.secContext = secContext;
-		this.collections = collections;
-		this.wishListsService = wishListsService;
-	}
-	
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView index() {
-		Account user = UserContext.authenticatedUser(secContext);
-		
-		ModelAndView mav = new ModelAndView("you/index");
-		mav.addObject("user", user);
-		mav.addObject("info", service.findProfileView(user));
-		return mav;
-	}
+    @Autowired(required = false)
+    private MessageSource messageSource;
+    private final CollectionsService collections;
+    private final WishListsService wishListsService;
+    private final ProfilesService service;
+    private final UserContext secContext;
 
-	@RequestMapping(value = "/collection", method = RequestMethod.GET)
-	public String collection(ModelMap model) {
-		Account user = UserContext.authenticatedUser(secContext);
-		Collection collection = collections.findByOwner(user);
-		
-		model.addAttribute("collection", collection);
-		model.addAttribute("owner", user);
-		model.addAttribute("editForm", CollectionItemForm.jsForm(messageSource));
-		
-		return "collection/manage";
-	}
+    @Autowired
+    public YouController(ProfilesService service,
+                         CollectionsService collections,
+                         WishListsService wishListsService,
+                         UserContext secContext) {
+        this.service = service;
+        this.secContext = secContext;
+        this.collections = collections;
+        this.wishListsService = wishListsService;
+    }
 
-	@RequestMapping(value = "/wishlists", method = RequestMethod.GET)
-	public String wishlists(ModelMap model) {
-		Account user = UserContext.authenticatedUser(secContext);
-		
-		model.addAttribute("owner", user);
-		model.addAttribute("results", wishListsService.findByOwner(user));
-		return "wishlist/list";
-	}
-	
-	@RequestMapping(value = "/wishlists/{slug}", method = RequestMethod.GET)
-	public String wishlist(@PathVariable("slug") String slug, ModelMap model) {
-		Account user = UserContext.authenticatedUser(secContext);
-		
-		WishList wishList = wishListsService.findBySlugOrDefault(user, slug);
-		
-		model.addAttribute("wishList", wishList);
-		model.addAttribute("editForm", WishListItemForm.jsForm(wishList, messageSource));
-		return "wishlist/manage";
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView index() {
+        Account user = UserContext.authenticatedUser(secContext);
+
+        ModelAndView mav = new ModelAndView("you/index");
+        mav.addObject("user", user);
+        mav.addObject("info", service.findProfileView(user));
+        return mav;
+    }
+
+    @RequestMapping(value = "/collection", method = RequestMethod.GET)
+    public String collection(ModelMap model) {
+        Account user = UserContext.authenticatedUser(secContext);
+        Collection collection = collections.findByOwner(user);
+
+        model.addAttribute("collection", collection);
+        model.addAttribute("owner", user);
+        model.addAttribute("editForm", CollectionItemForm.jsForm(messageSource));
+
+        return "collection/manage";
+    }
+
+    @RequestMapping(value = "/wishlists", method = RequestMethod.GET)
+    public String wishlists(ModelMap model) {
+        Account user = UserContext.authenticatedUser(secContext);
+
+        model.addAttribute("owner", user);
+        model.addAttribute("results", wishListsService.findByOwner(user));
+        return "wishlist/list";
+    }
+
+    @RequestMapping(value = "/wishlists/{slug}", method = RequestMethod.GET)
+    public String wishlist(@PathVariable("slug") String slug, ModelMap model) {
+        Account user = UserContext.authenticatedUser(secContext);
+
+        WishList wishList = wishListsService.findBySlugOrDefault(user, slug);
+
+        model.addAttribute("wishList", wishList);
+        model.addAttribute("editForm", WishListItemForm.jsForm(wishList, messageSource));
+        return "wishlist/manage";
+    }
 }

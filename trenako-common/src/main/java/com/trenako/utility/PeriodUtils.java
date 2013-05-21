@@ -33,71 +33,69 @@ import static org.joda.time.Minutes.minutesBetween;
 /**
  * An utility class to calculate periods between a date and the current
  * timestamp.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class PeriodUtils {
-	
-	/**
-	 * Returns a pair of label and value with the period duration between
-	 * the provided date and the current timestamp.
-	 * 
-	 * @param startDate the starting date and time
-	 * @return a pair of label and value
-	 */
-	public static Pair<String, Integer> periodUntilNow(Date startDate) {
-		DateTime start = new DateTime(startDate);
-		DateTime now = DateTime.now();
-		return period(start, now);
-	}
 
-	static Pair<String, Integer> period(DateTime start, DateTime now) {
-		Pair<String, Integer> p = null;
+    /**
+     * Returns a pair of label and value with the period duration between
+     * the provided date and the current timestamp.
+     *
+     * @param startDate the starting date and time
+     * @return a pair of label and value
+     */
+    public static Pair<String, Integer> periodUntilNow(Date startDate) {
+        DateTime start = new DateTime(startDate);
+        DateTime now = DateTime.now();
+        return period(start, now);
+    }
 
-		p = periodValue(yearsBetween(start, now));
-		if (p != null) {
-			return p;
-		}
+    static Pair<String, Integer> period(DateTime start, DateTime now) {
+        Pair<String, Integer> p;
 
-		p = periodValue(monthsBetween(start, now));
-		if (p != null) {
-			return p;
-		}
+        p = periodValue(yearsBetween(start, now));
+        if (p != null) {
+            return p;
+        }
 
-		p = periodValue(weeksBetween(start, now));
-		if (p != null) {
-			return p;
-		}
+        p = periodValue(monthsBetween(start, now));
+        if (p != null) {
+            return p;
+        }
 
-		p = periodValue(daysBetween(start, now));
-		if (p != null) {
-			return p;
-		}
+        p = periodValue(weeksBetween(start, now));
+        if (p != null) {
+            return p;
+        }
 
-		p = periodValue(hoursBetween(start, now));
-		if (p != null) {
-			return p;
-		}
+        p = periodValue(daysBetween(start, now));
+        if (p != null) {
+            return p;
+        }
 
-		p = periodValue(minutesBetween(start, now));
-		if (p != null) {
-			return p;
-		}
+        p = periodValue(hoursBetween(start, now));
+        if (p != null) {
+            return p;
+        }
 
-		return new ImmutablePair<String, Integer>("interval.minutes.one.label", 1);	
-	}
+        p = periodValue(minutesBetween(start, now));
+        if (p != null) {
+            return p;
+        }
 
-	private static Pair<String, Integer> periodValue(BaseSingleFieldPeriod field) {
-		String name = field.getPeriodType().getName().toLowerCase();
-		int value = field.get(field.getFieldType());
-		if (value > 1) {
-			return new ImmutablePair<String, Integer>("interval." + name + ".more.label",  value);
-		}
-		else if (value > 0) {
-			return new ImmutablePair<String, Integer>("interval." + name + ".one.label",  1);
-		}
+        return new ImmutablePair<>("interval.minutes.one.label", 1);
+    }
 
-		return null;
-	}
+    private static Pair<String, Integer> periodValue(BaseSingleFieldPeriod field) {
+        String name = field.getPeriodType().getName().toLowerCase();
+        int value = field.get(field.getFieldType());
+        if (value > 1) {
+            return new ImmutablePair<>("interval." + name + ".more.label", value);
+        } else if (value > 0) {
+            return new ImmutablePair<>("interval." + name + ".one.label", 1);
+        }
+
+        return null;
+    }
 }

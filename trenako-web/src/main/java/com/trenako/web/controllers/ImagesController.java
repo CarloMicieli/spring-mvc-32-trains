@@ -35,33 +35,34 @@ import com.trenako.web.images.WebImageService;
 
 /**
  * It represents the controller used for images rendering.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Controller
 @RequestMapping("/images")
 public class ImagesController {
 
-	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
-	private final WebImageService imgService;
+    private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
+    private final WebImageService imgService;
 
-	/**
-	 * Creates a new {@code ImagesController}.
-	 * @param imgService the image service
-	 */
-	@Autowired
-	public ImagesController(WebImageService imgService) {
-		this.imgService = imgService;
-	}
+    /**
+     * Creates a new {@code ImagesController}.
+     *
+     * @param imgService the image service
+     */
+    @Autowired
+    public ImagesController(WebImageService imgService) {
+        this.imgService = imgService;
+    }
 
-	@RequestMapping(value = "/{imageSlug}", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> renderImage(@PathVariable("imageSlug") String imageSlug) {
-		return imgService.renderImage(imageSlug);
-	}
-	
-	@ExceptionHandler(UploadRenderingException.class)
-	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-	public void handleIOException(UploadRenderingException ex, HttpServletResponse response) {
-		log.error(ex.toString());
-	}
+    @RequestMapping(value = "/{imageSlug}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> renderImage(@PathVariable("imageSlug") String imageSlug) {
+        return imgService.renderImage(imageSlug);
+    }
+
+    @ExceptionHandler(UploadRenderingException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public void handleIOException(UploadRenderingException ex, HttpServletResponse response) {
+        log.error(ex.toString());
+    }
 }

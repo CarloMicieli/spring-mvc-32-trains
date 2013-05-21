@@ -35,53 +35,54 @@ import org.springframework.stereotype.Repository;
 
 /**
  * The concrete class for Mongo GridFs repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Repository("imagesRepository")
 public class ImagesRepositoryImpl implements ImagesRepository {
 
-	private final MongoDbFactory dbFactory;
-	private final GridFsTemplate gridFsTemplate;
+    private final MongoDbFactory dbFactory;
+    private final GridFsTemplate gridFsTemplate;
 
-	/**
-	 * Creates a new {@code ImagesRepositoryImpl}.
-	 * @param gridFsTemplate the GridFs template
-	 */
-	@Autowired
-	public ImagesRepositoryImpl(MongoDbFactory dbFactory, GridFsTemplate gridFsTemplate) {
-		this.dbFactory = dbFactory;
-		this.gridFsTemplate = gridFsTemplate;
-	}
+    /**
+     * Creates a new {@code ImagesRepositoryImpl}.
+     *
+     * @param gridFsTemplate the GridFs template
+     */
+    @Autowired
+    public ImagesRepositoryImpl(MongoDbFactory dbFactory, GridFsTemplate gridFsTemplate) {
+        this.dbFactory = dbFactory;
+        this.gridFsTemplate = gridFsTemplate;
+    }
 
-	@Override
-	public GridFSDBFile findFileBySlug(String slug) {
-		return gridFsTemplate.findOne(query(whereMetaData("slug").is(slug)));
-	}
+    @Override
+    public GridFSDBFile findFileBySlug(String slug) {
+        return gridFsTemplate.findOne(query(whereMetaData("slug").is(slug)));
+    }
 
-	@Override
-	public void store(UploadFile file) {
-		DBObject metadata = fillMetadata(file.getMetadata());
+    @Override
+    public void store(UploadFile file) {
+        DBObject metadata = fillMetadata(file.getMetadata());
 
-		GridFSInputFile f = getGridFs().createFile(file.getContent());
-		f.setFilename(file.getFilename());
-		f.setMetaData(metadata);
-		f.setContentType(file.getContentType());
-		f.save();
-	}
+        GridFSInputFile f = getGridFs().createFile(file.getContent());
+        f.setFilename(file.getFilename());
+        f.setMetaData(metadata);
+        f.setContentType(file.getContentType());
+        f.save();
+    }
 
-	@Override
-	public void delete(String slug) {
-		gridFsTemplate.delete(query(whereMetaData("slug").is(slug)));
-	}
+    @Override
+    public void delete(String slug) {
+        gridFsTemplate.delete(query(whereMetaData("slug").is(slug)));
+    }
 
-	private GridFS getGridFs() {
-		return new GridFS(dbFactory.getDb());
-	}
-	
-	private DBObject fillMetadata(Map<String, String> metadata) {
-		DBObject dbo = new BasicDBObject();
-		dbo.putAll(metadata);
-		return dbo;
-	}
+    private GridFS getGridFs() {
+        return new GridFS(dbFactory.getDb());
+    }
+
+    private DBObject fillMetadata(Map<String, String> metadata) {
+        DBObject dbo = new BasicDBObject();
+        dbo.putAll(metadata);
+        return dbo;
+    }
 }

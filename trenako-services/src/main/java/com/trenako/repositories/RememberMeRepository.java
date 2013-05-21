@@ -20,33 +20,36 @@ import com.trenako.entities.PersistentLogin;
 /**
  * It represents a {@code PersistentLogin} repository to implement
  * the "remember me" functionality.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface RememberMeRepository {
-	/**
-	 * Returns the {@code PersistentLogin} token with the provided series value.
-	 * @param seriesId the series value
-	 * @return a {@code PersistentLogin} if found; {@code null} otherwise
-	 */
-	PersistentLogin findBySeries(String seriesId);
-	
-	/**
-	 * Creates a new {@code PersistentLogin} token.
-	 * @param token the {@code PersistentLogin} to be created
-	 */
-	void createNew(PersistentLogin token);
-	
-	/**
-	 * Saves the {@code PersistentLogin} token changes.
-	 * @param token the {@code PersistentLogin} to be saved
-	 */
-	void save(PersistentLogin token);
-	
-	/**
-	 * Deletes {@code PersistentLogin} tokens for the provided username.
-	 * @param username the user name
-	 */
-	void deleteByUsername(String username);
+    /**
+     * Returns the {@code PersistentLogin} token with the provided series value.
+     *
+     * @param seriesId the series value
+     * @return a {@code PersistentLogin} if found; {@code null} otherwise
+     */
+    PersistentLogin findBySeries(String seriesId);
+
+    /**
+     * Creates a new {@code PersistentLogin} token.
+     *
+     * @param token the {@code PersistentLogin} to be created
+     */
+    void createNew(PersistentLogin token);
+
+    /**
+     * Saves the {@code PersistentLogin} token changes.
+     *
+     * @param token the {@code PersistentLogin} to be saved
+     */
+    void save(PersistentLogin token);
+
+    /**
+     * Deletes {@code PersistentLogin} tokens for the provided username.
+     *
+     * @param username the user name
+     */
+    void deleteByUsername(String username);
 }

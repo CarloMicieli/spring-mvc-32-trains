@@ -32,134 +32,142 @@ import org.springframework.util.Assert;
  * denormalized schemas, but it requires less database queries to populate
  * the field values.
  * </p>
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class WeakDbRef<E extends DbReferenceable> {
-	
-	@Indexed
-	private String slug;
-	private String label;
-	
-	/**
-	 * Creates an empty {@code WeakDbRef}.
-	 */
-	public WeakDbRef() {
-	}
-	
-	/**
-	 * Creates a new {@code WeakDbRef}.
-	 * @param slug the slug
-	 * @param label the label
-	 */
-	public WeakDbRef(String slug, String label) {
-		this.slug = slug;
-		this.label = label;
-	}
-	
-	private WeakDbRef(E entity) {
-		this(entity.getSlug(), entity.getLabel());
-	}
-	
-	/**
-	 * Builds a new {@code WeakDbRef} for the provided entity.
-	 * @param entity the entity object
-	 * @return the new {@code WeakDbRef}
-	 */
-	public static <E extends DbReferenceable> WeakDbRef<E> buildRef(E entity) {
-		Assert.notNull(entity, "Weak ref: entity obj is required.");
-		return new WeakDbRef<E>(entity);
-	}
 
-	/**
-	 * Builds a new {@code WeakDbRef} for the provided slug string.
-	 * @param slug the slug
-	 * @param entity the entity type
-	 * @return the new {@code WeakDbRef}
-	 */
-	public static <E extends DbReferenceable> WeakDbRef<E> buildFromSlug(String slug, Class<E> entity) {
-		Assert.notNull(slug, "Weak ref: slug text is required.");
-		return new WeakDbRef<E>().setSlug(slug);
-	}
-	
-	/**
-	 * Checks whether the current {@code WeakDbRef} was fully loaded.
-	 * <p>
-	 * A reference is loaded when it contains values for both {@code slug} and {@code label}.
-	 * </p>
-	 * @return {@code true} the reference was loaded; {@code false} otherwise.
-	 */
-	public boolean isLoaded() {
-		return (!StringUtils.isBlank(slug) && !StringUtils.isBlank(label));
-	}
-	
-	/**
-	 * Returns the {@code WeakDbRef} slug.
-	 * @return the slug
-	 */
-	public String getSlug() {
-		return slug;
-	}
+    @Indexed
+    private String slug;
+    private String label;
 
-	/**
-	 * Sets the {@code WeakDbRef} slug.
-	 * @param slug the slug
-	 */
-	public WeakDbRef<E> setSlug(String slug) {
-		this.slug = slug;
-		return this;
-	}
+    /**
+     * Creates an empty {@code WeakDbRef}.
+     */
+    public WeakDbRef() {
+    }
 
-	/**
-	 * Returns the {@code WeakDbRef} label.
-	 * @return the label
-	 */
-	public String getLabel() {
-		return label;
-	}
-	
-	/**
-	 * Returns the {@code WeakDbRef} label.
-	 * @param label the label
-	 */	
-	public WeakDbRef<E> setLabel(String label) {
-		this.label = label;
-		return this;
-	}
+    /**
+     * Creates a new {@code WeakDbRef}.
+     *
+     * @param slug  the slug
+     * @param label the label
+     */
+    public WeakDbRef(String slug, String label) {
+        this.slug = slug;
+        this.label = label;
+    }
 
-	@Override
-	public String toString() {
-		return this.getSlug();
-	}
-	
-	/**
-	 * Returns the complete (both slug and label) representation for the 
-	 * current reference.
-	 * @return the complete string representation
-	 */
-	public String toCompleteString() {
-		return new StringBuilder()
-			.append("{slug: ").append(getSlug())
-			.append(", label: ").append(getLabel())
-			.append("}")
-			.toString();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof WeakDbRef)) return false;
-		
-		WeakDbRef<?> other = (WeakDbRef<?>) obj;
-		return new EqualsBuilder()
-			.append(this.slug, other.slug)
-			.append(this.label, other.label)
-			.isEquals();
-	}
-	
-	@Override
-	public int hashCode() {
-		return slug.hashCode();
-	}
+    private WeakDbRef(E entity) {
+        this(entity.getSlug(), entity.getLabel());
+    }
+
+    /**
+     * Builds a new {@code WeakDbRef} for the provided entity.
+     *
+     * @param entity the entity object
+     * @return the new {@code WeakDbRef}
+     */
+    public static <E extends DbReferenceable> WeakDbRef<E> buildRef(E entity) {
+        Assert.notNull(entity, "Weak ref: entity obj is required.");
+        return new WeakDbRef<E>(entity);
+    }
+
+    /**
+     * Builds a new {@code WeakDbRef} for the provided slug string.
+     *
+     * @param slug   the slug
+     * @param entity the entity type
+     * @return the new {@code WeakDbRef}
+     */
+    public static <E extends DbReferenceable> WeakDbRef<E> buildFromSlug(String slug, Class<E> entity) {
+        Assert.notNull(slug, "Weak ref: slug text is required.");
+        return new WeakDbRef<E>().setSlug(slug);
+    }
+
+    /**
+     * Checks whether the current {@code WeakDbRef} was fully loaded.
+     * <p>
+     * A reference is loaded when it contains values for both {@code slug} and {@code label}.
+     * </p>
+     *
+     * @return {@code true} the reference was loaded; {@code false} otherwise.
+     */
+    public boolean isLoaded() {
+        return (!StringUtils.isBlank(slug) && !StringUtils.isBlank(label));
+    }
+
+    /**
+     * Returns the {@code WeakDbRef} slug.
+     *
+     * @return the slug
+     */
+    public String getSlug() {
+        return slug;
+    }
+
+    /**
+     * Sets the {@code WeakDbRef} slug.
+     *
+     * @param slug the slug
+     */
+    public WeakDbRef<E> setSlug(String slug) {
+        this.slug = slug;
+        return this;
+    }
+
+    /**
+     * Returns the {@code WeakDbRef} label.
+     *
+     * @return the label
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * Returns the {@code WeakDbRef} label.
+     *
+     * @param label the label
+     */
+    public WeakDbRef<E> setLabel(String label) {
+        this.label = label;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return this.getSlug();
+    }
+
+    /**
+     * Returns the complete (both slug and label) representation for the
+     * current reference.
+     *
+     * @return the complete string representation
+     */
+    public String toCompleteString() {
+        return new StringBuilder()
+                .append("{slug: ").append(getSlug())
+                .append(", label: ").append(getLabel())
+                .append("}")
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof WeakDbRef)) return false;
+
+        WeakDbRef<?> other = (WeakDbRef<?>) obj;
+        return new EqualsBuilder()
+                .append(this.slug, other.slug)
+                .append(this.label, other.label)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return slug.hashCode();
+    }
 }

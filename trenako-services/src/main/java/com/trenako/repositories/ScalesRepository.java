@@ -22,21 +22,23 @@ import com.trenako.entities.Scale;
 
 /**
  * The interface for model railway {@code Scale}s repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface ScalesRepository extends MongoRepository<Scale, ObjectId> {
-	/**
-	 * Returns the {@code Scale} with the provided name.
-	 * @param name the {@code Scale} name.
-	 * @return a {@code Scale} if found; {@code null} otherwise
-	 */
-	Scale findByName(String name);
+    /**
+     * Returns the {@code Scale} with the provided name.
+     *
+     * @param name the {@code Scale} name.
+     * @return a {@code Scale} if found; {@code null} otherwise
+     */
+    Scale findByName(String name);
 
-	/**
-	 * Returns the {@code Scale} with the provided name.
-	 * @param slug the {@code Scale} slug.
-	 * @return a {@code Scale} if found; {@code null} otherwise
-	 */
-	Scale findBySlug(String slug);
+    /**
+     * Returns the {@code Scale} with the provided name.
+     *
+     * @param slug the {@code Scale} slug.
+     * @return a {@code Scale} if found; {@code null} otherwise
+     */
+    Scale findBySlug(String slug);
 }

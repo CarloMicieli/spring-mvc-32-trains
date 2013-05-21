@@ -24,32 +24,30 @@ import org.springframework.web.multipart.MultipartFile;
 import com.trenako.AppGlobals;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class ImageValidator implements ConstraintValidator<Image, MultipartFile> {
-	
-	@Override
-	public void initialize(Image constraintAnnotation) {
-	}
 
-	@Override
-	public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
-		// skip validation for empty files.
-		if (file == null || file.isEmpty()) return true;
+    @Override
+    public void initialize(Image constraintAnnotation) {
+    }
 
-		// validate file size
-		if (file.getSize() > AppGlobals.MAX_UPLOAD_SIZE) {
-			return false;
-		}
-		
-		// validate content type
-		MediaType contentType = MediaType.parseMediaType(file.getContentType());
-		if (!AppGlobals.ALLOWED_MEDIA_TYPES.contains(contentType.toString())) {
-			return false;
-		}
-		
-		return true;
-	}
+    @Override
+    public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
+        // skip validation for empty files.
+        if (file == null || file.isEmpty()) return true;
+
+        // validate file size
+        if (file.getSize() > AppGlobals.MAX_UPLOAD_SIZE) {
+            return false;
+        }
+
+        // validate content type
+        MediaType contentType = MediaType.parseMediaType(file.getContentType());
+        if (!AppGlobals.ALLOWED_MEDIA_TYPES.contains(contentType.toString())) {
+            return false;
+        }
+
+        return true;
+    }
 }

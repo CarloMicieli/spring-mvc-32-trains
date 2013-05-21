@@ -19,45 +19,46 @@ import com.trenako.entities.Account;
 
 /**
  * It represents a user permission in the system.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public abstract class Permission {
 
-	/**
-	 * The user has permission to {@code read} the resource.
-	 */
-	public final static String READ = "read";
+    /**
+     * The user has permission to {@code read} the resource.
+     */
+    public final static String READ = "read";
 
-	/**
-	 * The user has permission to {@code write} the resource.
-	 */
-	public final static String WRITE = "write";
-	
-	/**
-	 * The user has permission to {@code delete} the resource.
-	 */
-	public final static String DELETE = "delete";
-		
-	/**
-	 * Checks whether the user has the appropriate permissions on 
-	 * the provided {@code targetObj}.
-	 * @param user the user
-	 * @param targetObj the target object
-	 * @param permissionType the permission type ({@code read}, {@code write}, {@code delete})
-	 * @return {@code true} if the user has the permissions; {@code false} otherwise
-	 */
-	public abstract boolean evaluate(Account user, Object targetObj, Object permissionType);
+    /**
+     * The user has permission to {@code write} the resource.
+     */
+    public final static String WRITE = "write";
 
-	protected boolean isReading(Object permissionType) {
-		return permissionType.equals(Permission.READ);
-	}
-	
-	protected boolean isWriting(Object permissionType) {
-		return permissionType.equals(Permission.WRITE);
-	}
-	
-	protected boolean isDeleting(Object permissionType) {
-		return permissionType.equals(Permission.DELETE);
-	}
+    /**
+     * The user has permission to {@code delete} the resource.
+     */
+    public final static String DELETE = "delete";
+
+    /**
+     * Checks whether the user has the appropriate permissions on
+     * the provided {@code targetObj}.
+     *
+     * @param user           the user
+     * @param targetObj      the target object
+     * @param permissionType the permission type ({@code read}, {@code write}, {@code delete})
+     * @return {@code true} if the user has the permissions; {@code false} otherwise
+     */
+    public abstract boolean evaluate(Account user, Object targetObj, Object permissionType);
+
+    protected boolean isReading(Object permissionType) {
+        return permissionType.equals(Permission.READ);
+    }
+
+    protected boolean isWriting(Object permissionType) {
+        return permissionType.equals(Permission.WRITE);
+    }
+
+    protected boolean isDeleting(Object permissionType) {
+        return permissionType.equals(Permission.DELETE);
+    }
 }

@@ -25,74 +25,75 @@ import com.trenako.mapping.DbReferenceable;
 
 /**
  * It represents a web request for a file upload.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class UploadRequest {
-	private String entity;
-	private String slug;
-	private MultipartFile file;
+    private String entity;
+    private String slug;
+    private MultipartFile file;
 
-	/**
-	 * Creates an empty {@code UploadRequest}.
-	 */
-	public UploadRequest() {
-	}
-	
-	public static <E extends DbReferenceable> UploadRequest create(E obj, MultipartFile file) {
-		return new UploadRequest(obj.getClass().getSimpleName().toLowerCase(),
-				obj.getSlug(),
-				file);
-	}
+    /**
+     * Creates an empty {@code UploadRequest}.
+     */
+    public UploadRequest() {
+    }
 
-	/**
-	 * Creates an empty {@code UploadRequest}.
-	 * @param entity the entity name
-	 * @param slug the slug
-	 * @param file the uploaded file
-	 */
-	public UploadRequest(String entity, String slug, MultipartFile file) {
-		this.entity = entity;
-		this.slug = slug;
-		this.file = file;
-	}
+    public static <E extends DbReferenceable> UploadRequest create(E obj, MultipartFile file) {
+        return new UploadRequest(obj.getClass().getSimpleName().toLowerCase(),
+                obj.getSlug(),
+                file);
+    }
 
-	public String getEntity() {
-		return entity;
-	}
+    /**
+     * Creates an empty {@code UploadRequest}.
+     *
+     * @param entity the entity name
+     * @param slug   the slug
+     * @param file   the uploaded file
+     */
+    public UploadRequest(String entity, String slug, MultipartFile file) {
+        this.entity = entity;
+        this.slug = slug;
+        this.file = file;
+    }
 
-	public String getSlug() {
-		return slug;
-	}
+    public String getEntity() {
+        return entity;
+    }
 
-	public MultipartFile getFile() {
-		return file;
-	}
+    public String getSlug() {
+        return slug;
+    }
 
-	public Map<String, String> asMetadata(boolean isThumb) {
-		return map("slug", filename(isThumb));
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof UploadRequest)) return false;
-		
-		UploadRequest other = (UploadRequest) obj;
-		return this.entity.equals(other.entity) &&
-			this.slug.equals(other.slug);
-	}
-	
-	private String filename(boolean isThumb) {
-		StringBuilder sb = new StringBuilder();
-		
-		if (isThumb) {
-			sb.append("th_");
-		}
-		
-		return sb.append(getEntity())
-			.append("_")
-			.append(getSlug())
-			.toString();
-	}
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public Map<String, String> asMetadata(boolean isThumb) {
+        return map("slug", filename(isThumb));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof UploadRequest)) return false;
+
+        UploadRequest other = (UploadRequest) obj;
+        return this.entity.equals(other.entity) &&
+                this.slug.equals(other.slug);
+    }
+
+    private String filename(boolean isThumb) {
+        StringBuilder sb = new StringBuilder();
+
+        if (isThumb) {
+            sb.append("th_");
+        }
+
+        return sb.append(getEntity())
+                .append("_")
+                .append(getSlug())
+                .toString();
+    }
 }

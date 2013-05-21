@@ -42,73 +42,78 @@ import com.trenako.entities.Railway;
  */
 public interface RailwaysService {
 
-	/**
-	 * Finds the {@link Railway} with the provided id.
-	 * @param id the unique id
-	 * @return a {@code Railway} if found; {@code null} otherwise
-	 */
-	Railway findById(ObjectId id);
+    /**
+     * Finds the {@link Railway} with the provided id.
+     *
+     * @param id the unique id
+     * @return a {@code Railway} if found; {@code null} otherwise
+     */
+    Railway findById(ObjectId id);
 
-	/**
-	 * Finds the {@link Railway} with the provided name.
-	 * <p>
-	 * Due to possible data store implementation the clients for this method must 
-	 * think this search as case sensitive.
-	 * </p>
-	 *
-	 * @param name the {@code Railway} name
-	 * @return a {@code Railway} if found; {@code null} otherwise
-	 * @see com.trenako.entities.Railway#getName()
-	 */
-	Railway findByName(String name);
+    /**
+     * Finds the {@link Railway} with the provided name.
+     * <p>
+     * Due to possible data store implementation the clients for this method must
+     * think this search as case sensitive.
+     * </p>
+     *
+     * @param name the {@code Railway} name
+     * @return a {@code Railway} if found; {@code null} otherwise
+     * @see com.trenako.entities.Railway#getName()
+     */
+    Railway findByName(String name);
 
-	/**
-	 * Finds the {@link Railway} with the provided slug value.
-	 * @param slug the {@code Railway} slug
-	 * @return a {@code Railway} if found; {@code null} otherwise
-	 * @see com.trenako.entities.Railway#getSlug()
-	 */
-	Railway findBySlug(String slug);
-	
-	/**
-	 * Returns all {@link Railway} objects for the provided country from the data store.
-	 * <p>
-	 * This methods return all the railways, sort by name.
-	 * </p>
-	 * <p>
-	 * The country code is one value from the {@code ISO 3166-1 alpha-2} code standard.
-	 * </p>
-	 * 
-	 * @param country the country code
-	 * @return a {@code Railway} list
-	 */	
-	Iterable<Railway> findByCountry(String country);
-	
-	/**
-	 * Returns all {@link Railway} objects from the data store.
-	 * <p>
-	 * This methods return all the railways, sort by name.
-	 * </p>
-	 * @return a {@code Railway} list
-	 */
-	Page<Railway> findAll(Pageable paging);
+    /**
+     * Finds the {@link Railway} with the provided slug value.
+     *
+     * @param slug the {@code Railway} slug
+     * @return a {@code Railway} if found; {@code null} otherwise
+     * @see com.trenako.entities.Railway#getSlug()
+     */
+    Railway findBySlug(String slug);
 
-	/**
-	 * Persists the {@link Railway} changes in the data store.
-	 * <p>
-	 * This method performs a "upsert": if the {@code Railway} is not present in the data store
-	 * a new {@code Railway} is created; otherwise the method will update the existing {@code Railway}. 
-	 * </p>	 
-	 * @param railway the {@code Railway} to be saved
-	 */
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-	void save(Railway railway);
+    /**
+     * Returns all {@link Railway} objects for the provided country from the data store.
+     * <p>
+     * This methods return all the railways, sort by name.
+     * </p>
+     * <p>
+     * The country code is one value from the {@code ISO 3166-1 alpha-2} code standard.
+     * </p>
+     *
+     * @param country the country code
+     * @return a {@code Railway} list
+     */
+    Iterable<Railway> findByCountry(String country);
 
-	/**
-	 * Removes a {@link Railway} from the data store.
-	 * @param railway the {@code Railway} to be removed
-	 */
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-	void remove(Railway railway);
+    /**
+     * Returns all {@link Railway} objects from the data store.
+     * <p>
+     * This methods return all the railways, sort by name.
+     * </p>
+     *
+     * @return a {@code Railway} list
+     */
+    Page<Railway> findAll(Pageable paging);
+
+    /**
+     * Persists the {@link Railway} changes in the data store.
+     * <p>
+     * This method performs a "upsert": if the {@code Railway} is not present in the data store
+     * a new {@code Railway} is created; otherwise the method will update the existing {@code Railway}.
+     * </p>
+     *
+     * @param railway the {@code Railway} to be saved
+     */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    void save(Railway railway);
+
+    /**
+     * Removes a {@link Railway} from the data store.
+     *
+     * @param railway the {@code Railway} to be removed
+     */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    void remove(Railway railway);
 
 }

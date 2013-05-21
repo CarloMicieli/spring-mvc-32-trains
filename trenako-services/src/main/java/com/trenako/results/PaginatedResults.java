@@ -21,58 +21,59 @@ import com.trenako.criteria.SearchCriteria;
  * It represents the public interface for paginated result sets.
  * <p>
  * Given the performance issues for pagination, the concrete classes that
- * implement this interface will provide a range based pagination (for instance see how 
+ * implement this interface will provide a range based pagination (for instance see how
  * Twitter api implemented pagination).
  * </p>
  * <p>
- * The pagination will not provide the random access to one of the result set pages, but 
- * only the basic {@code previous} and {@code next} are available. This is not usually a 
+ * The pagination will not provide the random access to one of the result set pages, but
+ * only the basic {@code previous} and {@code next} are available. This is not usually a
  * limit for RESTful api, but it can be a limitation for common web applications.
- * </p>
- * <p>
- * The {@link PaginatedResults#getTotalSize()} implementation could require another trip 
- * to the database in order to count the result set total size. 
  * </p>
  *
  * @param <T> the item type
- *
  * @author Carlo Micieli
  */
 public interface PaginatedResults<T> {
-	
-	/**
-	 * Returns the {@code SearchCriteria} that produced this result set.
-	 * @return the search criteria
-	 */
-	SearchCriteria getCriteria();
-	
-	/**
-	 * Returns the {@code RangeRequest} that produced this result set.
-	 * @return the range request
-	 */
-	SearchRange getRange();
-	
-	/**
-	 * Indicates whether the result set has a previous page.
-	 * @return {@code true} if the previous page exists; {@code false} otherwise
-	 */
-	boolean hasPreviousPage();
-	
-	/**
-	 * Indicates whether the result set has a next page.
-	 * @return {@code true} if the next page exists; {@code false} otherwise
-	 */	
-	boolean hasNextPage();
-	
-	/**
-	 * Returns the items for the current result set page.
-	 * @return the items
-	 */
-	Iterable<T> getItems();
 
-	/**
-	 * Checks whether the results set is empty.
-	 * @return {@code true} if empty; {@code false} otherwise
-	 */
-	boolean isEmpty();
+    /**
+     * Returns the {@code SearchCriteria} that produced this result set.
+     *
+     * @return the search criteria
+     */
+    SearchCriteria getCriteria();
+
+    /**
+     * Returns the {@code RangeRequest} that produced this result set.
+     *
+     * @return the range request
+     */
+    SearchRange getRange();
+
+    /**
+     * Indicates whether the result set has a previous page.
+     *
+     * @return {@code true} if the previous page exists; {@code false} otherwise
+     */
+    boolean hasPreviousPage();
+
+    /**
+     * Indicates whether the result set has a next page.
+     *
+     * @return {@code true} if the next page exists; {@code false} otherwise
+     */
+    boolean hasNextPage();
+
+    /**
+     * Returns the items for the current result set page.
+     *
+     * @return the items
+     */
+    Iterable<T> getItems();
+
+    /**
+     * Checks whether the results set is empty.
+     *
+     * @return {@code true} if empty; {@code false} otherwise
+     */
+    boolean isEmpty();
 }

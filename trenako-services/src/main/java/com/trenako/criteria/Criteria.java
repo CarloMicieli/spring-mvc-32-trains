@@ -28,74 +28,74 @@ import com.trenako.values.PowerMethod;
 
 /**
  * The enum values for rolling stocks criteria.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public enum Criteria {
-	/**
-	 * The criterion by rolling stocks {@code Brand}.
-	 */	
-	BRAND(Brand.class),
+    /**
+     * The criterion by rolling stocks {@code Brand}.
+     */
+    BRAND(Brand.class),
 
-	/**
-	 * The criterion by rolling stocks {@code Scale}.
-	 */	
-	SCALE(Scale.class),
-	
-	/**
-	 * The criterion by rolling stocks {@code Cat}.
-	 */
-	CAT(Cat.class),
-	
-	/**
-	 * The criterion by rolling stocks {@code Railway}.
-	 */
-	RAILWAY(Railway.class),
+    /**
+     * The criterion by rolling stocks {@code Scale}.
+     */
+    SCALE(Scale.class),
 
-	/**
-	 * The criterion by rolling stocks {@code Era}.
-	 */
-	ERA(Era.class),
-	
-	/**
-	 * The criterion by rolling stocks {@code PowerMethod}.
-	 */
-	POWER_METHOD(PowerMethod.class),
-	
-	/**
-	 * The criterion by rolling stocks {@code Category}.
-	 */
-	CATEGORY(Category.class);
-	
-	private final Class<?> criterionType;
-	
-	Criteria(Class<?> type) {
-		criterionType = type;
-	}
-	
-	public Class<?> getCriterionType() {
-		return criterionType;
-	}
-	
-	public static <T> Criteria criterionForType(Class<T> providedType) {
-		for (Criteria crit : Criteria.values()) {
-			if (crit.criterionType.equals(providedType)) {
-				return crit;
-			}
-		}
-		
-		return null;
-	}
+    /**
+     * The criterion by rolling stocks {@code Cat}.
+     */
+    CAT(Cat.class),
 
-	public String criterionName() {
-		return name().replace("_", "").toLowerCase();
-	}
-	
-	public static Iterable<String> keys() {
-		List<String> keys = new ArrayList<String>();
-		for (Criteria crit : Criteria.values()) {
-			keys.add(crit.name().replace("_", "").toLowerCase());
-		}
-		return keys;
-	}
+    /**
+     * The criterion by rolling stocks {@code Railway}.
+     */
+    RAILWAY(Railway.class),
+
+    /**
+     * The criterion by rolling stocks {@code Era}.
+     */
+    ERA(Era.class),
+
+    /**
+     * The criterion by rolling stocks {@code PowerMethod}.
+     */
+    POWER_METHOD(PowerMethod.class),
+
+    /**
+     * The criterion by rolling stocks {@code Category}.
+     */
+    CATEGORY(Category.class);
+
+    private final Class<?> criterionType;
+
+    Criteria(Class<?> type) {
+        criterionType = type;
+    }
+
+    public Class<?> getCriterionType() {
+        return criterionType;
+    }
+
+    public static <T> Criteria criterionForType(Class<T> providedType) {
+        for (Criteria crit : Criteria.values()) {
+            if (crit.criterionType.equals(providedType)) {
+                return crit;
+            }
+        }
+
+        return null;
+    }
+
+    public String criterionName() {
+        return name().replace("_", "").toLowerCase();
+    }
+
+    public static Iterable<String> keys() {
+        List<String> keys = new ArrayList<String>();
+        for (Criteria crit : Criteria.values()) {
+            keys.add(crit.name().replace("_", "").toLowerCase());
+        }
+        return keys;
+    }
 }

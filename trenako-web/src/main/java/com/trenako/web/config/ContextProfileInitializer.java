@@ -26,27 +26,26 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
  *
  * @author Carlo Micieli
  */
-public class ContextProfileInitializer 
-	implements ApplicationContextInitializer<ConfigurableWebApplicationContext> {
+public class ContextProfileInitializer
+        implements ApplicationContextInitializer<ConfigurableWebApplicationContext> {
 
-	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
-	
-	private CloudEnvironment cloudFoundryEnvironment;
+    private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
 
-	public ContextProfileInitializer() {
-		this.cloudFoundryEnvironment = new CloudEnvironment();
-	}
-	
-	@Override
-	public void initialize(ConfigurableWebApplicationContext context) {
-		ConfigurableEnvironment environment = context.getEnvironment();
+    private CloudEnvironment cloudFoundryEnvironment;
 
-		if (cloudFoundryEnvironment.isOpenShift()) {
-			environment.setActiveProfiles("cloud");
-		}
-		else {
-			log.info("Not running on Cloud Foundry, using 'default' profile");
-			environment.setActiveProfiles("default");
-		}
-	}
+    public ContextProfileInitializer() {
+        this.cloudFoundryEnvironment = new CloudEnvironment();
+    }
+
+    @Override
+    public void initialize(ConfigurableWebApplicationContext context) {
+        ConfigurableEnvironment environment = context.getEnvironment();
+
+        if (cloudFoundryEnvironment.isOpenShift()) {
+            environment.setActiveProfiles("cloud");
+        } else {
+            log.info("Not running on Cloud Foundry, using 'default' profile");
+            environment.setActiveProfiles("default");
+        }
+    }
 }

@@ -31,83 +31,85 @@ import com.trenako.values.Visibility;
 
 /**
  * A concrete implementation for the rolling stocks collection service.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("collectionsService")
 public class CollectionsServiceImpl implements CollectionsService {
 
-	private @Autowired(required = false) MessageSource messageSource;
-	private final CollectionsRepository repo;
-	
-	@Autowired
-	public CollectionsServiceImpl(CollectionsRepository repo) {
-		this.repo = repo;
-	}
-	
-	@Override
-	public Collection findById(ObjectId id) {
-		return repo.findById(id);
-	}
+    private
+    @Autowired(required = false)
+    MessageSource messageSource;
+    private final CollectionsRepository repo;
 
-	@Override
-	public Collection findBySlug(String slug) {
-		return repo.findBySlug(slug);
-	}
+    @Autowired
+    public CollectionsServiceImpl(CollectionsRepository repo) {
+        this.repo = repo;
+    }
 
-	@Override
-	public Collection findByOwner(Account owner) {
-		Collection coll = repo.findByOwner(owner);
-		if (coll == null) {
-			return Collection.defaultCollection();
-		}
-		return coll;
-	}
+    @Override
+    public Collection findById(ObjectId id) {
+        return repo.findById(id);
+    }
 
-	@Override
-	public boolean containsRollingStock(Account owner, RollingStock rollingStock) {
-		return repo.containsRollingStock(owner, rollingStock);
-	}
+    @Override
+    public Collection findBySlug(String slug) {
+        return repo.findBySlug(slug);
+    }
 
-	@Override
-	public void addRollingStock(Account owner, CollectionItem item) {
-		repo.addItem(owner, item);
-	}
+    @Override
+    public Collection findByOwner(Account owner) {
+        Collection coll = repo.findByOwner(owner);
+        if (coll == null) {
+            return Collection.defaultCollection();
+        }
+        return coll;
+    }
+
+    @Override
+    public boolean containsRollingStock(Account owner, RollingStock rollingStock) {
+        return repo.containsRollingStock(owner, rollingStock);
+    }
+
+    @Override
+    public void addRollingStock(Account owner, CollectionItem item) {
+        repo.addItem(owner, item);
+    }
 
 
-	@Override
-	public void updateItem(Account owner, CollectionItem item) {
-		repo.updateItem(owner, item);
-	}
-	
-	@Override
-	public void removeRollingStock(Account owner, CollectionItem item) {
-		repo.removeItem(owner, item);
-	}
+    @Override
+    public void updateItem(Account owner, CollectionItem item) {
+        repo.updateItem(owner, item);
+    }
 
-	@Override
-	public void changeVisibility(Account owner, Visibility visibility) {
-		repo.changeVisibility(owner, visibility);
-	}
-	
-	@Override
-	public void createNew(Account owner) {
-		Collection collection = new Collection(owner, Visibility.PUBLIC);
-		repo.createNew(collection);
-	}
-	
-	@Override
-	public void saveChanges(Collection collection) {
-		repo.saveChanges(collection);
-	}
-	
-	@Override
-	public void remove(Collection collection) {
-		repo.remove(collection);
-	}
+    @Override
+    public void removeRollingStock(Account owner, CollectionItem item) {
+        repo.removeItem(owner, item);
+    }
 
-	@Override
-	public Iterable<LocalizedEnum<Condition>> conditionsList() {
-		return LocalizedEnum.list(Condition.class, messageSource, null);
-	}
+    @Override
+    public void changeVisibility(Account owner, Visibility visibility) {
+        repo.changeVisibility(owner, visibility);
+    }
+
+    @Override
+    public void createNew(Account owner) {
+        Collection collection = new Collection(owner, Visibility.PUBLIC);
+        repo.createNew(collection);
+    }
+
+    @Override
+    public void saveChanges(Collection collection) {
+        repo.saveChanges(collection);
+    }
+
+    @Override
+    public void remove(Collection collection) {
+        repo.remove(collection);
+    }
+
+    @Override
+    public Iterable<LocalizedEnum<Condition>> conditionsList() {
+        return LocalizedEnum.list(Condition.class, messageSource, null);
+    }
 }

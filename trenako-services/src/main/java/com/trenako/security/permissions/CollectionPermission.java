@@ -20,35 +20,32 @@ import com.trenako.entities.Collection;
 import com.trenako.values.Visibility;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class CollectionPermission extends Permission {
 
-	@Override
-	public boolean evaluate(Account user, Object targetObj, Object permissionType) {
-		
-		Collection collection = collection(targetObj);
-		
-		if (collection.isOwnedBy(user)) {
-			return true;
-		}
-		else {
-			return isReading(permissionType) && isPublic(collection);
-		}
-	}
+    @Override
+    public boolean evaluate(Account user, Object targetObj, Object permissionType) {
 
-	private boolean isPublic(Collection collection) {
-		return collection.getVisibilityValue().equals(Visibility.PUBLIC);
-	}
-	
-	private Collection collection(Object targetObj) {
-		if (!(targetObj instanceof Collection)) {
-			throw new IllegalArgumentException("Only Collection objects are valid");
-		}
+        Collection collection = collection(targetObj);
 
-		return (Collection) targetObj;
-	}
+        if (collection.isOwnedBy(user)) {
+            return true;
+        } else {
+            return isReading(permissionType) && isPublic(collection);
+        }
+    }
+
+    private boolean isPublic(Collection collection) {
+        return collection.getVisibilityValue().equals(Visibility.PUBLIC);
+    }
+
+    private Collection collection(Object targetObj) {
+        if (!(targetObj instanceof Collection)) {
+            throw new IllegalArgumentException("Only Collection objects are valid");
+        }
+
+        return (Collection) targetObj;
+    }
 
 }

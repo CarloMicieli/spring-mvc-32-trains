@@ -28,133 +28,141 @@ import com.trenako.values.OptionFamily;
 /**
  * It represents a rolling stock option
  * (DCC interface, head lights configuration, coupler...).
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Document(collection = "options")
 public class Option {
-	@Id
-	private ObjectId id;
-	
-	@NotBlank(message = "option.name.required")
-	private String name;
-	
-	private byte[] image;
-	
-	@NotNull(message = "option.family.required")
-	private String family;
-	
-	/**
-	 * Creates an empty rolling stock {@code Option}.
-	 */
-	public Option() {
-	}
-	
-	/**
-	 * Creates a new rolling stock {@code Option}.
-	 * @param name the option name
-	 * @param family the option family
-	 */
-	public Option(String name, OptionFamily family) {
-		this.name = name;
-		this.family = optionFamiliy(family);
-	}
-	
-	/**
-	 * Creates a new rolling stock {@code Option}.
-	 * @param name the option name
-	 * @param family the option family
-	 * @param image
-	 */
-	public Option(String name, String family, byte[] image) {
-		this.name = name;
-		this.family = family;
-		this.image = image;
-	}
-	
-	/**
-	 * Gets the unique id for this option.	
-	 * @return the id
-	 */
-	public ObjectId getId() {
-		return id;
-	}
+    @Id
+    private ObjectId id;
 
-	/**
-	 * Sets the unique id for this option.	
-	 * @param id the id
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
-	
-	/**
-	 * Returns the option name.
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    @NotBlank(message = "option.name.required")
+    private String name;
 
-	/**
-	 * Sets the option name.
-	 * @param name the name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    private byte[] image;
 
-	/**
-	 * Returns the option family.
-	 * @return the family
-	 */
-	public String getFamily() {
-		return family;
-	}
+    @NotNull(message = "option.family.required")
+    private String family;
 
-	/**
-	 * Sets the option family.
-	 * @param family the family
-	 */
-	public void setFamily(String family) {
-		this.family = family;
-	}
-	
-	public OptionFamily getOptionFamily() {
-		return OptionFamily.parse(family);
-	}
-	
-	public byte[] getImage() {
-		return image;
-	}
+    /**
+     * Creates an empty rolling stock {@code Option}.
+     */
+    public Option() {
+    }
 
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
+    /**
+     * Creates a new rolling stock {@code Option}.
+     *
+     * @param name   the option name
+     * @param family the option family
+     */
+    public Option(String name, OptionFamily family) {
+        this.name = name;
+        this.family = optionFamiliy(family);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof Option)) return false;
-		
-		Option other = (Option)obj;
-		return new EqualsBuilder()
-			.append(name, other.name)
-			.append(family, other.family)
-			.isEquals();
-	}
-	
-	@Override
-	public String toString() {
-		return new StringBuilder()
-			.append(name)
-			.append(" (")
-			.append(family)
-			.append(")")
-			.toString();
-	}
-	
-	private static String optionFamiliy(OptionFamily of) {
-		return of.label();
-	}
+    /**
+     * Creates a new rolling stock {@code Option}.
+     *
+     * @param name   the option name
+     * @param family the option family
+     * @param image
+     */
+    public Option(String name, String family, byte[] image) {
+        this.name = name;
+        this.family = family;
+        this.image = image;
+    }
+
+    /**
+     * Gets the unique id for this option.
+     *
+     * @return the id
+     */
+    public ObjectId getId() {
+        return id;
+    }
+
+    /**
+     * Sets the unique id for this option.
+     *
+     * @param id the id
+     */
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    /**
+     * Returns the option name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the option name.
+     *
+     * @param name the name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the option family.
+     *
+     * @return the family
+     */
+    public String getFamily() {
+        return family;
+    }
+
+    /**
+     * Sets the option family.
+     *
+     * @param family the family
+     */
+    public void setFamily(String family) {
+        this.family = family;
+    }
+
+    public OptionFamily getOptionFamily() {
+        return OptionFamily.parse(family);
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Option)) return false;
+
+        Option other = (Option) obj;
+        return new EqualsBuilder()
+                .append(name, other.name)
+                .append(family, other.family)
+                .isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append(name)
+                .append(" (")
+                .append(family)
+                .append(")")
+                .toString();
+    }
+
+    private static String optionFamiliy(OptionFamily of) {
+        return of.label();
+    }
 }

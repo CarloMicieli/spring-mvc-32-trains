@@ -20,34 +20,31 @@ import com.trenako.entities.WishList;
 import com.trenako.values.Visibility;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class WishListPermission extends Permission {
 
-	@Override
-	public boolean evaluate(Account user, Object targetObj, Object permissionType) {
-		
-		WishList list = wishList(targetObj);
-		
-		if (list.isOwnedBy(user)) {
-			return true;
-		}
-		else {
-			return isReading(permissionType) && isPublic(list);
-		}
-	}
+    @Override
+    public boolean evaluate(Account user, Object targetObj, Object permissionType) {
 
-	private boolean isPublic(WishList list) {
-		return list.getVisibilityValue().equals(Visibility.PUBLIC);
-	}
-	
-	private WishList wishList(Object targetObj) {
-		if (!(targetObj instanceof WishList)) {
-			throw new IllegalArgumentException("Only WishList objects are valid");
-		}
+        WishList list = wishList(targetObj);
 
-		return (WishList) targetObj;
-	}
+        if (list.isOwnedBy(user)) {
+            return true;
+        } else {
+            return isReading(permissionType) && isPublic(list);
+        }
+    }
+
+    private boolean isPublic(WishList list) {
+        return list.getVisibilityValue().equals(Visibility.PUBLIC);
+    }
+
+    private WishList wishList(Object targetObj) {
+        if (!(targetObj instanceof WishList)) {
+            throw new IllegalArgumentException("Only WishList objects are valid");
+        }
+
+        return (WishList) targetObj;
+    }
 }

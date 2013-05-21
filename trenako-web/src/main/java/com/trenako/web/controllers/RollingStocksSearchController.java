@@ -30,32 +30,31 @@ import com.trenako.web.controllers.form.ResultsOptionsForm;
  * It represents the controller to manage the requests to search
  * rolling stocks by any of the available criteria (ie by brand, by railway
  * and so on).
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Controller
 @RequestMapping("/rs")
 public class RollingStocksSearchController {
-	
 
-	private final BrowseService service;
-	
-	/**
-	 * Creates a new {@code RollingStockSearchController}.
-	 * @param service
-	 */
-	@Autowired
-	public RollingStocksSearchController(BrowseService service) {
-		this.service = service;
-	}
+    private final BrowseService service;
 
-	@RequestMapping(value = "/**", method = RequestMethod.GET)
-	public ModelAndView search(SearchRequest search, RangeRequest range) {
-		ModelAndView mav = new ModelAndView("browse/results");
-		
-		mav.addObject("results", service.findByCriteria(search, range));
-		mav.addObject("options", ResultsOptionsForm.buildFor(range));
-		return mav;
-	}
+    /**
+     * Creates a new {@code RollingStockSearchController}.
+     *
+     * @param service
+     */
+    @Autowired
+    public RollingStocksSearchController(BrowseService service) {
+        this.service = service;
+    }
+
+    @RequestMapping(value = "/**", method = RequestMethod.GET)
+    public ModelAndView search(SearchRequest search, RangeRequest range) {
+        ModelAndView mav = new ModelAndView("browse/results");
+
+        mav.addObject("results", service.findByCriteria(search, range));
+        mav.addObject("options", ResultsOptionsForm.buildFor(range));
+        return mav;
+    }
 }

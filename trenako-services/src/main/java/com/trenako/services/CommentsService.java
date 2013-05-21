@@ -25,42 +25,46 @@ import com.trenako.entities.RollingStockComments;
  * @author Carlo Micieli
  */
 public interface CommentsService {
-	
-	/**
-	 * Returns the list of {@link Comment} for the same rolling stock id.
-	 *
-	 * @param rollingStock the rolling stock
-	 * @return the list of comments
-	 */	
-	RollingStockComments findByRollingStock(RollingStock rollingStock);
 
-	/**
-	 * Posts a new {@code Comment} for the provided rolling stock.
-	 * @param rs the {@code RollingStock} to be commented
-	 * @param comment the {@code Comment} to be saved
-	 */
-	void postComment(RollingStock rs, Comment comment);
-	
-	/**
-	 * Post an answer to a rolling stock {@code Comment}.
-	 * @param rs the {@code RollingStock} to be commented
-	 * @param parent the parent {@code Comment} 
-	 * @param answer the answer to be saved
-	 */
-	void postAnswer(RollingStock rs, Comment parent, Comment answer);
-	
-	/**
-	 * Posts a new {@code Comment} for the provided rolling stock.
-	 * @param rs the {@code RollingStock} to be commented
-	 * @param comment the {@code Comment} to be saved
-	 */
-	void deleteComment(RollingStock rs, Comment comment);
-	
-	/**
-	 * Post an answer to a rolling stock {@code Comment}.
-	 * @param rs the {@code RollingStock} to be commented
-	 * @param parent the parent {@code Comment} 
-	 * @param answer the answer to be saved
-	 */
-	void deleteAnswer(RollingStock rs, Comment parent, Comment answer);
+    /**
+     * Returns the list of {@link Comment} for the same rolling stock id.
+     *
+     * @param rollingStock the rolling stock
+     * @return the list of comments
+     */
+    RollingStockComments findByRollingStock(RollingStock rollingStock);
+
+    /**
+     * Posts a new {@code Comment} for the provided rolling stock.
+     *
+     * @param rs      the {@code RollingStock} to be commented
+     * @param comment the {@code Comment} to be saved
+     */
+    void postComment(RollingStock rs, Comment comment);
+
+    /**
+     * Post an answer to a rolling stock {@code Comment}.
+     *
+     * @param rs     the {@code RollingStock} to be commented
+     * @param parent the parent {@code Comment}
+     * @param answer the answer to be saved
+     */
+    void postAnswer(RollingStock rs, Comment parent, Comment answer);
+
+    /**
+     * Posts a new {@code Comment} for the provided rolling stock.
+     *
+     * @param rs      the {@code RollingStock} to be commented
+     * @param comment the {@code Comment} to be saved
+     */
+    void deleteComment(RollingStock rs, Comment comment);
+
+    /**
+     * Post an answer to a rolling stock {@code Comment}.
+     *
+     * @param rs     the {@code RollingStock} to be commented
+     * @param parent the parent {@code Comment}
+     * @param answer the answer to be saved
+     */
+    void deleteAnswer(RollingStock rs, Comment parent, Comment answer);
 }

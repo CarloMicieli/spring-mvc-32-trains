@@ -19,26 +19,28 @@ import org.springframework.core.NestedRuntimeException;
 
 /**
  * It represents a not checked exception during file rendering.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @SuppressWarnings("serial")
 public class UploadRenderingException extends NestedRuntimeException {
 
-	/**
-	 * Creates a new {@code UploadRenderingException}.
-	 * @param msg the exception message
-	 */
-	public UploadRenderingException(String msg) {
-		super(msg);
-	}
-	
-	/**
-	 * Creates a new {@code UploadRenderingException}.
-	 * @param msg the exception message
-	 * @param cause the nested exception
-	 */
-	public UploadRenderingException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+    /**
+     * Creates a new {@code UploadRenderingException}.
+     *
+     * @param msg the exception message
+     */
+    public UploadRenderingException(String msg) {
+        super(msg);
+    }
+
+    /**
+     * Creates a new {@code UploadRenderingException}.
+     *
+     * @param msg   the exception message
+     * @param cause the nested exception
+     */
+    public UploadRenderingException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }

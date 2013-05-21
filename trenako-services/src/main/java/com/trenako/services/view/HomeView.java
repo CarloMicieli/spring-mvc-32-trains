@@ -22,56 +22,59 @@ import com.trenako.entities.RollingStock;
 
 /**
  * It represents the immutable content for the homepage.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class HomeView {
-	private final boolean isLogged;
-	private final Iterable<RollingStock> rollingStocks;
-	private final Iterable<Activity> activityStream;
-	
-	public HomeView(boolean isLogged,
-			Iterable<RollingStock> rollingStocks,
-			Iterable<Activity> activityStream) {
-		this.isLogged = isLogged;
-		this.rollingStocks = rollingStocks;
-		this.activityStream = activityStream;
-	}
+    private final boolean isLogged;
+    private final Iterable<RollingStock> rollingStocks;
+    private final Iterable<Activity> activityStream;
 
-	/**
-	 * Returns whether the current user is logged.
-	 * @return {@code true} if the user is logged; {@code false} otherwise
-	 */
-	public boolean isLogged() {
-		return isLogged;
-	}
+    public HomeView(boolean isLogged,
+                    Iterable<RollingStock> rollingStocks,
+                    Iterable<Activity> activityStream) {
+        this.isLogged = isLogged;
+        this.rollingStocks = rollingStocks;
+        this.activityStream = activityStream;
+    }
 
-	/**
-	 * Returns the last updated {@code RollingStocks}.
-	 * @return the {@code RollingStock} list
-	 */
-	public Iterable<RollingStock> getRollingStocks() {
-		return rollingStocks;
-	}
+    /**
+     * Returns whether the current user is logged.
+     *
+     * @return {@code true} if the user is logged; {@code false} otherwise
+     */
+    public boolean isLogged() {
+        return isLogged;
+    }
 
-	/**
-	 * Returns the activity stream.
-	 * @return the activity stream
-	 */
-	public Iterable<Activity> getActivityStream() {
-		return activityStream;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof HomeView)) return false;
-		
-		HomeView other = (HomeView) obj;
-		return new EqualsBuilder()
-			.append(this.isLogged, other.isLogged)
-			.append(this.rollingStocks, other.rollingStocks)
-			.append(this.activityStream, other.activityStream)
-			.isEquals();
-	}	
+    /**
+     * Returns the last updated {@code RollingStocks}.
+     *
+     * @return the {@code RollingStock} list
+     */
+    public Iterable<RollingStock> getRollingStocks() {
+        return rollingStocks;
+    }
+
+    /**
+     * Returns the activity stream.
+     *
+     * @return the activity stream
+     */
+    public Iterable<Activity> getActivityStream() {
+        return activityStream;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof HomeView)) return false;
+
+        HomeView other = (HomeView) obj;
+        return new EqualsBuilder()
+                .append(this.isLogged, other.isLogged)
+                .append(this.rollingStocks, other.rollingStocks)
+                .append(this.activityStream, other.activityStream)
+                .isEquals();
+    }
 }

@@ -17,32 +17,32 @@ package com.trenako.values;
 
 /**
  * The model railways eras enumeration.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public enum Era {
-	/**
-	 * Era I: country & private railways.
-	 */
-	I,
-	/**
-	 * Era II: the period after the formation of large state railways. 
-	 */
-	II,
-	/**
-	 * Era III: the new organization of European railroads.
-	 */
-	III,
-	/**
-	 * Era IV: standardized computer lettering on all rolling stock.
-	 */
-	IV,
-	/**
-	 * Era V: the modern era of railroading.
-	 */
-	V,
-	/**
-	 * Era VI
-	 */
-	VI;
+    /**
+     * Era I: country & private railways.
+     */
+    I,
+    /**
+     * Era II: the period after the formation of large state railways.
+     */
+    II,
+    /**
+     * Era III: the new organization of European railroads.
+     */
+    III,
+    /**
+     * Era IV: standardized computer lettering on all rolling stock.
+     */
+    IV,
+    /**
+     * Era V: the modern era of railroading.
+     */
+    V,
+    /**
+     * Era VI
+     */
+    VI;
 }

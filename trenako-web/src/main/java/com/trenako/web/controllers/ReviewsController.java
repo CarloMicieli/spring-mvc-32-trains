@@ -38,67 +38,66 @@ import com.trenako.web.controllers.form.ReviewForm;
 import com.trenako.web.security.UserContext;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Controller
 @RequestMapping("/rollingstocks/{slug}/reviews")
 public class ReviewsController {
 
-	private @Autowired UserContext userContext;
-	private final ReviewsService service;
-	private final RollingStocksService rsService;
-	
-	final static ControllerMessage REVIEW_POSTED_MSG = ControllerMessage.success("review.posted.message");
-	
-	@Autowired
-	public ReviewsController(ReviewsService service, RollingStocksService rsService) {
-		this.service = service;
-		this.rsService = rsService;
-	}
-	
-	void setUserContext(UserContext userContext) {
-		this.userContext = userContext;
-	}
-	
-	@RequestMapping(method = RequestMethod.GET)
-	public String reviews(@PathVariable("slug") String slug, ModelMap model) {
-		
-		RollingStock rs = rsService.findBySlug(slug);
-		RollingStockReviews reviews = service.findByRollingStock(rs);
-		
-		model.addAttribute("reviews", reviews);
-		model.addAttribute("rollingStock", rs);
-		return "review/list";
-	}
-	
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String newReview(@PathVariable("slug") String slug, ModelMap model) {
-		RollingStock rs = rsService.findBySlug(slug);
-		ReviewForm newForm = ReviewForm.newForm(rs, userContext);
-		model.addAttribute(newForm);
-		model.addAttribute("rs", rs);
-		return "review/new";
-	}
-	
-	@RequestMapping(method = RequestMethod.POST)
-	public String postReview(	@Valid @ModelAttribute ReviewForm reviewForm, 
-			BindingResult bindingResult,
-			ModelMap model,
-			RedirectAttributes redirectAtts) {
+    @Autowired
+    private UserContext userContext;
+    private final ReviewsService service;
+    private final RollingStocksService rsService;
 
-		RollingStock rollingStock = rsService.findBySlug(reviewForm.getRsSlug());
-		Review review = reviewForm.buildReview(new Date(), userContext);
-		
-		if (bindingResult.hasErrors()) {
-			model.addAttribute(reviewForm);
-			return "review/new";
-		}
-		
-		service.postReview(rollingStock, review);
-		REVIEW_POSTED_MSG.appendToRedirect(redirectAtts);
-		redirectAtts.addAttribute("slug", rollingStock.getSlug());
-		return "redirect:/rollingstocks/{slug}/reviews";
-	}
+    final static ControllerMessage REVIEW_POSTED_MSG = ControllerMessage.success("review.posted.message");
+
+    @Autowired
+    public ReviewsController(ReviewsService service, RollingStocksService rsService) {
+        this.service = service;
+        this.rsService = rsService;
+    }
+
+    void setUserContext(UserContext userContext) {
+        this.userContext = userContext;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String reviews(@PathVariable("slug") String slug, ModelMap model) {
+
+        RollingStock rs = rsService.findBySlug(slug);
+        RollingStockReviews reviews = service.findByRollingStock(rs);
+
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("rollingStock", rs);
+        return "review/list";
+    }
+
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String newReview(@PathVariable("slug") String slug, ModelMap model) {
+        RollingStock rs = rsService.findBySlug(slug);
+        ReviewForm newForm = ReviewForm.newForm(rs, userContext);
+        model.addAttribute(newForm);
+        model.addAttribute("rs", rs);
+        return "review/new";
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public String postReview(@Valid @ModelAttribute ReviewForm reviewForm,
+                             BindingResult bindingResult,
+                             ModelMap model,
+                             RedirectAttributes redirectAtts) {
+
+        RollingStock rollingStock = rsService.findBySlug(reviewForm.getRsSlug());
+        Review review = reviewForm.buildReview(new Date(), userContext);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute(reviewForm);
+            return "review/new";
+        }
+
+        service.postReview(rollingStock, review);
+        REVIEW_POSTED_MSG.appendToRedirect(redirectAtts);
+        redirectAtts.addAttribute("slug", rollingStock.getSlug());
+        return "redirect:/rollingstocks/{slug}/reviews";
+    }
 }

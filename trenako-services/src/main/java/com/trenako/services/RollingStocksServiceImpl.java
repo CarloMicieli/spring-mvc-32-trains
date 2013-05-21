@@ -33,83 +33,84 @@ import com.trenako.services.view.RollingStockView;
 
 /**
  * A concrete implementation for the {@code RollingStocks} service.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("rollingStocksService")
 public class RollingStocksServiceImpl implements RollingStocksService {
-	
-	private final RollingStocksRepository rollingStocks;
-	private final CommentsService comments;
-	private final ReviewsService reviews;
-	private final WishListsService wishLists;
-	
-	/**
-	 * Creates a {@code RollingStocksServiceImpl}
-	 * @param rollingStocks the {@code RollingStock} repository
-	 * @param comments the {@code Comment} service
-	 * @param reviews the {@code Review} service
-	 * @param wishlistsService the {@code WishList} service
-	 */
-	@Autowired
-	public RollingStocksServiceImpl(RollingStocksRepository rollingStocks,
-			CommentsService comments,
-			ReviewsService reviews, 
-			WishListsService wishLists) {
-		
-		this.rollingStocks = rollingStocks;
-		this.comments = comments;
-		this.reviews = reviews;
-		this.wishLists = wishLists;
-	}
-	
-	@Override
-	public RollingStock findById(ObjectId id) {
-		return rollingStocks.findOne(id);
-	}
-	
-	@Override
-	public RollingStock findBySlug(String slug) {
-		return rollingStocks.findBySlug(slug);
-	}
-	
-	@Override
-	public RollingStockView findRollingStockView(String slug, Account loggedUser) {
-		RollingStock rs = rollingStocks.findBySlug(slug);
-		if (rs == null) {		
-			return null;
-		}
-		
-		RollingStockComments rsComments = comments.findByRollingStock(rs);
-		RollingStockReviews rsReviews = reviews.findByRollingStock(rs);
-		Iterable<WishList> wishlists = loggedUser != null ?
-				wishLists.findByOwner(loggedUser) : null;
-		
-		return new RollingStockView(rs, 
-				rsComments,
-				rsReviews,
-				wishlists);		
-	}
 
-	@Override
-	public void createNew(RollingStock rs) {
-		rollingStocks.save(rs);
-	}
-	
-	@Override
-	public void save(RollingStock rs) {
-		Assert.notNull(rs.getId(), "Rolling stock id is required during update");
-		rollingStocks.save(rs);
-	}
+    private final RollingStocksRepository rollingStocks;
+    private final CommentsService comments;
+    private final ReviewsService reviews;
+    private final WishListsService wishLists;
 
-	@Override
-	public void remove(RollingStock rs) {
-		rollingStocks.delete(rs);
-	}
+    /**
+     * Creates a {@code RollingStocksServiceImpl}
+     *
+     * @param rollingStocks    the {@code RollingStock} repository
+     * @param comments         the {@code Comment} service
+     * @param reviews          the {@code Review} service
+     * @param wishlistsService the {@code WishList} service
+     */
+    @Autowired
+    public RollingStocksServiceImpl(RollingStocksRepository rollingStocks,
+                                    CommentsService comments,
+                                    ReviewsService reviews,
+                                    WishListsService wishLists) {
 
-	@Override
-	public Iterable<RollingStock> findLatestModified(int numberOfItems) {
-		Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "lastModified");
-		return rollingStocks.findAll(pageable).getContent();
-	}
+        this.rollingStocks = rollingStocks;
+        this.comments = comments;
+        this.reviews = reviews;
+        this.wishLists = wishLists;
+    }
+
+    @Override
+    public RollingStock findById(ObjectId id) {
+        return rollingStocks.findOne(id);
+    }
+
+    @Override
+    public RollingStock findBySlug(String slug) {
+        return rollingStocks.findBySlug(slug);
+    }
+
+    @Override
+    public RollingStockView findRollingStockView(String slug, Account loggedUser) {
+        RollingStock rs = rollingStocks.findBySlug(slug);
+        if (rs == null) {
+            return null;
+        }
+
+        RollingStockComments rsComments = comments.findByRollingStock(rs);
+        RollingStockReviews rsReviews = reviews.findByRollingStock(rs);
+        Iterable<WishList> wishlists = loggedUser != null ?
+                wishLists.findByOwner(loggedUser) : null;
+
+        return new RollingStockView(rs,
+                rsComments,
+                rsReviews,
+                wishlists);
+    }
+
+    @Override
+    public void createNew(RollingStock rs) {
+        rollingStocks.save(rs);
+    }
+
+    @Override
+    public void save(RollingStock rs) {
+        Assert.notNull(rs.getId(), "Rolling stock id is required during update");
+        rollingStocks.save(rs);
+    }
+
+    @Override
+    public void remove(RollingStock rs) {
+        rollingStocks.delete(rs);
+    }
+
+    @Override
+    public Iterable<RollingStock> findLatestModified(int numberOfItems) {
+        Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "lastModified");
+        return rollingStocks.findAll(pageable).getContent();
+    }
 }

@@ -19,41 +19,43 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * The content visibility enum.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public enum Visibility {
-	PUBLIC,
-	PRIVATE;
-	
-	/**
-	 * Gets the {@code Visibility} label
-	 * @return the label
-	 */
-	public String label() {
-		return LocalizedEnum.buildKey(this);
-	}
+    PUBLIC,
+    PRIVATE;
 
-	/**
-	 * Parses the string argument as a {@code Visibility}.
-	 * @param vis the string to be parsed
-	 * @return a {@code Visibility} value
-	 */
-	public static Visibility parse(String vis) {
-		return LocalizedEnum.parseString(vis, Visibility.class);
-	}
-	
-	/**
-	 * Parses the string argument as a {@code Visibility}.
-	 * @param vis the string to be parsed
-	 * @param defaultVis the default {@code Visibility} value 
-	 * @return a {@code Visibility} value
-	 */
-	public static Visibility parse(String vis, Visibility defaultVis) {
-		if (StringUtils.isBlank(vis)) {
-			return defaultVis;
-		}
-		return LocalizedEnum.parseString(vis, Visibility.class);
-	}
+    /**
+     * Gets the {@code Visibility} label
+     *
+     * @return the label
+     */
+    public String label() {
+        return LocalizedEnum.buildKey(this);
+    }
+
+    /**
+     * Parses the string argument as a {@code Visibility}.
+     *
+     * @param vis the string to be parsed
+     * @return a {@code Visibility} value
+     */
+    public static Visibility parse(String vis) {
+        return LocalizedEnum.parseString(vis, Visibility.class);
+    }
+
+    /**
+     * Parses the string argument as a {@code Visibility}.
+     *
+     * @param vis        the string to be parsed
+     * @param defaultVis the default {@code Visibility} value
+     * @return a {@code Visibility} value
+     */
+    public static Visibility parse(String vis, Visibility defaultVis) {
+        if (StringUtils.isBlank(vis)) {
+            return defaultVis;
+        }
+        return LocalizedEnum.parseString(vis, Visibility.class);
+    }
 }

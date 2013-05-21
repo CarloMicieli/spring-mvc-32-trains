@@ -28,48 +28,48 @@ import com.trenako.repositories.ReviewsRepository;
 
 /**
  * The interface for the reviews repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("reviewsService")
 public class ReviewsServiceImpl implements ReviewsService {
 
-	private final ReviewsRepository repo;
-	
-	@Autowired
-	public ReviewsServiceImpl(ReviewsRepository repo) {
-		this.repo = repo;
-	}
+    private final ReviewsRepository repo;
 
-	@Override
-	public RollingStockReviews findBySlug(String slug) {
-		return repo.findBySlug(slug);
-	}
+    @Autowired
+    public ReviewsServiceImpl(ReviewsRepository repo) {
+        this.repo = repo;
+    }
 
-	@Override
-	public RollingStockReviews findByRollingStock(RollingStock rollingStock) {
-		RollingStockReviews rsr = repo.findByRollingStock(rollingStock);
-		if (rsr == null) {
-			return RollingStockReviews.defaultRollingStockReviews();
-		}
-		
-		return rsr;
-	}
+    @Override
+    public RollingStockReviews findBySlug(String slug) {
+        return repo.findBySlug(slug);
+    }
 
-	@Override
-	public void postReview(RollingStock rs, Review review) {
-		Assert.notNull(rs.getLabel(), "Rolling stock label required");
-		Assert.notNull(rs.getSlug(), "Rolling stock slug required");
-		
-		if (review.getPostedAt() == null) {
-			review.setPostedAt(new Date());
-		}
-		
-		repo.addReview(rs, review);
-	}
+    @Override
+    public RollingStockReviews findByRollingStock(RollingStock rollingStock) {
+        RollingStockReviews rsr = repo.findByRollingStock(rollingStock);
+        if (rsr == null) {
+            return RollingStockReviews.defaultRollingStockReviews();
+        }
 
-	@Override
-	public void deleteReview(RollingStock rs, Review review) {
-		repo.removeReview(rs, review);
-	}
+        return rsr;
+    }
+
+    @Override
+    public void postReview(RollingStock rs, Review review) {
+        Assert.notNull(rs.getLabel(), "Rolling stock label required");
+        Assert.notNull(rs.getSlug(), "Rolling stock slug required");
+
+        if (review.getPostedAt() == null) {
+            review.setPostedAt(new Date());
+        }
+
+        repo.addReview(rs, review);
+    }
+
+    @Override
+    public void deleteReview(RollingStock rs, Review review) {
+        repo.removeReview(rs, review);
+    }
 }

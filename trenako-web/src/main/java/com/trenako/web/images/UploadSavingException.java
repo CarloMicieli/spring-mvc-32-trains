@@ -19,26 +19,28 @@ import org.springframework.core.NestedRuntimeException;
 
 /**
  * It represents a not checked exception during file upload saving operations.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @SuppressWarnings("serial")
 public class UploadSavingException extends NestedRuntimeException {
 
-	/**
-	 * Creates a new {@code UploadSavingException}.
-	 * @param msg the exception message
-	 */
-	public UploadSavingException(String msg) {
-		super(msg);
-	}
-	
-	/**
-	 * Creates a new {@code UploadSavingException}.
-	 * @param msg the exception message
-	 * @param cause the nested exception
-	 */
-	public UploadSavingException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+    /**
+     * Creates a new {@code UploadSavingException}.
+     *
+     * @param msg the exception message
+     */
+    public UploadSavingException(String msg) {
+        super(msg);
+    }
+
+    /**
+     * Creates a new {@code UploadSavingException}.
+     *
+     * @param msg   the exception message
+     * @param cause the nested exception
+     */
+    public UploadSavingException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }

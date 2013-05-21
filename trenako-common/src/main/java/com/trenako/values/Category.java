@@ -21,84 +21,87 @@ import java.util.List;
 
 /**
  * The enumeration of the model categories.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public enum Category {
-	/**
-	 * The steam locomotives category.
-	 */
-	STEAM_LOCOMOTIVES,
+    /**
+     * The steam locomotives category.
+     */
+    STEAM_LOCOMOTIVES,
 
-	/**
-	 * The diesel locomotives category.
-	 */
-	DIESEL_LOCOMOTIVES,
-	
-	/**
-	 * The electric locomotives category.
-	 */
-	ELECTRIC_LOCOMOTIVES,
-	
-	/**
-	 * The railcar category.
-	 */
-	RAILCARS,
-	
-	/**
-	 * The electric multiple unit category.
-	 */
-	ELECTRIC_MULTIPLE_UNIT,
-	
-	/**
-	 * The freight cars category.
-	 */
-	FREIGHT_CARS,
-	
-	/**
-	 * The passenger cars category.
-	 */
-	PASSENGER_CARS,
-	
-	/**
-	 * The train set category.
-	 */
-	TRAIN_SETS,
-	
-	/**
-	 * The starter sets (usually includes the tracks) category.
-	 */
-	STARTER_SETS;
-	
-	/**
-	 * Gets the {@code Category} label
-	 * @return the label
-	 */
-	public String label() {
-		return LocalizedEnum.buildKey(this);
-	}
+    /**
+     * The diesel locomotives category.
+     */
+    DIESEL_LOCOMOTIVES,
 
-	/**
-	 * Parses the string argument as a {@code Category}.
-	 * @param s the string to be parsed
-	 * @return a {@code Category} value
-	 */
-	public static Category parse(String s) {
-		return LocalizedEnum.parseString(s, Category.class);
-	}
+    /**
+     * The electric locomotives category.
+     */
+    ELECTRIC_LOCOMOTIVES,
 
-	/**
-	 * Returns the list of {@code Category} labels
-	 * @return the {@code Category} list
-	 */
-	public static List<String> list() {
-		int i = 0;
-		String[] labels = new String[Category.values().length];
-		for (Category cat : Category.values()) {
-			labels[i++] = cat.label();
-		}
+    /**
+     * The railcar category.
+     */
+    RAILCARS,
 
-		return Collections.unmodifiableList(
-				Arrays.asList(labels));
-	}
+    /**
+     * The electric multiple unit category.
+     */
+    ELECTRIC_MULTIPLE_UNIT,
+
+    /**
+     * The freight cars category.
+     */
+    FREIGHT_CARS,
+
+    /**
+     * The passenger cars category.
+     */
+    PASSENGER_CARS,
+
+    /**
+     * The train set category.
+     */
+    TRAIN_SETS,
+
+    /**
+     * The starter sets (usually includes the tracks) category.
+     */
+    STARTER_SETS;
+
+    /**
+     * Gets the {@code Category} label
+     *
+     * @return the label
+     */
+    public String label() {
+        return LocalizedEnum.buildKey(this);
+    }
+
+    /**
+     * Parses the string argument as a {@code Category}.
+     *
+     * @param s the string to be parsed
+     * @return a {@code Category} value
+     */
+    public static Category parse(String s) {
+        return LocalizedEnum.parseString(s, Category.class);
+    }
+
+    /**
+     * Returns the list of {@code Category} labels
+     *
+     * @return the {@code Category} list
+     */
+    public static List<String> list() {
+        int i = 0;
+        String[] labels = new String[Category.values().length];
+        for (Category cat : Category.values()) {
+            labels[i++] = cat.label();
+        }
+
+        return Collections.unmodifiableList(
+                Arrays.asList(labels));
+    }
 }

@@ -41,63 +41,65 @@ import com.trenako.results.RollingStockResults;
 
 /**
  * The concrete implementation for the browse repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Repository("browseRepository")
 public class BrowseRepositoryImpl implements BrowseRepository {
-	
-	private final MongoTemplate mongo;
-	
-	/**
-	 * Creates a new {@code BrowseRepositoryImpl}.
-	 * @param mongo the mongo template
-	 */
-	@Autowired
-	public BrowseRepositoryImpl(MongoTemplate mongo) {
-		this.mongo = mongo;
-	}
 
-	@Override
-	public Iterable<Brand> getBrands() {
-		return findAll(Brand.class);
-	}
+    private final MongoTemplate mongo;
 
-	@Override
-	public Iterable<Scale> getScales() {
-		return findAll(Scale.class);
-	}
+    /**
+     * Creates a new {@code BrowseRepositoryImpl}.
+     *
+     * @param mongo the mongo template
+     */
+    @Autowired
+    public BrowseRepositoryImpl(MongoTemplate mongo) {
+        this.mongo = mongo;
+    }
 
-	@Override
-	public Iterable<Railway> getRailways() {
-		return findAll(Railway.class);
-	}
+    @Override
+    public Iterable<Brand> getBrands() {
+        return findAll(Brand.class);
+    }
 
-	@Override
-	public PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range) {
-		return runRangeQuery(MongoSearchCriteria.buildCriteria(sc), sc, range);
-	}
+    @Override
+    public Iterable<Scale> getScales() {
+        return findAll(Scale.class);
+    }
 
-	@Override
-	public PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range) {
-		return runRangeQuery(where("tag").is(tag), new SearchCriteria(), range);
-	}
+    @Override
+    public Iterable<Railway> getRailways() {
+        return findAll(Railway.class);
+    }
 
-	@Override
-	public <T> T findBySlug(String slug, Class<T> entityClass) {
-		return mongo.findOne(query(where("slug").is(slug)), entityClass);
-	}
-	
-	private RollingStockResults runRangeQuery(Criteria criteria, SearchCriteria sc, RangeRequest range) {
-		final Query query = buildQuery(criteria, range);
-		final List<RollingStock> results = mongo.find(query, RollingStock.class);
-		return new RollingStockResults(results, sc, range);
-	}
-	
-	private static final Sort NAME_SORT = new Sort(Direction.ASC, "name");
-	private <T> Iterable<T> findAll(Class<T> clazz) {
-		Query query = new Query();
-		query.with(NAME_SORT);
-		return mongo.find(query, clazz);
-	}
+    @Override
+    public PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range) {
+        return runRangeQuery(MongoSearchCriteria.buildCriteria(sc), sc, range);
+    }
+
+    @Override
+    public PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range) {
+        return runRangeQuery(where("tag").is(tag), new SearchCriteria(), range);
+    }
+
+    @Override
+    public <T> T findBySlug(String slug, Class<T> entityClass) {
+        return mongo.findOne(query(where("slug").is(slug)), entityClass);
+    }
+
+    private RollingStockResults runRangeQuery(Criteria criteria, SearchCriteria sc, RangeRequest range) {
+        final Query query = buildQuery(criteria, range);
+        final List<RollingStock> results = mongo.find(query, RollingStock.class);
+        return new RollingStockResults(results, sc, range);
+    }
+
+    private static final Sort NAME_SORT = new Sort(Direction.ASC, "name");
+
+    private <T> Iterable<T> findAll(Class<T> clazz) {
+        Query query = new Query();
+        query.with(NAME_SORT);
+        return mongo.find(query, clazz);
+    }
 }

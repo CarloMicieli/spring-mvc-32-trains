@@ -19,104 +19,106 @@ import com.trenako.entities.Collection;
 import com.trenako.entities.WishList;
 
 /**
- *
- * @author Carlo Micieli 
- *
+ * @author Carlo Micieli
  */
 public class ActivityContext {
 
-	public static final String COLLECTION = "collection";
-	public static final String WISH_LIST = "wishList";
+    public static final String COLLECTION = "collection";
+    public static final String WISH_LIST = "wishList";
 
-	private String contextType;
-	private String name;
-	private String description;
+    private String contextType;
+    private String name;
+    private String description;
 
-	/**
-	 * Creates an empty {@code ActivityContext}.
-	 */
-	public ActivityContext() {
-	}
+    /**
+     * Creates an empty {@code ActivityContext}.
+     */
+    public ActivityContext() {
+    }
 
-	/**
-	 * Creates a new {@code ActivityContext}.
-	 * @param contextType the context type
-	 * @param name the name
-	 * @param description the description
-	 */
-	public ActivityContext(String contextType, String name, String description) {
-		this.contextType = contextType;
-		this.name = name;
-		this.description = description;
-	}
+    /**
+     * Creates a new {@code ActivityContext}.
+     *
+     * @param contextType the context type
+     * @param name        the name
+     * @param description the description
+     */
+    public ActivityContext(String contextType, String name, String description) {
+        this.contextType = contextType;
+        this.name = name;
+        this.description = description;
+    }
 
-	/**
-	 * Returns the {@code ActivityContext} type.
-	 * @return the type
-	 */
-	public String getContextType() {
-		return contextType;
-	}
-	
-	public void setContextType(String contextType) {
-		this.contextType = contextType;
-	}
+    /**
+     * Returns the {@code ActivityContext} type.
+     *
+     * @return the type
+     */
+    public String getContextType() {
+        return contextType;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setContextType(String contextType) {
+        this.contextType = contextType;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof ActivityContext)) return false;
-		
-		ActivityContext other = (ActivityContext) obj;
-		return this.contextType.equals(other.contextType) &&
-			this.name.equals(other.name) &&
-			this.description.equals(other.description);
-	}
-	
-	@Override
-	public String toString() {
-		return new StringBuilder()
-			.append("activityContext{type: ")
-			.append(getContextType())
-			.append(", name: ")
-			.append(getName())
-			.append(", description: ")
-			.append(getDescription())
-			.append("}")
-			.toString();
-	}
-	
-	
-	/**
-	 * Creates a new {@code ActivityContext} for the provided {@code Collection}.
-	 * @return a new {@code ActivityContext}
-	 */
-	public static ActivityContext collectionContext(Collection c) {
-		return new ActivityContext(COLLECTION, c.getSlug(), "");
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * Creates a new {@code ActivityContext} for the provided {@code WishList}.
-	 * @return a new {@code ActivityContext}
-	 */
-	public static ActivityContext wishListContext(WishList w) {
-		return new ActivityContext(WISH_LIST, w.getSlug(), w.getName());
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof ActivityContext)) return false;
+
+        ActivityContext other = (ActivityContext) obj;
+        return this.contextType.equals(other.contextType) &&
+                this.name.equals(other.name) &&
+                this.description.equals(other.description);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("activityContext{type: ")
+                .append(getContextType())
+                .append(", name: ")
+                .append(getName())
+                .append(", description: ")
+                .append(getDescription())
+                .append("}")
+                .toString();
+    }
+
+
+    /**
+     * Creates a new {@code ActivityContext} for the provided {@code Collection}.
+     *
+     * @return a new {@code ActivityContext}
+     */
+    public static ActivityContext collectionContext(Collection c) {
+        return new ActivityContext(COLLECTION, c.getSlug(), "");
+    }
+
+    /**
+     * Creates a new {@code ActivityContext} for the provided {@code WishList}.
+     *
+     * @return a new {@code ActivityContext}
+     */
+    public static ActivityContext wishListContext(WishList w) {
+        return new ActivityContext(WISH_LIST, w.getSlug(), w.getName());
+    }
 
 }

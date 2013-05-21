@@ -31,72 +31,76 @@ import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Aspect
 @Component
 public class ActivityAspect {
-	
-	private final ActivityStream activityStream;
-	
-	@Autowired
-	public ActivityAspect(ActivityStream activityStream) {
-		this.activityStream = activityStream;
-	}
-	
-	//
-	// pointcuts
-	
-	@Pointcut("execution(* com.trenako.services.CommentsService.postComment(..)) && args(rs, comment)")
-	protected void postComment(RollingStock rs, Comment comment) {}
-	
-	@Pointcut("execution(* com.trenako.services.ReviewsService.postReview(..)) && args(rs, review)")
-	protected void postReview(RollingStock rs, Review review) {}
-	
-	@Pointcut("execution(* com.trenako.services.RollingStocksService.createNew(..)) && args(rs)")
-	protected void createRollingStock(RollingStock rs) {}
-	
-	@Pointcut("execution(* com.trenako.services.RollingStocksService.save(..)) && args(rs)")
-	protected void updateRollingStock(RollingStock rs) {}
-	
-	@Pointcut("execution(* com.trenako.services.CollectionsService.addRollingStock(..)) && args(owner, item)")
-	protected void addCollection(Account owner, CollectionItem item) {}
-	
-	@Pointcut("execution(* com.trenako.services.WishListsService.addItem(..)) && args(wishList, newItem)")
-	protected void addWishlist(WishList wishList, WishListItem newItem) {}
-	
-	//
-	// AOP advises
-	
-	@AfterReturning("postComment(rs, comment)")
-	public void recordCommentPosting(JoinPoint jp, RollingStock rs, Comment comment) {
-		activityStream.comment(rs, comment);
-	}
-	
-	@AfterReturning("postReview(rs, review)")
-	public void recordReviewPosting(JoinPoint jp, RollingStock rs, Review review) {
-		activityStream.review(rs, review);
-	}
-	
-	@AfterReturning("createRollingStock(rs)")
-	public void recordRollingStockCreation(JoinPoint jp, RollingStock rs) {
-		activityStream.createRollingStock(rs);
-	}
-	
-	@AfterReturning("updateRollingStock(rs)")
-	public void recordRollingStockUpdate(JoinPoint jp, RollingStock rs) {
-		activityStream.changeRollingStock(rs);
-	}
-	
-	@AfterReturning("addCollection(owner, item)")
-	public void recordCollectionChange(JoinPoint jp, Account owner, CollectionItem item) {
-		activityStream.collection(owner, item);
-	}
-	
-	@AfterReturning("addWishlist(wishList, newItem)")
-	public void recordWishListChange(JoinPoint jp, WishList wishList, WishListItem newItem) {
-		activityStream.wishList(wishList, newItem);
-	}
+
+    private final ActivityStream activityStream;
+
+    @Autowired
+    public ActivityAspect(ActivityStream activityStream) {
+        this.activityStream = activityStream;
+    }
+
+    //
+    // pointcuts
+
+    @Pointcut("execution(* com.trenako.services.CommentsService.postComment(..)) && args(rs, comment)")
+    protected void postComment(RollingStock rs, Comment comment) {
+    }
+
+    @Pointcut("execution(* com.trenako.services.ReviewsService.postReview(..)) && args(rs, review)")
+    protected void postReview(RollingStock rs, Review review) {
+    }
+
+    @Pointcut("execution(* com.trenako.services.RollingStocksService.createNew(..)) && args(rs)")
+    protected void createRollingStock(RollingStock rs) {
+    }
+
+    @Pointcut("execution(* com.trenako.services.RollingStocksService.save(..)) && args(rs)")
+    protected void updateRollingStock(RollingStock rs) {
+    }
+
+    @Pointcut("execution(* com.trenako.services.CollectionsService.addRollingStock(..)) && args(owner, item)")
+    protected void addCollection(Account owner, CollectionItem item) {
+    }
+
+    @Pointcut("execution(* com.trenako.services.WishListsService.addItem(..)) && args(wishList, newItem)")
+    protected void addWishlist(WishList wishList, WishListItem newItem) {
+    }
+
+    //
+    // AOP advises
+
+    @AfterReturning("postComment(rs, comment)")
+    public void recordCommentPosting(JoinPoint jp, RollingStock rs, Comment comment) {
+        activityStream.comment(rs, comment);
+    }
+
+    @AfterReturning("postReview(rs, review)")
+    public void recordReviewPosting(JoinPoint jp, RollingStock rs, Review review) {
+        activityStream.review(rs, review);
+    }
+
+    @AfterReturning("createRollingStock(rs)")
+    public void recordRollingStockCreation(JoinPoint jp, RollingStock rs) {
+        activityStream.createRollingStock(rs);
+    }
+
+    @AfterReturning("updateRollingStock(rs)")
+    public void recordRollingStockUpdate(JoinPoint jp, RollingStock rs) {
+        activityStream.changeRollingStock(rs);
+    }
+
+    @AfterReturning("addCollection(owner, item)")
+    public void recordCollectionChange(JoinPoint jp, Account owner, CollectionItem item) {
+        activityStream.collection(owner, item);
+    }
+
+    @AfterReturning("addWishlist(wishList, newItem)")
+    public void recordWishListChange(JoinPoint jp, WishList wishList, WishListItem newItem) {
+        activityStream.wishList(wishList, newItem);
+    }
 }

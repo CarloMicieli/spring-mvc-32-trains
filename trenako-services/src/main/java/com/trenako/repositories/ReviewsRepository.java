@@ -23,61 +23,62 @@ import com.trenako.entities.RollingStockReviews;
 
 /**
  * The interface for the {@code RollingStock} reviews repository.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface ReviewsRepository {
 
-	/**
-	 * Finds the {@code RollingStockReviews} with the provided unique id.
-	 *
-	 * @param id the review id
-	 * @return the {@code RollingStockReviews} if found; {@code null} otherwise
-	 */
-	RollingStockReviews findById(ObjectId id);
-	
-	/**
-	 * Finds the {@code RollingStockReviews} with the provided slug.
-	 *
-	 * @param slug the review slug
-	 * @return the {@code RollingStockReviews} if found; {@code null} otherwise
-	 */
-	RollingStockReviews findBySlug(String slug);
-	
-	/**
-	 * Finds the {@code RollingStockReviews} for the provided {@code RollingStock}.
-	 *
-	 * @param rollingStock the rolling stock
-	 * @return the list of reviews
-	 */	
-	RollingStockReviews findByRollingStock(RollingStock rollingStock);
-		
-	/**
-	 * Adds a new user review to the provided {@code RollingStock}.
-	 *
-	 * @param rs the {@code RollingStock} under review
-	 * @param review the review to be saved	 
-	 */
-	void addReview(RollingStock rs, Review review);
-	
-	/**
-	 * Removes the review from the provided {@code RollingStock}.
-	 *
-	 * @param rs the {@code RollingStock} under review
-	 * @param review the review to be removed	 
-	 */
-	void removeReview(RollingStock rs, Review review);
-	
-	/**
-	 * Saves all the reviews for the {@code RollingStock}.
-	 * @param rsReview the rolling stock reviews
-	 */
-	void save(RollingStockReviews rsReviews);
-	
-	/**
-	 * Removes all the reviews for the {@code RollingStock}.
-	 * @param rsReview the rolling stock reviews
-	 */
-	void remove(RollingStockReviews rsReviews);
+    /**
+     * Finds the {@code RollingStockReviews} with the provided unique id.
+     *
+     * @param id the review id
+     * @return the {@code RollingStockReviews} if found; {@code null} otherwise
+     */
+    RollingStockReviews findById(ObjectId id);
+
+    /**
+     * Finds the {@code RollingStockReviews} with the provided slug.
+     *
+     * @param slug the review slug
+     * @return the {@code RollingStockReviews} if found; {@code null} otherwise
+     */
+    RollingStockReviews findBySlug(String slug);
+
+    /**
+     * Finds the {@code RollingStockReviews} for the provided {@code RollingStock}.
+     *
+     * @param rollingStock the rolling stock
+     * @return the list of reviews
+     */
+    RollingStockReviews findByRollingStock(RollingStock rollingStock);
+
+    /**
+     * Adds a new user review to the provided {@code RollingStock}.
+     *
+     * @param rs     the {@code RollingStock} under review
+     * @param review the review to be saved
+     */
+    void addReview(RollingStock rs, Review review);
+
+    /**
+     * Removes the review from the provided {@code RollingStock}.
+     *
+     * @param rs     the {@code RollingStock} under review
+     * @param review the review to be removed
+     */
+    void removeReview(RollingStock rs, Review review);
+
+    /**
+     * Saves all the reviews for the {@code RollingStock}.
+     *
+     * @param rsReview the rolling stock reviews
+     */
+    void save(RollingStockReviews rsReviews);
+
+    /**
+     * Removes all the reviews for the {@code RollingStock}.
+     *
+     * @param rsReview the rolling stock reviews
+     */
+    void remove(RollingStockReviews rsReviews);
 }

@@ -39,53 +39,57 @@ import com.trenako.values.OptionFamily;
  */
 public interface OptionsService {
 
-	/**
-	 * Finds the {@link Option} with the provided id.
-	 * @param id the unique id
-	 * @return a {@code Option} if found; {@code null} otherwise
-	 */
-	Option findById(ObjectId id);
+    /**
+     * Finds the {@link Option} with the provided id.
+     *
+     * @param id the unique id
+     * @return a {@code Option} if found; {@code null} otherwise
+     */
+    Option findById(ObjectId id);
 
-	/**
-	 * Finds the {@link Option} with the provided name.
-	 * @param name the option name
-	 * @return a {@code Option} if found; {@code null} otherwise
-	 */
-	Option findByName(String name);
+    /**
+     * Finds the {@link Option} with the provided name.
+     *
+     * @param name the option name
+     * @return a {@code Option} if found; {@code null} otherwise
+     */
+    Option findByName(String name);
 
-	/**
-	 * Returns the list of {@link Option} with the same {@link OptionFamily}.
-	 * <p>
-	 * This method returns all {@code Option} objects, sort by name. 
-	 * </p>
-	 *
-	 * @param family the {@code OptionFamily}
-	 * @return a {@code Option} list
-	 * @see com.trenako.values.OptionFamily
-	 */	 
-	Iterable<Option> findByFamily(OptionFamily family);
+    /**
+     * Returns the list of {@link Option} with the same {@link OptionFamily}.
+     * <p>
+     * This method returns all {@code Option} objects, sort by name.
+     * </p>
+     *
+     * @param family the {@code OptionFamily}
+     * @return a {@code Option} list
+     * @see com.trenako.values.OptionFamily
+     */
+    Iterable<Option> findByFamily(OptionFamily family);
 
-	/**
-	 * Returns the list of all {@link Option} objects sorted by name.
-	 *
-	 * @return a {@code Option} list
-	 */	 
-	Iterable<Option> findAll();
+    /**
+     * Returns the list of all {@link Option} objects sorted by name.
+     *
+     * @return a {@code Option} list
+     */
+    Iterable<Option> findAll();
 
-	/**
-	 * Persists the {@link Option} changes in the data store.
-	 * <p>
-	 * This method performs a "upsert": if the {@code Option} is not present in the data store
-	 * a new {@code Option} is created; otherwise the method will update the existing {@code Option}. 
-	 * </p>	 
-	 * @param option the {@code Option} to be saved
-	 */
-	void save(Option option);
+    /**
+     * Persists the {@link Option} changes in the data store.
+     * <p>
+     * This method performs a "upsert": if the {@code Option} is not present in the data store
+     * a new {@code Option} is created; otherwise the method will update the existing {@code Option}.
+     * </p>
+     *
+     * @param option the {@code Option} to be saved
+     */
+    void save(Option option);
 
-	/**
-	 * Removes a {@link Option} from the data store.
-	 * @param option the {@code Option} to be removed
-	 */
-	void remove(Option option);
+    /**
+     * Removes a {@link Option} from the data store.
+     *
+     * @param option the {@code Option} to be removed
+     */
+    void remove(Option option);
 
 }

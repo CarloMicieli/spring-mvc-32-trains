@@ -33,41 +33,41 @@ import com.trenako.services.view.ProfileView;
 
 /**
  * It represents the concrete implementation for the {@code ProfileService} interface.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("profilesService")
 public class ProfilesServiceImpl implements ProfilesService {
 
-	private final CollectionsRepository collections;
-	private final WishListsRepository wishLists;
-	private final ActivityStream activityStream;
-	
-	@Autowired
-	public ProfilesServiceImpl(CollectionsRepository collections, 
-			WishListsRepository wishLists,
-			ActivityStream activityStream) {
-		
-		this.collections = collections;
-		this.wishLists = wishLists;
-		this.activityStream = activityStream;
-	}
+    private final CollectionsRepository collections;
+    private final WishListsRepository wishLists;
+    private final ActivityStream activityStream;
 
-	@Override
-	public ProfileView findProfileView(Account owner) {
-		
-		Iterable<Activity> userActivity = activityStream.userActivity(owner, 10);
-		
-		Collection collection = collections.findByOwner(owner);
-		if (collection == null) {
-			collection = new Collection(owner);
-		}
-		
-		List<WishList> lists = (List<WishList>) wishLists.findAllByOwner(owner, 10);
-		if (lists == null) {
-			lists = Collections.emptyList();
-		}
-		
-		return new ProfileView(userActivity, collection, lists, ProfileOptions.DEFAULT);
-	}
+    @Autowired
+    public ProfilesServiceImpl(CollectionsRepository collections,
+                               WishListsRepository wishLists,
+                               ActivityStream activityStream) {
+
+        this.collections = collections;
+        this.wishLists = wishLists;
+        this.activityStream = activityStream;
+    }
+
+    @Override
+    public ProfileView findProfileView(Account owner) {
+
+        Iterable<Activity> userActivity = activityStream.userActivity(owner, 10);
+
+        Collection collection = collections.findByOwner(owner);
+        if (collection == null) {
+            collection = new Collection(owner);
+        }
+
+        List<WishList> lists = (List<WishList>) wishLists.findAllByOwner(owner, 10);
+        if (lists == null) {
+            lists = Collections.emptyList();
+        }
+
+        return new ProfileView(userActivity, collection, lists, ProfileOptions.DEFAULT);
+    }
 }

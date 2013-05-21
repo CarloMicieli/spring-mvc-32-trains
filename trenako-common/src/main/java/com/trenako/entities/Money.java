@@ -27,175 +27,183 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * It represents a class which encapsulates all information about amount of money, 
+ * It represents a class which encapsulates all information about amount of money,
  * such as its value and its currency.
  *
  * @author Carlo Micieli
- *
  */
 public class Money {
 
-	private static final Money EMPTY_VALUE = new Money(0, "");
-	public static final BigDecimal MONEY_VALUE_FACTOR = BigDecimal.valueOf(100);
+    private static final Money EMPTY_VALUE = new Money(0, "");
+    public static final BigDecimal MONEY_VALUE_FACTOR = BigDecimal.valueOf(100);
 
-	@Field("val")
-	@Range(min = 0, max = 999900, message = "money.value.range.notmet")
-	private int value;
-	
-	@Field("cur")
-	private String currency;
-	
-	/**
-	 * Creates an empty {@code Money}.
-	 */
-	public Money() {
-	}
-	
-	/**
-	 * Creates a new {@code Money}.
-	 * @param value the {@code Money} value
-	 * @param currency the {@code Money} currency
-	 */
-	public Money(int value, String currency) {
-		this.value = value;
-		this.currency = currency;
-	}
-	
-	/**
-	 * Creates a new {@code Money} using the currency from 
-	 * the provided Locale.
-	 *
-	 * @param value the {@code Money} value
-	 * @param locale the currency locale
-	 */
-	public Money(int value, Locale locale) {
-		this(value, Currency.getInstance(locale).getCurrencyCode());
-	}
-	
-	/**
-	 * Creates a new {@code Money}.
-	 *
-	 * @param value the {@code Money} value
-	 * @param currency the {@code Money} currency
-	 */
-	public Money(BigDecimal value, String currency) {
-		this(intValue(value), currency);
-	}
-	
-	/**
-	 * Creates a new {@code Money}.
-	 *
-	 * @param value the {@code Money} value
-	 * @param currency the {@code Money} currency
-	 */
-	public Money(BigDecimal value, Currency currency) {
-		this(intValue(value), currency.getCurrencyCode());
-	}
-	
-	/**
-	 * Build a new {@code Money} getting the currency form the user profile.
-	 * @param val the money value
-	 * @param user the user
-	 * @return a {@code Money}
-	 */
-	public static Money newMoney(BigDecimal val, Account user) {
-		if (val == null) {
-			return null;
-		}
-		return new Money(val, user.getProfile().getCurrency());
-	}
-	
-	/**
-	 * Returns the {@code NULL} value for {@code Money}.
-	 * @return the default value
-	 */
-	public static Money nullMoney() {
-		return EMPTY_VALUE;
-	}
+    @Field("val")
+    @Range(min = 0, max = 999900, message = "money.value.range.notmet")
+    private int value;
 
-	/**
-	 * Returns the {@code Money} value.
-	 * @return the {@code Money} value
-	 */
-	public int getValue() {
-		return value;
-	}
-	
-	public BigDecimal getDecimalValue() {
-		return moneyValue(this);
-	}
-	
-	/**
-	 * Sets the {@code Money} value.
-	 * @param value the {@code Money} value
-	 */	
-	public void setValue(int value) {
-		this.value = value;
-	}
-	
-	/**
-	 * Returns the {@code Money} currency.
-	 * @return the {@code Money} currency
-	 */	
-	public String getCurrency() {
-		return currency;
-	}
-	
-	/**
-	 * Sets the {@code Money} currency.
-	 * @param currency the {@code Money} currency
-	 */	
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-	
-	/**
-	 * Checks whether the current {@code Money} is without a meaningful value.
-	 * @return {@code true} if the {@code Money} is empty; {@code false} otherwise
-	 */
-	public boolean isEmpty() {
-		return StringUtils.isBlank(currency) && value == 0;
-	}
-	
-	/**
-	 * Returns the value part of the provided {@code Money}.
-	 * @return the value
-	 */
-	public static BigDecimal moneyValue(Money money) {
-		int val = (money != null) ? money.getValue() : 0;
-		return 	BigDecimal.valueOf(val).divide(Money.MONEY_VALUE_FACTOR);
-	}
-	
-	@Override 
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof Money)) return false;
-		
-		Money other = (Money) obj;
-		return this.value == other.value &&
-			this.currency.equals(other.currency);
-	}
-	
-	@Override
-	public String toString() {
-		if (this == EMPTY_VALUE) {
-			return "-";
-		}
-		
-		BigDecimal v = BigDecimal.valueOf(getValue()).divide(MONEY_VALUE_FACTOR);
+    @Field("cur")
+    private String currency;
 
-		NumberFormat nf = NumberFormat.getCurrencyInstance();
+    /**
+     * Creates an empty {@code Money}.
+     */
+    public Money() {
+    }
 
-		// the user may have selected a different currency than the default
-		Currency currency = Currency.getInstance(getCurrency());
-		nf.setCurrency(currency);
-		nf.setMinimumFractionDigits(2);
+    /**
+     * Creates a new {@code Money}.
+     *
+     * @param value    the {@code Money} value
+     * @param currency the {@code Money} currency
+     */
+    public Money(int value, String currency) {
+        this.value = value;
+        this.currency = currency;
+    }
 
-		return nf.format(v);
-	}
-	
-	private static int intValue(BigDecimal d) {
-		return d.setScale(2, BigDecimal.ROUND_DOWN)
-				.multiply(MONEY_VALUE_FACTOR).intValue();
-	}
+    /**
+     * Creates a new {@code Money} using the currency from
+     * the provided Locale.
+     *
+     * @param value  the {@code Money} value
+     * @param locale the currency locale
+     */
+    public Money(int value, Locale locale) {
+        this(value, Currency.getInstance(locale).getCurrencyCode());
+    }
+
+    /**
+     * Creates a new {@code Money}.
+     *
+     * @param value    the {@code Money} value
+     * @param currency the {@code Money} currency
+     */
+    public Money(BigDecimal value, String currency) {
+        this(intValue(value), currency);
+    }
+
+    /**
+     * Creates a new {@code Money}.
+     *
+     * @param value    the {@code Money} value
+     * @param currency the {@code Money} currency
+     */
+    public Money(BigDecimal value, Currency currency) {
+        this(intValue(value), currency.getCurrencyCode());
+    }
+
+    /**
+     * Build a new {@code Money} getting the currency form the user profile.
+     *
+     * @param val  the money value
+     * @param user the user
+     * @return a {@code Money}
+     */
+    public static Money newMoney(BigDecimal val, Account user) {
+        if (val == null) {
+            return null;
+        }
+        return new Money(val, user.getProfile().getCurrency());
+    }
+
+    /**
+     * Returns the {@code NULL} value for {@code Money}.
+     *
+     * @return the default value
+     */
+    public static Money nullMoney() {
+        return EMPTY_VALUE;
+    }
+
+    /**
+     * Returns the {@code Money} value.
+     *
+     * @return the {@code Money} value
+     */
+    public int getValue() {
+        return value;
+    }
+
+    public BigDecimal getDecimalValue() {
+        return moneyValue(this);
+    }
+
+    /**
+     * Sets the {@code Money} value.
+     *
+     * @param value the {@code Money} value
+     */
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    /**
+     * Returns the {@code Money} currency.
+     *
+     * @return the {@code Money} currency
+     */
+    public String getCurrency() {
+        return currency;
+    }
+
+    /**
+     * Sets the {@code Money} currency.
+     *
+     * @param currency the {@code Money} currency
+     */
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    /**
+     * Checks whether the current {@code Money} is without a meaningful value.
+     *
+     * @return {@code true} if the {@code Money} is empty; {@code false} otherwise
+     */
+    public boolean isEmpty() {
+        return StringUtils.isBlank(currency) && value == 0;
+    }
+
+    /**
+     * Returns the value part of the provided {@code Money}.
+     *
+     * @return the value
+     */
+    public static BigDecimal moneyValue(Money money) {
+        int val = (money != null) ? money.getValue() : 0;
+        return BigDecimal.valueOf(val).divide(Money.MONEY_VALUE_FACTOR);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Money)) return false;
+
+        Money other = (Money) obj;
+        return this.value == other.value &&
+                this.currency.equals(other.currency);
+    }
+
+    @Override
+    public String toString() {
+        if (this == EMPTY_VALUE) {
+            return "-";
+        }
+
+        BigDecimal v = BigDecimal.valueOf(getValue()).divide(MONEY_VALUE_FACTOR);
+
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+
+        // the user may have selected a different currency than the default
+        Currency currency = Currency.getInstance(getCurrency());
+        nf.setCurrency(currency);
+        nf.setMinimumFractionDigits(2);
+
+        return nf.format(v);
+    }
+
+    private static int intValue(BigDecimal d) {
+        return d.setScale(2, BigDecimal.ROUND_DOWN)
+                .multiply(MONEY_VALUE_FACTOR).intValue();
+    }
 }

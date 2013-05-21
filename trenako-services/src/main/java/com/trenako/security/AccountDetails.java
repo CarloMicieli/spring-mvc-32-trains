@@ -27,76 +27,77 @@ import com.trenako.entities.Account;
 
 /**
  * It represents a user details wrapper for the Authentication object.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class AccountDetails implements UserDetails {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final Account account;
+    private final Account account;
 
-	/**
-	 * Creates a new {@link AccountDetails} instance.
-	 * @param account the account wrapped by this details.
-	 */
-	public AccountDetails(Account account) {
-		this.account = account;
-	}
-	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<String> l = account.getRoles();
-		String[] roles = l==null ?
-				new String[] {"ROLE_USER"} : l.toArray(new String[l.size()]);
+    /**
+     * Creates a new {@link AccountDetails} instance.
+     *
+     * @param account the account wrapped by this details.
+     */
+    public AccountDetails(Account account) {
+        this.account = account;
+    }
 
-		return Collections.unmodifiableList(
-			AuthorityUtils.createAuthorityList(roles));
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<String> l = account.getRoles();
+        String[] roles = l == null ?
+                new String[]{"ROLE_USER"} : l.toArray(new String[l.size()]);
 
-	@Override
-	public String getPassword() {
-		return account.getPassword();
-	}
+        return Collections.unmodifiableList(
+                AuthorityUtils.createAuthorityList(roles));
+    }
 
-	@Override
-	public String getUsername() {
-		return account.getEmailAddress();
-	}
+    @Override
+    public String getPassword() {
+        return account.getPassword();
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return !account.isExpired();
-	}
+    @Override
+    public String getUsername() {
+        return account.getEmailAddress();
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return !account.isLocked();
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return !account.isExpired();
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-	
-	@Override
-	public boolean isEnabled() {
-		return account.isEnabled();
-	}
-	
-	public String getDisplayName() {
-		return account.getDisplayName();
-	}
-	
-	public Account getAccount() {
-		return account;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof AccountDetails)) return false;
-		
-		AccountDetails other = (AccountDetails) obj;
-		return this.account.equals(other.account);
-	}
+    @Override
+    public boolean isAccountNonLocked() {
+        return !account.isLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return account.isEnabled();
+    }
+
+    public String getDisplayName() {
+        return account.getDisplayName();
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof AccountDetails)) return false;
+
+        AccountDetails other = (AccountDetails) obj;
+        return this.account.equals(other.account);
+    }
 }

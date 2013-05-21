@@ -18,19 +18,17 @@ package com.trenako.activities;
 import com.trenako.values.LocalizedEnum;
 
 /**
- *
- * @author Carlo Micieli 
- *
+ * @author Carlo Micieli
  */
 public enum ActivityVerb {
-	COMMENT,
-	REVIEW,
-	RS_INSERT,
-	RS_UPDATE,
-	ADD_COLLECTION,
-	ADD_WISH_LIST;
+    COMMENT,
+    REVIEW,
+    RS_INSERT,
+    RS_UPDATE,
+    ADD_COLLECTION,
+    ADD_WISH_LIST;
 
-	public String label() {
-		return LocalizedEnum.buildKey(this);
-	}
+    public String label() {
+        return LocalizedEnum.buildKey(this);
+    }
 }

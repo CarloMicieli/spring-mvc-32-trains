@@ -27,132 +27,139 @@ import com.trenako.AppGlobals;
 
 /**
  * It represents an immutable search range for rolling stocks.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public final class SearchRange {
 
-	private final Object since;
-	private final Object max;
-	private final Sort sort;
-	private final int pageSize;
-	
-	/**
-	 * Creates a new {@code SearchRange}.
-	 * @param pageSize the page size
-	 * @param sort the sorting information
-	 * @param since the first item in the result set
-	 * @param max the last item in the result set
-	 */
-	public SearchRange(int pageSize, Sort sort, Object since, Object max) {
-		this.pageSize = pageSize;
-		this.sort = sort;
-		this.since = since;
-		this.max = max;
-	}
-	
-	/**
-	 * Returns the minimum {@code id} in the result page.
-	 * @return the minimum {@code id}
-	 */
-	public Object getSince() {
-		return since;
-	}
+    private final Object since;
+    private final Object max;
+    private final Sort sort;
+    private final int pageSize;
 
-	/**
-	 * Returns the maximum {@code id} in the result page.
-	 * @return the maximum {@code id}
-	 */
-	public Object getMax() {
-		return max;
-	}
+    /**
+     * Creates a new {@code SearchRange}.
+     *
+     * @param pageSize the page size
+     * @param sort     the sorting information
+     * @param since    the first item in the result set
+     * @param max      the last item in the result set
+     */
+    public SearchRange(int pageSize, Sort sort, Object since, Object max) {
+        this.pageSize = pageSize;
+        this.sort = sort;
+        this.since = since;
+        this.max = max;
+    }
 
-	/**
-	 * Returns the sort.
-	 * @return the sort
-	 */
-	public Sort getSort() {
-		if (sort == null) {
-			return RangeRequest.DEFAULT_SORT;
-		}
-		return sort;
-	}
+    /**
+     * Returns the minimum {@code id} in the result page.
+     *
+     * @return the minimum {@code id}
+     */
+    public Object getSince() {
+        return since;
+    }
 
-	/**
-	 * Returns the page size.
-	 * @return the page size
-	 */
-	public int getPageSize() {
-		return pageSize;
-	}
-	
-	/**
-	 * Checks whether the current sort has the default value.
-	 * @return {@code true} if sort is the default; {@code false} otherwise
-	 */
-	public boolean isDefaultSort() {
-		if (getSort() == null) return true;
-		return getSort().equals(RangeRequest.DEFAULT_SORT);
-	}
-	
-	/**
-	 * Checks whether the current page size has the default value.
-	 * @return {@code true} if page size is the default; {@code false} otherwise
-	 */
-	public boolean isDefaultPageSize() {
-		return getPageSize() == AppGlobals.PAGE_SIZE;
-	}
+    /**
+     * Returns the maximum {@code id} in the result page.
+     *
+     * @return the maximum {@code id}
+     */
+    public Object getMax() {
+        return max;
+    }
 
-	/**
-	 * Returns the current {@code SearchRange} as a {@code Map}.
-	 * <p>
-	 * The returned maps contain only not default values.
-	 * </p>
-	 * 
-	 * @return the values {@code Map}
-	 */
-	public Map<String, Object> asMap() {
-		Map<String, Object> params = new TreeMap<String, Object>();
-		
-		if (getSince() != null) {
-			params.put(RangeRequest.SINCE_NAME, getSince());
-		}
-		
-		if (getMax() != null) {
-			params.put(RangeRequest.MAX_NAME, getMax());
-		}
-		
-		if (getSort() != null && !isDefaultSort()) {
-			params.put(RangeRequest.SORT_NAME, getFirstOrder().getProperty());
-			params.put(RangeRequest.ORDER_NAME, getFirstOrder().getDirection());
-		}
+    /**
+     * Returns the sort.
+     *
+     * @return the sort
+     */
+    public Sort getSort() {
+        if (sort == null) {
+            return RangeRequest.DEFAULT_SORT;
+        }
+        return sort;
+    }
 
-		if (!isDefaultPageSize()) {
-			params.put(RangeRequest.SIZE_NAME, getPageSize());
-		}
-		
-		return Collections.unmodifiableMap(params);
-	}
-		
-	@Override
-	public String toString() {
-		return new StringBuilder()
-			.append("max=")
-			.append(getMax())
-			.append(",since=")
-			.append(getSince())
-			.append(",size=")
-			.append(getPageSize())
-			.append(",size=")
-			.append(getSort().toString()).toString();
-	}
-	
-	private Order getFirstOrder() {
-		Iterator<Order> it = getSort().iterator();
-		while (it.hasNext()) {
-			return it.next();
-		}
+    /**
+     * Returns the page size.
+     *
+     * @return the page size
+     */
+    public int getPageSize() {
+        return pageSize;
+    }
 
-		return null;
-	}
+    /**
+     * Checks whether the current sort has the default value.
+     *
+     * @return {@code true} if sort is the default; {@code false} otherwise
+     */
+    public boolean isDefaultSort() {
+        if (getSort() == null) return true;
+        return getSort().equals(RangeRequest.DEFAULT_SORT);
+    }
+
+    /**
+     * Checks whether the current page size has the default value.
+     *
+     * @return {@code true} if page size is the default; {@code false} otherwise
+     */
+    public boolean isDefaultPageSize() {
+        return getPageSize() == AppGlobals.PAGE_SIZE;
+    }
+
+    /**
+     * Returns the current {@code SearchRange} as a {@code Map}.
+     * <p>
+     * The returned maps contain only not default values.
+     * </p>
+     *
+     * @return the values {@code Map}
+     */
+    public Map<String, Object> asMap() {
+        Map<String, Object> params = new TreeMap<String, Object>();
+
+        if (getSince() != null) {
+            params.put(RangeRequest.SINCE_NAME, getSince());
+        }
+
+        if (getMax() != null) {
+            params.put(RangeRequest.MAX_NAME, getMax());
+        }
+
+        if (getSort() != null && !isDefaultSort()) {
+            params.put(RangeRequest.SORT_NAME, getFirstOrder().getProperty());
+            params.put(RangeRequest.ORDER_NAME, getFirstOrder().getDirection());
+        }
+
+        if (!isDefaultPageSize()) {
+            params.put(RangeRequest.SIZE_NAME, getPageSize());
+        }
+
+        return Collections.unmodifiableMap(params);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("max=")
+                .append(getMax())
+                .append(",since=")
+                .append(getSince())
+                .append(",size=")
+                .append(getPageSize())
+                .append(",size=")
+                .append(getSort().toString()).toString();
+    }
+
+    private Order getFirstOrder() {
+        Iterator<Order> it = getSort().iterator();
+        while (it.hasNext()) {
+            return it.next();
+        }
+
+        return null;
+    }
 }

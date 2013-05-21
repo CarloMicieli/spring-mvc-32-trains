@@ -31,175 +31,188 @@ import com.trenako.mapping.WeakDbRef;
 
 /**
  * It represents a list of comments for the same {@code RollingStock}.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Document(collection = "comments")
 public class RollingStockComments {
-	
-	private static final RollingStockComments EMPTY = new RollingStockComments();
-	
-	@Id
-	private ObjectId id;
-	
-	@Indexed(unique = true)
-	private String slug;
-	
-	@NotNull(message = "comment.rollingStock.required")
-	private WeakDbRef<RollingStock> rollingStock;
-	
-	@Valid
-	private List<Comment> items;
-	private int numberOfComments;
-	
-	/**
-	 * Creates a new empty {@code RollingStockComments}.
-	 */
-	public RollingStockComments() {
-	}
-	
-	/**
-	 * Creates an empty {@code RollingStockComments} for the
-	 * provided {@code RollingStock}.
-	 * @param rs the rolling stock
-	 */
-	public RollingStockComments(RollingStock rs) {
-		this(rs, slug(rs));
-	}
-	
-	/**
-	 * Creates an empty {@code RollingStockComments} for the
-	 * provided {@code RollingStock}.
-	 * @param rs the rolling stock
-	 * @param commentsSlug the comments slug
-	 */
-	public RollingStockComments(RollingStock rs, String commentsSlug) {
-		this.rollingStock = rollingStock(rs);
-		this.slug = commentsSlug;	
-	}
-	
-	/**
-	 * Returns the default value for {@code RollingStockComments}.
-	 * @return the default value
-	 */
-	public static RollingStockComments defaultRollingStockComments() {
-		return EMPTY;
-	}
-	
-	/**
-	 * Returns the {@code RollingStockComments} unique id.
-	 * @return the id
-	 */
-	public ObjectId getId() {
-		return id;
-	}
 
-	/**
-	 * Sets the {@code RollingStockComments} unique id.
-	 * @param id the id
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
+    private static final RollingStockComments EMPTY = new RollingStockComments();
 
-	/**
-	 * Returns the {@code RollingStockComments} slug.
-	 * @return the slug
-	 */
-	public String getSlug() {
-		return slug;
-	}
+    @Id
+    private ObjectId id;
 
-	/**
-	 * Sets the {@code RollingStockComments} slug.
-	 * @param slug the slug
-	 */	
-	public void setSlug(String slug) {
-		this.slug = slug;
-	}
+    @Indexed(unique = true)
+    private String slug;
 
-	/**
-	 * Returns the rolling stock to be commented.
-	 * @return the rolling stock
-	 */
-	public WeakDbRef<RollingStock> getRollingStock() {
-		return rollingStock;
-	}
+    @NotNull(message = "comment.rollingStock.required")
+    private WeakDbRef<RollingStock> rollingStock;
 
-	/**
-	 * Sets the rolling stock to be commented.
-	 * @param rollingStock the rolling stock
-	 */
-	public void setRollingStock(WeakDbRef<RollingStock> rollingStock) {
-		this.rollingStock = rollingStock;
-	}
+    @Valid
+    private List<Comment> items;
+    private int numberOfComments;
 
-	/**
-	 * Returns the immutable comments list.
-	 * @return the comments list
-	 */
-	public List<Comment> getItems() {
-		if (items == null) {
-			return Collections.emptyList();
-		}
-		return items;
-	}
+    /**
+     * Creates a new empty {@code RollingStockComments}.
+     */
+    public RollingStockComments() {
+    }
 
-	/**
-	 * Sets the comments list.
-	 * @param items the comments list
-	 */
-	public void setItems(List<Comment> items) {
-		this.items = items;
-	}
+    /**
+     * Creates an empty {@code RollingStockComments} for the
+     * provided {@code RollingStock}.
+     *
+     * @param rs the rolling stock
+     */
+    public RollingStockComments(RollingStock rs) {
+        this(rs, slug(rs));
+    }
 
-	/**
-	 * Returns the number of comments.
-	 * @return the number of comments
-	 */
-	public int getNumberOfComments() {
-		return numberOfComments;
-	}
+    /**
+     * Creates an empty {@code RollingStockComments} for the
+     * provided {@code RollingStock}.
+     *
+     * @param rs           the rolling stock
+     * @param commentsSlug the comments slug
+     */
+    public RollingStockComments(RollingStock rs, String commentsSlug) {
+        this.rollingStock = rollingStock(rs);
+        this.slug = commentsSlug;
+    }
 
-	/**
-	 * Sets the number of comments.
-	 * @param numberOfComments the number of comments
-	 */
-	public void setNumberOfComments(int numberOfComments) {
-		this.numberOfComments = numberOfComments;
-	}
+    /**
+     * Returns the default value for {@code RollingStockComments}.
+     *
+     * @return the default value
+     */
+    public static RollingStockComments defaultRollingStockComments() {
+        return EMPTY;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof RollingStockComments)) return false;
-		
-		RollingStockComments other = (RollingStockComments) obj;
-		return new EqualsBuilder()
-			.append(this.id, other.id)
-			.append(this.slug, other.slug)
-			.append(this.rollingStock, other.rollingStock)
-			.isEquals();
-	}
-	
-	@Override
-	public String toString() {
-		return new StringBuilder()
-			.append("comments{slug: ")
-			.append(getSlug())
-			.append(", rollingStock: ")
-			.append(getRollingStock().getSlug())
-			.append(", count: ")
-			.append(getNumberOfComments())
-			.append("}")
-			.toString();	
-	}
-	
-	private WeakDbRef<RollingStock> rollingStock(RollingStock rs) {
-		return WeakDbRef.buildRef(rs);
-	}
-	
-	private static String slug(RollingStock rs) {
-		return rs.getSlug();
-	}	
+    /**
+     * Returns the {@code RollingStockComments} unique id.
+     *
+     * @return the id
+     */
+    public ObjectId getId() {
+        return id;
+    }
+
+    /**
+     * Sets the {@code RollingStockComments} unique id.
+     *
+     * @param id the id
+     */
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    /**
+     * Returns the {@code RollingStockComments} slug.
+     *
+     * @return the slug
+     */
+    public String getSlug() {
+        return slug;
+    }
+
+    /**
+     * Sets the {@code RollingStockComments} slug.
+     *
+     * @param slug the slug
+     */
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    /**
+     * Returns the rolling stock to be commented.
+     *
+     * @return the rolling stock
+     */
+    public WeakDbRef<RollingStock> getRollingStock() {
+        return rollingStock;
+    }
+
+    /**
+     * Sets the rolling stock to be commented.
+     *
+     * @param rollingStock the rolling stock
+     */
+    public void setRollingStock(WeakDbRef<RollingStock> rollingStock) {
+        this.rollingStock = rollingStock;
+    }
+
+    /**
+     * Returns the immutable comments list.
+     *
+     * @return the comments list
+     */
+    public List<Comment> getItems() {
+        if (items == null) {
+            return Collections.emptyList();
+        }
+        return items;
+    }
+
+    /**
+     * Sets the comments list.
+     *
+     * @param items the comments list
+     */
+    public void setItems(List<Comment> items) {
+        this.items = items;
+    }
+
+    /**
+     * Returns the number of comments.
+     *
+     * @return the number of comments
+     */
+    public int getNumberOfComments() {
+        return numberOfComments;
+    }
+
+    /**
+     * Sets the number of comments.
+     *
+     * @param numberOfComments the number of comments
+     */
+    public void setNumberOfComments(int numberOfComments) {
+        this.numberOfComments = numberOfComments;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof RollingStockComments)) return false;
+
+        RollingStockComments other = (RollingStockComments) obj;
+        return new EqualsBuilder()
+                .append(this.id, other.id)
+                .append(this.slug, other.slug)
+                .append(this.rollingStock, other.rollingStock)
+                .isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("comments{slug: ")
+                .append(getSlug())
+                .append(", rollingStock: ")
+                .append(getRollingStock().getSlug())
+                .append(", count: ")
+                .append(getNumberOfComments())
+                .append("}")
+                .toString();
+    }
+
+    private WeakDbRef<RollingStock> rollingStock(RollingStock rs) {
+        return WeakDbRef.buildRef(rs);
+    }
+
+    private static String slug(RollingStock rs) {
+        return rs.getSlug();
+    }
 }

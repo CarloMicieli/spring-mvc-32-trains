@@ -42,70 +42,74 @@ import com.trenako.entities.Brand;
  */
 public interface BrandsService {
 
-	/**
-	 * Finds the {@link Brand} with the provided id.
-	 * @param id the unique id
-	 * @return a {@code Brand} if found; {@code null} otherwise
-	 */
-	Brand findById(ObjectId id);
+    /**
+     * Finds the {@link Brand} with the provided id.
+     *
+     * @param id the unique id
+     * @return a {@code Brand} if found; {@code null} otherwise
+     */
+    Brand findById(ObjectId id);
 
-	/**
-	 * Finds the {@link Brand} with the provided slug value.
-	 * @param slug the {@code Brand} slug
-	 * @return a {@code Brand} if found; {@code null} otherwise
-	 * @see com.trenako.entities.Brand#getSlug()
-	 */
-	Brand findBySlug(String slug);
+    /**
+     * Finds the {@link Brand} with the provided slug value.
+     *
+     * @param slug the {@code Brand} slug
+     * @return a {@code Brand} if found; {@code null} otherwise
+     * @see com.trenako.entities.Brand#getSlug()
+     */
+    Brand findBySlug(String slug);
 
-	/**
-	 * Finds the {@link Brand} with the provided name.
-	 * <p>
-	 * Due to possible data store implementation the clients for this method must 
-	 * think this search as case sensitive.
-	 * </p>
-	 *
-	 * @param name the {@code Brand} name
-	 * @return a {@code Brand} if found; {@code null} otherwise
-	 */
-	Brand findByName(String name);
+    /**
+     * Finds the {@link Brand} with the provided name.
+     * <p>
+     * Due to possible data store implementation the clients for this method must
+     * think this search as case sensitive.
+     * </p>
+     *
+     * @param name the {@code Brand} name
+     * @return a {@code Brand} if found; {@code null} otherwise
+     */
+    Brand findByName(String name);
 
-	/**
-	 * Returns the list of all {@link Brand} objects.
-	 * <p>
-	 * This methods return all the brands, sort by name.
-	 * </p>
-	 * 
-	 * @return a {@code Brand} list
-	 */
-	Iterable<Brand> findAll();
-	
-	/**
-	 * Returns the list of paginated {@link Brand}s.
-	 * 
-	 * @param pageable the pagination information
-	 * @return the paginated {@code Brand} results
-	 */
-	Page<Brand> findAll(Pageable pageable);
-	
-	/**
-	 * Persists the {@link Brand} changes in the data store.
-	 * <p>
-	 * This method performs a "upsert": if the {@code Brand} is not present in the data store
-	 * a new {@code Brand} is created; otherwise the method will update the existing {@code Brand}. 
-	 * </p>	 
-	 * @param brand the {@code Brand} to be saved
-	 */
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-	void save(Brand brand);
+    /**
+     * Returns the list of all {@link Brand} objects.
+     * <p>
+     * This methods return all the brands, sort by name.
+     * </p>
+     *
+     * @return a {@code Brand} list
+     */
+    Iterable<Brand> findAll();
 
-	/**
-	 * Persists the {@link Brand} changes in the data store.
-	 * <p>
-	 * This method performs a "upsert": if the {@code Brand} is not present in the data store
-	 * a new {@code Brand} is created; otherwise the method will update the existing {@code Brand}. 
-	 * </p>	 
-	 * @param brand the {@code Brand} to be saved
-	 */
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-	void remove(Brand brand);
+    /**
+     * Returns the list of paginated {@link Brand}s.
+     *
+     * @param pageable the pagination information
+     * @return the paginated {@code Brand} results
+     */
+    Page<Brand> findAll(Pageable pageable);
+
+    /**
+     * Persists the {@link Brand} changes in the data store.
+     * <p>
+     * This method performs a "upsert": if the {@code Brand} is not present in the data store
+     * a new {@code Brand} is created; otherwise the method will update the existing {@code Brand}.
+     * </p>
+     *
+     * @param brand the {@code Brand} to be saved
+     */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    void save(Brand brand);
+
+    /**
+     * Persists the {@link Brand} changes in the data store.
+     * <p>
+     * This method performs a "upsert": if the {@code Brand} is not present in the data store
+     * a new {@code Brand} is created; otherwise the method will update the existing {@code Brand}.
+     * </p>
+     *
+     * @param brand the {@code Brand} to be saved
+     */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    void remove(Brand brand);
 }

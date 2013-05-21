@@ -24,39 +24,38 @@ import org.springframework.web.multipart.MultipartFile;
 import com.trenako.AppGlobals;
 
 /**
- * A custom validator for {@code MultipartFile}. 
+ * A custom validator for {@code MultipartFile}.
  * <p>
  * Validation is checking the {@code size} and {@code contentType}
  * for the uploaded file. Validation for empty files will always succeeds.
  * </p>
  *
  * @author Carlo Micieli
- *
  */
 @Component
 public class MultipartFileValidator implements Validator {
-	@Override
-	public boolean supports(Class<?> clazz) {
-		return MultipartFile.class.isAssignableFrom(clazz);
-	}
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return MultipartFile.class.isAssignableFrom(clazz);
+    }
 
-	@Override
-	public void validate(Object target, Errors errors) {
-		// skip validation for empty files.
-		if (target == null) return;
-		
-		MultipartFile file = (MultipartFile) target;
-		if (file.isEmpty()) return;
+    @Override
+    public void validate(Object target, Errors errors) {
+        // skip validation for empty files.
+        if (target == null) return;
 
-		// validate file size
-		if (file.getSize() > AppGlobals.MAX_UPLOAD_SIZE) {
-			errors.reject("uploadFile.size.range.notmet", "Invalid media size. Max size is 512 Kb");
-		}
-		
-		// validate content type
-		MediaType contentType = MediaType.parseMediaType(file.getContentType());
-		if (!AppGlobals.ALLOWED_MEDIA_TYPES.contains(contentType.toString())) {
-			errors.reject("uploadFile.contentType.notvalid", "Invalid media type");
-		}
-	}
- }
+        MultipartFile file = (MultipartFile) target;
+        if (file.isEmpty()) return;
+
+        // validate file size
+        if (file.getSize() > AppGlobals.MAX_UPLOAD_SIZE) {
+            errors.reject("uploadFile.size.range.notmet", "Invalid media size. Max size is 512 Kb");
+        }
+
+        // validate content type
+        MediaType contentType = MediaType.parseMediaType(file.getContentType());
+        if (!AppGlobals.ALLOWED_MEDIA_TYPES.contains(contentType.toString())) {
+            errors.reject("uploadFile.contentType.notvalid", "Invalid media type");
+        }
+    }
+}

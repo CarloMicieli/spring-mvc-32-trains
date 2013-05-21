@@ -24,15 +24,13 @@ import com.mongodb.DBObject;
 import com.trenako.entities.WishList;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Component
 public class WishListsEventListener extends AbstractMongoEventListener<WishList> {
-	@Override
-	public void onBeforeSave(WishList source, DBObject dbo) {
-		dbo.put("lastModified", new Date());
-		dbo.put("slug", source.getSlug());
-	}
+    @Override
+    public void onBeforeSave(WishList source, DBObject dbo) {
+        dbo.put("lastModified", new Date());
+        dbo.put("slug", source.getSlug());
+    }
 }

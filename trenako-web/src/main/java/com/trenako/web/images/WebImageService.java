@@ -19,44 +19,44 @@ import org.springframework.http.ResponseEntity;
 
 /**
  * The interface for the upload images service for web requests.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface WebImageService {
 
-	/**
-	 * Saves the uploaded image to the database.
-	 * <p>
-	 * To create also the thumbnail the clients have to call the 
-	 * {@link WebImageService#saveImageWithThumb(UploadRequest)} 
-	 * method instead. 
-	 * </p>
-	 * 
-	 * @param req the file upload request
-	 */
-	void saveImage(UploadRequest req);
+    /**
+     * Saves the uploaded image to the database.
+     * <p>
+     * To create also the thumbnail the clients have to call the
+     * {@link WebImageService#saveImageWithThumb(UploadRequest,int)}
+     * method instead.
+     * </p>
+     *
+     * @param req the file upload request
+     */
+    void saveImage(UploadRequest req);
 
-	/**
-	 * Saves the uploaded image to the database creating the thumbnail too.
-	 *
-	 * @param req the file upload request
-	 * @param size the thumbnail size in pixels
-	 */
-	void saveImageWithThumb(UploadRequest req, int size);
-	
-	/**
-	 * Renders the image with the provided {@code ImageRequest} 
-	 * in the web response.
-	 * 
-	 * @param imageSlug the image slug
-	 * @return a web response entity
-	 */
-	ResponseEntity<byte[]> renderImage(String imageSlug);
+    /**
+     * Saves the uploaded image to the database creating the thumbnail too.
+     *
+     * @param req  the file upload request
+     * @param size the thumbnail size in pixels
+     */
+    void saveImageWithThumb(UploadRequest req, int size);
 
-	/**
-	 * Deletes a file from the database.
-	 * 
-	 * @param imageSlug the image slug
-	 */
-	void deleteImage(ImageRequest req);
+    /**
+     * Renders the image with the provided {@code ImageRequest}
+     * in the web response.
+     *
+     * @param imageSlug the image slug
+     * @return a web response entity
+     */
+    ResponseEntity<byte[]> renderImage(String imageSlug);
+
+    /**
+     * Deletes a file from the database.
+     *
+     * @param req the image request
+     */
+    void deleteImage(ImageRequest req);
 }

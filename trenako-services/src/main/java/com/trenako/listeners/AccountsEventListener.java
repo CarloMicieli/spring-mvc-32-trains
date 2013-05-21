@@ -24,16 +24,14 @@ import com.mongodb.DBObject;
 import com.trenako.entities.Account;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Component
 public class AccountsEventListener extends AbstractMongoEventListener<Account> {
 
-	@Override
-	public void onBeforeSave(Account user, DBObject dbo) {
-		dbo.put("slug", user.getSlug());
-		dbo.put("lastModified", new Date());
-	}
+    @Override
+    public void onBeforeSave(Account user, DBObject dbo) {
+        dbo.put("slug", user.getSlug());
+        dbo.put("lastModified", new Date());
+    }
 }

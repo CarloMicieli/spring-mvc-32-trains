@@ -24,34 +24,35 @@ import com.trenako.entities.Brand;
 
 /**
  * Custom {@code PropertyEditor} for fields with {@link Brand} type.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class BrandPropertyEditor extends PropertyEditorSupport {
-	
-	private final boolean allowEmpty;
-	
-	/**
-	 * Creates a new {@code BrandPropertyEditor}.
-	 * @param allowEmpty if empty strings should be allowed
-	 */
-	public BrandPropertyEditor(boolean allowEmpty) {
-		this.allowEmpty = allowEmpty;
-	}
-	
-	@Override
-	public void setAsText(String text) throws IllegalArgumentException {
-		if (allowEmpty && StringUtils.isBlank(text)) {
-			setValue(null);
-			return;
-		}
-		
-		if (!ObjectId.isValid(text)) {
-			throw new IllegalArgumentException(text + " is not a valid ObjecId");
-		}
-		
-		ObjectId id = new ObjectId(text);
-		setValue(new Brand(id));
-	}
-	
+
+    private final boolean allowEmpty;
+
+    /**
+     * Creates a new {@code BrandPropertyEditor}.
+     *
+     * @param allowEmpty if empty strings should be allowed
+     */
+    public BrandPropertyEditor(boolean allowEmpty) {
+        this.allowEmpty = allowEmpty;
+    }
+
+    @Override
+    public void setAsText(String text) throws IllegalArgumentException {
+        if (allowEmpty && StringUtils.isBlank(text)) {
+            setValue(null);
+            return;
+        }
+
+        if (!ObjectId.isValid(text)) {
+            throw new IllegalArgumentException(text + " is not a valid ObjecId");
+        }
+
+        ObjectId id = new ObjectId(text);
+        setValue(new Brand(id));
+    }
+
 }

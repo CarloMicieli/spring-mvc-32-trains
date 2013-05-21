@@ -30,112 +30,112 @@ import com.trenako.entities.WishList;
 import com.trenako.entities.WishListItem;
 
 /**
- * It represents an immutable view for user data like his collections 
+ * It represents an immutable view for user data like his collections
  * and wish lists.
- * 
+ *
  * @author Carlo Micieli
- * 
  */
 public class ProfileView {
 
-	private final Iterable<Activity> userActivity;
-	private final ProfileOptions options;
-	private final Collection collection;
-	private final Iterable<WishList> wishLists;
-	private final Map<String, String> wishListNames;
+    private final Iterable<Activity> userActivity;
+    private final ProfileOptions options;
+    private final Collection collection;
+    private final Iterable<WishList> wishLists;
+    private final Map<String, String> wishListNames;
 
-	/**
-	 * Creates a new {@code ProfileView}.
-	 * @param collection the user collection
-	 * @param wishLists the user wish lists
-	 */
-	public ProfileView(Iterable<Activity> userActivity,
-			Collection collection, 
-			Iterable<WishList> wishLists, 
-			ProfileOptions options) {
-		
-		this.userActivity = userActivity;
-		this.collection = collection;
-		this.wishLists = wishLists;
-		this.options = options;
-		this.wishListNames = extractWishListNames(wishLists);
-	}
-	
-	public Collection getCollection() {
-		return collection;
-	}
+    /**
+     * Creates a new {@code ProfileView}.
+     *
+     * @param collection the user collection
+     * @param wishLists  the user wish lists
+     */
+    public ProfileView(Iterable<Activity> userActivity,
+                       Collection collection,
+                       Iterable<WishList> wishLists,
+                       ProfileOptions options) {
 
-	public Iterable<WishList> getWishLists() {
-		return wishLists;
-	}
+        this.userActivity = userActivity;
+        this.collection = collection;
+        this.wishLists = wishLists;
+        this.options = options;
+        this.wishListNames = extractWishListNames(wishLists);
+    }
 
-	public Iterable<Activity> getUserActivity() {
-		return userActivity;
-	}
-	
-	public Map<String, String> getWishListNames() {
-		return wishListNames;
-	}
+    public Collection getCollection() {
+        return collection;
+    }
 
-	public CategoriesCount getCategoriesCount() {
-		if (collection == null) {
-			return new CategoriesCount();
-		} 
+    public Iterable<WishList> getWishLists() {
+        return wishLists;
+    }
 
-		return collection.getCategories();
-	}
-	
-	public Iterable<ItemView> getCollectionItems() {
-		List<ItemView> items = new ArrayList<ItemView>();
-		for (CollectionItem item : collection.getItems()) {
-			items.add(ItemView.createView(collection, item));
-		}
+    public Iterable<Activity> getUserActivity() {
+        return userActivity;
+    }
 
-		return sortedSublist(items, 
-				new ItemViewComparator(), 
-				options.getNumberOfItemsForCollections());
-	}
-	
-	public Iterable<ItemView> getWishListItems() {
-		List<ItemView> items = new ArrayList<ItemView>();
-		for (WishList list : wishLists) {
-			for (WishListItem it : list.getItems()) {
-				items.add(ItemView.createView(list, it));
-			}
-		}
-		
-		return sortedSublist(items, 
-				new ItemViewComparator(),
-				options.getNumberOfItemsForWishLists());
-	}
-	
-	private List<ItemView> sortedSublist(List<ItemView> elements, Comparator<ItemView> comparator, int size) {
-		Collections.sort(elements, comparator);
-		List<ItemView> items = new ArrayList<ItemView>(size);
-		
-		int numOfElements = elements.size() > size ? size : elements.size();
-		for (int i = 0; i < numOfElements; i++) {
-			items.add(elements.get(i));
-		}
-		
-		return items;
-	}
-	
-	private Map<String, String> extractWishListNames(Iterable<WishList> wishLists) {
-		Map<String, String> mapNames = new LinkedHashMap<String, String>();
-		for (WishList list : wishLists) {
-			mapNames.put(list.getSlug(), list.getName());
-		}
+    public Map<String, String> getWishListNames() {
+        return wishListNames;
+    }
 
-		return Collections.unmodifiableMap(mapNames);
-	}
-	
-	private static class ItemViewComparator implements Comparator<ItemView> {
+    public CategoriesCount getCategoriesCount() {
+        if (collection == null) {
+            return new CategoriesCount();
+        }
 
-		@Override
-		public int compare(ItemView item1, ItemView item2) {
-			return item2.getAddedAt().compareTo(item1.getAddedAt());
-		}
-		
-	}
+        return collection.getCategories();
+    }
+
+    public Iterable<ItemView> getCollectionItems() {
+        List<ItemView> items = new ArrayList<ItemView>();
+        for (CollectionItem item : collection.getItems()) {
+            items.add(ItemView.createView(collection, item));
+        }
+
+        return sortedSublist(items,
+                new ItemViewComparator(),
+                options.getNumberOfItemsForCollections());
+    }
+
+    public Iterable<ItemView> getWishListItems() {
+        List<ItemView> items = new ArrayList<ItemView>();
+        for (WishList list : wishLists) {
+            for (WishListItem it : list.getItems()) {
+                items.add(ItemView.createView(list, it));
+            }
+        }
+
+        return sortedSublist(items,
+                new ItemViewComparator(),
+                options.getNumberOfItemsForWishLists());
+    }
+
+    private List<ItemView> sortedSublist(List<ItemView> elements, Comparator<ItemView> comparator, int size) {
+        Collections.sort(elements, comparator);
+        List<ItemView> items = new ArrayList<ItemView>(size);
+
+        int numOfElements = elements.size() > size ? size : elements.size();
+        for (int i = 0; i < numOfElements; i++) {
+            items.add(elements.get(i));
+        }
+
+        return items;
+    }
+
+    private Map<String, String> extractWishListNames(Iterable<WishList> wishLists) {
+        Map<String, String> mapNames = new LinkedHashMap<String, String>();
+        for (WishList list : wishLists) {
+            mapNames.put(list.getSlug(), list.getName());
+        }
+
+        return Collections.unmodifiableMap(mapNames);
+    }
+
+    private static class ItemViewComparator implements Comparator<ItemView> {
+
+        @Override
+        public int compare(ItemView item1, ItemView item2) {
+            return item2.getAddedAt().compareTo(item1.getAddedAt());
+        }
+
+    }
 }

@@ -23,36 +23,37 @@ import com.trenako.entities.WishList;
 
 /**
  * It represents a {@code Permission} container.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class PermissionsHolder {
 
-	private final static Map<Class<?>, Permission> permissions = initPermissions();
-	private final static NullPermission nullPermission = new NullPermission();
+    private final static Map<Class<?>, Permission> permissions = initPermissions();
+    private final static NullPermission nullPermission = new NullPermission();
 
-	/**
-	 * Returns the permission evaluator for the provided type.
-	 * <p>
-	 * If a specific evaluator was not registered then this method
-	 * will return a {@code NullPermission} instead. 
-	 * </p>
-	 * @param providedObj 
-	 * @return the permission evaluator
-	 */
-	public Permission permission(Object providedObj) {
-		Class<?> providedType = providedObj.getClass();
-		if (!permissions.containsKey(providedType)) {
-			return nullPermission;
-		}
+    /**
+     * Returns the permission evaluator for the provided type.
+     * <p>
+     * If a specific evaluator was not registered then this method
+     * will return a {@code NullPermission} instead.
+     * </p>
+     *
+     * @param providedObj
+     * @return the permission evaluator
+     */
+    public Permission permission(Object providedObj) {
+        Class<?> providedType = providedObj.getClass();
+        if (!permissions.containsKey(providedType)) {
+            return nullPermission;
+        }
 
-		return permissions.get(providedType);
-	}
+        return permissions.get(providedType);
+    }
 
-	private static Map<Class<?>, Permission> initPermissions() {
-		Map<Class<?>, Permission> m = new HashMap<Class<?>, Permission>();
-		m.put(Collection.class, new CollectionPermission());
-		m.put(WishList.class, new WishListPermission());
-		return m;
-	}
+    private static Map<Class<?>, Permission> initPermissions() {
+        Map<Class<?>, Permission> m = new HashMap<Class<?>, Permission>();
+        m.put(Collection.class, new CollectionPermission());
+        m.put(WishList.class, new WishListPermission());
+        return m;
+    }
 }

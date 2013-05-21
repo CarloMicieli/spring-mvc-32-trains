@@ -21,20 +21,18 @@ import org.slf4j.Logger;
 import org.springframework.validation.Errors;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class LogUtils {
-	private LogUtils() {
-	}
-	
-	public static void logException(Logger log, Throwable ex) {
-		log.error(ExceptionUtils.getStackTrace(ex));
-	}
-	
-	public static void logValidationErrors(Logger log, Errors errors) {
-		log.error(StringUtils.join(errors.getAllErrors(), '\n'));
-	}
-	
+    private LogUtils() {
+    }
+
+    public static void logException(Logger log, Throwable ex) {
+        log.error(ExceptionUtils.getStackTrace(ex));
+    }
+
+    public static void logValidationErrors(Logger log, Errors errors) {
+        log.error(StringUtils.join(errors.getAllErrors(), '\n'));
+    }
+
 }

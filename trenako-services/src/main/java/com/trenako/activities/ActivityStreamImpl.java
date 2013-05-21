@@ -36,72 +36,70 @@ import com.trenako.mapping.WeakDbRef;
 import com.trenako.repositories.ActivityRepository;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Service("activityStream")
 public class ActivityStreamImpl implements ActivityStream {
 
-	private final ActivityRepository repo;
-	
-	@Autowired
-	public ActivityStreamImpl(ActivityRepository repo) {
-		this.repo = repo;
-	}
-	
-	@Override
-	public void comment(RollingStock rs, Comment comment) {
-		Activity act = Activity.buildForComment(comment, WeakDbRef.buildRef(rs));
-		repo.save(act);
-	}
+    private final ActivityRepository repo;
 
-	@Override
-	public void review(RollingStock rs, Review review) {
-		Activity act = Activity.buildForReview(review, WeakDbRef.buildRef(rs));
-		repo.save(act);
-	}
+    @Autowired
+    public ActivityStreamImpl(ActivityRepository repo) {
+        this.repo = repo;
+    }
 
-	@Override
-	public void createRollingStock(RollingStock rs) {
-		Activity act = Activity.buildForRsCreate(rs);
-		repo.save(act);
-	}
+    @Override
+    public void comment(RollingStock rs, Comment comment) {
+        Activity act = Activity.buildForComment(comment, WeakDbRef.buildRef(rs));
+        repo.save(act);
+    }
 
-	@Override
-	public void changeRollingStock(RollingStock rs) {
-		Activity act = Activity.buildForRsChange(rs);
-		repo.save(act);
-	}
+    @Override
+    public void review(RollingStock rs, Review review) {
+        Activity act = Activity.buildForReview(review, WeakDbRef.buildRef(rs));
+        repo.save(act);
+    }
 
-	@Override
-	public void wishList(WishList wishList, WishListItem item) {
-		Activity act = Activity.buildForWishList(wishList, item);
-		repo.save(act);
-	}
+    @Override
+    public void createRollingStock(RollingStock rs) {
+        Activity act = Activity.buildForRsCreate(rs);
+        repo.save(act);
+    }
 
-	@Override
-	public void collection(Account owner, CollectionItem item) {
-		Collection collection = new Collection(owner);
-		Activity act = Activity.buildForCollection(collection, item);
-		repo.save(act);
-	}
-	
-	@Override
-	public Iterable<Activity> recentActivity(int numberOfItems) {
-		Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "recorded");
-		Page<Activity> results = repo.findAll(pageable);
-		
-		if (!results.hasContent()) {
-			return Collections.emptyList();
-		}
-		
-		return results.getContent();
-	}
+    @Override
+    public void changeRollingStock(RollingStock rs) {
+        Activity act = Activity.buildForRsChange(rs);
+        repo.save(act);
+    }
 
-	@Override
-	public Iterable<Activity> userActivity(Account user, int numberOfItems) {
-		Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "recorded");
-		return repo.findByActor(user.getSlug(), pageable);
-	}
+    @Override
+    public void wishList(WishList wishList, WishListItem item) {
+        Activity act = Activity.buildForWishList(wishList, item);
+        repo.save(act);
+    }
+
+    @Override
+    public void collection(Account owner, CollectionItem item) {
+        Collection collection = new Collection(owner);
+        Activity act = Activity.buildForCollection(collection, item);
+        repo.save(act);
+    }
+
+    @Override
+    public Iterable<Activity> recentActivity(int numberOfItems) {
+        Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "recorded");
+        Page<Activity> results = repo.findAll(pageable);
+
+        if (!results.hasContent()) {
+            return Collections.emptyList();
+        }
+
+        return results.getContent();
+    }
+
+    @Override
+    public Iterable<Activity> userActivity(Account user, int numberOfItems) {
+        Pageable pageable = new PageRequest(0, numberOfItems, Direction.DESC, "recorded");
+        return repo.findByActor(user.getSlug(), pageable);
+    }
 }

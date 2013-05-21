@@ -31,17 +31,17 @@ import com.trenako.validation.ISOCountryValidator;
 
 /**
  * Java annotation for ISO country codes validation.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {FIELD, METHOD, PARAMETER})
 @Constraint(validatedBy = ISOCountryValidator.class)
 @Documented
 public @interface ISOCountry {
-	String message() default "{com.trenako.contry.code.invalid}";
+    String message() default "{com.trenako.contry.code.invalid}";
 
-	Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

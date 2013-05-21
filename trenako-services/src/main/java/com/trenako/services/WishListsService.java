@@ -24,142 +24,155 @@ import com.trenako.values.Visibility;
 
 /**
  * The interface for the {@code WishList} service.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface WishListsService {
 
-	/**
-	 * Returns the list of {@code WishList} for the provided owner.
-	 * <p>
-	 * This method is not loading the items for the {@code WishList}; just the 
-	 * header information are returned.
-	 * </p>
-	 * <p>
-	 * The {@link WishList#defaultList(Account)} is always added to the results; 
-	 * this means this method will always return at least one {@code WishList}.
-	 * </p>
-	 * 
-	 * @param owner the owner
-	 * @return a {@code WishList} list
-	 */
-	Iterable<WishList> findByOwner(Account owner);
-	
-	/**
-	 * Returns the list of {@code WishList} for the provided owner.
-	 * <p>
-	 * This method is loading the items for the {@code WishList}; the number
-	 * of returned wish list items is limited by the {@code maxNumberOfItems} value.
-	 * </p>
-	 *
-	 * @param owner the owner
-	 * @param maxNumberOfItems the max number of returned items 
-	 * @return a {@code WishList} list
-	 */
-	Iterable<WishList> findAllByOwner(Account owner, int maxNumberOfItems);
-		
-	/**
-	 * Returns the {@code WishList} with the provided slug.
-	 * @param slug the slug
-	 * @returns a {@code WishList} if found; {@code null} otherwise
-	 */
-	WishList findBySlug(String slug);
-	
-	/**
-	 * Returns the {@code WishList} with the provided slug.
-	 *
-	 * <p>
-	 * If the provided slug is the same as {@link WishList#defaultList(Account owner)} 
-	 * then this method will return the default {@code WishList} instead of {@code null}.
-	 * </p>
-	 *
-	 * @param owner the {@code WishList} owner
-	 * @param slug the slug
-	 * @returns a {@code WishList} if found; {@code null} otherwise
-	 */
-	WishList findBySlugOrDefault(Account owner, String slug);
-	
-	/**
-	 * Checks whether the provided {@code WishList} contains a given rolling stock.
-	 * @param wishList the {@code WishList}
-	 * @param rs the rolling stock
-	 * @return {@code true} if the list contains the rolling stock; {@code false} otherwise
-	 */
-	boolean containsRollingStock(WishList wishList, RollingStock rs);
-	
-	/**
-	 * Adds a new item to the provided {@code WishList}.
-	 * @param wishList the {@code WishList} to be modified
-	 * @param newItem the item to be added
-	 */
-	void addItem(WishList wishList, WishListItem newItem);
+    /**
+     * Returns the list of {@code WishList} for the provided owner.
+     * <p>
+     * This method is not loading the items for the {@code WishList}; just the
+     * header information are returned.
+     * </p>
+     * <p>
+     * The {@link WishList#defaultList(Account)} is always added to the results;
+     * this means this method will always return at least one {@code WishList}.
+     * </p>
+     *
+     * @param owner the owner
+     * @return a {@code WishList} list
+     */
+    Iterable<WishList> findByOwner(Account owner);
 
-	/**
-	 * Updates an item for the provided {@code WishList}.
-	 * @param wishList the {@code WishList} to be modified
-	 * @param item the item to be saved
-	 * @param oldPrice the previous estimated price
-	 */
-	void updateItem(WishList wishList, WishListItem item, Money oldPrice);
-	
-	/**
-	 * Removes the new item from the provided {@code WishList}.
-	 * @param wishList the {@code WishList} to be modified
-	 * @param item the item to be removed
-	 */
-	void removeItem(WishList wishList, WishListItem item);
-	
-	/**
-	 * Moves the provided item from the {@code source} wish list to the {@code target} one.
-	 * @param source the source {@code WishList}
-	 * @param target the target {@code WishList}
-	 * @param item the item to be moved
-	 */
-	void moveItem(WishList source, WishList target, WishListItem item);
-	
-	/**
-	 * Changes the {@code WishList} visibility (either {@code public} or {@code private}).
-	 * @param wishList the {@code WishList} to be modified
-	 * @param visibility the new visibility
-	 */
-	void changeVisibility(WishList wishList, Visibility visibility);
-	
-	/**
-	 * Changes the {@code WishList} name.
-	 * @param wishList the {@code WishList} to be modified
-	 * @param newName the new name
-	 */
-	void changeName(WishList wishList, String newName);
-	
-	/**
-	 * Changes the {@code WishList} budget.
-	 * @param wishList the {@code WishList} to be modified
-	 * @param newBudget the new budget for the wish list
-	 */
-	void changeBudget(WishList wishList, Money newBudget);
-	
-	/**
-	 * Creates a new public {@code WishList}.
-	 * @param owner the owner
-	 * @param name the name
-	 */ 
-	void createNew(Account owner, String name);
+    /**
+     * Returns the list of {@code WishList} for the provided owner.
+     * <p>
+     * This method is loading the items for the {@code WishList}; the number
+     * of returned wish list items is limited by the {@code maxNumberOfItems} value.
+     * </p>
+     *
+     * @param owner            the owner
+     * @param maxNumberOfItems the max number of returned items
+     * @return a {@code WishList} list
+     */
+    Iterable<WishList> findAllByOwner(Account owner, int maxNumberOfItems);
 
-	/**
-	 * Creates a new {@code WishList}.
-	 * @param newList the {@code WishList} to be created
-	 */ 
-	void createNew(WishList newList);
-	
-	/**
-	 * Saves the {@code WishList} changes.
-	 * @param wishList the {@code WishList} to be saved
-	 */
-	void saveChanges(WishList wishList);
-	
-	/**
-	 * Removes the {@code WishList}.
-	 * @param wishList the {@code WishList} to be removed
-	 */ 
-	void remove(WishList wishList);
+    /**
+     * Returns the {@code WishList} with the provided slug.
+     *
+     * @param slug the slug
+     * @returns a {@code WishList} if found; {@code null} otherwise
+     */
+    WishList findBySlug(String slug);
+
+    /**
+     * Returns the {@code WishList} with the provided slug.
+     * <p/>
+     * <p>
+     * If the provided slug is the same as {@link WishList#defaultList(Account owner)}
+     * then this method will return the default {@code WishList} instead of {@code null}.
+     * </p>
+     *
+     * @param owner the {@code WishList} owner
+     * @param slug  the slug
+     * @returns a {@code WishList} if found; {@code null} otherwise
+     */
+    WishList findBySlugOrDefault(Account owner, String slug);
+
+    /**
+     * Checks whether the provided {@code WishList} contains a given rolling stock.
+     *
+     * @param wishList the {@code WishList}
+     * @param rs       the rolling stock
+     * @return {@code true} if the list contains the rolling stock; {@code false} otherwise
+     */
+    boolean containsRollingStock(WishList wishList, RollingStock rs);
+
+    /**
+     * Adds a new item to the provided {@code WishList}.
+     *
+     * @param wishList the {@code WishList} to be modified
+     * @param newItem  the item to be added
+     */
+    void addItem(WishList wishList, WishListItem newItem);
+
+    /**
+     * Updates an item for the provided {@code WishList}.
+     *
+     * @param wishList the {@code WishList} to be modified
+     * @param item     the item to be saved
+     * @param oldPrice the previous estimated price
+     */
+    void updateItem(WishList wishList, WishListItem item, Money oldPrice);
+
+    /**
+     * Removes the new item from the provided {@code WishList}.
+     *
+     * @param wishList the {@code WishList} to be modified
+     * @param item     the item to be removed
+     */
+    void removeItem(WishList wishList, WishListItem item);
+
+    /**
+     * Moves the provided item from the {@code source} wish list to the {@code target} one.
+     *
+     * @param source the source {@code WishList}
+     * @param target the target {@code WishList}
+     * @param item   the item to be moved
+     */
+    void moveItem(WishList source, WishList target, WishListItem item);
+
+    /**
+     * Changes the {@code WishList} visibility (either {@code public} or {@code private}).
+     *
+     * @param wishList   the {@code WishList} to be modified
+     * @param visibility the new visibility
+     */
+    void changeVisibility(WishList wishList, Visibility visibility);
+
+    /**
+     * Changes the {@code WishList} name.
+     *
+     * @param wishList the {@code WishList} to be modified
+     * @param newName  the new name
+     */
+    void changeName(WishList wishList, String newName);
+
+    /**
+     * Changes the {@code WishList} budget.
+     *
+     * @param wishList  the {@code WishList} to be modified
+     * @param newBudget the new budget for the wish list
+     */
+    void changeBudget(WishList wishList, Money newBudget);
+
+    /**
+     * Creates a new public {@code WishList}.
+     *
+     * @param owner the owner
+     * @param name  the name
+     */
+    void createNew(Account owner, String name);
+
+    /**
+     * Creates a new {@code WishList}.
+     *
+     * @param newList the {@code WishList} to be created
+     */
+    void createNew(WishList newList);
+
+    /**
+     * Saves the {@code WishList} changes.
+     *
+     * @param wishList the {@code WishList} to be saved
+     */
+    void saveChanges(WishList wishList);
+
+    /**
+     * Removes the {@code WishList}.
+     *
+     * @param wishList the {@code WishList} to be removed
+     */
+    void remove(WishList wishList);
 }

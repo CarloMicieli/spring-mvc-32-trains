@@ -25,39 +25,40 @@ import com.trenako.entities.Account;
 import com.trenako.services.AccountsService;
 
 /**
- * The concrete implementation for the service that allows 
+ * The concrete implementation for the service that allows
  * for retrieving a UserDetails object based on the email address.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service
 public class AccountDetailsService implements UserDetailsService {
 
-	private final AccountsService service;
-	
-	/**
-	 * Creates the accounts details service.
-	 * @param service the accounts service.
-	 */
-	@Autowired
-	public AccountDetailsService(AccountsService service) {
-		this.service = service;
-	}
-	
-	/**
-	 * Locates the user based on the email address.
-	 * @param emailAddress the email address.
-	 * @return the user details.
-	 */
-	@Override
-	public UserDetails loadUserByUsername(String emailAddress)
-			throws UsernameNotFoundException {
+    private final AccountsService service;
 
-		Account account = service.findByEmailAddress(emailAddress);
-		if (account == null) {
-			throw new UsernameNotFoundException("Could not find user with email " + emailAddress);
-		}
-		return new AccountDetails(account);
-	}
+    /**
+     * Creates the accounts details service.
+     *
+     * @param service the accounts service.
+     */
+    @Autowired
+    public AccountDetailsService(AccountsService service) {
+        this.service = service;
+    }
+
+    /**
+     * Locates the user based on the email address.
+     *
+     * @param emailAddress the email address.
+     * @return the user details.
+     */
+    @Override
+    public UserDetails loadUserByUsername(String emailAddress)
+            throws UsernameNotFoundException {
+
+        Account account = service.findByEmailAddress(emailAddress);
+        if (account == null) {
+            throw new UsernameNotFoundException("Could not find user with email " + emailAddress);
+        }
+        return new AccountDetails(account);
+    }
 }

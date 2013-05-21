@@ -23,37 +23,38 @@ import com.trenako.entities.RollingStockReviews;
  * The interface for the rolling stock reviews service.
  *
  * @author Carlo Micieli
- */ 
+ */
 public interface ReviewsService {
-	
-	/**
-	 * Finds the {@code RollingStockReviews} with the provided slug.
-	 * @param slug the slug
-	 * @return a {@code RollingStockReviews} if found; {@code null} otherwise
-	 */
-	RollingStockReviews findBySlug(String slug);
-		
-	/**
-	 * Returns the {@code RollingStockReviews} for the provided rolling stock.
-	 *
-	 * @param rollingStock the rolling stock
-	 * @return a {@code RollingStockReviews} if found; {@code null} otherwise
-	 */	
-	RollingStockReviews findByRollingStock(RollingStock rollingStock);
 
-	/**
-	 * Posts a new user review for the provided {@code RollingStock}.
-	 *
-	 * @param rs the {@code RollingStock} under review
-	 * @param review the review to be saved	 
-	 */
-	void postReview(RollingStock rs, Review review);
-	
-	/**
-	 * Deletes a review for the provided {@code RollingStock}.
-	 *
-	 * @param rs the {@code RollingStock} under review
-	 * @param review the review to be deleted	 
-	 */
-	void deleteReview(RollingStock rs, Review review);	
+    /**
+     * Finds the {@code RollingStockReviews} with the provided slug.
+     *
+     * @param slug the slug
+     * @return a {@code RollingStockReviews} if found; {@code null} otherwise
+     */
+    RollingStockReviews findBySlug(String slug);
+
+    /**
+     * Returns the {@code RollingStockReviews} for the provided rolling stock.
+     *
+     * @param rollingStock the rolling stock
+     * @return a {@code RollingStockReviews} if found; {@code null} otherwise
+     */
+    RollingStockReviews findByRollingStock(RollingStock rollingStock);
+
+    /**
+     * Posts a new user review for the provided {@code RollingStock}.
+     *
+     * @param rs     the {@code RollingStock} under review
+     * @param review the review to be saved
+     */
+    void postReview(RollingStock rs, Review review);
+
+    /**
+     * Deletes a review for the provided {@code RollingStock}.
+     *
+     * @param rs     the {@code RollingStock} under review
+     * @param review the review to be deleted
+     */
+    void deleteReview(RollingStock rs, Review review);
 }

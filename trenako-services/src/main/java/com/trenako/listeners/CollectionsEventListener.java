@@ -24,16 +24,14 @@ import com.mongodb.DBObject;
 import com.trenako.entities.Collection;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Component
 public class CollectionsEventListener extends AbstractMongoEventListener<Collection> {
 
-	@Override
-	public void onBeforeSave(Collection rs, DBObject dbo) {
-		dbo.put("lastModified", new Date());
-	}
+    @Override
+    public void onBeforeSave(Collection rs, DBObject dbo) {
+        dbo.put("lastModified", new Date());
+    }
 
 }

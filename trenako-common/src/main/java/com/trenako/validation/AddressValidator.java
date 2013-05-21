@@ -32,43 +32,43 @@ import com.trenako.validation.constraints.ValidAddress;
  * <li>have valid values for {@code street address}, {@code postal code}, {@code city} and {@code country}.</li>
  * </ul>
  * </p>
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
-public class AddressValidator 
-	implements ConstraintValidator<ValidAddress, Address> {
+public class AddressValidator
+        implements ConstraintValidator<ValidAddress, Address> {
 
-	@Override
-	public void initialize(ValidAddress constraintAnnotation) {
-	}
+    @Override
+    public void initialize(ValidAddress constraintAnnotation) {
+    }
 
-	@Override
-	public boolean isValid(Address addr, ConstraintValidatorContext context) {
-		if (addr == null || addr.isEmpty()) {
-			return true;
-		}
+    @Override
+    public boolean isValid(Address a, ConstraintValidatorContext context) {
+        if (a == null || a.isEmpty()) {
+            return true;
+        }
 
-		if (invalidStreetAddress(addr)) return false;
-		if (invalidPostalCode(addr)) return false;
-		if (invalidCity(addr)) return false;
-		if (invalidCountry(addr)) return false;
-		
-		return true;
-	}
+        if (invalidStreetAddress(a)) return false;
+        if (invalidPostalCode(a)) return false;
+        if (invalidCity(a)) return false;
+        if (invalidCountry(a)) return false;
 
-	private static boolean invalidStreetAddress(Address addr) {
-		return StringUtils.isBlank(addr.getStreetAddress());
-	}
+        return true;
+    }
 
-	private static boolean invalidPostalCode(Address addr) {
-		return StringUtils.isBlank(addr.getPostalCode());
-	}
+    private static boolean invalidStreetAddress(Address a) {
+        return StringUtils.isBlank(a.getStreetAddress());
+    }
 
-	private static boolean invalidCity(Address addr) {
-		return StringUtils.isBlank(addr.getCity());
-	}
+    private static boolean invalidPostalCode(Address a) {
+        return StringUtils.isBlank(a.getPostalCode());
+    }
 
-	private static boolean invalidCountry(Address addr) {
-		return StringUtils.isBlank(addr.getCountry());
-	}
+    private static boolean invalidCity(Address a) {
+        return StringUtils.isBlank(a.getCity());
+    }
+
+    private static boolean invalidCountry(Address a) {
+        return StringUtils.isBlank(a.getCountry());
+    }
 }

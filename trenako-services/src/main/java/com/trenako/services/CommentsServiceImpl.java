@@ -25,47 +25,46 @@ import com.trenako.repositories.CommentsRepository;
 
 /**
  * The interface for the comments service.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("commentsService")
 public class CommentsServiceImpl implements CommentsService {
 
-	private final CommentsRepository repo;
-	
-	@Autowired
-	public CommentsServiceImpl(CommentsRepository repo) {
-		this.repo = repo;
-	}
+    private final CommentsRepository repo;
 
-	@Override
-	public RollingStockComments findByRollingStock(RollingStock rollingStock) {
-		RollingStockComments rsc = repo.findByRollingStock(rollingStock);
-		if (rsc == null) {
-			return RollingStockComments.defaultRollingStockComments();
-		}
-		
-		return rsc;
-	}
+    @Autowired
+    public CommentsServiceImpl(CommentsRepository repo) {
+        this.repo = repo;
+    }
 
-	@Override
-	public void postComment(RollingStock rs, Comment comment) {
-		repo.createNew(rs, comment);
-	}
+    @Override
+    public RollingStockComments findByRollingStock(RollingStock rollingStock) {
+        RollingStockComments rsc = repo.findByRollingStock(rollingStock);
+        if (rsc == null) {
+            return RollingStockComments.defaultRollingStockComments();
+        }
 
-	@Override
-	public void postAnswer(RollingStock rs, Comment parent, Comment answer) {
-		repo.createAnswer(rs, parent, answer);
-	}
+        return rsc;
+    }
 
-	@Override
-	public void deleteComment(RollingStock rs, Comment comment) {
-		repo.remove(rs, comment);		
-	}
+    @Override
+    public void postComment(RollingStock rs, Comment comment) {
+        repo.createNew(rs, comment);
+    }
 
-	@Override
-	public void deleteAnswer(RollingStock rs, Comment parent, Comment answer) {
-		repo.removeAnswer(rs, parent, answer);		
-	}
+    @Override
+    public void postAnswer(RollingStock rs, Comment parent, Comment answer) {
+        repo.createAnswer(rs, parent, answer);
+    }
 
+    @Override
+    public void deleteComment(RollingStock rs, Comment comment) {
+        repo.remove(rs, comment);
+    }
+
+    @Override
+    public void deleteAnswer(RollingStock rs, Comment parent, Comment answer) {
+        repo.removeAnswer(rs, parent, answer);
+    }
 }

@@ -25,16 +25,15 @@ import com.trenako.entities.Brand;
 
 /**
  * The listener to change the document just before the brands are saved.
- * 
- * @author Carlo P. Micieli
  *
+ * @author Carlo P. Micieli
  */
 @Component
 public class BrandsEventListener extends AbstractMongoEventListener<Brand> {
 
-	@Override
-	public void onBeforeSave(Brand brand, DBObject dbo) {
-		dbo.put("lastModified", new Date());
-		dbo.put("slug", brand.getSlug());
-	}
+    @Override
+    public void onBeforeSave(Brand brand, DBObject dbo) {
+        dbo.put("lastModified", new Date());
+        dbo.put("slug", brand.getSlug());
+    }
 }

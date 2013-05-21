@@ -23,21 +23,21 @@ import com.mongodb.DBObject;
 
 /**
  * Converter from {@code DBObject} to {@code LocalizedField} during reading operations.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class LocalizedFieldReadConverter<T> implements Converter<DBObject, LocalizedField<T>> {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public LocalizedField<T> convert(DBObject dbo) {
+    @SuppressWarnings("unchecked")
+    @Override
+    public LocalizedField<T> convert(DBObject dbo) {
 
-		LocalizedField<T> field = new LocalizedField<T>();
-		Set<String> fieldNames = dbo.keySet();
-		for (String lang : fieldNames) {
-			field.put(lang, (T) dbo.get(lang));
-		}
-				
-		return field;
-	}
+        LocalizedField<T> field = new LocalizedField<T>();
+        Set<String> fieldNames = dbo.keySet();
+        for (String lang : fieldNames) {
+            field.put(lang, (T) dbo.get(lang));
+        }
+
+        return field;
+    }
 }

@@ -30,227 +30,231 @@ import com.trenako.utility.Utils;
 
 /**
  * It represents a delivery date for a rolling stock.
- * 
- * The delivery date has two parts: the {@code year} (required) and 
+ * <p/>
+ * The delivery date has two parts: the {@code year} (required) and
  * the {@code quarter} (optional).
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class DeliveryDate {
 
-	private static final String QUARTER_PREFIX = "Q";
-	private static final List<Integer> QUARTERS =
-			Collections.unmodifiableList(Arrays.asList(1, 2, 3, 4));
-	
-	private int year;
-	private int quarter;
-	
-	/**
-	 * Creates an empty {@code DeliveryDate}.
-	 */
-	public DeliveryDate() {
-	}
-	
-	/**
-	 * Creates a new {@code DeliveryDate} without the quarter.
-	 * @param year the year
-	 */
-	public DeliveryDate(int year) {
-		this.year = year;
-	}
-	
-	/**
-	 * Creates a new {@code DeliveryDate} with year and quarter.
-	 * @param year the year
-	 * @param quarter quarter (1-4)
-	 * 
-	 * @throws IllegalArgumentException if the quarter is invalid.
-	 */	
-	public DeliveryDate(int year, int quarter) {
-		if (!QUARTERS.contains(quarter)) {
-			throw new IllegalArgumentException("Delivery quarter must be >=1 and <=4");
-		}
-		
-		this.year = year;
-		this.quarter = quarter;
-	}
-	
-	/**
-	 * Sets the delivery date year.
-	 * @param year the year
-	 */
-	public void setYear(int year) {
-		this.year = year;
-	}
+    private static final String QUARTER_PREFIX = "Q";
+    private static final List<Integer> QUARTERS =
+            Collections.unmodifiableList(Arrays.asList(1, 2, 3, 4));
 
-	/**
-	 * Returns the delivery date year.
-	 * @return the year
-	 */
-	public int getYear() {
-		return year;
-	}
-	
-	/**
-	 * Sets the delivery date quarter.
-	 * @param quarter the quarter
-	 */
-	public void setQuarter(int quarter) {
-		this.quarter = quarter;
-	}
+    private int year;
+    private int quarter;
 
-	/**
-	 * Returns the delivery date quarter.
-	 * @return the quarter
-	 */
-	public int getQuarter() {
-		return quarter;
-	}
-	
-	/**
-	 * Returns the list of {@code DeliveryDate}.
-	 * <p>
-	 * This methods provides two different years ranges:
-	 * <ul>
-	 * <li>since {@code endYearWithQuarters} back to {@code startYearWithQuarters} 
-	 * the years are listed with quarter information;
-	 * <li>since {@code endYearWithoutQuarters} back to {@code startYearWithoutQuarters} 
-	 * the years are listed without quarter information.
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param startYearWithoutQuarters the first year without quarters
-	 * @param endYearWithoutQuarters the last year without quarters
-	 * @param startYearWithQuarters the first year with quarters
-	 * @param endYearWithQuarters the last year with quarters
-	 * @return the {@code DeliveryDate} list
-	 */
-	public static Iterable<DeliveryDate> list(int startYearWithoutQuarters, 
-		int endYearWithoutQuarters, 
-		int startYearWithQuarters, 
-		int endYearWithQuarters) {
-			
-		Assert.isTrue(startYearWithoutQuarters <= endYearWithoutQuarters);
-		Assert.isTrue(startYearWithQuarters <= endYearWithQuarters);
-		
-		List<DeliveryDate> list = new ArrayList<DeliveryDate>();
-		
-		for (int year : inverseRange(startYearWithQuarters, endYearWithQuarters)) {
-			for (int q : Utils.reverseIterable(QUARTERS)) {
-				list.add(new DeliveryDate(year, q));
-			}
-		}
-		
-		for (int year : inverseRange(startYearWithoutQuarters, endYearWithoutQuarters)) {
-			list.add(new DeliveryDate(year));
-		}
-		
-		return Collections.unmodifiableList(list);		
-	}
+    /**
+     * Creates an empty {@code DeliveryDate}.
+     */
+    public DeliveryDate() {
+    }
 
-	/**
-	 * Parses the string argument as a {@code DeliveryDate}.
-	 * <p>
-	 * A valid instance of {@code DeliveryDate} can have two formats:
-	 * <ul>
-	 * <li>{@code YYYY}, where {@code YYYY} is a valid year (ie {@code year>=1900 && year<2999});</li>
-	 * <li>{@code YYYY + '/Q' + N}, where {@code YYYY} is a valid year (ie {@code year>=1900 && year<2999})
-	 * and {@code N} is the quarter number (ie {@code quarter>=1 && quarter<4}).
-	 * </li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param s the string to be parsed
-	 * @return a {@code DeliveryDate} represented by the string argument
-	 * @throws IllegalArgumentException if {@code s} is empty or {@code null}
-	 * @throws DeliveryDateFormatException if {@code s} doesn't represent a valid {@code DeliveryDate}
-	 */
-	public static DeliveryDate parseString(String s) {
-		if (StringUtils.isBlank(s)) {
-			throw new IllegalArgumentException("Empty string is not valid");
-		}
-		
-		int year = 0;
-		int quarter = 0;
-		
-		String[] tokens = s.split("/");
-		
-		String sYear = tokens[0];
-		if (!StringUtils.isNumeric(sYear)) {
-			throw new DeliveryDateFormatException("'" + sYear + "' is not a valid year");
-		}
-		
-		year = Integer.parseInt(sYear);
-		if (year < 1900 || year > 2999) {
-			throw new DeliveryDateFormatException("'" + sYear + "' is not a valid year");
-		}
-		
-		if (tokens.length == 2) {
-			String sQuarter = tokens[1];
-			if (sQuarter.length() != 2 && !sQuarter.startsWith(QUARTER_PREFIX)) {
-				throw new DeliveryDateFormatException("'" + sQuarter + "' is not a valid quarter");
-			}
-			
-			quarter = Integer.parseInt(sQuarter.substring(1));
-			if( !QUARTERS.contains(quarter) ) {
-				throw new DeliveryDateFormatException("'" + sQuarter + "' is not a valid quarter");
-			}
-		}
-		
-		if (quarter == 0)
-			return new DeliveryDate(year);
-		else
-			return new DeliveryDate(year, quarter);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof DeliveryDate)) return false;
-		
-		DeliveryDate other = (DeliveryDate)obj;
-		return this.quarter == other.quarter &&
-				this.year == other.year;
-	}
+    /**
+     * Creates a new {@code DeliveryDate} without the quarter.
+     *
+     * @param year the year
+     */
+    public DeliveryDate(int year) {
+        this.year = year;
+    }
 
-	@Override
-	public String toString() {
-		if (QUARTERS.contains(quarter)) {
-			return String.format("%d/%s%d", year, QUARTER_PREFIX, quarter);
-		}
-		
-		return String.format("%d", year);
-	}
-	
-	private static Iterable<Integer> inverseRange(final int start, final int end) {
-		return new Iterable<Integer>() {
-			@Override
-			public Iterator<Integer> iterator() {
-				return new Iterator<Integer>() {
-					private int current = end;
-					
-					@Override
-					public boolean hasNext() {
-						return current >= start;
-					}
+    /**
+     * Creates a new {@code DeliveryDate} with year and quarter.
+     *
+     * @param year    the year
+     * @param quarter quarter (1-4)
+     * @throws IllegalArgumentException if the quarter is invalid.
+     */
+    public DeliveryDate(int year, int quarter) {
+        if (!QUARTERS.contains(quarter)) {
+            throw new IllegalArgumentException("Delivery quarter must be >=1 and <=4");
+        }
 
-					@Override
-					public Integer next() {
-						if (!hasNext()) {
-							throw new NoSuchElementException();
-						}
-						int n = current;
-						current--;
-						return n;
-					}
+        this.year = year;
+        this.quarter = quarter;
+    }
 
-					@Override
-					public void remove() {
-						throw new UnsupportedOperationException();
-					}
-				};
-			}
-		};
-	}
+    /**
+     * Sets the delivery date year.
+     *
+     * @param year the year
+     */
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    /**
+     * Returns the delivery date year.
+     *
+     * @return the year
+     */
+    public int getYear() {
+        return year;
+    }
+
+    /**
+     * Sets the delivery date quarter.
+     *
+     * @param quarter the quarter
+     */
+    public void setQuarter(int quarter) {
+        this.quarter = quarter;
+    }
+
+    /**
+     * Returns the delivery date quarter.
+     *
+     * @return the quarter
+     */
+    public int getQuarter() {
+        return quarter;
+    }
+
+    /**
+     * Returns the list of {@code DeliveryDate}.
+     * <p>
+     * This methods provides two different years ranges:
+     * <ul>
+     * <li>since {@code endYearWithQuarters} back to {@code startYearWithQuarters}
+     * the years are listed with quarter information;
+     * <li>since {@code endYearWithoutQuarters} back to {@code startYearWithoutQuarters}
+     * the years are listed without quarter information.
+     * </ul>
+     * </p>
+     *
+     * @param startYearWithoutQuarters the first year without quarters
+     * @param endYearWithoutQuarters   the last year without quarters
+     * @param startYearWithQuarters    the first year with quarters
+     * @param endYearWithQuarters      the last year with quarters
+     * @return the {@code DeliveryDate} list
+     */
+    public static Iterable<DeliveryDate> list(int startYearWithoutQuarters,
+                                              int endYearWithoutQuarters,
+                                              int startYearWithQuarters,
+                                              int endYearWithQuarters) {
+
+        Assert.isTrue(startYearWithoutQuarters <= endYearWithoutQuarters);
+        Assert.isTrue(startYearWithQuarters <= endYearWithQuarters);
+
+        List<DeliveryDate> list = new ArrayList<DeliveryDate>();
+
+        for (int year : inverseRange(startYearWithQuarters, endYearWithQuarters)) {
+            for (int q : Utils.reverseIterable(QUARTERS)) {
+                list.add(new DeliveryDate(year, q));
+            }
+        }
+
+        for (int year : inverseRange(startYearWithoutQuarters, endYearWithoutQuarters)) {
+            list.add(new DeliveryDate(year));
+        }
+
+        return Collections.unmodifiableList(list);
+    }
+
+    /**
+     * Parses the string argument as a {@code DeliveryDate}.
+     * <p>
+     * A valid instance of {@code DeliveryDate} can have two formats:
+     * <ul>
+     * <li>{@code YYYY}, where {@code YYYY} is a valid year (ie {@code year>=1900 && year<2999});</li>
+     * <li>{@code YYYY + '/Q' + N}, where {@code YYYY} is a valid year (ie {@code year>=1900 && year<2999})
+     * and {@code N} is the quarter number (ie {@code quarter>=1 && quarter<4}).
+     * </li>
+     * </ul>
+     * </p>
+     *
+     * @param s the string to be parsed
+     * @return a {@code DeliveryDate} represented by the string argument
+     * @throws IllegalArgumentException    if {@code s} is empty or {@code null}
+     * @throws DeliveryDateFormatException if {@code s} doesn't represent a valid {@code DeliveryDate}
+     */
+    public static DeliveryDate parseString(String s) {
+        if (StringUtils.isBlank(s)) {
+            throw new IllegalArgumentException("Empty string is not valid");
+        }
+
+        int year = 0;
+        int quarter = 0;
+
+        String[] tokens = s.split("/");
+
+        String sYear = tokens[0];
+        if (!StringUtils.isNumeric(sYear)) {
+            throw new DeliveryDateFormatException("'" + sYear + "' is not a valid year");
+        }
+
+        year = Integer.parseInt(sYear);
+        if (year < 1900 || year > 2999) {
+            throw new DeliveryDateFormatException("'" + sYear + "' is not a valid year");
+        }
+
+        if (tokens.length == 2) {
+            String sQuarter = tokens[1];
+            if (sQuarter.length() != 2 && !sQuarter.startsWith(QUARTER_PREFIX)) {
+                throw new DeliveryDateFormatException("'" + sQuarter + "' is not a valid quarter");
+            }
+
+            quarter = Integer.parseInt(sQuarter.substring(1));
+            if (!QUARTERS.contains(quarter)) {
+                throw new DeliveryDateFormatException("'" + sQuarter + "' is not a valid quarter");
+            }
+        }
+
+        if (quarter == 0)
+            return new DeliveryDate(year);
+        else
+            return new DeliveryDate(year, quarter);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof DeliveryDate)) return false;
+
+        DeliveryDate other = (DeliveryDate) obj;
+        return this.quarter == other.quarter &&
+                this.year == other.year;
+    }
+
+    @Override
+    public String toString() {
+        if (QUARTERS.contains(quarter)) {
+            return String.format("%d/%s%d", year, QUARTER_PREFIX, quarter);
+        }
+
+        return String.format("%d", year);
+    }
+
+    private static Iterable<Integer> inverseRange(final int start, final int end) {
+        return new Iterable<Integer>() {
+            @Override
+            public Iterator<Integer> iterator() {
+                return new Iterator<Integer>() {
+                    private int current = end;
+
+                    @Override
+                    public boolean hasNext() {
+                        return current >= start;
+                    }
+
+                    @Override
+                    public Integer next() {
+                        if (!hasNext()) {
+                            throw new NoSuchElementException();
+                        }
+                        int n = current;
+                        current--;
+                        return n;
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
 }

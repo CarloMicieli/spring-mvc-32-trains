@@ -21,32 +21,34 @@ import com.trenako.services.view.HomeView;
 
 /**
  * The interface for the homepage service.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface HomeService {
 
-	/**
-	 * Returns the content for the homepage.
-	 * <p>
-	 * This method will have two different behaviors whether the current user
-	 * is logged or not (i.e. this method will manage {@code null} logged user}. 
-	 * </p>
-	 * @param loggedUser the logged user, can be {@code null}
-	 * @return the homepage content
-	 */
-	HomeView getHomeContent(Account loggedUser);
+    /**
+     * Returns the content for the homepage.
+     * <p>
+     * This method will have two different behaviors whether the current user
+     * is logged or not (i.e. this method will manage {@code null} logged user}.
+     * </p>
+     *
+     * @param loggedUser the logged user, can be {@code null}
+     * @return the homepage content
+     */
+    HomeView getHomeContent(Account loggedUser);
 
-	/**
-	 * Returns the content for the homepage.
-	 * <p>
-	 * This method will have two different behaviors whether the current user
-	 * is logged or not (i.e. this method will manage {@code null} logged user}. 
-	 * </p>
-	 * @param loggedUser the logged user, can be {@code null}
-	 * @param options the home content options
-	 * @return the homepage content
-	 */
-	HomeView getHomeContent(Account loggedUser, HomepageOptions options);
-	
+    /**
+     * Returns the content for the homepage.
+     * <p>
+     * This method will have two different behaviors whether the current user
+     * is logged or not (i.e. this method will manage {@code null} logged user}.
+     * </p>
+     *
+     * @param loggedUser the logged user, can be {@code null}
+     * @param options    the home content options
+     * @return the homepage content
+     */
+    HomeView getHomeContent(Account loggedUser, HomepageOptions options);
+
 }

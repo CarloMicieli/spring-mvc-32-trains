@@ -24,21 +24,19 @@ import com.trenako.mapping.DbReferenceable;
 import com.trenako.mapping.WeakDbRef;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class WeakDbRefFormatter implements Formatter<WeakDbRef<?>> {
 
-	@Override
-	public String print(WeakDbRef<?> ref, Locale locale) {
-		return ref.getSlug();
-	}
+    @Override
+    public String print(WeakDbRef<?> ref, Locale locale) {
+        return ref.getSlug();
+    }
 
-	@Override
-	public WeakDbRef<DbReferenceable> parse(String text, Locale locale)
-			throws ParseException {
-		return WeakDbRef.buildFromSlug(text, DbReferenceable.class);
-	}
+    @Override
+    public WeakDbRef<DbReferenceable> parse(String text, Locale locale)
+            throws ParseException {
+        return WeakDbRef.buildFromSlug(text, DbReferenceable.class);
+    }
 
 }

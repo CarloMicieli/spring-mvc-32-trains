@@ -25,7 +25,7 @@ import com.trenako.entities.Account;
  * The interface for the accounts service.
  * <p>
  * The concrete classes that implements the {@code AccountsService} interface will provide
- * the following functionalities:
+ * the following functionality:
  * <ul>
  * <li>finds the {@code Account} by id;</li>
  * <li>finds the {@code Account} by email address;</li>
@@ -39,55 +39,62 @@ import com.trenako.entities.Account;
  * @see com.trenako.repositories.AccountsRepository
  */
 public interface AccountsService {
-	
-	/**
-	 * Returns the {@code Account} list.
-	 * @param pageable the paging information
-	 * @return the {@code Account} list
-	 */
-	Page<Account> findAll(Pageable pageable);
-	
-	/**
-	 * Finds the {@link Account} with the provided id.
-	 * @param id the unique id
-	 * @return an {@code Account} if found; {@code null} otherwise
-	 */
-	Account findById(ObjectId id);
-	
-	/**
-	 * Finds the {@link Account} with the provided email address.
-	 * @param emailAddress the email address
-	 * @return an {@code Account} if found; {@code null} otherwise
-	 */
-	Account findByEmailAddress(String emailAddress);
-	
-	/**
-	 * Finds the {@link Account} with the provided slug.
-	 * @param slug the user slug
-	 * @return an {@code Account} if found; {@code null} otherwise
-	 * @see com.trenako.entities.Account#getSlug()
-	 */	
-	Account findBySlug(String slug);
-	
-	/**
-	 * This method will update only roles and flag for a given account. 
-	 * @param account the {@code Account} to be saved
-	 */
-	void updateChanges(Account account);
-	
-	/**
-	 * Persists the {@link Account} changes in the data store.
-	 * <p>
-	 * This method performs a "upsert": if the {@code Account} is not present in the data store
-	 * a new {@code Account} is created; otherwise the method will update the existing {@code Account}. 
-	 * </p>	 
-	 * @param account the {@code Account} to be saved
-	 */
-	void save(Account account);
-	
-	/**
-	 * Removes a {@link Account} from the data store.
-	 * @param account the {@code Account} to be removed
-	 */
-	void remove(Account account);
+
+    /**
+     * Returns the {@code Account} list.
+     *
+     * @param pageable the paging information
+     * @return the {@code Account} list
+     */
+    Page<Account> findAll(Pageable pageable);
+
+    /**
+     * Finds the {@link Account} with the provided id.
+     *
+     * @param id the unique id
+     * @return an {@code Account} if found; {@code null} otherwise
+     */
+    Account findById(ObjectId id);
+
+    /**
+     * Finds the {@link Account} with the provided email address.
+     *
+     * @param emailAddress the email address
+     * @return an {@code Account} if found; {@code null} otherwise
+     */
+    Account findByEmailAddress(String emailAddress);
+
+    /**
+     * Finds the {@link Account} with the provided slug.
+     *
+     * @param slug the user slug
+     * @return an {@code Account} if found; {@code null} otherwise
+     * @see com.trenako.entities.Account#getSlug()
+     */
+    Account findBySlug(String slug);
+
+    /**
+     * This method will update only roles and flag for a given account.
+     *
+     * @param account the {@code Account} to be saved
+     */
+    void updateChanges(Account account);
+
+    /**
+     * Persists the {@link Account} changes in the data store.
+     * <p>
+     * This method performs a "upsert": if the {@code Account} is not present in the data store
+     * a new {@code Account} is created; otherwise the method will update the existing {@code Account}.
+     * </p>
+     *
+     * @param account the {@code Account} to be saved
+     */
+    void save(Account account);
+
+    /**
+     * Removes a {@link Account} from the data store.
+     *
+     * @param account the {@code Account} to be removed
+     */
+    void remove(Account account);
 }

@@ -26,33 +26,31 @@ import org.springframework.format.number.AbstractNumberFormatter;
 import com.trenako.entities.Scale;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class GaugeFormatter extends AbstractNumberFormatter {
 
-	@Override
-	public String print(Number object, Locale locale) {
-		BigDecimal number = new BigDecimal((Integer)object).divide(Scale.GAUGE_FACTOR);
-		return super.print(number, locale);
-	}
+    @Override
+    public String print(Number object, Locale locale) {
+        BigDecimal number = new BigDecimal((Integer) object).divide(Scale.GAUGE_FACTOR);
+        return super.print(number, locale);
+    }
 
-	@Override
-	public Integer parse(String text, Locale locale) throws ParseException {
-		Integer val = null;
-		BigDecimal d = (BigDecimal) super.parse(text, locale);
-		if (d!=null) {
-			val = d.multiply(Scale.GAUGE_FACTOR).intValue();
-		}
-		return val;
-	}
+    @Override
+    public Integer parse(String text, Locale locale) throws ParseException {
+        Integer val = null;
+        BigDecimal d = (BigDecimal) super.parse(text, locale);
+        if (d != null) {
+            val = d.multiply(Scale.GAUGE_FACTOR).intValue();
+        }
+        return val;
+    }
 
-	@Override
-	protected NumberFormat getNumberFormat(Locale locale) {
-		DecimalFormat format = (DecimalFormat) NumberFormat.getInstance(locale);
-		format.setParseBigDecimal(true);
-		return format;
-	}
+    @Override
+    protected NumberFormat getNumberFormat(Locale locale) {
+        DecimalFormat format = (DecimalFormat) NumberFormat.getInstance(locale);
+        format.setParseBigDecimal(true);
+        return format;
+    }
 
 }

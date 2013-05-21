@@ -28,96 +28,97 @@ import com.trenako.web.security.UserContext;
 
 /**
  * It represents a web form for {@code Comment}s.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class CommentForm {
-	
-	private String rsSlug;
-	private String rsLabel;
-	
-	@Valid
-	private Comment comment;
-	
-	/**
-	 * Creates a new empty {@code CommentForm}.
-	 */
-	public CommentForm() {
-	}
-	
-	private CommentForm(RollingStock rs, Account author, String content) {
-		this.rsLabel = rs.getLabel();
-		this.rsSlug = rs.getSlug();
-		
-		this.comment = new Comment(author, content, null);
-	}
-	
-	/**
-	 * Creates a new {@code CommentForm} for the currently logged user.
-	 * 
-	 * @param rs the rolling stock to be commented
-	 * @param secContext the security context
-	 * @return a {@code CommentForm} if there is a logged user; {@code null} otherwise
-	 */
-	public static CommentForm newForm(RollingStock rs, UserContext secContext) {
-		Account author = UserContext.authenticatedUser(secContext);
-		if (author != null) {
-			return new CommentForm(rs, author, "");
-		}
-		
-		return null;
-	}
 
-	public String getRsSlug() {
-		return rsSlug;
-	}
+    private String rsSlug;
+    private String rsLabel;
 
-	public void setRsSlug(String rsSlug) {
-		this.rsSlug = rsSlug;
-	}
+    @Valid
+    private Comment comment;
 
-	public String getRsLabel() {
-		return rsLabel;
-	}
+    /**
+     * Creates a new empty {@code CommentForm}.
+     */
+    public CommentForm() {
+    }
 
-	public void setRsLabel(String rsLabel) {
-		this.rsLabel = rsLabel;
-	}
+    private CommentForm(RollingStock rs, Account author, String content) {
+        this.rsLabel = rs.getLabel();
+        this.rsSlug = rs.getSlug();
 
-	public Comment getComment() {
-		return comment;
-	}
+        this.comment = new Comment(author, content, null);
+    }
 
-	public void setComment(Comment comment) {
-		this.comment = comment;
-	}
-	
-	/**
-	 * Builds the {@code Comment} for the posted form.
-	 * @param postedAt the posting date
-	 * @return a {@code Comment}
-	 */
-	public Comment buildComment(Date postedAt) {
-		if (getComment() == null) {
-			return null;
-		}
-		
-		return new Comment(
-				getComment().getAuthor(), 
-				getComment().getContent(), 
-				postedAt);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof CommentForm)) return false;
-		
-		CommentForm other = (CommentForm) obj;
-		return new EqualsBuilder()
-			.append(this.comment, other.comment)
-			.append(this.rsSlug, other.rsSlug)
-			.append(this.rsLabel, other.rsLabel)
-			.isEquals();
-	}
+    /**
+     * Creates a new {@code CommentForm} for the currently logged user.
+     *
+     * @param rs         the rolling stock to be commented
+     * @param secContext the security context
+     * @return a {@code CommentForm} if there is a logged user; {@code null} otherwise
+     */
+    public static CommentForm newForm(RollingStock rs, UserContext secContext) {
+        Account author = UserContext.authenticatedUser(secContext);
+        if (author != null) {
+            return new CommentForm(rs, author, "");
+        }
+
+        return null;
+    }
+
+    public String getRsSlug() {
+        return rsSlug;
+    }
+
+    public void setRsSlug(String rsSlug) {
+        this.rsSlug = rsSlug;
+    }
+
+    public String getRsLabel() {
+        return rsLabel;
+    }
+
+    public void setRsLabel(String rsLabel) {
+        this.rsLabel = rsLabel;
+    }
+
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    /**
+     * Builds the {@code Comment} for the posted form.
+     *
+     * @param postedAt the posting date
+     * @return a {@code Comment}
+     */
+    public Comment buildComment(Date postedAt) {
+        if (getComment() == null) {
+            return null;
+        }
+
+        return new Comment(
+                getComment().getAuthor(),
+                getComment().getContent(),
+                postedAt);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof CommentForm)) return false;
+
+        CommentForm other = (CommentForm) obj;
+        return new EqualsBuilder()
+                .append(this.comment, other.comment)
+                .append(this.rsSlug, other.rsSlug)
+                .append(this.rsLabel, other.rsLabel)
+                .isEquals();
+    }
 }

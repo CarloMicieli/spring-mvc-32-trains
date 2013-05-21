@@ -25,15 +25,15 @@ import com.trenako.entities.RollingStock;
 
 /**
  * The listener to change the document just before the rolling stocks are saved.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Component
 public class RollingStocksEventListener extends AbstractMongoEventListener<RollingStock> {
 
-	@Override
-	public void onBeforeSave(RollingStock rs, DBObject dbo) {
-		dbo.put("lastModified", new Date());
-		dbo.put("slug", rs.getSlug());
-	}
+    @Override
+    public void onBeforeSave(RollingStock rs, DBObject dbo) {
+        dbo.put("lastModified", new Date());
+        dbo.put("slug", rs.getSlug());
+    }
 }

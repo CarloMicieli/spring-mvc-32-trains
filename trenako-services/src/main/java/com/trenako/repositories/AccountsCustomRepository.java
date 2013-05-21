@@ -18,11 +18,9 @@ package com.trenako.repositories;
 import com.trenako.entities.Account;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public interface AccountsCustomRepository {
 
-	void updateChanges(Account account);
+    void updateChanges(Account account);
 }

@@ -29,80 +29,78 @@ import com.trenako.results.RangeRequest;
 import com.trenako.results.SearchRange;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class RangeRequestQueryParamsBuilder {
 
-	private RangeRequestQueryParamsBuilder() {
-	}
-	
-	/**
-	 * Builds the query parameters for the provided {@code SearchRange}.
-	 * @param searchRange the {@code SearchRange}
-	 * @return the query parameters
-	 */
-	public static String buildQueryParamsNext(SearchRange searchRange) {
-		try {
-			return buildQueryParams(searchRange.asMap(), RangeRequest.SINCE_NAME);
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
-	}
-	
-	/**
-	 * Builds the query parameters for the provided {@code SearchRange}.
-	 * @param searchRange the {@code SearchRange}
-	 * @return the query parameters
-	 */
-	public static String buildQueryParamsPrevious(SearchRange searchRange) {
-		try {
-			return buildQueryParams(searchRange.asMap(), RangeRequest.MAX_NAME);
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
-	}
-	
-	/**
-	 * Builds the query parameters for the provided parameters {@code Map}.
-	 * @param params the parameters
-	 * @param range range id
-	 * @return the query parameters
-	 * @throws UnsupportedEncodingException 
-	 */
-	static String buildQueryParams(Map<String, Object> params, String range) throws UnsupportedEncodingException {
-		StringBuilder sb = new StringBuilder();
-		
-		boolean first = true;
-		for (Map.Entry<String, Object> entry : params.entrySet()) {
-			
-			if (RANGE_NAMES.contains(entry.getKey()) && !entry.getKey().equals(range)) {
-				continue;
-			}
-			
-			if (first) {
-				sb.append("?");
-				first = false;
-			}
-			else {
-				sb.append("&");
-			}
-			
-			String val = ""; 
-			if (entry.getValue() instanceof Date) {
-				val = DateFormatUtils.format((Date) entry.getValue(), DateFormatUtils.ISO_DATETIME_FORMAT.getPattern());
-			}
-			else {
-				val = entry.getValue().toString();
-			}
-			sb.append(entry.getKey()).append("=").append(URLEncoder.encode(val, "UTF-8"));
-		}
-		
-		return sb.toString();
-		
-	}
-	
-	static final List<String> RANGE_NAMES = 
-			Collections.unmodifiableList(Arrays.asList(RangeRequest.MAX_NAME, RangeRequest.SINCE_NAME));
+    private RangeRequestQueryParamsBuilder() {
+    }
+
+    /**
+     * Builds the query parameters for the provided {@code SearchRange}.
+     *
+     * @param searchRange the {@code SearchRange}
+     * @return the query parameters
+     */
+    public static String buildQueryParamsNext(SearchRange searchRange) {
+        try {
+            return buildQueryParams(searchRange.asMap(), RangeRequest.SINCE_NAME);
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Builds the query parameters for the provided {@code SearchRange}.
+     *
+     * @param searchRange the {@code SearchRange}
+     * @return the query parameters
+     */
+    public static String buildQueryParamsPrevious(SearchRange searchRange) {
+        try {
+            return buildQueryParams(searchRange.asMap(), RangeRequest.MAX_NAME);
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Builds the query parameters for the provided parameters {@code Map}.
+     *
+     * @param params the parameters
+     * @param range  range id
+     * @return the query parameters
+     * @throws UnsupportedEncodingException
+     */
+    static String buildQueryParams(Map<String, Object> params, String range) throws UnsupportedEncodingException {
+        StringBuilder sb = new StringBuilder();
+
+        boolean first = true;
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+
+            if (RANGE_NAMES.contains(entry.getKey()) && !entry.getKey().equals(range)) {
+                continue;
+            }
+
+            if (first) {
+                sb.append("?");
+                first = false;
+            } else {
+                sb.append("&");
+            }
+
+            String val;
+            if (entry.getValue() instanceof Date) {
+                val = DateFormatUtils.format((Date) entry.getValue(), DateFormatUtils.ISO_DATETIME_FORMAT.getPattern());
+            } else {
+                val = entry.getValue().toString();
+            }
+            sb.append(entry.getKey()).append("=").append(URLEncoder.encode(val, "UTF-8"));
+        }
+
+        return sb.toString();
+    }
+
+    static final List<String> RANGE_NAMES =
+            Collections.unmodifiableList(Arrays.asList(RangeRequest.MAX_NAME, RangeRequest.SINCE_NAME));
 }

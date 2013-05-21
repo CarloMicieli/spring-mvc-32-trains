@@ -40,77 +40,74 @@ import com.trenako.web.controllers.ControllerMessage;
 import com.trenako.web.infrastructure.LogUtils;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Controller
 @RequestMapping("/admin/users")
 public class AdminUsersController {
 
-	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
+    private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
 
-	final static ControllerMessage USER_SAVED_MSG = success("user.saved.message");
-	final static ControllerMessage USER_BLOCKED_MSG = success("user.blocked.message");
-	final static ControllerMessage USER_DB_ERROR_MSG = error("user.db.error.message");
-	final static ControllerMessage USER_NOT_FOUND_MSG = error("user.not.found.message");
-	
-	private final AccountsService userService;
+    final static ControllerMessage USER_SAVED_MSG = success("user.saved.message");
+    final static ControllerMessage USER_BLOCKED_MSG = success("user.blocked.message");
+    final static ControllerMessage USER_DB_ERROR_MSG = error("user.db.error.message");
+    final static ControllerMessage USER_NOT_FOUND_MSG = error("user.not.found.message");
 
-	@Autowired
-	public AdminUsersController(AccountsService userService) {
-		this.userService = userService;
-	}
-	
-	@ModelAttribute("rolesList")
-	public Iterable<String> roles() {
-		return Account.accountRoles();
-	}
-	
-	@RequestMapping(method = RequestMethod.GET)
-	public String usersList(Pageable pageable, ModelMap model) {
-		model.addAttribute("users", userService.findAll(pageable));
-		return "user/list";
-	}
+    private final AccountsService userService;
 
-	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
-	public String editForm(@PathVariable("slug") String slug, 
-		ModelMap model, 
-		RedirectAttributes redirectAtts) {
+    @Autowired
+    public AdminUsersController(AccountsService userService) {
+        this.userService = userService;
+    }
 
-		Account user = userService.findBySlug(slug);
-		if (user == null) {
-			USER_NOT_FOUND_MSG.appendToRedirect(redirectAtts);
-			return "redirect:/admin/users";
-		}
+    @ModelAttribute("rolesList")
+    public Iterable<String> roles() {
+        return Account.accountRoles();
+    }
 
-		model.addAttribute(user);
-		return "user/edit";
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    public String usersList(Pageable pageable, ModelMap model) {
+        model.addAttribute("users", userService.findAll(pageable));
+        return "user/list";
+    }
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String saveUser(@Valid @ModelAttribute Account user, 
-		BindingResult bindingResult, 
-		ModelMap model, 
-		RedirectAttributes redirectAtts) {
+    @RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
+    public String editForm(@PathVariable("slug") String slug,
+                           ModelMap model,
+                           RedirectAttributes redirectAtts) {
 
-		if (bindingResult.hasErrors()) {
-			LogUtils.logValidationErrors(log, bindingResult);
-			model.addAttribute(user);
-			return "user/edit";
-		}
+        Account user = userService.findBySlug(slug);
+        if (user == null) {
+            USER_NOT_FOUND_MSG.appendToRedirect(redirectAtts);
+            return "redirect:/admin/users";
+        }
 
-		try {
-			userService.updateChanges(user);
-			USER_SAVED_MSG.appendToRedirect(redirectAtts);
-			return "redirect:/admin/users";
-		}
-		catch (DataAccessException dae) {
-			LogUtils.logException(log, dae);
-			USER_DB_ERROR_MSG.appendToModel(model);
-			model.addAttribute(user);
-			return "user/edit";
-		}
-	}
+        model.addAttribute(user);
+        return "user/edit";
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public String saveUser(@Valid @ModelAttribute Account user,
+                           BindingResult bindingResult,
+                           ModelMap model,
+                           RedirectAttributes redirectAtts) {
+
+        if (bindingResult.hasErrors()) {
+            LogUtils.logValidationErrors(log, bindingResult);
+            model.addAttribute(user);
+            return "user/edit";
+        }
+
+        try {
+            userService.updateChanges(user);
+            USER_SAVED_MSG.appendToRedirect(redirectAtts);
+            return "redirect:/admin/users";
+        } catch (DataAccessException dae) {
+            LogUtils.logException(log, dae);
+            USER_DB_ERROR_MSG.appendToModel(model);
+            model.addAttribute(user);
+            return "user/edit";
+        }
+    }
 
 }

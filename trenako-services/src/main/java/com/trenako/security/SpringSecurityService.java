@@ -25,29 +25,29 @@ import com.trenako.entities.Account;
 
 /**
  * The concrete implementation for the service.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("securityService")
 public class SpringSecurityService implements SecurityService {
 
-	private SecurityContext getSecContext() {
-		return SecurityContextHolder.getContext();
-	}
-	
-	@Override
-	public void authenticate(Account user) {
-		AccountDetails userDetails = new AccountDetails(user);
-		Authentication auth = new UsernamePasswordAuthenticationToken(
-				userDetails,
-				userDetails.getPassword(),
-				userDetails.getAuthorities());
-		getSecContext().setAuthentication(auth);
-	}
+    private SecurityContext getSecContext() {
+        return SecurityContextHolder.getContext();
+    }
 
-	@Override
-	public AccountDetails getCurrentUser() {
-		Authentication auth = getSecContext().getAuthentication();
-		return auth==null ? null : (AccountDetails) auth.getPrincipal();
-	}
+    @Override
+    public void authenticate(Account user) {
+        AccountDetails userDetails = new AccountDetails(user);
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                userDetails.getPassword(),
+                userDetails.getAuthorities());
+        getSecContext().setAuthentication(auth);
+    }
+
+    @Override
+    public AccountDetails getCurrentUser() {
+        Authentication auth = getSecContext().getAuthentication();
+        return auth == null ? null : (AccountDetails) auth.getPrincipal();
+    }
 }

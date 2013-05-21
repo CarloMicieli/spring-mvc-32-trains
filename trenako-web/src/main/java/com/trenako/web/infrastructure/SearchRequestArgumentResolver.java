@@ -29,46 +29,44 @@ import com.trenako.criteria.SearchRequest;
 
 /**
  * Resolves {@code SearchRequest} method arguments for controller actions.
- * 
+ *
  * @author Carlo Micieli
  * @see com.trenako.criteria.SearchRequest
- *
  */
 public class SearchRequestArgumentResolver implements HandlerMethodArgumentResolver {
-	
-	private static final Object UNRESOLVED = new Object();
-	
-	/**
-	 * Creates a new {@code SearchRequestArgumentResolver}.
-	 * @param failbackRequest a failback request
-	 */
-	public SearchRequestArgumentResolver() {
-	}
-	
-	@Override
-	public Object resolveArgument(MethodParameter param,
-			ModelAndViewContainer mavContainer, 
-			NativeWebRequest webRequest,
-			WebDataBinderFactory binderFactory) throws Exception {
 
-		if (param.getParameterType().equals(SearchRequest.class)) {
-			SearchRequest searchRequest = new SearchRequest();
-			
-			WebDataBinder webBinder = binderFactory.createBinder(webRequest, searchRequest, "");
-			
-			HttpServletRequest request = 
-					(HttpServletRequest) webRequest.getNativeRequest();
-			PropertyValues pvs = new ServletRequestPathVariablesPropertyValues(request);
-			webBinder.bind(pvs);
-			return searchRequest;
-		}
-		
-		return UNRESOLVED;
-	}
+    private static final Object UNRESOLVED = new Object();
 
-	@Override
-	public boolean supportsParameter(MethodParameter par) {
-		Class<?> paramType = par.getParameterType();
-		return SearchRequest.class.isAssignableFrom(paramType);
-	}
+    /**
+     * Creates a new {@code SearchRequestArgumentResolver}.
+     */
+    public SearchRequestArgumentResolver() {
+    }
+
+    @Override
+    public Object resolveArgument(MethodParameter param,
+                                  ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest,
+                                  WebDataBinderFactory binderFactory) throws Exception {
+
+        if (param.getParameterType().equals(SearchRequest.class)) {
+            SearchRequest searchRequest = new SearchRequest();
+
+            WebDataBinder webBinder = binderFactory.createBinder(webRequest, searchRequest, "");
+
+            HttpServletRequest request =
+                    (HttpServletRequest) webRequest.getNativeRequest();
+            PropertyValues pvs = new ServletRequestPathVariablesPropertyValues(request);
+            webBinder.bind(pvs);
+            return searchRequest;
+        }
+
+        return UNRESOLVED;
+    }
+
+    @Override
+    public boolean supportsParameter(MethodParameter par) {
+        Class<?> paramType = par.getParameterType();
+        return SearchRequest.class.isAssignableFrom(paramType);
+    }
 }

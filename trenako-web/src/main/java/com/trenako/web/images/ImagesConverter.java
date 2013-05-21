@@ -25,29 +25,28 @@ import com.trenako.images.UploadFile;
 /**
  * The interface for the processing library
  * in charge of the uploaded images management.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface ImagesConverter {
-	/**
-	 * Creates a thumbnail for a received {@link MultipartFile} from a web request.
-	 * 
-	 * @param file the received {@code MultipartFile}
-	 * @param metadata the file metadata
-	 * @param targetSize the target size in pixel
-	 * @return the {@code UploadFile}
-	 * @throws IOException if an I/O exception of some sort has occurred
-	 */
-	UploadFile createThumbnail(MultipartFile file, Map<String, String> metadata, int targetSize) throws IOException;
-	
-	/**
-	 * Converts a received {@link MultipartFile} from a web request to a bytes array.
-	 * 
-	 * @param file the received {@code MultipartFile}
-	 * @param metadata the file metadata
-	 * @return the {@code UploadFile}
-	 * @throws IOException if an I/O exception of some sort has occurred
-	 */
-	UploadFile createImage(MultipartFile file, Map<String, String> metadata) throws IOException;
+    /**
+     * Creates a thumbnail for a received {@link MultipartFile} from a web request.
+     *
+     * @param file       the received {@code MultipartFile}
+     * @param metadata   the file metadata
+     * @param targetSize the target size in pixel
+     * @return the {@code UploadFile}
+     * @throws IOException if an I/O exception of some sort has occurred
+     */
+    UploadFile createThumbnail(MultipartFile file, Map<String, String> metadata, int targetSize) throws IOException;
+
+    /**
+     * Converts a received {@link MultipartFile} from a web request to a bytes array.
+     *
+     * @param file     the received {@code MultipartFile}
+     * @param metadata the file metadata
+     * @return the {@code UploadFile}
+     * @throws IOException if an I/O exception of some sort has occurred
+     */
+    UploadFile createImage(MultipartFile file, Map<String, String> metadata) throws IOException;
 }

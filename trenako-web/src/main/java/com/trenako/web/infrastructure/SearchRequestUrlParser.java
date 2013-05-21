@@ -25,49 +25,47 @@ import org.springframework.util.Assert;
 import com.trenako.criteria.Criteria;
 
 /**
- * It represents a parser for a servlet path based representation 
+ * It represents a parser for a servlet path based representation
  * of {@code SearchRequest} objects.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class SearchRequestUrlParser {
 
-	private static final List<String> SEARCH_CRITERIA_KEYS = (List<String>) Criteria.keys();
-	
-	/**
-	 * Parses the {@code path} string, matching the {@code SearchCriteria} property names.
-	 * <p>
-	 * This method is able to manage paths with wrong sequences, in this case
-	 * the values outside the correct sequence are simply ignored.
-	 * </p>
-	 * 
-	 * @param path the {@code path} string
-	 * @return a {@code Map} with the extracted values 
-	 */
-	public static Map<String, String> parseUrl(String path) {
-		Assert.notNull(path, "Path must be not null");
-		
-		Map<String, String> values = new HashMap<String, String>();
-		Stack<String> stack = new Stack<String>();
-		String[] tokens = path.split("/");
-		for (String tk : tokens) {
-			if (SEARCH_CRITERIA_KEYS.contains(tk)) {
-				if (!stack.isEmpty()) {
-					// a different key name was found, but no value was provided
-					// (ie /key1/key2/value2)
-					stack.pop();
-				}
-				stack.push(tk);
-			}
-			else {
-				if (!stack.isEmpty()) {
-					// match this value with the key name in the stack
-					values.put(stack.pop(), tk);					
-				}
-			}
-		}
-		
-		return values;
-	}
+    private static final List<String> SEARCH_CRITERIA_KEYS = (List<String>) Criteria.keys();
+
+    /**
+     * Parses the {@code path} string, matching the {@code SearchCriteria} property names.
+     * <p>
+     * This method is able to manage paths with wrong sequences, in this case
+     * the values outside the correct sequence are simply ignored.
+     * </p>
+     *
+     * @param path the {@code path} string
+     * @return a {@code Map} with the extracted values
+     */
+    public static Map<String, String> parseUrl(String path) {
+        Assert.notNull(path, "Path must be not null");
+
+        Map<String, String> values = new HashMap<>();
+        Stack<String> stack = new Stack<>();
+        String[] tokens = path.split("/");
+        for (String tk : tokens) {
+            if (SEARCH_CRITERIA_KEYS.contains(tk)) {
+                if (!stack.isEmpty()) {
+                    // a different key name was found, but no value was provided
+                    // (ie /key1/key2/value2)
+                    stack.pop();
+                }
+                stack.push(tk);
+            } else {
+                if (!stack.isEmpty()) {
+                    // match this value with the key name in the stack
+                    values.put(stack.pop(), tk);
+                }
+            }
+        }
+
+        return values;
+    }
 }

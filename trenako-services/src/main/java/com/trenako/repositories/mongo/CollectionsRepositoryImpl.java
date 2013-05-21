@@ -39,124 +39,125 @@ import com.trenako.values.Visibility;
 
 /**
  * The concrete implementation of {@code CollectionsRepository} for MongoDB.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Repository("collectionsRepository")
 public class CollectionsRepositoryImpl implements CollectionsRepository {
 
-	private final MongoTemplate mongo;
-	
-	@Autowired
-	public CollectionsRepositoryImpl(MongoTemplate mongoTemplate) {
-		this.mongo = mongoTemplate;
-	}
+    private final MongoTemplate mongo;
 
-	// for testing
-	private Date now = null;
-	protected void setCurrentTimestamp(Date now) {
-		this.now = now;
-	}
-	
-	protected Date now() {
-		if (now == null) {
-			return new Date();
-		}
-		return now;
-	}
-	
-	@Override
-	public Collection findById(ObjectId id) {
-		return mongo.findById(id, Collection.class);
-	}
+    @Autowired
+    public CollectionsRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongo = mongoTemplate;
+    }
 
-	@Override
-	public Collection findBySlug(String slug) {
-		Query query = query(where("slug").is(slug));
-		return mongo.findOne(query, Collection.class);
-	}
+    // for testing
+    private Date now = null;
 
-	@Override
-	public Collection findByOwner(Account owner) {
-		Query query = query(where("owner").is(owner.getSlug()));
-		return mongo.findOne(query, Collection.class);
-	}
+    protected void setCurrentTimestamp(Date now) {
+        this.now = now;
+    }
 
-	@Override
-	public boolean containsRollingStock(Account owner, RollingStock rollingStock) {
-		Query query = query(where("owner").is(owner.getSlug())
-				.and("items.rollingStock.slug").is(rollingStock.getSlug()));
-				
-		return mongo.count(query, Collection.class) > 0;
-	}
+    protected Date now() {
+        if (now == null) {
+            return new Date();
+        }
+        return now;
+    }
 
-	@Override
-	public void addItem(Account owner, CollectionItem item) {
-		Collection collection = new Collection(owner);
-				
-		// force the item to calculate its id
-		if (StringUtils.isBlank(item.getItemId())) {
-			item.setItemId(item.getItemId());
-		}
-		
-		Update upd = new Update()
-			.set("owner", collection.getOwner())
-			.set("slug", collection.getSlug())
-			.set("visibility", collection.getVisibility())
-			.set("lastModified", now())
-			.push("items", item)
-			.inc("categories." + CategoriesCount.getKey(item.getCategory()), 1);
-		mongo.upsert(query(where("owner").is(owner.getSlug())), upd, Collection.class);
-	}
+    @Override
+    public Collection findById(ObjectId id) {
+        return mongo.findById(id, Collection.class);
+    }
 
-	@Override
-	public void updateItem(Account owner, CollectionItem item) {
-		Collection collection = new Collection(owner);
-		
-		Query where = query(where("owner").is(collection.getOwner())
-				.and("items.itemId").is(item.getItemId()));
-		Update upd = new Update()
-			.set("lastModified", now())
-			.set("items.$", item);
-		mongo.updateFirst(where, upd, Collection.class);
-	}
-	
-	@Override
-	public void removeItem(Account owner, CollectionItem item) {
-		Collection collection = new Collection(owner);
-		
-		Update upd = new Update()
-			.pull("items", Maps.map("itemId", item.getItemId()))
-			.inc("categories." + CategoriesCount.getKey(item.getCategory()), -1)
-			.set("lastModified", now());
-		mongo.updateFirst(query(where("owner").is(collection.getOwner())), upd, Collection.class);
-	}
+    @Override
+    public Collection findBySlug(String slug) {
+        Query query = query(where("slug").is(slug));
+        return mongo.findOne(query, Collection.class);
+    }
 
-	@Override
-	public void saveChanges(Collection collection) {
-		Update upd = new Update()
-			.set("owner", collection.getOwner())
-			.set("visibility", collection.getVisibility())
-			.set("notes", collection.getNotes())
-			.set("lastModified", now());
-		mongo.upsert(query(where("slug").is(collection.getSlug())), upd, Collection.class);
-	}
-	
-	@Override
-	public void changeVisibility(Account owner, Visibility visibility) {
-		Update upd = new Update()
-			.set("visibility", visibility.label())
-			.set("lastModified", now());
-		mongo.updateFirst(query(where("owner").is(owner.getSlug())), upd, Collection.class);	
-	}
+    @Override
+    public Collection findByOwner(Account owner) {
+        Query query = query(where("owner").is(owner.getSlug()));
+        return mongo.findOne(query, Collection.class);
+    }
 
-	@Override
-	public void createNew(Collection collection) {
-		mongo.save(collection);
-	}
+    @Override
+    public boolean containsRollingStock(Account owner, RollingStock rollingStock) {
+        Query query = query(where("owner").is(owner.getSlug())
+                .and("items.rollingStock.slug").is(rollingStock.getSlug()));
 
-	@Override
-	public void remove(Collection collection) {
-		mongo.remove(collection);
-	}
+        return mongo.count(query, Collection.class) > 0;
+    }
+
+    @Override
+    public void addItem(Account owner, CollectionItem item) {
+        Collection collection = new Collection(owner);
+
+        // force the item to calculate its id
+        if (StringUtils.isBlank(item.getItemId())) {
+            item.setItemId(item.getItemId());
+        }
+
+        Update upd = new Update()
+                .set("owner", collection.getOwner())
+                .set("slug", collection.getSlug())
+                .set("visibility", collection.getVisibility())
+                .set("lastModified", now())
+                .push("items", item)
+                .inc("categories." + CategoriesCount.getKey(item.getCategory()), 1);
+        mongo.upsert(query(where("owner").is(owner.getSlug())), upd, Collection.class);
+    }
+
+    @Override
+    public void updateItem(Account owner, CollectionItem item) {
+        Collection collection = new Collection(owner);
+
+        Query where = query(where("owner").is(collection.getOwner())
+                .and("items.itemId").is(item.getItemId()));
+        Update upd = new Update()
+                .set("lastModified", now())
+                .set("items.$", item);
+        mongo.updateFirst(where, upd, Collection.class);
+    }
+
+    @Override
+    public void removeItem(Account owner, CollectionItem item) {
+        Collection collection = new Collection(owner);
+
+        Update upd = new Update()
+                .pull("items", Maps.map("itemId", item.getItemId()))
+                .inc("categories." + CategoriesCount.getKey(item.getCategory()), -1)
+                .set("lastModified", now());
+        mongo.updateFirst(query(where("owner").is(collection.getOwner())), upd, Collection.class);
+    }
+
+    @Override
+    public void saveChanges(Collection collection) {
+        Update upd = new Update()
+                .set("owner", collection.getOwner())
+                .set("visibility", collection.getVisibility())
+                .set("notes", collection.getNotes())
+                .set("lastModified", now());
+        mongo.upsert(query(where("slug").is(collection.getSlug())), upd, Collection.class);
+    }
+
+    @Override
+    public void changeVisibility(Account owner, Visibility visibility) {
+        Update upd = new Update()
+                .set("visibility", visibility.label())
+                .set("lastModified", now());
+        mongo.updateFirst(query(where("owner").is(owner.getSlug())), upd, Collection.class);
+    }
+
+    @Override
+    public void createNew(Collection collection) {
+        mongo.save(collection);
+    }
+
+    @Override
+    public void remove(Collection collection) {
+        mongo.remove(collection);
+    }
 }

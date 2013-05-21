@@ -44,215 +44,225 @@ import com.trenako.web.security.UserContext;
 
 /**
  * It represent a creation/editing form for {@code RollingStock}.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class RollingStockForm {
-	
-	@Valid
-	private RollingStock rs;
-	
-	private String tags;
-	
-	@Image(message = "rollingStock.image.notValid")
-	private MultipartFile file;
-	
-	private FormValuesService valuesService;
-	
-	/**
-	 * Creates a new empty {@code RollingStockForm}.
-	 */
-	public RollingStockForm() {
-	}
 
-	/**
-	 * Creates a new multipart form for the provided {@code RollingStock}. 
-	 * @param rs the {@code RollingStock}
-	 * @param valuesService the service to fill the drop down lists
-	 * @param file the {@code RollingStock} image file
-	 */
-	public RollingStockForm(RollingStock rs, 
-			FormValuesService valuesService, 
-			MultipartFile file) {
-		this.rs = rs;
-		this.valuesService = valuesService;
-		this.file = file;
-		
-		if (rs.getTags() != null) {
-			this.tags = StringUtils.join(rs.getTags(), ",");
-		}
-	}
-	
-	/**
-	 * Creates a new form for the provided {@code RollingStock}. 
-	 * @param rs the {@code RollingStock}
-	 * @param valuesService the service to fill the drop down lists
-	 */
-	public static RollingStockForm newForm(RollingStock rs, FormValuesService valuesService) {
-		return new RollingStockForm(rs, valuesService, null);
-	}	
-	
-	public static RollingStockForm rejectForm(RollingStockForm form, FormValuesService valuesService) {
-		form.valuesService = valuesService;
-		return form;
-	}
-	
-	/**
-	 * Builds a new {@code RollingStock} using the values posted with the form.
-	 * @param valuesService the values service
-	 * @param userContext the security context
-	 * @param modifiedAt the timestamp when the {@code RollingStock} was modified
-	 * @return a new {@code RollingStock}
-	 */
-	public RollingStock buildRollingStock(FormValuesService valuesService, UserContext userContext, Date modifiedAt) {
-		
-		Account user = authenticatedUser(userContext);
-		if (user == null) {
-			return null;
-		}
-		
-		Brand brand = lookupBrand(valuesService, getRs().getBrand());
-		Railway railway = lookupRailway(valuesService, getRs().getRailway());
-		Scale scale = lookupScale(valuesService, getRs().getScale());
-		
-		String country = railway != null ? railway.getCountry() : null;
+    @Valid
+    private RollingStock rs;
 
-		RollingStock rs = new RollingStock.Builder(brand, getRs().getItemNumber())
-			.id(getRs().getId())
-			.railway(railway)
-			.scale(scale)
-			.description(getRs().getDescription())
-			.details(getRs().getDetails())
-			.country(country)
-			.era(getRs().getEra())
-			.category(getRs().getCategory())
-			.tags(getTagsSet())
-			.totalLength(getRs().getTotalLength())
-			.powerMethod(getRs().getPowerMethod())
-			.upcCode(getRs().getUpcCode())
-			.modifiedBy(user)
-			.deliveryDate(getRs().getDeliveryDate())
-			.lastModified(modifiedAt)
-			.build();
-		
-		return rs;
-	}
+    private String tags;
 
-	/**
-	 * Returns the {@code RollingStock} managed by this form.
-	 * @return the {@code RollingStock}
-	 */
-	public RollingStock getRs() {
-		return rs;
-	}
+    @Image(message = "rollingStock.image.notValid")
+    private MultipartFile file;
 
-	/**
-	 * Sets the {@code RollingStock} managed by this form.
-	 * @param rs the {@code RollingStock}
-	 */
-	public void setRs(RollingStock rs) {
-		this.rs = rs;
-	}
+    private FormValuesService valuesService;
 
-	/**
-	 * Returns the {@code Multipart} file.
-	 * @return the file
-	 */
-	public MultipartFile getFile() {
-		return file;
-	}
+    /**
+     * Creates a new empty {@code RollingStockForm}.
+     */
+    public RollingStockForm() {
+    }
 
-	/**
-	 * Sets the {@code Multipart} file.
-	 * @param file the file
-	 */
-	public void setFile(MultipartFile file) {
-		this.file = file;
-	}
+    /**
+     * Creates a new multipart form for the provided {@code RollingStock}.
+     *
+     * @param rs            the {@code RollingStock}
+     * @param valuesService the service to fill the drop down lists
+     * @param file          the {@code RollingStock} image file
+     */
+    public RollingStockForm(RollingStock rs,
+                            FormValuesService valuesService,
+                            MultipartFile file) {
+        this.rs = rs;
+        this.valuesService = valuesService;
+        this.file = file;
 
-	/**
-	 * Returns the list of tags.
-	 * @return the tags
-	 */
-	public String getTags() {
-		return tags;
-	}
+        if (rs.getTags() != null) {
+            this.tags = StringUtils.join(rs.getTags(), ",");
+        }
+    }
 
-	/**
-	 * Sets the list of tags.
-	 * @param tags the tags
-	 */
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
+    /**
+     * Creates a new form for the provided {@code RollingStock}.
+     *
+     * @param rs            the {@code RollingStock}
+     * @param valuesService the service to fill the drop down lists
+     */
+    public static RollingStockForm newForm(RollingStock rs, FormValuesService valuesService) {
+        return new RollingStockForm(rs, valuesService, null);
+    }
 
-	public Iterable<Brand> getBrandsList() {
-		return valuesService.brands();
-	}
-	
-	public Iterable<Railway> getRailwaysList() {
-		return valuesService.railways();
-	}
-	
-	public Iterable<Scale> getScalesList() {
-		return valuesService.scales();
-	}
-	
-	public Iterable<LocalizedEnum<Category>> getCategoriesList() {
-		return valuesService.categories();
-	}
-	
-	public Iterable<LocalizedEnum<Era>> getErasList() {
-		return valuesService.eras();
-	}
-	
-	public Iterable<LocalizedEnum<PowerMethod>> getPowerMethodsList() {
-		return valuesService.powerMethods();
-	}
-	
-	public Iterable<DeliveryDate> getDeliveryDates() {
-		return valuesService.deliveryDates();
-	}
+    public static RollingStockForm rejectForm(RollingStockForm form, FormValuesService valuesService) {
+        form.valuesService = valuesService;
+        return form;
+    }
 
-	/**
-	 * Returns the tags set built parsing a comma separated string.
-	 * @return the tags
-	 */
-	public SortedSet<String> getTagsSet() {
-		if (StringUtils.isBlank(getTags())) {
-			return null;
-		}
-		
-		String[] tags = getTags().split(",");
-		SortedSet<String> tagsList = new TreeSet<String>();
-		for (String tag : tags) {
-			tagsList.add(Slug.encode(tag.trim()));
-		}
-		return tagsList;
-	}
-	
-	private Brand lookupBrand(FormValuesService valuesService, WeakDbRef<Brand> ref) {
-		if (!withValue(ref)) {
-			return null;
-		}
-		return valuesService.getBrand(ref.getSlug());
-	}
-	
-	private Scale lookupScale(FormValuesService valuesService, WeakDbRef<Scale> ref) {
-		if (!withValue(ref)) {
-			return null;
-		}
-		return valuesService.getScale(ref.getSlug());
-	}
-	
-	private Railway lookupRailway(FormValuesService valuesService, WeakDbRef<Railway> ref) {
-		if (!withValue(ref)) {
-			return null;
-		}
-		return valuesService.getRailway(ref.getSlug());
-	}
+    /**
+     * Builds a new {@code RollingStock} using the values posted with the form.
+     *
+     * @param valuesService the values service
+     * @param userContext   the security context
+     * @param modifiedAt    the timestamp when the {@code RollingStock} was modified
+     * @return a new {@code RollingStock}
+     */
+    public RollingStock buildRollingStock(FormValuesService valuesService, UserContext userContext, Date modifiedAt) {
 
-	private boolean withValue(WeakDbRef<?> ref) {
-		return (ref != null && ref.getSlug() != null);
-	}
+        Account user = authenticatedUser(userContext);
+        if (user == null) {
+            return null;
+        }
+
+        Brand brand = lookupBrand(valuesService, getRs().getBrand());
+        Railway railway = lookupRailway(valuesService, getRs().getRailway());
+        Scale scale = lookupScale(valuesService, getRs().getScale());
+
+        String country = railway != null ? railway.getCountry() : null;
+
+        RollingStock rs = new RollingStock.Builder(brand, getRs().getItemNumber())
+                .id(getRs().getId())
+                .railway(railway)
+                .scale(scale)
+                .description(getRs().getDescription())
+                .details(getRs().getDetails())
+                .country(country)
+                .era(getRs().getEra())
+                .category(getRs().getCategory())
+                .tags(getTagsSet())
+                .totalLength(getRs().getTotalLength())
+                .powerMethod(getRs().getPowerMethod())
+                .upcCode(getRs().getUpcCode())
+                .modifiedBy(user)
+                .deliveryDate(getRs().getDeliveryDate())
+                .lastModified(modifiedAt)
+                .build();
+
+        return rs;
+    }
+
+    /**
+     * Returns the {@code RollingStock} managed by this form.
+     *
+     * @return the {@code RollingStock}
+     */
+    public RollingStock getRs() {
+        return rs;
+    }
+
+    /**
+     * Sets the {@code RollingStock} managed by this form.
+     *
+     * @param rs the {@code RollingStock}
+     */
+    public void setRs(RollingStock rs) {
+        this.rs = rs;
+    }
+
+    /**
+     * Returns the {@code Multipart} file.
+     *
+     * @return the file
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * Sets the {@code Multipart} file.
+     *
+     * @param file the file
+     */
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    /**
+     * Returns the list of tags.
+     *
+     * @return the tags
+     */
+    public String getTags() {
+        return tags;
+    }
+
+    /**
+     * Sets the list of tags.
+     *
+     * @param tags the tags
+     */
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public Iterable<Brand> getBrandsList() {
+        return valuesService.brands();
+    }
+
+    public Iterable<Railway> getRailwaysList() {
+        return valuesService.railways();
+    }
+
+    public Iterable<Scale> getScalesList() {
+        return valuesService.scales();
+    }
+
+    public Iterable<LocalizedEnum<Category>> getCategoriesList() {
+        return valuesService.categories();
+    }
+
+    public Iterable<LocalizedEnum<Era>> getErasList() {
+        return valuesService.eras();
+    }
+
+    public Iterable<LocalizedEnum<PowerMethod>> getPowerMethodsList() {
+        return valuesService.powerMethods();
+    }
+
+    public Iterable<DeliveryDate> getDeliveryDates() {
+        return valuesService.deliveryDates();
+    }
+
+    /**
+     * Returns the tags set built parsing a comma separated string.
+     *
+     * @return the tags
+     */
+    public SortedSet<String> getTagsSet() {
+        if (StringUtils.isBlank(getTags())) {
+            return null;
+        }
+
+        String[] tags = getTags().split(",");
+        SortedSet<String> tagsList = new TreeSet<String>();
+        for (String tag : tags) {
+            tagsList.add(Slug.encode(tag.trim()));
+        }
+        return tagsList;
+    }
+
+    private Brand lookupBrand(FormValuesService valuesService, WeakDbRef<Brand> ref) {
+        if (!withValue(ref)) {
+            return null;
+        }
+        return valuesService.getBrand(ref.getSlug());
+    }
+
+    private Scale lookupScale(FormValuesService valuesService, WeakDbRef<Scale> ref) {
+        if (!withValue(ref)) {
+            return null;
+        }
+        return valuesService.getScale(ref.getSlug());
+    }
+
+    private Railway lookupRailway(FormValuesService valuesService, WeakDbRef<Railway> ref) {
+        if (!withValue(ref)) {
+            return null;
+        }
+        return valuesService.getRailway(ref.getSlug());
+    }
+
+    private boolean withValue(WeakDbRef<?> ref) {
+        return (ref != null && ref.getSlug() != null);
+    }
 }

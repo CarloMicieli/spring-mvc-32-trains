@@ -22,15 +22,16 @@ import com.trenako.entities.RollingStock;
 
 /**
  * The interface for the model rolling stocks repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface RollingStocksRepository extends MongoRepository<RollingStock, ObjectId> {
-	
-	/**
-	 Finds the rolling stock document in the collection by slug.
-	 * @param slug the rolling stock slug.
-	 * @return the rolling stock document if found; <em>null</em> otherwise.
-	 */
-	RollingStock findBySlug(String slug);
+
+    /**
+     * Finds the rolling stock document in the collection by slug.
+     *
+     * @param slug the rolling stock slug.
+     * @return the rolling stock document if found; <em>null</em> otherwise.
+     */
+    RollingStock findBySlug(String slug);
 }

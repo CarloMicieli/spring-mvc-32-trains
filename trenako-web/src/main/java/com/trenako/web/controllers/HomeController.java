@@ -26,72 +26,73 @@ import com.trenako.services.HomeService;
 import com.trenako.web.security.UserContext;
 
 /**
- * It represents the controller for homepage and its children pages (mostly static). 
- * @author Carlo Micieli
+ * It represents the controller for homepage and its children pages (mostly static).
  *
+ * @author Carlo Micieli
  */
 @Controller
 public class HomeController {
-	
-	private final HomeService service;
-	private final UserContext userContext;
-	
-	/**
-	 * Creates a new {@code HomeController}.
-	 * @param service the homepage service
-	 * @param userContext the user context
-	 */
-	@Autowired
-	public HomeController(HomeService service, UserContext userContext) {
-		this.service = service;
-		this.userContext = userContext;
-	}
-		
-	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-	public String home(ModelMap model) {
-		Account user = loggedUser();
-		model.addAttribute("content", service.getHomeContent(user));
-		if (user != null) {
-			model.addAttribute(user);
-		}
-		return "home/index";
-	}
-	
-	@RequestMapping(value = "/home/explore", method = RequestMethod.GET)
-	public String explore() {
-		return "home/explore";
-	}
-	
-	@RequestMapping(value = "/default", method = RequestMethod.GET)
-	public String defaultAction() {
-		return "redirect:/home";
-	}
 
-	@RequestMapping(value = "/home/developers", method = RequestMethod.GET)
-	public String developers() {
-		return "home/developers";
-	}
-	
-	@RequestMapping(value = "/home/about", method = RequestMethod.GET)
-	public String about() {
-		return "home/about";
-	}
-	
-	@RequestMapping(value = "/home/privacy", method = RequestMethod.GET)
-	public String privacy() {
-		return "home/privacy";
-	}
-	
-	@RequestMapping(value = "/home/terms", method = RequestMethod.GET)
-	public String termsOfUse() {
-		return "home/terms";
-	}
-	
-	private Account loggedUser() {
-		if (userContext != null && userContext.getCurrentUser() != null) {
-			return userContext.getCurrentUser().getAccount();
-		}
-		
-		return null;
-	}
+    private final HomeService service;
+    private final UserContext userContext;
+
+    /**
+     * Creates a new {@code HomeController}.
+     *
+     * @param service     the homepage service
+     * @param userContext the user context
+     */
+    @Autowired
+    public HomeController(HomeService service, UserContext userContext) {
+        this.service = service;
+        this.userContext = userContext;
+    }
+
+    @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
+    public String home(ModelMap model) {
+        Account user = loggedUser();
+        model.addAttribute("content", service.getHomeContent(user));
+        if (user != null) {
+            model.addAttribute(user);
+        }
+        return "home/index";
+    }
+
+    @RequestMapping(value = "/home/explore", method = RequestMethod.GET)
+    public String explore() {
+        return "home/explore";
+    }
+
+    @RequestMapping(value = "/default", method = RequestMethod.GET)
+    public String defaultAction() {
+        return "redirect:/home";
+    }
+
+    @RequestMapping(value = "/home/developers", method = RequestMethod.GET)
+    public String developers() {
+        return "home/developers";
+    }
+
+    @RequestMapping(value = "/home/about", method = RequestMethod.GET)
+    public String about() {
+        return "home/about";
+    }
+
+    @RequestMapping(value = "/home/privacy", method = RequestMethod.GET)
+    public String privacy() {
+        return "home/privacy";
+    }
+
+    @RequestMapping(value = "/home/terms", method = RequestMethod.GET)
+    public String termsOfUse() {
+        return "home/terms";
+    }
+
+    private Account loggedUser() {
+        if (userContext != null && userContext.getCurrentUser() != null) {
+            return userContext.getCurrentUser().getAccount();
+        }
+
+        return null;
+    }
 }

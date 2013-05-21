@@ -20,26 +20,29 @@ import com.mongodb.gridfs.GridFSDBFile;
 
 /**
  * The interface for Mongo GridFs repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface ImagesRepository {
-	/**
-	 * Returns the file with the provided slug.
-	 * @param slug the slug
-	 * @return a {@code GridFSDBFile} if found; {@code null} otherwise
-	 */
-	GridFSDBFile findFileBySlug(String slug);
+    /**
+     * Returns the file with the provided slug.
+     *
+     * @param slug the slug
+     * @return a {@code GridFSDBFile} if found; {@code null} otherwise
+     */
+    GridFSDBFile findFileBySlug(String slug);
 
-	/**
-	 * Stores the uploaded file.
-	 * @param file the uploaded file
-	 */
-	void store(UploadFile file);
+    /**
+     * Stores the uploaded file.
+     *
+     * @param file the uploaded file
+     */
+    void store(UploadFile file);
 
-	/**
-	 * Deletes the uploaded file.
-	 * @param slug the slug
-	 */
-	void delete(String slug);
+    /**
+     * Deletes the uploaded file.
+     *
+     * @param slug the slug
+     */
+    void delete(String slug);
 }

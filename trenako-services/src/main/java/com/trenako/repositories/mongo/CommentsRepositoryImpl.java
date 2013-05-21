@@ -33,96 +33,98 @@ import static org.springframework.data.mongodb.core.query.Criteria.*;
 
 /**
  * The concrete implementation for the comments mongodb repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Repository("commentsRepository")
 public class CommentsRepositoryImpl implements CommentsRepository {
 
-	private final MongoTemplate mongo;
-		
-	/**
-	 * Creates a new mongodb repository for comments.
-	 * @param mongo the mongodb template
-	 */
-	@Autowired
-	public CommentsRepositoryImpl(MongoTemplate mongo) {
-		this.mongo = mongo;
-	}
-	
-	// for testing
-	private Date now = null;
-	protected void setCurrentTimestamp(Date now) {
-		this.now = now;
-	}
-	
-	protected Date now() {
-		if (now == null) {
-			return new Date();
-		}
-		return now;
-	}
-	
-	@Override
-	public RollingStockComments findByRollingStock(RollingStock rollingStock) {
-		Query query = query(where("slug").is(rollingStock.getSlug()));
-		return mongo.findOne(query, RollingStockComments.class);
-	}
+    private final MongoTemplate mongo;
 
-	@Override
-	public void createNew(RollingStock rs, Comment comment) {
-		RollingStockComments rsc = new RollingStockComments(rs);
-		Comment c = new Comment(comment.getAuthor(), comment.getContent(), now());
-		
-		Update upd = new Update()
-			.set("rollingStock", rsc.getRollingStock())
-			.inc("numberOfComments", 1)
-			.push("items", c);
-		
-		mongo.upsert(query(where("slug").is(rsc.getSlug())), upd, RollingStockComments.class);
-	}
+    /**
+     * Creates a new mongodb repository for comments.
+     *
+     * @param mongo the mongodb template
+     */
+    @Autowired
+    public CommentsRepositoryImpl(MongoTemplate mongo) {
+        this.mongo = mongo;
+    }
 
-	@Override
-	public void createAnswer(RollingStock rs, Comment comment, Comment answer) {
-		RollingStockComments rsc = new RollingStockComments(rs);
-		Comment a = new Comment(answer.getAuthor(), answer.getContent(), now());
-		
-		Update upd = new Update()
-			.inc("numberOfComments", 1)
-			.push("items.$.answers", a);
-		
-		Query where = query(where("slug").is(rsc.getSlug())
-				.and("items.commentId").is(comment.getCommentId()));
-		
-		mongo.updateFirst(where, upd, RollingStockComments.class);
-	}
-	
-	@Override
-	public void remove(RollingStock rs, Comment comment) {
-		RollingStockComments rsc = new RollingStockComments(rs);
-		Comment c = new Comment(comment.getCommentId());
-		
-		Update upd = new Update()
-			.inc("numberOfComments", -1)
-			.pull("items", c);
-		
-		Query where = query(where("slug").is(rsc.getSlug()));
-		
-		mongo.updateFirst(where, upd, RollingStockComments.class);
-	}
+    // for testing
+    private Date now = null;
 
-	@Override
-	public void removeAnswer(RollingStock rs, Comment comment, Comment answer) {
-		RollingStockComments rsc = new RollingStockComments(rs);
-		Comment a = new Comment(answer.getCommentId());
-		
-		Update upd = new Update()
-			.inc("numberOfComments", -1)
-			.pull("items.$.answers", a);
-		
-		Query where = query(where("slug").is(rsc.getSlug())
-				.and("items.commentId").is(comment.getCommentId()));
-		
-		mongo.updateFirst(where, upd, RollingStockComments.class);
-	}
+    protected void setCurrentTimestamp(Date now) {
+        this.now = now;
+    }
+
+    protected Date now() {
+        if (now == null) {
+            return new Date();
+        }
+        return now;
+    }
+
+    @Override
+    public RollingStockComments findByRollingStock(RollingStock rollingStock) {
+        Query query = query(where("slug").is(rollingStock.getSlug()));
+        return mongo.findOne(query, RollingStockComments.class);
+    }
+
+    @Override
+    public void createNew(RollingStock rs, Comment comment) {
+        RollingStockComments rsc = new RollingStockComments(rs);
+        Comment c = new Comment(comment.getAuthor(), comment.getContent(), now());
+
+        Update upd = new Update()
+                .set("rollingStock", rsc.getRollingStock())
+                .inc("numberOfComments", 1)
+                .push("items", c);
+
+        mongo.upsert(query(where("slug").is(rsc.getSlug())), upd, RollingStockComments.class);
+    }
+
+    @Override
+    public void createAnswer(RollingStock rs, Comment comment, Comment answer) {
+        RollingStockComments rsc = new RollingStockComments(rs);
+        Comment a = new Comment(answer.getAuthor(), answer.getContent(), now());
+
+        Update upd = new Update()
+                .inc("numberOfComments", 1)
+                .push("items.$.answers", a);
+
+        Query where = query(where("slug").is(rsc.getSlug())
+                .and("items.commentId").is(comment.getCommentId()));
+
+        mongo.updateFirst(where, upd, RollingStockComments.class);
+    }
+
+    @Override
+    public void remove(RollingStock rs, Comment comment) {
+        RollingStockComments rsc = new RollingStockComments(rs);
+        Comment c = new Comment(comment.getCommentId());
+
+        Update upd = new Update()
+                .inc("numberOfComments", -1)
+                .pull("items", c);
+
+        Query where = query(where("slug").is(rsc.getSlug()));
+
+        mongo.updateFirst(where, upd, RollingStockComments.class);
+    }
+
+    @Override
+    public void removeAnswer(RollingStock rs, Comment comment, Comment answer) {
+        RollingStockComments rsc = new RollingStockComments(rs);
+        Comment a = new Comment(answer.getCommentId());
+
+        Update upd = new Update()
+                .inc("numberOfComments", -1)
+                .pull("items.$.answers", a);
+
+        Query where = query(where("slug").is(rsc.getSlug())
+                .and("items.commentId").is(comment.getCommentId()));
+
+        mongo.updateFirst(where, upd, RollingStockComments.class);
+    }
 }

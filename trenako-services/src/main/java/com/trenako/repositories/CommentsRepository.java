@@ -21,50 +21,54 @@ import com.trenako.entities.RollingStockComments;
 
 /**
  * The interface for the rolling stock comments repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface CommentsRepository {
 
-	/**
-	 * Finds the list of comments for a rolling stock.
-	 * 
-	 * This method returns the comments ordered by
-	 * descending posted date. 
-	 * 
-	 * @param rollingStock the rolling stock
-	 * @return the list of comments
-	 */	
-	RollingStockComments findByRollingStock(RollingStock rollingStock);
-	
-	/**
-	 * Creates a new {@code Comment}.
-	 * @param rs the rolling stock under review
-	 * @param comment the comment to be saved
-	 */
-	void createNew(RollingStock rs, Comment comment);
-	
-	/**
-	 * Creates a new {@code Comment}'s answer.
-	 * @param rs the rolling stock under review
-	 * @param comment the original {@code Comment}
-	 * @param answer the answer
-	 */
-	void createAnswer(RollingStock rs, Comment comment, Comment answer);
-	
-	
-	/**
-	 * Removes the {@code Comment}.
-	 * @param rs the rolling stock under review
-	 * @param comment the comment to be removed
-	 */
-	void remove(RollingStock rs, Comment comment);
+    /**
+     * Finds the list of comments for a rolling stock.
+     * <p/>
+     * This method returns the comments ordered by
+     * descending posted date.
+     *
+     * @param rollingStock the rolling stock
+     * @return the list of comments
+     */
+    RollingStockComments findByRollingStock(RollingStock rollingStock);
 
-	/**
-	 * Removes the {@code Comment}'s answer.
-	 * @param rs the rolling stock under review
-	 * @param comment the comment
-	 * @param answer the answer to be removed
-	 */
-	void removeAnswer(RollingStock rs, Comment comment, Comment answer);
+    /**
+     * Creates a new {@code Comment}.
+     *
+     * @param rs      the rolling stock under review
+     * @param comment the comment to be saved
+     */
+    void createNew(RollingStock rs, Comment comment);
+
+    /**
+     * Creates a new {@code Comment}'s answer.
+     *
+     * @param rs      the rolling stock under review
+     * @param comment the original {@code Comment}
+     * @param answer  the answer
+     */
+    void createAnswer(RollingStock rs, Comment comment, Comment answer);
+
+
+    /**
+     * Removes the {@code Comment}.
+     *
+     * @param rs      the rolling stock under review
+     * @param comment the comment to be removed
+     */
+    void remove(RollingStock rs, Comment comment);
+
+    /**
+     * Removes the {@code Comment}'s answer.
+     *
+     * @param rs      the rolling stock under review
+     * @param comment the comment
+     * @param answer  the answer to be removed
+     */
+    void removeAnswer(RollingStock rs, Comment comment, Comment answer);
 }

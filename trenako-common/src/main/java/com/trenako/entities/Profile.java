@@ -21,83 +21,88 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * It represents a user profile.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class Profile {
 
-	private final static Profile DEFAULT_PROFILE = new Profile("EUR");
-	
-	private String currencyCode;
-	
-	/**
-	 * Creates a new empty {@code Profile}.
-	 */
-	public Profile() {
-	}
-	
-	/**
-	 * Creates a empty {@code Profile}.
-	 * @param currencyCode the currency code
-	 */
-	public Profile(String currencyCode) {
-		this.currencyCode = currencyCode;
-	}
+    private final static Profile DEFAULT_PROFILE = new Profile("EUR");
 
-	/**
-	 * Creates the default {@code Profile} for Euro.
-	 * @param the default profile
-	 */
-	public static Profile defaultProfile() {
-		return DEFAULT_PROFILE;
-	}
-	
-	/**
-	 * Returns the currency.
-	 * @return the currency
-	 */
-	public Currency getCurrency() {
-		return Currency.getInstance(getCurrencyCode());
-	}
-	
-	/**
-	 * Returns the currency code.
-	 * <p>
-	 * If the profile doesn't include a currency code, this method will return
-	 * the default value (in this case {@code EUR}).
-	 * </p>
-	 * @return the currency code
-	 */
-	public String getCurrencyCode() {
-		if (StringUtils.isBlank(currencyCode)) {
-			return defaultProfile().getCurrencyCode();
-		}
-		return currencyCode;
-	}
+    private String currencyCode;
 
-	/**
-	 * Sets the currency code.
-	 * @param currencyCode the currency code
-	 */
-	public void setCurrencyCode(String currencyCode) {
-		this.currencyCode = currencyCode;
-	}
+    /**
+     * Creates a new empty {@code Profile}.
+     */
+    public Profile() {
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof Profile)) return false;
+    /**
+     * Creates a empty {@code Profile}.
+     *
+     * @param currencyCode the currency code
+     */
+    public Profile(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
 
-		Profile other = (Profile) obj;
-		return this.currencyCode.equals(other.currencyCode);
-	}
+    /**
+     * Creates the default {@code Profile} for Euro.
+     *
+     * @return the default profile
+     */
+    public static Profile defaultProfile() {
+        return DEFAULT_PROFILE;
+    }
 
-	@Override
-	public String toString() {
-		return new StringBuilder()
-			.append("profile{currency: ")
-			.append(getCurrencyCode())
-			.append("}")
-			.toString();
-	}
+    /**
+     * Returns the currency.
+     *
+     * @return the currency
+     */
+    public Currency getCurrency() {
+        return Currency.getInstance(getCurrencyCode());
+    }
+
+    /**
+     * Returns the currency code.
+     * <p>
+     * If the profile doesn't include a currency code, this method will return
+     * the default value (in this case {@code EUR}).
+     * </p>
+     *
+     * @return the currency code
+     */
+    public String getCurrencyCode() {
+        if (StringUtils.isBlank(currencyCode)) {
+            return defaultProfile().getCurrencyCode();
+        }
+        return currencyCode;
+    }
+
+    /**
+     * Sets the currency code.
+     *
+     * @param currencyCode the currency code
+     */
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Profile)) return false;
+
+        Profile other = (Profile) obj;
+        return this.currencyCode.equals(other.currencyCode);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("profile{currency: ")
+                .append(getCurrencyCode())
+                .append("}")
+                .toString();
+    }
 }

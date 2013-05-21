@@ -26,44 +26,41 @@ import com.trenako.entities.Money;
 import com.trenako.validation.constraints.ValidMoney;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class MoneyValidator implements ConstraintValidator<ValidMoney, Money> {
 
-	@Override
-	public void initialize(ValidMoney constraintAnnotation) {
-	}
+    @Override
+    public void initialize(ValidMoney constraintAnnotation) {
+    }
 
-	@Override
-	public boolean isValid(Money money, ConstraintValidatorContext context) {
-		if (money == null || money.isEmpty()) {
-			return true;
-		}
-		
-		if (money.getValue() <= 0) {
-			return false;
-		}
-		
-		if (!validCurrency(money)) {
-			return false;
-		}
-		
-		return true;
-	}
+    @Override
+    public boolean isValid(Money money, ConstraintValidatorContext context) {
+        if (money == null || money.isEmpty()) {
+            return true;
+        }
 
-	private static boolean validCurrency(Money m) {
-		if (StringUtils.isBlank(m.getCurrency())) return false;
-		
-		try {
-			Currency.getInstance(m.getCurrency());
-			return true;
-		}
-		catch (IllegalArgumentException ex) {
-			// currencyCode is not a supported ISO 4217 code
-		}
-		
-		return false;
-	}
+        if (money.getValue() <= 0) {
+            return false;
+        }
+
+        if (!validCurrency(money)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean validCurrency(Money m) {
+        if (StringUtils.isBlank(m.getCurrency())) return false;
+
+        try {
+            Currency.getInstance(m.getCurrency());
+            return true;
+        } catch (IllegalArgumentException ex) {
+            // currencyCode is not a supported ISO 4217 code
+        }
+
+        return false;
+    }
 }

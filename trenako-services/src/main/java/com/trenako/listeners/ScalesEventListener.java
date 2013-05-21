@@ -25,15 +25,15 @@ import com.trenako.entities.Scale;
 
 /**
  * The listener to change the document just before the scales are saved.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Component
 public class ScalesEventListener extends AbstractMongoEventListener<Scale> {
 
-	@Override
-	public void onBeforeSave(Scale source, DBObject dbo) {
-		dbo.put("lastModified", new Date());
-		dbo.put("slug", source.getSlug());
-	}	
+    @Override
+    public void onBeforeSave(Scale source, DBObject dbo) {
+        dbo.put("lastModified", new Date());
+        dbo.put("slug", source.getSlug());
+    }
 }

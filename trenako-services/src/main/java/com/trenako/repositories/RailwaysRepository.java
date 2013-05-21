@@ -22,28 +22,31 @@ import com.trenako.entities.Railway;
 
 /**
  * The interface for the {@code Railway}s repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface RailwaysRepository extends MongoRepository<Railway, ObjectId> {
-	/**
-	 * Returns the {@code Railway} with the provided name.
-	 * @param name the {@code Railway} name
-	 * @return a {@code Railway} if found; {@code null} otherwise
-	 */
-	Railway findByName(String name);
+    /**
+     * Returns the {@code Railway} with the provided name.
+     *
+     * @param name the {@code Railway} name
+     * @return a {@code Railway} if found; {@code null} otherwise
+     */
+    Railway findByName(String name);
 
-	/**
-	 * Returns the {@code Railway} with the provided slug.
-	 * @param slug the {@code Railway} slug
-	 * @return a {@code Railway} if found; {@code null} otherwise
-	 */
-	Railway findBySlug(String slug);
-	
-	/**
-	 * Returns the {@code Railway} list with the provided country code.
-	 * @param country the country code
-	 * @return a list of {@code Railway}s
-	 */
-	Iterable<Railway> findByCountryOrderByNameAsc(String country);
+    /**
+     * Returns the {@code Railway} with the provided slug.
+     *
+     * @param slug the {@code Railway} slug
+     * @return a {@code Railway} if found; {@code null} otherwise
+     */
+    Railway findBySlug(String slug);
+
+    /**
+     * Returns the {@code Railway} list with the provided country code.
+     *
+     * @param country the country code
+     * @return a list of {@code Railway}s
+     */
+    Iterable<Railway> findByCountryOrderByNameAsc(String country);
 }

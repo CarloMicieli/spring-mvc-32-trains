@@ -37,67 +37,67 @@ import com.trenako.web.controllers.ControllerMessage;
 import com.trenako.web.controllers.form.OptionForm;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Controller
 @RequestMapping("/admin/options")
 public class AdminOptionsController {
 
-	private final static Logger log = LoggerFactory.getLogger("trenako.web");
-	
-	static final ControllerMessage OPTION_CREATED_MSG = ControllerMessage.success("option.created.message");
-	
-	private final OptionsService service;
-	private @Autowired MessageSource messageSource;
-	
-	@Autowired
-	public AdminOptionsController(OptionsService service) {
-		this.service = service;
-	}
-	
-	@ModelAttribute("familiesList")
-	public Iterable<LocalizedEnum<OptionFamily>> families() {
-		return LocalizedEnum.list(OptionFamily.class, messageSource, null);
-	}
+    private final static Logger log = LoggerFactory.getLogger("trenako.web");
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String list(ModelMap model) {
-		model.addAttribute("couplerOptions", service.findByFamily(OptionFamily.COUPLER));
-		model.addAttribute("headlightsOptions", service.findByFamily(OptionFamily.HEADLIGHTS));
-		model.addAttribute("transmissionOptions", service.findByFamily(OptionFamily.TRANSMISSION));
-		model.addAttribute("dccOptions", service.findByFamily(OptionFamily.DCC_INTERFACE));
-		
-		return "option/list";
-	}
-		
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String newOption(ModelMap model) {
-		model.addAttribute("newForm", new OptionForm());
-		return "option/new";
-	}
+    static final ControllerMessage OPTION_CREATED_MSG = ControllerMessage.success("option.created.message");
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String create(OptionForm form, BindingResult bindingResult, ModelMap model, RedirectAttributes redirectAtts) {
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("newForm", form);
-			return "option/new";
-		}
-		
-		Option option;
-		try {
-			option = form.buildOption();
-			service.save(option);
-			OPTION_CREATED_MSG.appendToRedirect(redirectAtts);
-			return "redirect:/admin/options";
-			
-		} catch (IOException e) {
-			log.error(e.toString());
-		}
-		
-		model.addAttribute("newForm", form);
-		return "option/new";
-	}
+    private final OptionsService service;
+    private
+    @Autowired
+    MessageSource messageSource;
+
+    @Autowired
+    public AdminOptionsController(OptionsService service) {
+        this.service = service;
+    }
+
+    @ModelAttribute("familiesList")
+    public Iterable<LocalizedEnum<OptionFamily>> families() {
+        return LocalizedEnum.list(OptionFamily.class, messageSource, null);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String list(ModelMap model) {
+        model.addAttribute("couplerOptions", service.findByFamily(OptionFamily.COUPLER));
+        model.addAttribute("headlightsOptions", service.findByFamily(OptionFamily.HEADLIGHTS));
+        model.addAttribute("transmissionOptions", service.findByFamily(OptionFamily.TRANSMISSION));
+        model.addAttribute("dccOptions", service.findByFamily(OptionFamily.DCC_INTERFACE));
+
+        return "option/list";
+    }
+
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String newOption(ModelMap model) {
+        model.addAttribute("newForm", new OptionForm());
+        return "option/new";
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public String create(OptionForm form, BindingResult bindingResult, ModelMap model, RedirectAttributes redirectAtts) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("newForm", form);
+            return "option/new";
+        }
+
+        Option option;
+        try {
+            option = form.buildOption();
+            service.save(option);
+            OPTION_CREATED_MSG.appendToRedirect(redirectAtts);
+            return "redirect:/admin/options";
+
+        } catch (IOException e) {
+            log.error(e.toString());
+        }
+
+        model.addAttribute("newForm", form);
+        return "option/new";
+    }
 
 }

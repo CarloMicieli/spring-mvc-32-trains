@@ -16,27 +16,25 @@
 package com.trenako.services.view;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class ProfileOptions {
 
-	private final int numberOfItemsForCollections;
-	private final int numberOfItemsForWishLists;
+    private final int numberOfItemsForCollections;
+    private final int numberOfItemsForWishLists;
 
-	public final static ProfileOptions DEFAULT = new ProfileOptions(10, 10);
-	
-	public ProfileOptions(int numberOfItemsForCollections, int numberOfItemsForWishLists) {
-		this.numberOfItemsForCollections = numberOfItemsForCollections;
-		this.numberOfItemsForWishLists = numberOfItemsForWishLists;
-	}
+    public final static ProfileOptions DEFAULT = new ProfileOptions(10, 10);
 
-	public int getNumberOfItemsForCollections() {
-		return numberOfItemsForCollections;
-	}
+    public ProfileOptions(int numberOfItemsForCollections, int numberOfItemsForWishLists) {
+        this.numberOfItemsForCollections = numberOfItemsForCollections;
+        this.numberOfItemsForWishLists = numberOfItemsForWishLists;
+    }
 
-	public int getNumberOfItemsForWishLists() {
-		return numberOfItemsForWishLists;
-	}	
+    public int getNumberOfItemsForCollections() {
+        return numberOfItemsForCollections;
+    }
+
+    public int getNumberOfItemsForWishLists() {
+        return numberOfItemsForWishLists;
+    }
 }

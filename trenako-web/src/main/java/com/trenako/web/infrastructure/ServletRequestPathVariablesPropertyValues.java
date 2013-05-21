@@ -25,22 +25,22 @@ import org.springframework.beans.MutablePropertyValues;
  * This class is implemented as a mutable map of property values to
  * ease the data binding for {@code SearchCriteria} beans.
  * </p>
- * 
+ *
  * @author Carlo Micieli
  * @see MutablePropertyValues
  */
 public class ServletRequestPathVariablesPropertyValues
-	extends MutablePropertyValues {
+        extends MutablePropertyValues {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Creates a new {@code ServletRequestPathVariablesPropertyValues} from
-	 * the provided {@code ServletRequest}.
-	 * 
-	 * @param servletRequest the {@code ServletRequest}
-	 */
-	public ServletRequestPathVariablesPropertyValues(HttpServletRequest servletRequest) {
-		super(SearchRequestUrlParser.parseUrl(servletRequest.getRequestURI()));
-	}
+    /**
+     * Creates a new {@code ServletRequestPathVariablesPropertyValues} from
+     * the provided {@code ServletRequest}.
+     *
+     * @param servletRequest the {@code ServletRequest}
+     */
+    public ServletRequestPathVariablesPropertyValues(HttpServletRequest servletRequest) {
+        super(SearchRequestUrlParser.parseUrl(servletRequest.getRequestURI()));
+    }
 }

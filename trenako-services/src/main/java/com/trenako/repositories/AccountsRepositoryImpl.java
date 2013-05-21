@@ -27,26 +27,26 @@ import com.trenako.entities.Account;
 
 /**
  * This class implements custom methods for the {@code BrandsRepository}.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @NoRepositoryBean
 public class AccountsRepositoryImpl implements AccountsCustomRepository {
 
-	private final MongoTemplate mongoTemplate;
-	
-	@Autowired
-	public AccountsRepositoryImpl(MongoTemplate mongoTemplate) {
-		this.mongoTemplate = mongoTemplate;
-	}
-	
-	@Override
-	public void updateChanges(Account account) {
-		Update upd = new Update()
-			.set("roles", account.getRoles())
-			.set("locked", account.isLocked())
-			.set("enabled", account.isEnabled());
-		
-		mongoTemplate.updateFirst(query(where("slug").is(account.getSlug())), upd, Account.class);
-	}
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public AccountsRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public void updateChanges(Account account) {
+        Update upd = new Update()
+                .set("roles", account.getRoles())
+                .set("locked", account.isLocked())
+                .set("enabled", account.isEnabled());
+
+        mongoTemplate.updateFirst(query(where("slug").is(account.getSlug())), upd, Account.class);
+    }
 }

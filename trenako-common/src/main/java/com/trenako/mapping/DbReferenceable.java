@@ -26,21 +26,22 @@ package com.trenako.mapping;
  * </pre>
  * </blockquote>
  * </p>
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface DbReferenceable {
-	
-	/**
-	 * Returns the {@code slug} for the current entity object.
-	 * @return the entity {@code slug} value
-	 */
-	String getSlug();
-	
-	/**
-	 * Returns the {@code label} for the current entity object.
-	 * @return the entity {@code label} value
-	 */
-	String getLabel();
+
+    /**
+     * Returns the {@code slug} for the current entity object.
+     *
+     * @return the entity {@code slug} value
+     */
+    String getSlug();
+
+    /**
+     * Returns the {@code label} for the current entity object.
+     *
+     * @return the entity {@code label} value
+     */
+    String getLabel();
 }

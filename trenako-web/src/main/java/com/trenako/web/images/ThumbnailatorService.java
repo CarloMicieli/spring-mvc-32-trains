@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+
 import net.coobird.thumbnailator.Thumbnails;
 
 import org.springframework.stereotype.Component;
@@ -28,38 +29,36 @@ import org.springframework.web.multipart.MultipartFile;
 import com.trenako.images.UploadFile;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Component
 public class ThumbnailatorService implements ImagesConverter {
 
-	@Override
-	public UploadFile createThumbnail(MultipartFile file, Map<String, String> metadata, int targetSize) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Thumbnails.of(inputStream(file))
-			.height(targetSize)
-			.outputQuality(0.8d)
-			.toOutputStream(baos);
-		
-		InputStream is = new ByteArrayInputStream(baos.toByteArray());
-		baos.close();
-		return new UploadFile(is, 
-				file.getContentType(), 
-				file.getOriginalFilename(),
-				metadata);
-	}
+    @Override
+    public UploadFile createThumbnail(MultipartFile file, Map<String, String> metadata, int targetSize) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Thumbnails.of(inputStream(file))
+                .height(targetSize)
+                .outputQuality(0.8d)
+                .toOutputStream(baos);
 
-	@Override
-	public UploadFile createImage(MultipartFile file, Map<String, String> metadata) throws IOException {
-		return new UploadFile(inputStream(file), 
-				file.getContentType(), 
-				file.getOriginalFilename(),
-				metadata);
-	}
+        InputStream is = new ByteArrayInputStream(baos.toByteArray());
+        baos.close();
+        return new UploadFile(is,
+                file.getContentType(),
+                file.getOriginalFilename(),
+                metadata);
+    }
 
-	private InputStream inputStream(MultipartFile file) throws IOException {
-		return new ByteArrayInputStream(file.getBytes());
-	}
+    @Override
+    public UploadFile createImage(MultipartFile file, Map<String, String> metadata) throws IOException {
+        return new UploadFile(inputStream(file),
+                file.getContentType(),
+                file.getOriginalFilename(),
+                metadata);
+    }
+
+    private InputStream inputStream(MultipartFile file) throws IOException {
+        return new ByteArrayInputStream(file.getBytes());
+    }
 }

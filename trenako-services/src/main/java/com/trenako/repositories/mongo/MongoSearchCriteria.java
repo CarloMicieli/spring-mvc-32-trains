@@ -22,52 +22,53 @@ import com.trenako.utility.Cat;
 
 /**
  * It converts a {@link SearchCriteria} object to MongoDB criteria.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public final class MongoSearchCriteria {
 
-	private MongoSearchCriteria() {
-	}
+    private MongoSearchCriteria() {
+    }
 
-	/**
-	 * Builds a MongoDB criteria for the provided {@code SearchCriteria}.
-	 * @param sc the search criteria
-	 * @return a MongoDB criteria
-	 */
-	public static Criteria buildCriteria(SearchCriteria sc) {
-		Criteria c = new Criteria();
-		
-		if (sc.hasBrand()) {
-			c.and("brand.slug").is(sc.getBrand());
-		}
-		
-		if (sc.hasEra()) {
-			c.and("era").is(sc.getEra());
-		}
-		
-		if (sc.hasRailway()) {
-			c.and("railway.slug").is(sc.getRailway());
-		}
-		
-		if (sc.hasScale()) {
-			c.and("scale.slug").is(sc.getScale());
-		}
-		
-		if (sc.hasCat()) {
-			Cat cat = Cat.parseString(sc.getCat());
-			c.and("category").is(cat.category())
-				.and("powerMethod").is(cat.powerMethod());
-		}
-		
-		if (!sc.hasCat() && sc.hasPowerMethod()) {
-			c.and("powerMethod").is(sc.getPowerMethod());
-		}
+    /**
+     * Builds a MongoDB criteria for the provided {@code SearchCriteria}.
+     *
+     * @param sc the search criteria
+     * @return a MongoDB criteria
+     */
+    public static Criteria buildCriteria(SearchCriteria sc) {
+        Criteria c = new Criteria();
 
-		if (!sc.hasCat() && sc.hasCategory()) {
-			c.and("category").is(sc.getCategory());
-		}
-		
-		return c;
-	}
+        if (sc.hasBrand()) {
+            c.and("brand.slug").is(sc.getBrand());
+        }
+
+        if (sc.hasEra()) {
+            c.and("era").is(sc.getEra());
+        }
+
+        if (sc.hasRailway()) {
+            c.and("railway.slug").is(sc.getRailway());
+        }
+
+        if (sc.hasScale()) {
+            c.and("scale.slug").is(sc.getScale());
+        }
+
+        if (sc.hasCat()) {
+            Cat cat = Cat.parseString(sc.getCat());
+            c.and("category").is(cat.category())
+                    .and("powerMethod").is(cat.powerMethod());
+        }
+
+        if (!sc.hasCat() && sc.hasPowerMethod()) {
+            c.and("powerMethod").is(sc.getPowerMethod());
+        }
+
+        if (!sc.hasCat() && sc.hasCategory()) {
+            c.and("category").is(sc.getCategory());
+        }
+
+        return c;
+    }
 }

@@ -20,19 +20,17 @@ import org.springframework.core.convert.converter.Converter;
 import com.mongodb.DBObject;
 
 /**
- * 
- * @author Carlo Micieli
- *
  * @param <T>
+ * @author Carlo Micieli
  */
 public class WeakDbRefReadConverter<T extends DbReferenceable> implements Converter<DBObject, WeakDbRef<T>> {
 
-	@Override
-	public WeakDbRef<T> convert(DBObject source) {
-		WeakDbRef<T> ref = new WeakDbRef<T>(
-				source.get("slug").toString(), 
-				source.get("label").toString());
-		return ref;
-	}
+    @Override
+    public WeakDbRef<T> convert(DBObject source) {
+        WeakDbRef<T> ref = new WeakDbRef<T>(
+                source.get("slug").toString(),
+                source.get("label").toString());
+        return ref;
+    }
 
 }

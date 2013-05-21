@@ -34,6 +34,7 @@ import com.mongodb.WriteConcern;
 
 /**
  * The configuration class for the Spring application context.
+ *
  * @author Carlo Micieli
  */
 @Configuration
@@ -41,52 +42,56 @@ import com.mongodb.WriteConcern;
 @Profile("default")
 @EnableMongoRepositories("com.trenako.repositories")
 @ImportResource(value = {
-		"classpath:META-INF/spring/spring-data.xml", 
-		"classpath:META-INF/spring/spring-security.xml",
-		"classpath:META-INF/spring/spring-aop.xml"})
+        "classpath:META-INF/spring/spring-data.xml",
+        "classpath:META-INF/spring/spring-security.xml",
+        "classpath:META-INF/spring/spring-aop.xml"})
 public class ApplicationConfig extends AbstractMongoConfiguration {
-	
-	// Autowired from 'spring-data.xml' context
-	private @Autowired SimpleMongoDbFactory mongoDbFactory;	
-	
-	/**
-	 * Return the message source for multi-language management.
-	 * @return the message source bean
-	 */
-	public @Bean MessageSource messageSource() {
-		ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
-		ms.setBasenames(new String[] { "locale/Messages", "locale/Errors" });
-		return ms;
-	}
-	
-	/**
-	 * Returns a {@code MongoTemplate} instance.
-	 * @return the MongoDB template bean
-	 * @throws Exception
-	 */
-	public @Bean MongoTemplate mongoTemplate() throws Exception {
-		MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
-		mongoTemplate.setWriteConcern(WriteConcern.SAFE);
-		return mongoTemplate;
-	}
-	
-	@Override
-	public SimpleMongoDbFactory mongoDbFactory() throws Exception {
-		return mongoDbFactory;
-	}
-	
-	@Override
-	public String getDatabaseName() {
-		return mongoDbFactory.getDb().getName();
-	}
-	
-	@Override
-	public Mongo mongo() throws Exception {
-		return mongoDbFactory.getDb().getMongo();
-	}
-	
-	@Override
-	public String getMappingBasePackage() {
-		return "com.trenako.mapping";
-	}
+
+    @Autowired
+    private SimpleMongoDbFactory mongoDbFactory;
+
+    /**
+     * Return the message source for multi-language management.
+     *
+     * @return the message source bean
+     */
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
+        ms.setBasenames(new String[]{"locale/Messages", "locale/Errors"});
+        return ms;
+    }
+
+    /**
+     * Returns a {@code MongoTemplate} instance.
+     *
+     * @return the MongoDB template bean
+     * @throws Exception
+     */
+    @Bean
+    public MongoTemplate mongoTemplate() throws Exception {
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
+        mongoTemplate.setWriteConcern(WriteConcern.SAFE);
+        return mongoTemplate;
+    }
+
+    @Override
+    public SimpleMongoDbFactory mongoDbFactory() throws Exception {
+        return mongoDbFactory;
+    }
+
+    @Override
+    public String getDatabaseName() {
+        return mongoDbFactory.getDb().getName();
+    }
+
+    @Override
+    public Mongo mongo() throws Exception {
+        return mongoDbFactory.getDb().getMongo();
+    }
+
+    @Override
+    public String getMappingBasePackage() {
+        return "com.trenako.mapping";
+    }
 }

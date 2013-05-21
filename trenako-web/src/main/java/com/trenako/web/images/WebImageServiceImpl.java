@@ -37,93 +37,90 @@ import com.trenako.web.errors.NotFoundException;
 /**
  * This is class provide a concrete implementation for the {@code WebImageService}
  * interface.
- * 
+ * <p/>
  * <p>
  * <ul>
  * <li>{@link ImagesRepository}: to load/store images to the database;</li>
  * <li>{@link ImagesConverter} to convert images from and to {@link MultipartFile}.</li>
- * </ul> 
+ * </ul>
  * </p>
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("webImageService")
 public class WebImageServiceImpl implements WebImageService {
 
-	private final ImagesRepository repo;
-	private final ImagesConverter converter;
+    private final ImagesRepository repo;
+    private final ImagesConverter converter;
 
-	/**
-	 * Creates a new {@code WebImageServiceImpl}.
-	 * @param repo the images repository
-	 * @param converter the images converter
-	 */
-	@Autowired
-	public WebImageServiceImpl(ImagesRepository repo, ImagesConverter converter) {
-		this.converter = converter;
-		this.repo = repo;
-	}
+    /**
+     * Creates a new {@code WebImageServiceImpl}.
+     *
+     * @param repo      the images repository
+     * @param converter the images converter
+     */
+    @Autowired
+    public WebImageServiceImpl(ImagesRepository repo, ImagesConverter converter) {
+        this.converter = converter;
+        this.repo = repo;
+    }
 
-	@Override
-	public void saveImage(UploadRequest req) {
-		Assert.notNull(req, "Upload request must be not null");
+    @Override
+    public void saveImage(UploadRequest req) {
+        Assert.notNull(req, "Upload request must be not null");
 
-		try {
-			repo.store(converter.createImage(req.getFile(), req.asMetadata(false)));
-		}
-		catch (IOException ioEx) {
-			throw new UploadSavingException("Error occurred uploading the file.", ioEx);
-		}
-	}
+        try {
+            repo.store(converter.createImage(req.getFile(), req.asMetadata(false)));
+        } catch (IOException ioEx) {
+            throw new UploadSavingException("Error occurred uploading the file.", ioEx);
+        }
+    }
 
-	@Override
-	public void saveImageWithThumb(UploadRequest req, int size) {
-		Assert.notNull(req, "Upload request must be not null");
-		Assert.isTrue(size > 0, "Thumbnail size must be positive");
+    @Override
+    public void saveImageWithThumb(UploadRequest req, int size) {
+        Assert.notNull(req, "Upload request must be not null");
+        Assert.isTrue(size > 0, "Thumbnail size must be positive");
 
-		try {
-			repo.store(converter.createImage(req.getFile(), req.asMetadata(false)));
-			repo.store(converter.createThumbnail(req.getFile(), req.asMetadata(true), size));
-		}
-		catch (IOException ioEx) {
-			throw new UploadSavingException("Error occurred uploading the file.", ioEx);
-		}
-	}
-	
-	@Override
-	public ResponseEntity<byte[]> renderImage(String imageSlug) {
-		GridFSDBFile img = repo.findFileBySlug(imageSlug);
-		if (img == null) {
-			throw new NotFoundException();
-		}
-		
-		InputStream in = img.getInputStream();
-		MediaType mediaType = parse(img.getContentType());
+        try {
+            repo.store(converter.createImage(req.getFile(), req.asMetadata(false)));
+            repo.store(converter.createThumbnail(req.getFile(), req.asMetadata(true), size));
+        } catch (IOException ioEx) {
+            throw new UploadSavingException("Error occurred uploading the file.", ioEx);
+        }
+    }
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(mediaType);
+    @Override
+    public ResponseEntity<byte[]> renderImage(String imageSlug) {
+        GridFSDBFile img = repo.findFileBySlug(imageSlug);
+        if (img == null) {
+            throw new NotFoundException();
+        }
 
-		try {
-			return new ResponseEntity<byte[]>(
-				IOUtils.toByteArray(in), 
-				headers, 
-				HttpStatus.CREATED);
-		}
-		catch (IOException ioEx) {
-			throw new UploadRenderingException("Error occurred rendering the file.", ioEx);
-		}
-	}
+        InputStream in = img.getInputStream();
+        MediaType mediaType = parse(img.getContentType());
 
-	@Override
-	public void deleteImage(ImageRequest req) {
-		repo.delete(req.getFilename());
-		repo.delete(req.getThumbFilename());
-	}
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(mediaType);
 
-	// helper methods
+        try {
+            return new ResponseEntity<byte[]>(
+                    IOUtils.toByteArray(in),
+                    headers,
+                    HttpStatus.CREATED);
+        } catch (IOException ioEx) {
+            throw new UploadRenderingException("Error occurred rendering the file.", ioEx);
+        }
+    }
 
-	private MediaType parse(String mediaType) {
-		return MediaType.parseMediaType(mediaType);
-	}
+    @Override
+    public void deleteImage(ImageRequest req) {
+        repo.delete(req.getFilename());
+        repo.delete(req.getThumbFilename());
+    }
+
+    // helper methods
+
+    private MediaType parse(String mediaType) {
+        return MediaType.parseMediaType(mediaType);
+    }
 }

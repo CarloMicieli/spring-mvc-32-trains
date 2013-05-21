@@ -25,46 +25,46 @@ import com.trenako.values.OptionFamily;
 
 /**
  * A concrete implementation for the options service for mongodb.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("optionsService")
 public class OptionsServiceImpl implements OptionsService {
 
-	private OptionsRepository repo;
-	
-	@Autowired
-	public OptionsServiceImpl(OptionsRepository repo) {
-		this.repo = repo;
-	}
-	
-	@Override
-	public Option findById(ObjectId id) {
-		return repo.findOne(id);
-	}
-	
-	@Override
-	public Option findByName(String name) {
-		return repo.findByName(name);
-	}
-	
-	@Override
-	public Iterable<Option> findByFamily(OptionFamily family) {
-		return repo.findByFamily(family.label());
-	}
-	
-	@Override
-	public Iterable<Option> findAll() {
-		return repo.findAll();
-	}
-	
-	@Override
-	public void save(Option option) {
-		repo.save(option);
-	}
-	
-	@Override
-	public void remove(Option option) {
-		repo.delete(option);
-	}
+    private OptionsRepository repo;
+
+    @Autowired
+    public OptionsServiceImpl(OptionsRepository repo) {
+        this.repo = repo;
+    }
+
+    @Override
+    public Option findById(ObjectId id) {
+        return repo.findOne(id);
+    }
+
+    @Override
+    public Option findByName(String name) {
+        return repo.findByName(name);
+    }
+
+    @Override
+    public Iterable<Option> findByFamily(OptionFamily family) {
+        return repo.findByFamily(family.label());
+    }
+
+    @Override
+    public Iterable<Option> findAll() {
+        return repo.findAll();
+    }
+
+    @Override
+    public void save(Option option) {
+        repo.save(option);
+    }
+
+    @Override
+    public void remove(Option option) {
+        repo.delete(option);
+    }
 }

@@ -18,25 +18,25 @@ package com.trenako;
 /**
  * Thrown to indicate that a method has been passed an illegal string argument
  * to be parsed as a {@code Cat}.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @SuppressWarnings("serial")
 public class CatFormatException extends IllegalArgumentException {
-	
-	/**
-	 * Constructs an {@code CatFormatException} with no detail message.
-	 */
-	public CatFormatException() {
-		super();
-	}
-	
-	/**
-	 * Constructs an {@code CatFormatException} with the specified detail message.
-	 * @param details the detail message
-	 */
-	public CatFormatException(String details) {
-		super(details);
-	}
+
+    /**
+     * Constructs an {@code CatFormatException} with no detail message.
+     */
+    public CatFormatException() {
+        super();
+    }
+
+    /**
+     * Constructs an {@code CatFormatException} with the specified detail message.
+     *
+     * @param details the detail message
+     */
+    public CatFormatException(String details) {
+        super(details);
+    }
 }

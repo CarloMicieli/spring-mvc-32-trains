@@ -19,15 +19,14 @@ import com.trenako.entities.Account;
 import com.trenako.services.view.ProfileView;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public interface ProfilesService {
-	/**
-	 * Returns the profile view for the provided {@code Account}.
-	 * @param owner the collection owner
-	 * @return a {@code ProfileView}
-	 */
-	ProfileView findProfileView(Account owner);
+    /**
+     * Returns the profile view for the provided {@code Account}.
+     *
+     * @param owner the collection owner
+     * @return a {@code ProfileView}
+     */
+    ProfileView findProfileView(Account owner);
 }

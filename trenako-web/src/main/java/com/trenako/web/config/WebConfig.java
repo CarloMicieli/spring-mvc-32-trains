@@ -45,72 +45,77 @@ import com.trenako.web.infrastructure.SearchRequestArgumentResolver;
 
 /**
  * The configuration class for the Spring MVC application.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Configuration
 @EnableWebMvc
 @Import(ApplicationConfig.class)
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		//Handles HTTP GET requests for resources by efficiently serving 
-		//up static resources in the ${webappRoot}/resources directory
-		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-	}
-	
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(localeChangeInterceptor());
-	}
-	
-	@Override
-	public void addFormatters(FormatterRegistry registry) {
-		registry.addConverter(new ObjectIdConverter());
-		registry.addFormatterForFieldType(WeakDbRef.class, new WeakDbRefFormatter());
-		registry.addFormatterForFieldAnnotation(new IntegerAnnotationFormatterFactory());
-	}
-	
-	@Override
-	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-		PageableArgumentResolver resolver = new PageableArgumentResolver();
-		resolver.setFallbackPagable(new PageRequest(1, 10));
-		
-		argumentResolvers.add(new ServletWebArgumentResolverAdapter(resolver));
-		argumentResolvers.add(new RangeRequestArgumentResolver());
-		argumentResolvers.add(new SearchRequestArgumentResolver());
-	}
-	
-	public @Bean InternalResourceViewResolver viewResolver() {
-		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-		resolver.setViewClass(JstlView.class);
-		resolver.setPrefix("/WEB-INF/views/");
-		resolver.setSuffix(".jsp");
-		return resolver;
-	}
-	
-	// bean for files upload. 
-	// commons-fileupload is required in the classpath
-	public @Bean CommonsMultipartResolver multipartResolver() {
-		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-		multipartResolver.setMaxUploadSize(1024 * 512); // 512Kb
-		return multipartResolver;
-	}
-	
-	/**
-	 * The {@code bean} that resolves the locale by using a session attribute.
-	 * @return a bean
-	 */
-	public @Bean SessionLocaleResolver localeResolver() {
-		SessionLocaleResolver resolver = new SessionLocaleResolver();
-		resolver.setDefaultLocale(AppGlobals.DEFAULT_LOCALE);
-		return resolver;
-	}
-	
-	public @Bean LocaleChangeInterceptor localeChangeInterceptor() {
-		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
-		interceptor.setParamName("lang");
-		return interceptor;
-	}
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //Handles HTTP GET requests for resources by efficiently serving
+        //up static resources in the ${webappRoot}/resources directory
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(localeChangeInterceptor());
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new ObjectIdConverter());
+        registry.addFormatterForFieldType(WeakDbRef.class, new WeakDbRefFormatter());
+        registry.addFormatterForFieldAnnotation(new IntegerAnnotationFormatterFactory());
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        PageableArgumentResolver resolver = new PageableArgumentResolver();
+        resolver.setFallbackPagable(new PageRequest(1, 10));
+
+        argumentResolvers.add(new ServletWebArgumentResolverAdapter(resolver));
+        argumentResolvers.add(new RangeRequestArgumentResolver());
+        argumentResolvers.add(new SearchRequestArgumentResolver());
+    }
+
+    @Bean
+    public InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setViewClass(JstlView.class);
+        resolver.setPrefix("/WEB-INF/views/");
+        resolver.setSuffix(".jsp");
+        return resolver;
+    }
+
+    // bean for files upload.
+    // commons-fileupload is required in the classpath
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(1024 * 512); // 512Kb
+        return multipartResolver;
+    }
+
+    /**
+     * The {@code bean} that resolves the locale by using a session attribute.
+     *
+     * @return a bean
+     */
+    @Bean
+    public SessionLocaleResolver localeResolver() {
+        SessionLocaleResolver resolver = new SessionLocaleResolver();
+        resolver.setDefaultLocale(AppGlobals.DEFAULT_LOCALE);
+        return resolver;
+    }
+
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+        interceptor.setParamName("lang");
+        return interceptor;
+    }
 }

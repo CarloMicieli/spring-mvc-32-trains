@@ -26,15 +26,15 @@ import com.trenako.utility.Slug;
 
 /**
  * The listener to change the document just before the railways are saved.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Component
 public class RailwaysEventListener extends AbstractMongoEventListener<Railway> {
-	
-	@Override
-	public void onBeforeSave(Railway railway, DBObject dbo) {
-		dbo.put("lastModified", new Date());
-		dbo.put("slug", Slug.encode(railway.getName()));
-	}
+
+    @Override
+    public void onBeforeSave(Railway railway, DBObject dbo) {
+        dbo.put("lastModified", new Date());
+        dbo.put("slug", Slug.encode(railway.getName()));
+    }
 }

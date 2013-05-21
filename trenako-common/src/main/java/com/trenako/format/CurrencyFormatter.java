@@ -24,35 +24,33 @@ import java.util.Locale;
 import org.springframework.format.number.AbstractNumberFormatter;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class CurrencyFormatter extends AbstractNumberFormatter {
 
-	private final static BigDecimal RATIO = BigDecimal.valueOf(100);
-	
-	@Override
-	public String print(Number object, Locale locale) {
-		BigDecimal number = new BigDecimal((Integer)object).divide(RATIO);
-		return super.print(number, locale);
-	}
+    private final static BigDecimal RATIO = BigDecimal.valueOf(100);
 
-	@Override
-	public Integer parse(String text, Locale locale) throws ParseException {
-		Integer val = null;
-		BigDecimal d = (BigDecimal) super.parse(text, locale);
-		if (d!=null) {
-			val = d.multiply(RATIO).intValue();
-		}
-		return val;
-	}
+    @Override
+    public String print(Number object, Locale locale) {
+        BigDecimal number = new BigDecimal((Integer) object).divide(RATIO);
+        return super.print(number, locale);
+    }
 
-	@Override
-	protected NumberFormat getNumberFormat(Locale locale) {
-		DecimalFormat format = (DecimalFormat) NumberFormat.getInstance(locale);
-		format.setParseBigDecimal(true);
-		return format;
-	}
+    @Override
+    public Integer parse(String text, Locale locale) throws ParseException {
+        Integer val = null;
+        BigDecimal d = (BigDecimal) super.parse(text, locale);
+        if (d != null) {
+            val = d.multiply(RATIO).intValue();
+        }
+        return val;
+    }
+
+    @Override
+    protected NumberFormat getNumberFormat(Locale locale) {
+        DecimalFormat format = (DecimalFormat) NumberFormat.getInstance(locale);
+        format.setParseBigDecimal(true);
+        return format;
+    }
 
 }

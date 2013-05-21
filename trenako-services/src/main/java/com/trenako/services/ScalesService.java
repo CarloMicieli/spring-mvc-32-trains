@@ -38,67 +38,70 @@ import com.trenako.entities.Scale;
  *
  * @author Carlo Micieli
  * @see com.trenako.entities.Scale
- */ 
+ */
 public interface ScalesService {
 
-	/**
-	 * Finds the {@link Scale} with the provided id.
-	 * @param id the unique id
-	 * @return a {@code Scale} if found; {@code null} otherwise
-	 */
-	Scale findById(ObjectId id);
+    /**
+     * Finds the {@link Scale} with the provided id.
+     *
+     * @param id the unique id
+     * @return a {@code Scale} if found; {@code null} otherwise
+     */
+    Scale findById(ObjectId id);
 
-	/**
-	 * Finds the {@link Scale} with the provided name.
-	 * <p>
-	 * Due to possible data store implementation the clients for this method must 
-	 * think this search as case sensitive.
-	 * </p>
-	 *  
-	 * @param name the {@code Scale} name
-	 * @return a {@code Scale} if found; {@code null} otherwise
-	 */
-	Scale findByName(String name);
-	
-	/**
-	 * Finds the {@link Scale} with the provided slug.
-	 * <p>
-	 * Due to possible data store implementation the clients for this method must 
-	 * think this search as case sensitive.
-	 * </p>
-	 *  
-	 * @param slug the {@code Scale} slug
-	 * @return a {@code Scale} if found; {@code null} otherwise
-	 */
-	Scale findBySlug(String slug);
-	
-	/**
-	 * Returns all {@link Scale} objects.
-	 * <p>
-	 * This methods return all the scale, sort by name.
-	 * </p>
-	 * @param pageable 
-	 * 
-	 * @return the list of scales
-	 */
-	Page<Scale> findAll(Pageable pageable);
+    /**
+     * Finds the {@link Scale} with the provided name.
+     * <p>
+     * Due to possible data store implementation the clients for this method must
+     * think this search as case sensitive.
+     * </p>
+     *
+     * @param name the {@code Scale} name
+     * @return a {@code Scale} if found; {@code null} otherwise
+     */
+    Scale findByName(String name);
 
-	/**
-	 * Persists the {@link Scale} changes in the data store.
-	 * <p>
-	 * This method performs a "upsert": if the {@code Scale} is not present in the data store
-	 * a new {@code Scale} is created; otherwise the method will update the existing {@code Scale}. 
-	 * </p>	 
-	 * @param scale the {@code Scale} to be saved
-	 */
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-	void save(Scale scale);
+    /**
+     * Finds the {@link Scale} with the provided slug.
+     * <p>
+     * Due to possible data store implementation the clients for this method must
+     * think this search as case sensitive.
+     * </p>
+     *
+     * @param slug the {@code Scale} slug
+     * @return a {@code Scale} if found; {@code null} otherwise
+     */
+    Scale findBySlug(String slug);
 
-	/**
-	 * Removes a {@link Scale} from the data store.
-	 * @param scale the scale {@code Scale} to be removed
-	 */
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-	void remove(Scale scale);
+    /**
+     * Returns all {@link Scale} objects.
+     * <p>
+     * This methods return all the scale, sort by name.
+     * </p>
+     *
+     * @param pageable
+     * @return the list of scales
+     */
+    Page<Scale> findAll(Pageable pageable);
+
+    /**
+     * Persists the {@link Scale} changes in the data store.
+     * <p>
+     * This method performs a "upsert": if the {@code Scale} is not present in the data store
+     * a new {@code Scale} is created; otherwise the method will update the existing {@code Scale}.
+     * </p>
+     *
+     * @param scale the {@code Scale} to be saved
+     */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    void save(Scale scale);
+
+    /**
+     * Removes a {@link Scale} from the data store.
+     *
+     * @param scale the scale {@code Scale} to be removed
+     */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    void remove(Scale scale);
 
 }

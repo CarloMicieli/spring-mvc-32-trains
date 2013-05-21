@@ -25,43 +25,44 @@ import org.springframework.util.Assert;
 
 /**
  * It represents an utility class to produce paginated partition of {@code List}.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class PaginatedLists {
-	/**
-	 * Returns a values page according the provided {@code Pageable}.
-	 * @param values the values to be paginated
-	 * @param pageable the paging information
-	 * @return a {@code Page}
-	 */
-	public static <T> Page<T> paginate(List<T> values, Pageable pageable) {
-		Assert.notNull(values, "Values list must be not null");
+    /**
+     * Returns a values page according the provided {@code Pageable}.
+     *
+     * @param values   the values to be paginated
+     * @param paging the paging information
+     * @return a {@code Page}
+     */
+    public static <T> Page<T> paginate(List<T> values, Pageable paging) {
+        Assert.notNull(values, "Values list must be not null");
 
-		int total = values.size();
-		int offset = pageable.getOffset();
-		
-		if (offset > total) {
-			return failbackPage();
-		}
-		
-		int sIndex = start(total, offset);
-		int eIndex = end(total, offset, pageable.getPageSize());
+        int total = values.size();
+        int offset = paging.getOffset();
 
-		List<T> content = values.subList(sIndex, eIndex);
-		return new PageImpl<T>(content, pageable, total);
-	}
+        if (offset > total) {
+            return failbackPage();
+        }
 
-	private static <T> Page<T> failbackPage() {
-		List<T> empty = Collections.emptyList();
-		return new PageImpl<T>(empty);
-	}
+        int sIndex = start(total, offset);
+        int eIndex = end(total, offset, paging.getPageSize());
 
-	private static int start(int total, int offset) {
-		return (offset > total) ? total : offset;
-	}
+        List<T> content = values.subList(sIndex, eIndex);
+        return new PageImpl<>(content, paging, total);
+    }
 
-	private static int end(int total, int offset, int pageSize) {
-		return (offset + pageSize > total) ? total : offset + pageSize;
-	}
+    private static <T> Page<T> failbackPage() {
+        List<T> empty = Collections.emptyList();
+        return new PageImpl<>(empty);
+    }
+
+    private static int start(int total, int offset) {
+        return (offset > total) ? total : offset;
+    }
+
+    private static int end(int total, int offset, int pageSize) {
+        return (offset + pageSize > total) ? total : offset + pageSize;
+    }
 }

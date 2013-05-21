@@ -31,116 +31,118 @@ import com.trenako.web.security.UserContext;
 
 /**
  * It represents the web form for {@code Review}s.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class ReviewForm {
-	private final static Map<Integer, String> RATING_LISTS = ratingsList();
+    private final static Map<Integer, String> RATING_LISTS = ratingsList();
 
-	@Valid
-	private Review review;
-	private RollingStock rs;
-	private String rsSlug;
-	private String rsLabel;
-	
-	public ReviewForm() {
-	}
-	
-	private ReviewForm(RollingStock rs, Account author) {
-		this.rs = rs;
-		this.rsLabel = rs.getLabel();
-		this.rsSlug = rs.getSlug();
-		this.review = new Review(author, "", "", 0, null, null);
-	}
-	
-	/**
-	 * Builds a new {@code ReviewForm}.
-	 * @param rs TODO
-	 * @param userContext the security content
-	 * @return the {@code ReviewForm}
-	 */
-	public static ReviewForm newForm(RollingStock rs, UserContext userContext) {
-		Account author = UserContext.authenticatedUser(userContext);
-		if (author != null) {
-			return new ReviewForm(rs, author);
-		}
-		return null;
-	}
-	
-	/**
-	 * Creates a new {@code Review} from the posted values.
-	 * @param postingDate the review posting date
-	 * @param userContext the security content
-	 * @return a new {@code Review}
-	 */
-	public Review buildReview(Date postingDate, UserContext userContext) {
-		if (getReview() == null) {
-			return null;
-		}
-		
-		Account author = UserContext.authenticatedUser(userContext);
-		return new Review(author, 
-				getReview().getTitle(),
-				getReview().getContent(),
-				getReview().getRating(),
-				postingDate
-				);
-	}
-	
-	public RollingStock getRs() {
-		return rs;
-	}
+    @Valid
+    private Review review;
+    private RollingStock rs;
+    private String rsSlug;
+    private String rsLabel;
 
-	public void setRs(RollingStock rs) {
-		this.rs = rs;
-	}
+    public ReviewForm() {
+    }
 
-	public Review getReview() {
-		return review;
-	}
+    private ReviewForm(RollingStock rs, Account author) {
+        this.rs = rs;
+        this.rsLabel = rs.getLabel();
+        this.rsSlug = rs.getSlug();
+        this.review = new Review(author, "", "", 0, null, null);
+    }
 
-	public void setReview(Review review) {
-		this.review = review;
-	}
-	
-	public String getRsSlug() {
-		return rsSlug;
-	}
+    /**
+     * Builds a new {@code ReviewForm}.
+     *
+     * @param rs          TODO
+     * @param userContext the security content
+     * @return the {@code ReviewForm}
+     */
+    public static ReviewForm newForm(RollingStock rs, UserContext userContext) {
+        Account author = UserContext.authenticatedUser(userContext);
+        if (author != null) {
+            return new ReviewForm(rs, author);
+        }
+        return null;
+    }
 
-	public void setRsSlug(String rsSlug) {
-		this.rsSlug = rsSlug;
-	}
+    /**
+     * Creates a new {@code Review} from the posted values.
+     *
+     * @param postingDate the review posting date
+     * @param userContext the security content
+     * @return a new {@code Review}
+     */
+    public Review buildReview(Date postingDate, UserContext userContext) {
+        if (getReview() == null) {
+            return null;
+        }
 
-	public String getRsLabel() {
-		return rsLabel;
-	}
+        Account author = UserContext.authenticatedUser(userContext);
+        return new Review(author,
+                getReview().getTitle(),
+                getReview().getContent(),
+                getReview().getRating(),
+                postingDate
+        );
+    }
 
-	public void setRsLabel(String rsLabel) {
-		this.rsLabel = rsLabel;
-	}
+    public RollingStock getRs() {
+        return rs;
+    }
 
-	public Map<Integer, String> getRatings() {
-		return RATING_LISTS;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof ReviewForm)) return false;
-		
-		ReviewForm other = (ReviewForm) obj;
-		return new EqualsBuilder()
-			.append(this.rsSlug, other.rsSlug)
-			.append(this.rsLabel, other.rsLabel)
-			.append(this.review, other.review)
-			.isEquals();
-	}
-	
-	private static Map<Integer, String> ratingsList() {
-		Map<Integer, String> ratings = new HashMap<Integer, String>();
-		for (int r = 1; r <= 5; r++) {
-			ratings.put(r, StringUtils.repeat("*", r));
-		}
-		return ratings;
-	}
+    public void setRs(RollingStock rs) {
+        this.rs = rs;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
+
+    public String getRsSlug() {
+        return rsSlug;
+    }
+
+    public void setRsSlug(String rsSlug) {
+        this.rsSlug = rsSlug;
+    }
+
+    public String getRsLabel() {
+        return rsLabel;
+    }
+
+    public void setRsLabel(String rsLabel) {
+        this.rsLabel = rsLabel;
+    }
+
+    public Map<Integer, String> getRatings() {
+        return RATING_LISTS;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof ReviewForm)) return false;
+
+        ReviewForm other = (ReviewForm) obj;
+        return new EqualsBuilder()
+                .append(this.rsSlug, other.rsSlug)
+                .append(this.rsLabel, other.rsLabel)
+                .append(this.review, other.review)
+                .isEquals();
+    }
+
+    private static Map<Integer, String> ratingsList() {
+        Map<Integer, String> ratings = new HashMap<Integer, String>();
+        for (int r = 1; r <= 5; r++) {
+            ratings.put(r, StringUtils.repeat("*", r));
+        }
+        return ratings;
+    }
 }

@@ -27,33 +27,33 @@ import com.trenako.services.view.HomeView;
 
 /**
  * The concrete implementation for the homepage service.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("homeService")
 public class HomeServiceImpl implements HomeService {
 
-	private final RollingStocksService rsService;
-	private final ActivityStream activityStream;
-	
-	@Autowired
-	public HomeServiceImpl(RollingStocksService rsService, ActivityStream activityStream) {
-		this.rsService = rsService;
-		this.activityStream = activityStream;
-	}
+    private final RollingStocksService rsService;
+    private final ActivityStream activityStream;
 
-	@Override
-	public HomeView getHomeContent(Account loggedUser) {
-		return getHomeContent(loggedUser, HomepageOptions.defaultHomepageOptions());
-	}
-	
-	@Override
-	public HomeView getHomeContent(Account loggedUser, HomepageOptions options) {
-		boolean isLogged = loggedUser != null;
-		
-		Iterable<RollingStock> rollingStocks = rsService.findLatestModified(options.getNumberOfRollingStocks());
-		Iterable<Activity> stream = activityStream.recentActivity(options.getActivityStreamSize());
-		
-		return new HomeView(isLogged, rollingStocks, stream);
-	}
+    @Autowired
+    public HomeServiceImpl(RollingStocksService rsService, ActivityStream activityStream) {
+        this.rsService = rsService;
+        this.activityStream = activityStream;
+    }
+
+    @Override
+    public HomeView getHomeContent(Account loggedUser) {
+        return getHomeContent(loggedUser, HomepageOptions.defaultHomepageOptions());
+    }
+
+    @Override
+    public HomeView getHomeContent(Account loggedUser, HomepageOptions options) {
+        boolean isLogged = loggedUser != null;
+
+        Iterable<RollingStock> rollingStocks = rsService.findLatestModified(options.getNumberOfRollingStocks());
+        Iterable<Activity> stream = activityStream.recentActivity(options.getActivityStreamSize());
+
+        return new HomeView(isLogged, rollingStocks, stream);
+    }
 }

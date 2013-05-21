@@ -26,134 +26,141 @@ import com.trenako.services.BrowseService;
 
 /**
  * It represents a controller to browse rolling stocks.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Controller
 @RequestMapping("/browse")
 public class BrowseController {
 
-	private final BrowseService service;
-	
-	/**
-	 * Creates a new {@code BrowseController}.
-	 * @param service the service
-	 */
-	@Autowired
-	public BrowseController(BrowseService service) {
-		this.service = service;
-	}
+    private final BrowseService service;
 
-	/**
-	 * Renders the browsing index page.
-	 * @return the model and view
-	 */
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView index() {
-		ModelAndView mav = new ModelAndView("browse/index");
+    /**
+     * Creates a new {@code BrowseController}.
+     *
+     * @param service the service
+     */
+    @Autowired
+    public BrowseController(BrowseService service) {
+        this.service = service;
+    }
 
-		mav.addObject("brands", service.brands());
-		mav.addObject("scales", service.scales());
-		mav.addObject("railways", service.railways());
-		mav.addObject("eras", service.eras());
-		mav.addObject("categories", service.categories());
-		
-		return mav;
-	}
+    /**
+     * Renders the browsing index page.
+     *
+     * @return the model and view
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView index() {
+        ModelAndView mav = new ModelAndView("browse/index");
 
-	/**
-	 * Renders the {@code Brand}s index page.
-	 * @return the model and view
-	 */
-	@RequestMapping(value = "/brands", method = RequestMethod.GET)
-	public ModelAndView brands() {
-		ModelAndView mav = new ModelAndView("browse/brands");
-		mav.addObject("brands", service.brands());
-		return mav;
-	}
+        mav.addObject("brands", service.brands());
+        mav.addObject("scales", service.scales());
+        mav.addObject("railways", service.railways());
+        mav.addObject("eras", service.eras());
+        mav.addObject("categories", service.categories());
 
-	/**
-	 * Renders the {@code era}s index page.
-	 * @return the model and view
-	 */
-	@RequestMapping(value = "/eras", method = RequestMethod.GET)
-	public ModelAndView eras() {
-		ModelAndView mav = new ModelAndView("browse/eras");
-		mav.addObject("eras", service.eras());
-		return mav;
-	}
+        return mav;
+    }
 
-	/**
-	 * Renders the {@code Railway}s index page.
-	 * @return the model and view
-	 */
-	@RequestMapping(value = "/railways", method = RequestMethod.GET)
-	public ModelAndView railways() {
-		ModelAndView mav = new ModelAndView("browse/railways");
-		mav.addObject("railways", service.railways());
-		return mav;
-	}
+    /**
+     * Renders the {@code Brand}s index page.
+     *
+     * @return the model and view
+     */
+    @RequestMapping(value = "/brands", method = RequestMethod.GET)
+    public ModelAndView brands() {
+        ModelAndView mav = new ModelAndView("browse/brands");
+        mav.addObject("brands", service.brands());
+        return mav;
+    }
 
-	/**
-	 * Renders the {@code Scale}s index page.
-	 * @return the model and view
-	 */
-	@RequestMapping(value = "/scales", method = RequestMethod.GET)
-	public ModelAndView scales() {
-		ModelAndView mav = new ModelAndView("browse/scales");
-		mav.addObject("scales", service.scales());
-		return mav;
-	}
+    /**
+     * Renders the {@code era}s index page.
+     *
+     * @return the model and view
+     */
+    @RequestMapping(value = "/eras", method = RequestMethod.GET)
+    public ModelAndView eras() {
+        ModelAndView mav = new ModelAndView("browse/eras");
+        mav.addObject("eras", service.eras());
+        return mav;
+    }
 
-	/**
-	 * Renders the {@code categories} index page.
-	 * @return the model and view
-	 */
-	@RequestMapping(value = "/categories", method = RequestMethod.GET)
-	public ModelAndView categories() {
-		ModelAndView mav = new ModelAndView("browse/categories");
-		mav.addObject("categories", service.categories());
-		return mav;
-	}
+    /**
+     * Renders the {@code Railway}s index page.
+     *
+     * @return the model and view
+     */
+    @RequestMapping(value = "/railways", method = RequestMethod.GET)
+    public ModelAndView railways() {
+        ModelAndView mav = new ModelAndView("browse/railways");
+        mav.addObject("railways", service.railways());
+        return mav;
+    }
 
-	@RequestMapping(value = "/brands/{slug}", method = RequestMethod.GET)
-	public ModelAndView brand(@PathVariable("slug") String slug) {
-		return new ModelAndView("browse/brand", "brand", service.findBrand(slug));
-	}
+    /**
+     * Renders the {@code Scale}s index page.
+     *
+     * @return the model and view
+     */
+    @RequestMapping(value = "/scales", method = RequestMethod.GET)
+    public ModelAndView scales() {
+        ModelAndView mav = new ModelAndView("browse/scales");
+        mav.addObject("scales", service.scales());
+        return mav;
+    }
 
-	@RequestMapping(value = "/railways/{slug}", method = RequestMethod.GET)
-	public ModelAndView railway(@PathVariable("slug") String slug) {
-		ModelAndView mav = new ModelAndView("browse/railway");
-		mav.addObject("railway", service.findRailway(slug));
-		mav.addObject("categories", service.categories());
-		mav.addObject("eras", service.eras());
-		return mav;
-	}
+    /**
+     * Renders the {@code categories} index page.
+     *
+     * @return the model and view
+     */
+    @RequestMapping(value = "/categories", method = RequestMethod.GET)
+    public ModelAndView categories() {
+        ModelAndView mav = new ModelAndView("browse/categories");
+        mav.addObject("categories", service.categories());
+        return mav;
+    }
 
-	@RequestMapping(value = "/scales/{slug}", method = RequestMethod.GET)
-	public ModelAndView scale(@PathVariable("slug") String slug) {
-		ModelAndView mav = new ModelAndView("browse/scale");
-		mav.addObject("scale", service.findScale(slug));
-		mav.addObject("categories", service.categories());
-		mav.addObject("eras", service.eras());
-		return mav;
-	}
+    @RequestMapping(value = "/brands/{slug}", method = RequestMethod.GET)
+    public ModelAndView brand(@PathVariable("slug") String slug) {
+        return new ModelAndView("browse/brand", "brand", service.findBrand(slug));
+    }
 
-	@RequestMapping(value = "/categories/{slug}", method = RequestMethod.GET)
-	public ModelAndView category(@PathVariable("slug") String slug) {
-		ModelAndView mav = new ModelAndView("browse/category");
-		mav.addObject("category", service.findCategory(slug));
-		mav.addObject("brands", service.brands());
-		mav.addObject("railways", service.railways());
-		return mav;
-	}
-	
-	@RequestMapping(value = "/eras/{slug}", method = RequestMethod.GET)
-	public ModelAndView era(@PathVariable("slug") String slug) {
-		ModelAndView mav = new ModelAndView("browse/era");
-		mav.addObject("era", service.findEra(slug));
-		mav.addObject("brands", service.brands());
-		mav.addObject("railways", service.railways());
-		return mav;
-	}
+    @RequestMapping(value = "/railways/{slug}", method = RequestMethod.GET)
+    public ModelAndView railway(@PathVariable("slug") String slug) {
+        ModelAndView mav = new ModelAndView("browse/railway");
+        mav.addObject("railway", service.findRailway(slug));
+        mav.addObject("categories", service.categories());
+        mav.addObject("eras", service.eras());
+        return mav;
+    }
+
+    @RequestMapping(value = "/scales/{slug}", method = RequestMethod.GET)
+    public ModelAndView scale(@PathVariable("slug") String slug) {
+        ModelAndView mav = new ModelAndView("browse/scale");
+        mav.addObject("scale", service.findScale(slug));
+        mav.addObject("categories", service.categories());
+        mav.addObject("eras", service.eras());
+        return mav;
+    }
+
+    @RequestMapping(value = "/categories/{slug}", method = RequestMethod.GET)
+    public ModelAndView category(@PathVariable("slug") String slug) {
+        ModelAndView mav = new ModelAndView("browse/category");
+        mav.addObject("category", service.findCategory(slug));
+        mav.addObject("brands", service.brands());
+        mav.addObject("railways", service.railways());
+        return mav;
+    }
+
+    @RequestMapping(value = "/eras/{slug}", method = RequestMethod.GET)
+    public ModelAndView era(@PathVariable("slug") String slug) {
+        ModelAndView mav = new ModelAndView("browse/era");
+        mav.addObject("era", service.findEra(slug));
+        mav.addObject("brands", service.brands());
+        mav.addObject("railways", service.railways());
+        return mav;
+    }
 }

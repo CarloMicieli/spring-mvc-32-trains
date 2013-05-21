@@ -28,24 +28,24 @@ import com.trenako.entities.Scale;
 
 /**
  * This class implements custom methods for the {@code BrandsRepository}.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @NoRepositoryBean
 public class BrandsRepositoryImpl implements BrandsCustomRepository {
 
-	private final MongoTemplate mongoTemplate;
-	
-	@Autowired
-	public BrandsRepositoryImpl(MongoTemplate mongoTemplate) {
-		this.mongoTemplate = mongoTemplate;
-	}
+    private final MongoTemplate mongoTemplate;
 
-	@Override
-	public void updateScales(Brand brand, Scale scale) {
-		
-		mongoTemplate.updateFirst(query(where("slug").is(brand.getSlug())), 
-				new Update().push("scales", scale.getSlug()), 
-				Brand.class);
-	}
+    @Autowired
+    public BrandsRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public void updateScales(Brand brand, Scale scale) {
+
+        mongoTemplate.updateFirst(query(where("slug").is(brand.getSlug())),
+                new Update().push("scales", scale.getSlug()),
+                Brand.class);
+    }
 }

@@ -22,29 +22,31 @@ import com.trenako.entities.Brand;
 
 /**
  * The interface for the model railway {@code Brand}s repository.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface BrandsRepository extends MongoRepository<Brand, ObjectId>, BrandsCustomRepository {
-	/**
-	 * Returns the {@code Brand} with the provided id.
-	 * @param id the {@code Brand} id.
-	 * @return a {@code Brand} if found; {@code null} otherwise
-	 */
-	Brand findById(ObjectId id);
-	
-	/**
-	 * Returns the {@code Brand} with the provided name.
-	 * @param name the {@code Brand} name
-	 * @return a {@code Brand} if found; {@code null} otherwise
-	 */
-	Brand findByName(String name);
-	
-	/**
-	 * Returns the {@code Brand} with the provided slug.
-	 * @param slug the {@code Brand} slug
-	 * @return a {@code Brand} if found; {@code null} otherwise
-	 */
-	Brand findBySlug(String slug);
+    /**
+     * Returns the {@code Brand} with the provided id.
+     *
+     * @param id the {@code Brand} id.
+     * @return a {@code Brand} if found; {@code null} otherwise
+     */
+    Brand findById(ObjectId id);
+
+    /**
+     * Returns the {@code Brand} with the provided name.
+     *
+     * @param name the {@code Brand} name
+     * @return a {@code Brand} if found; {@code null} otherwise
+     */
+    Brand findByName(String name);
+
+    /**
+     * Returns the {@code Brand} with the provided slug.
+     *
+     * @param slug the {@code Brand} slug
+     * @return a {@code Brand} if found; {@code null} otherwise
+     */
+    Brand findBySlug(String slug);
 }

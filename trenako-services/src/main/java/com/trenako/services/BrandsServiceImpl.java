@@ -29,59 +29,59 @@ import com.trenako.repositories.BrandsRepository;
 
 /**
  * A concrete implementation for the brands service for mongodb.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("brandsService")
 public class BrandsServiceImpl implements BrandsService {
-	
-	private final Sort NAME_SORT = new Sort(Direction.ASC, "name");
-	private BrandsRepository repo;
-	
-	@Autowired
-	public BrandsServiceImpl(BrandsRepository repo) {
-		this.repo = repo;
-	}
-	
-	@Override
-	public Brand findById(ObjectId id) {
-		return repo.findById(id);
-	}
-	
-	@Override
-	public Brand findBySlug(String slug) {
-		return repo.findBySlug(slug);
-	}
-	
-	@Override
-	public Brand findByName(String name) {
-		return repo.findByName(name);
-	}
-	
-	@Override
-	public void save(Brand brand) {
-		if (brand.getAddress() != null && brand.getAddress().isEmpty()) {
-			brand.setAddress(null);
-		}
-		
-		repo.save(brand);
-	}
-	
-	@Override
-	public void remove(Brand brand) {
-		repo.delete(brand);
-	}
 
-	@Override
-	public Iterable<Brand> findAll() {
-		return repo.findAll();
-	}
-	
-	@Override
-	public Page<Brand> findAll(Pageable pageable) {
-		if (pageable.getSort() == null) {
-			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), NAME_SORT);
-		}
-		return repo.findAll(pageable);
-	}
+    private final Sort NAME_SORT = new Sort(Direction.ASC, "name");
+    private BrandsRepository repo;
+
+    @Autowired
+    public BrandsServiceImpl(BrandsRepository repo) {
+        this.repo = repo;
+    }
+
+    @Override
+    public Brand findById(ObjectId id) {
+        return repo.findById(id);
+    }
+
+    @Override
+    public Brand findBySlug(String slug) {
+        return repo.findBySlug(slug);
+    }
+
+    @Override
+    public Brand findByName(String name) {
+        return repo.findByName(name);
+    }
+
+    @Override
+    public void save(Brand brand) {
+        if (brand.getAddress() != null && brand.getAddress().isEmpty()) {
+            brand.setAddress(null);
+        }
+
+        repo.save(brand);
+    }
+
+    @Override
+    public void remove(Brand brand) {
+        repo.delete(brand);
+    }
+
+    @Override
+    public Iterable<Brand> findAll() {
+        return repo.findAll();
+    }
+
+    @Override
+    public Page<Brand> findAll(Pageable pageable) {
+        if (pageable.getSort() == null) {
+            pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), NAME_SORT);
+        }
+        return repo.findAll(pageable);
+    }
 }

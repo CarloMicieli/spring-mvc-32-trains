@@ -32,55 +32,54 @@ import com.trenako.web.security.SignupService;
 
 /**
  * It represents the authentication controller.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
-	
-	static final ControllerMessage EMAIL_ADDRESS_OR_DISPLAY_NAME_ALREADY_TAKEN = ControllerMessage.error("auth.mail.display.name.used");
-	private final SignupService signupService;
-	
-	@Autowired
-	public AuthController(SignupService signupService) {
-		this.signupService = signupService;
-	}
-	
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login() {
-		return "auth/login";
-	}
 
-	@RequestMapping(value = "/signup", method = RequestMethod.GET)
-	public ModelAndView signUp() {
-		return new ModelAndView("auth/signup", "account", new Account());
-	}
+    static final ControllerMessage EMAIL_ADDRESS_OR_DISPLAY_NAME_ALREADY_TAKEN = ControllerMessage.error("auth.mail.display.name.used");
+    private final SignupService signupService;
 
-	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public String createUser(@Valid @ModelAttribute Account account, 
-			BindingResult result, 
-			ModelMap model) {
-		
-		if (result.hasErrors()) {
-			model.addAttribute(account);
-			return "auth/signup";
-		}
+    @Autowired
+    public AuthController(SignupService signupService) {
+        this.signupService = signupService;
+    }
 
-		try {
-			Account newUser = signupService.createAccount(account);
-			
-			// automatically sign in the new user
-			signupService.authenticate(newUser);
-			
-			return "redirect:/default";
-		} 
-		catch (DuplicateKeyException ex) {
-			model.addAttribute(account);
-			EMAIL_ADDRESS_OR_DISPLAY_NAME_ALREADY_TAKEN.appendToModel(model);
-			return "auth/signup";
-		}
-	}
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login() {
+        return "auth/login";
+    }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    public ModelAndView signUp() {
+        return new ModelAndView("auth/signup", "account", new Account());
+    }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public String createUser(@Valid @ModelAttribute Account account,
+                             BindingResult result,
+                             ModelMap model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute(account);
+            return "auth/signup";
+        }
+
+        try {
+            Account newUser = signupService.createAccount(account);
+
+            // automatically sign in the new user
+            signupService.authenticate(newUser);
+
+            return "redirect:/default";
+        } catch (DuplicateKeyException ex) {
+            model.addAttribute(account);
+            EMAIL_ADDRESS_OR_DISPLAY_NAME_ALREADY_TAKEN.appendToModel(model);
+            return "auth/signup";
+        }
+    }
 }
 
 

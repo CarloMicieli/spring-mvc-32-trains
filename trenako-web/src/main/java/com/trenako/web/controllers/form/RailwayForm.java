@@ -24,66 +24,67 @@ import com.trenako.entities.Railway;
 import com.trenako.web.images.validation.Image;
 
 /**
- * It represents the web form for railways. 
- * @author Carlo Micieli
+ * It represents the web form for railways.
  *
+ * @author Carlo Micieli
  */
 public class RailwayForm {
 
-	@Valid
-	private Railway railway;
-	
-	@Image(message = "railway.logo.notValid")
-	private MultipartFile file;	
+    @Valid
+    private Railway railway;
 
-	private RailwayForm(Railway railway) {
-		this.railway = railway;
-	}
-	
-	/**
-	 * Creates a new empty {@code RailwayForm}.
-	 */
-	public RailwayForm() {
-	}
+    @Image(message = "railway.logo.notValid")
+    private MultipartFile file;
 
-	/**
-	 * Creates a empty {@code RailwayForm}.
-	 * @param railway the railway 
-	 * @param file the picture file
-	 */
-	public RailwayForm(Railway railway, MultipartFile file) {
-		this.railway = railway;
-		this.file = file;
-	}
+    private RailwayForm(Railway railway) {
+        this.railway = railway;
+    }
 
-	public static RailwayForm newForm(Railway railway) {
-		return new RailwayForm(railway);
-	}
-	
-	public Railway getRailway() {
-		return railway;
-	}
+    /**
+     * Creates a new empty {@code RailwayForm}.
+     */
+    public RailwayForm() {
+    }
 
-	public void setRailway(Railway railway) {
-		this.railway = railway;
-	}
+    /**
+     * Creates a empty {@code RailwayForm}.
+     *
+     * @param railway the railway
+     * @param file    the picture file
+     */
+    public RailwayForm(Railway railway, MultipartFile file) {
+        this.railway = railway;
+        this.file = file;
+    }
 
-	public MultipartFile getFile() {
-		return file;
-	}
+    public static RailwayForm newForm(Railway railway) {
+        return new RailwayForm(railway);
+    }
 
-	public void setFile(MultipartFile file) {
-		this.file = file;
-	}
+    public Railway getRailway() {
+        return railway;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof RailwayForm)) return false;
-		
-		RailwayForm other = (RailwayForm) obj;
-		return new EqualsBuilder()
-			.append(this.railway, other.railway)
-			.isEquals();
-	}
+    public void setRailway(Railway railway) {
+        this.railway = railway;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof RailwayForm)) return false;
+
+        RailwayForm other = (RailwayForm) obj;
+        return new EqualsBuilder()
+                .append(this.railway, other.railway)
+                .isEquals();
+    }
 }

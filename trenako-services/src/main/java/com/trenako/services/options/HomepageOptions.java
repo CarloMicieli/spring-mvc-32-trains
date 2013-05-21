@@ -16,48 +16,48 @@
 package com.trenako.services.options;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class HomepageOptions {
-	private final int numberOfRollingStocks;
-	private final int activityStreamSize;
-	
-	private final static HomepageOptions DEFAULT_OPTIONS = new HomepageOptions(10, 10);
-	
-	public HomepageOptions(int numberOfRollingStocks, int activityStreamSize) {
-		this.numberOfRollingStocks = numberOfRollingStocks;
-		this.activityStreamSize = activityStreamSize;
-	}
-	
-	public static HomepageOptions defaultHomepageOptions() {
-		return DEFAULT_OPTIONS;
-	}
+    private final int numberOfRollingStocks;
+    private final int activityStreamSize;
 
-	/**
-	 * Returns the maximum number of shown rolling stocks
-	 * @return the number of rolling stocks
-	 */
-	public int getNumberOfRollingStocks() {
-		return numberOfRollingStocks;
-	}
+    private final static HomepageOptions DEFAULT_OPTIONS = new HomepageOptions(10, 10);
 
-	/**
-	 * Returns the maximum size of the activity steam.
-	 * @return the activity stream size
-	 */
-	public int getActivityStreamSize() {
-		return activityStreamSize;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof HomepageOptions)) return false;
-		
-		HomepageOptions other = (HomepageOptions) obj;
-		return this.numberOfRollingStocks == other.numberOfRollingStocks &&
-				this.activityStreamSize == other.activityStreamSize;
-	}
+    public HomepageOptions(int numberOfRollingStocks, int activityStreamSize) {
+        this.numberOfRollingStocks = numberOfRollingStocks;
+        this.activityStreamSize = activityStreamSize;
+    }
+
+    public static HomepageOptions defaultHomepageOptions() {
+        return DEFAULT_OPTIONS;
+    }
+
+    /**
+     * Returns the maximum number of shown rolling stocks
+     *
+     * @return the number of rolling stocks
+     */
+    public int getNumberOfRollingStocks() {
+        return numberOfRollingStocks;
+    }
+
+    /**
+     * Returns the maximum size of the activity steam.
+     *
+     * @return the activity stream size
+     */
+    public int getActivityStreamSize() {
+        return activityStreamSize;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof HomepageOptions)) return false;
+
+        HomepageOptions other = (HomepageOptions) obj;
+        return this.numberOfRollingStocks == other.numberOfRollingStocks &&
+                this.activityStreamSize == other.activityStreamSize;
+    }
 }

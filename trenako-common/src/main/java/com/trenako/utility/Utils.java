@@ -23,82 +23,82 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class Utils {
 
-	private Utils() {
-		throw new UnsupportedOperationException();
-	}
-	
-	/**
-	 * Creates an immutable {@code ArrayList} filled with 
-	 * the {@code Iterable} elements.
-	 * 
-	 * @param elements the elements to be added
-	 * @return the {@code ArrayList}
-	 */
-	public static <E> List<E> newList(final Iterable<E> elements) {
-		List<E> list = new ArrayList<E>();
-		for (E el : elements) {
-			list.add(el);
-		}
-		return Collections.unmodifiableList(list);
-	}
-	
-	/**
-	 * Returns a reverse version for the provided {@code List}. 
-	 * @param list the original list
-	 * @return the reverse iterable
-	 */
-	public static <E> Iterable<E> reverseIterable(final List<E> list) {
-		return new Iterable<E>() {
-			@Override
-			public Iterator<E> iterator() {
-				return new Iterator<E>() {
+    private Utils() {
+        throw new UnsupportedOperationException();
+    }
 
-					private int pos = list.size() - 1;
-					
-					@Override
-					public boolean hasNext() {
-						return pos >= 0;
-					}
+    /**
+     * Creates an immutable {@code ArrayList} filled with
+     * the {@code Iterable} elements.
+     *
+     * @param elements the elements to be added
+     * @return the {@code ArrayList}
+     */
+    public static <E> List<E> newList(final Iterable<E> elements) {
+        List<E> list = new ArrayList<>();
+        for (E el : elements) {
+            list.add(el);
+        }
+        return Collections.unmodifiableList(list);
+    }
 
-					@Override
-					public E next() {
-						return list.get(pos--);
-					}
+    /**
+     * Returns a reverse version for the provided {@code List}.
+     *
+     * @param list the original list
+     * @return the reverse iterable
+     */
+    public static <E> Iterable<E> reverseIterable(final List<E> list) {
+        return new Iterable<E>() {
+            @Override
+            public Iterator<E> iterator() {
+                return new Iterator<E>() {
 
-					@Override
-					public void remove() {
-						throw new UnsupportedOperationException();
-					}
-					
-				};
-			}
-		};
-	}
+                    private int pos = list.size() - 1;
 
-	/**
-	 * Creates an immutable {@code ArrayList} with the first elements.
-	 * @param elements the elements
-	 * @param size the size of the new sublist
-	 * @return the {@code ArrayList}
-	 */
-	public static <E> List<E> newSublist(Iterable<E> elements, int size) {
-		Assert.isTrue(size > 0, "Size must be > 0");
-		
-		int i = 1;
-		List<E> list = new ArrayList<E>();
-		for (E el : elements) {
-			list.add(el);
-			if (i == size) {
-				break;
-			}
-			i++;
-		}
-		return Collections.unmodifiableList(list);
-	}
+                    @Override
+                    public boolean hasNext() {
+                        return pos >= 0;
+                    }
+
+                    @Override
+                    public E next() {
+                        return list.get(pos--);
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+
+                };
+            }
+        };
+    }
+
+    /**
+     * Creates an immutable {@code ArrayList} with the first elements.
+     *
+     * @param elements the elements
+     * @param size     the size of the new sublist
+     * @return the {@code ArrayList}
+     */
+    public static <E> List<E> newSublist(Iterable<E> elements, int size) {
+        Assert.isTrue(size > 0, "Size must be > 0");
+
+        int i = 1;
+        List<E> list = new ArrayList<>();
+        for (E el : elements) {
+            list.add(el);
+            if (i == size) {
+                break;
+            }
+            i++;
+        }
+        return Collections.unmodifiableList(list);
+    }
 }

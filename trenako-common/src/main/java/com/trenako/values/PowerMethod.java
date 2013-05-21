@@ -21,49 +21,52 @@ import java.util.List;
 
 /**
  * The power methods for the model.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public enum PowerMethod {
-	/**
-	 * Direct current.
-	 */
-	DC,
-	
-	/**
-	 * Alternating current (Maerklin).
-	 */
-	AC;
-	
-	/**
-	 * Gets the {@code PowerMethod} label.
-	 * @return the label
-	 */
-	public String label() {
-		return LocalizedEnum.buildKey(this);
-	}
+    /**
+     * Direct current.
+     */
+    DC,
 
-	/**
-	 * Parses the string argument as a {@code PowerMethod}.
-	 * @param s the string to be parsed
-	 * @return a {@code PowerMethod} value
-	 */
-	public static PowerMethod parse(String s) {
-		return LocalizedEnum.parseString(s, PowerMethod.class);
-	}
-	
-	/**
-	 * Returns the list of {@code PowerMethod} labels.
-	 * @return the {@code PowerMethod} list
-	 */
-	public static List<String> list() {
-		int i = 0;
-		String[] labels = new String[PowerMethod.values().length];
-		for (PowerMethod pm : PowerMethod.values()) {
-			labels[i++] = pm.label();
-		}
+    /**
+     * Alternating current (Maerklin).
+     */
+    AC;
 
-		return Collections.unmodifiableList(
-				Arrays.asList(labels));
-	}
+    /**
+     * Gets the {@code PowerMethod} label.
+     *
+     * @return the label
+     */
+    public String label() {
+        return LocalizedEnum.buildKey(this);
+    }
+
+    /**
+     * Parses the string argument as a {@code PowerMethod}.
+     *
+     * @param s the string to be parsed
+     * @return a {@code PowerMethod} value
+     */
+    public static PowerMethod parse(String s) {
+        return LocalizedEnum.parseString(s, PowerMethod.class);
+    }
+
+    /**
+     * Returns the list of {@code PowerMethod} labels.
+     *
+     * @return the {@code PowerMethod} list
+     */
+    public static List<String> list() {
+        int i = 0;
+        String[] labels = new String[PowerMethod.values().length];
+        for (PowerMethod pm : PowerMethod.values()) {
+            labels[i++] = pm.label();
+        }
+
+        return Collections.unmodifiableList(
+                Arrays.asList(labels));
+    }
 }

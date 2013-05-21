@@ -29,17 +29,17 @@ import static java.lang.annotation.ElementType.PARAMETER;
 
 /**
  * Java annotation for uploaded images allowed by the application.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {FIELD, METHOD, PARAMETER})
 @Constraint(validatedBy = ImageValidator.class)
 @Documented
 public @interface Image {
-	String message() default "{com.trenako.upload.invalid}";
+    String message() default "{com.trenako.upload.invalid}";
 
-	Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

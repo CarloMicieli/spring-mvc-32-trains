@@ -21,101 +21,102 @@ import com.trenako.mapping.WeakDbRef;
 /**
  * It represents an the object for a user activity.
  *
- * @author Carlo Micieli 
- *
+ * @author Carlo Micieli
  */
 public class ActivityObject {
 
-	private String url;
-	private String objectType;
-	private String displayName;
-	private String slug;
+    private String url;
+    private String objectType;
+    private String displayName;
+    private String slug;
 
-	/**
-	 * Creates an empty {@code ActivityObject}.
-	 */
-	public ActivityObject() {
-	}
+    /**
+     * Creates an empty {@code ActivityObject}.
+     */
+    public ActivityObject() {
+    }
 
-	/**
-	 * Creates a new {@code ActivityObject}.
-	 * @param objectType the object type
-	 * @param slug the object slug
-	 * @param url the permalink url to this resource
-	 * @param displayName the resource display name
-	 */
-	public ActivityObject(String objectType, String slug, String url, String displayName) {
-		this.objectType = objectType;
-		this.slug = slug;
-		this.url = url;
-		this.displayName = displayName;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
+    /**
+     * Creates a new {@code ActivityObject}.
+     *
+     * @param objectType  the object type
+     * @param slug        the object slug
+     * @param url         the permalink url to this resource
+     * @param displayName the resource display name
+     */
+    public ActivityObject(String objectType, String slug, String url, String displayName) {
+        this.objectType = objectType;
+        this.slug = slug;
+        this.url = url;
+        this.displayName = displayName;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public String getSlug() {
-		return slug;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setSlug(String slug) {
-		this.slug = slug;
-	}
+    public String getSlug() {
+        return slug;
+    }
 
-	public String getObjectType() {
-		return objectType;
-	}
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
 
-	public void setObjectType(String objectType) {
-		this.objectType = objectType;
-	}
+    public String getObjectType() {
+        return objectType;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+    public String getDisplayName() {
+        return displayName;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof ActivityObject)) return false;
-		
-		ActivityObject other = (ActivityObject) obj;
-		return this.objectType.equals(other.objectType) &&
-				this.url.equals(other.url) &&
-				this.slug.equals(other.slug) &&
-				this.displayName.equals(other.displayName);
-	}
-	
-	@Override
-	public String toString() {
-		return new StringBuilder()
-			.append("object{type: ")
-			.append(getObjectType())
-			.append(", slug: ")
-			.append(getSlug())			
-			.append(", url: ")
-			.append(getUrl())
-			.append(", name: ")
-			.append(getDisplayName())
-			.append("}")
-			.toString();
-	}
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-	/**
-	 * Creates a {@code ActivityObject} for the provided rolling stock.
-	 * @param rs the rolling stock
-	 * @return a new {@code ActivityObject}
-	 */
-	public static ActivityObject rsObject(WeakDbRef<RollingStock> rs) {
-		return new ActivityObject("rollingStock", rs.getSlug(), "/rollingstocks/" + rs.getSlug(), rs.getLabel());
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof ActivityObject)) return false;
+
+        ActivityObject other = (ActivityObject) obj;
+        return this.objectType.equals(other.objectType) &&
+                this.url.equals(other.url) &&
+                this.slug.equals(other.slug) &&
+                this.displayName.equals(other.displayName);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("object{type: ")
+                .append(getObjectType())
+                .append(", slug: ")
+                .append(getSlug())
+                .append(", url: ")
+                .append(getUrl())
+                .append(", name: ")
+                .append(getDisplayName())
+                .append("}")
+                .toString();
+    }
+
+    /**
+     * Creates a {@code ActivityObject} for the provided rolling stock.
+     *
+     * @param rs the rolling stock
+     * @return a new {@code ActivityObject}
+     */
+    public static ActivityObject rsObject(WeakDbRef<RollingStock> rs) {
+        return new ActivityObject("rollingStock", rs.getSlug(), "/rollingstocks/" + rs.getSlug(), rs.getLabel());
+    }
 }

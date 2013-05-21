@@ -26,52 +26,51 @@ import com.trenako.repositories.AccountsRepository;
 
 /**
  * The concrete implementation for the accounts service.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("accountsService")
 public class AccountsServiceImpl implements AccountsService {
 
-	private final AccountsRepository repo;
-	
-	@Autowired
-	public AccountsServiceImpl(AccountsRepository repo) {
-		this.repo = repo;
-	}
-	
-	@Override
-	public Account findById(ObjectId id) {
-		return repo.findOne(id);
-	}
+    private final AccountsRepository repo;
 
-	@Override
-	public Account findByEmailAddress(String emailAddress) {
-		return repo.findByEmailAddress(emailAddress);
-	}
+    @Autowired
+    public AccountsServiceImpl(AccountsRepository repo) {
+        this.repo = repo;
+    }
 
-	@Override
-	public Account findBySlug(String slug) {
-		return repo.findBySlug(slug);
-	}
+    @Override
+    public Account findById(ObjectId id) {
+        return repo.findOne(id);
+    }
 
-	@Override
-	public void save(Account account) {
-		repo.save(account);
-	}
+    @Override
+    public Account findByEmailAddress(String emailAddress) {
+        return repo.findByEmailAddress(emailAddress);
+    }
 
-	@Override
-	public void remove(Account account) {
-		repo.delete(account);
-	}
+    @Override
+    public Account findBySlug(String slug) {
+        return repo.findBySlug(slug);
+    }
 
-	@Override
-	public void updateChanges(Account account) {
-		repo.updateChanges(account);
-	}
+    @Override
+    public void save(Account account) {
+        repo.save(account);
+    }
 
-	@Override
-	public Page<Account> findAll(Pageable pageable) {
-		return repo.findAll(pageable);
-	}
+    @Override
+    public void remove(Account account) {
+        repo.delete(account);
+    }
 
+    @Override
+    public void updateChanges(Account account) {
+        repo.updateChanges(account);
+    }
+
+    @Override
+    public Page<Account> findAll(Pageable pageable) {
+        return repo.findAll(pageable);
+    }
 }

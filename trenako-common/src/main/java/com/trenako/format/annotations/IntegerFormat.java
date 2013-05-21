@@ -24,25 +24,23 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Target({METHOD, FIELD, PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IntegerFormat {
-	
-	Style style() default Style.NUMBER;
-	
-	String pattern() default "";
-	
-	public enum Style {
-		NUMBER,
 
-		SCALE_RATIO,
+    Style style() default Style.NUMBER;
 
-		SCALE_GAUGE,
-		
-		CURRENCY,
-	}
+    String pattern() default "";
+
+    public enum Style {
+        NUMBER,
+
+        SCALE_RATIO,
+
+        SCALE_GAUGE,
+
+        CURRENCY,
+    }
 }

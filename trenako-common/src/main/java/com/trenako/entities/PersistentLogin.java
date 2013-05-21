@@ -24,85 +24,86 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * It represents a persistent login token.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Document(collection = "persistentLogins")
 public class PersistentLogin {
-	@Id
-	private ObjectId id;
-	
-	@Indexed(unique = true)
-	private String series;
-	private Date date;
-	private String tokenValue;
-	private String username;
+    @Id
+    private ObjectId id;
 
-	/**
-	 * Creates a new empty {@code PersistentLogin} token.
-	 */
-	public PersistentLogin() {
-	}
-	
-	/**
-	 * Creates a new {@code PersistentLogin} token.
-	 * @param username
-	 * @param series
-	 * @param date
-	 * @param tokenValue
-	 */
-	public PersistentLogin(String username, String series, Date date, String tokenValue) {
-		this.username = username;
-		this.series = series;
-		this.date = date;
-		this.tokenValue = tokenValue;
-	}
-	
-	public ObjectId getId() {
-		return id;
-	}
+    @Indexed(unique = true)
+    private String series;
+    private Date date;
+    private String tokenValue;
+    private String username;
 
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
+    /**
+     * Creates a new empty {@code PersistentLogin} token.
+     */
+    public PersistentLogin() {
+    }
 
-	public Date getDate() {
-		return date;
-	}
+    /**
+     * Creates a new {@code PersistentLogin} token.
+     *
+     * @param username
+     * @param series
+     * @param date
+     * @param tokenValue
+     */
+    public PersistentLogin(String username, String series, Date date, String tokenValue) {
+        this.username = username;
+        this.series = series;
+        this.date = date;
+        this.tokenValue = tokenValue;
+    }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
-	
-	public String getSeries() {
-		return series;
-	}
+    public ObjectId getId() {
+        return id;
+    }
 
-	public void setSeries(String series) {
-		this.series = series;
-	}
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 
-	public String getTokenValue() {
-		return tokenValue;
-	}
+    public Date getDate() {
+        return date;
+    }
 
-	public void setTokenValue(String tokenValue) {
-		this.tokenValue = tokenValue;
-	}
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getSeries() {
+        return series;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-	@Override
-	public String toString() {
-		return new StringBuilder()
-			.append(getUsername() + " ")
-			.append(getSeries())
-			.toString();
-	}
+    public void setSeries(String series) {
+        this.series = series;
+    }
+
+    public String getTokenValue() {
+        return tokenValue;
+    }
+
+    public void setTokenValue(String tokenValue) {
+        this.tokenValue = tokenValue;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append(getUsername() + " ")
+                .append(getSeries())
+                .toString();
+    }
 }

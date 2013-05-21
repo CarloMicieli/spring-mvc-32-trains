@@ -32,28 +32,28 @@ import com.trenako.validation.AddressValidator;
 
 /**
  * Java annotation for uploaded images allowed by the application.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Retention(RUNTIME)
 @Target(value = {FIELD, METHOD, ANNOTATION_TYPE})
 @Constraint(validatedBy = AddressValidator.class)
 @Documented
 public @interface ValidAddress {
-	String message() default "{com.trenako.address.invalid}";
+    String message() default "{com.trenako.address.invalid}";
 
-	Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default { };
-	
-	@Retention(RUNTIME)
-	@Target(value = {FIELD, METHOD, ANNOTATION_TYPE})
-	@Documented
-	@interface List {
+    Class<? extends Payload>[] payload() default {};
 
-		/**
-		 * Used to specify multiple confirm fields per class.
-		 */
-		ValidAddress[] value();
-	}
+    @Retention(RUNTIME)
+    @Target(value = {FIELD, METHOD, ANNOTATION_TYPE})
+    @Documented
+    @interface List {
+
+        /**
+         * Used to specify multiple confirm fields per class.
+         */
+        ValidAddress[] value();
+    }
 }

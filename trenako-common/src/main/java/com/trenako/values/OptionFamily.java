@@ -17,44 +17,46 @@ package com.trenako.values;
 
 /**
  * The enumeration of option family for a rolling stock model.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public enum OptionFamily {
-	/**
-	 * The digital control interface.
-	 */
-	DCC_INTERFACE,
-	
-	/**
-	 * The head lights configuration.
-	 */
-	HEADLIGHTS,
-	
-	/**
-	 * The transmission configuration.
-	 */
-	TRANSMISSION,
-	
-	/**
-	 * The coupler plug.
-	 */
-	COUPLER;
+    /**
+     * The digital control interface.
+     */
+    DCC_INTERFACE,
 
-	/**
-	 * Returns the key value for the current option family.
-	 * @return the key value
-	 */
-	public String label() {
-		return LocalizedEnum.buildKey(this);
-	}
+    /**
+     * The head lights configuration.
+     */
+    HEADLIGHTS,
 
-	/**
-	 * Parses the option family value from the database.
-	 * @param family the family name.
-	 * @return a value from OptionFamily enumeration.
-	 */
-	public static OptionFamily parse(String family) {
-		return LocalizedEnum.parseString(family, OptionFamily.class);
-	}	
+    /**
+     * The transmission configuration.
+     */
+    TRANSMISSION,
+
+    /**
+     * The coupler plug.
+     */
+    COUPLER;
+
+    /**
+     * Returns the key value for the current option family.
+     *
+     * @return the key value
+     */
+    public String label() {
+        return LocalizedEnum.buildKey(this);
+    }
+
+    /**
+     * Parses the option family value from the database.
+     *
+     * @param family the family name.
+     * @return a value from OptionFamily enumeration.
+     */
+    public static OptionFamily parse(String family) {
+        return LocalizedEnum.parseString(family, OptionFamily.class);
+    }
 }

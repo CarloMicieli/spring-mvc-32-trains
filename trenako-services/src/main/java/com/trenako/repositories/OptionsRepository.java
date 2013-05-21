@@ -22,22 +22,24 @@ import com.trenako.entities.Option;
 
 /**
  * The interface for the options repository.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface OptionsRepository extends MongoRepository<Option, ObjectId> {
 
-	/**
-	 * Returns the option document by option name.
-	 * @param name the option name.
-	 * @return an option document; <em>null</em> otherwise.
-	 */
-	Option findByName(String name);
-	
-	/**
-	 * Returns the option documents by option family.
-	 * @param family the family.
-	 * @return the option documents.
-	 */
-	Iterable<Option> findByFamily(String family);
+    /**
+     * Returns the option document by option name.
+     *
+     * @param name the option name.
+     * @return an option document; <em>null</em> otherwise.
+     */
+    Option findByName(String name);
+
+    /**
+     * Returns the option documents by option family.
+     *
+     * @param family the family.
+     * @return the option documents.
+     */
+    Iterable<Option> findByFamily(String family);
 }

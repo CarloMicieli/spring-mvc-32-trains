@@ -23,40 +23,39 @@ import org.springframework.stereotype.Repository;
 
 import com.trenako.entities.PersistentLogin;
 import com.trenako.repositories.RememberMeRepository;
-import static  org.springframework.data.mongodb.core.query.Criteria.where;
+
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Repository("rememberMeRepository")
 public class RememberMeRepositoryImpl implements RememberMeRepository {
 
-	private MongoTemplate mongoTemplate;
-	
-	@Autowired
-	public RememberMeRepositoryImpl(MongoTemplate mongoTemplate) {
-		this.mongoTemplate = mongoTemplate;
-	}
-	
-	@Override
-	public PersistentLogin findBySeries(String seriesId) {
-		return mongoTemplate.findOne(query(where("series").is(seriesId)), PersistentLogin.class);
-	}
+    private MongoTemplate mongoTemplate;
 
-	@Override
-	public void createNew(PersistentLogin token) {
-		mongoTemplate.insert(token);
-	}
+    @Autowired
+    public RememberMeRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
-	@Override
-	public void save(PersistentLogin token) {
-		mongoTemplate.save(token);
-	}
+    @Override
+    public PersistentLogin findBySeries(String seriesId) {
+        return mongoTemplate.findOne(query(where("series").is(seriesId)), PersistentLogin.class);
+    }
 
-	@Override
-	public void deleteByUsername(String username) {
-		mongoTemplate.remove(query(where("username").is(username)), PersistentLogin.class);
-	}
+    @Override
+    public void createNew(PersistentLogin token) {
+        mongoTemplate.insert(token);
+    }
+
+    @Override
+    public void save(PersistentLogin token) {
+        mongoTemplate.save(token);
+    }
+
+    @Override
+    public void deleteByUsername(String username) {
+        mongoTemplate.remove(query(where("username").is(username)), PersistentLogin.class);
+    }
 }

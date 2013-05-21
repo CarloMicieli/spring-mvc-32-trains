@@ -27,21 +27,21 @@ import com.trenako.validation.constraints.ISOLanguage;
 
 /**
  * It represents a validator for languages ISO codes.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class ISOLanguageValidator implements ConstraintValidator<ISOLanguage, String> {
 
-	@Override
-	public void initialize(ISOLanguage constraintAnnotation) {
-	}
+    @Override
+    public void initialize(ISOLanguage constraintAnnotation) {
+    }
 
-	@Override
-	public boolean isValid(String value, ConstraintValidatorContext context) {
-		if (StringUtils.isBlank(value)) {
-			return true;
-		}
-		return Arrays.binarySearch(Locale.getISOLanguages(), value.toLowerCase()) >= 0;
-	}
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (StringUtils.isBlank(value)) {
+            return true;
+        }
+        return Arrays.binarySearch(Locale.getISOLanguages(), value.toLowerCase()) >= 0;
+    }
 
 }

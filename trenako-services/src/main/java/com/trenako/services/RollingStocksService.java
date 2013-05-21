@@ -39,66 +39,72 @@ import com.trenako.services.view.RollingStockView;
  *
  * @author Carlo Micieli
  * @see com.trenako.entities.RollingStock
- */ 
+ */
 public interface RollingStocksService {
 
-	/**
-	 * Returns the latest modified rolling stocks list.
-	 * @param numberOfItems the maximum number of returned items
-	 * @return the rolling stocks list
-	 */
-	Iterable<RollingStock> findLatestModified(int numberOfItems);
-	
-	/**
-	 * Finds the {@code RollingStock} with the provided id.
-	 * @param id the unique id
-	 * @return a {@code RollingStock} if found; {@code null} otherwise
-	 */
-	RollingStock findById(ObjectId id);
+    /**
+     * Returns the latest modified rolling stocks list.
+     *
+     * @param numberOfItems the maximum number of returned items
+     * @return the rolling stocks list
+     */
+    Iterable<RollingStock> findLatestModified(int numberOfItems);
 
-	/**
-	 * Finds the {@code RollingStock} with the provided slug.
-	 * @param slug the slug
-	 * @return a {@code RollingStock} if found; {@code null} otherwise
-	 * @see com.trenako.entities.RollingStock#getSlug()
-	 */
-	RollingStock findBySlug(String slug);
+    /**
+     * Finds the {@code RollingStock} with the provided id.
+     *
+     * @param id the unique id
+     * @return a {@code RollingStock} if found; {@code null} otherwise
+     */
+    RollingStock findById(ObjectId id);
 
-	/**
-	 * Finds the {@code RollingStock} with the provided slug and fills its view.
-	 * <p>
-	 * A {@code RollingStock} view contains also other information for the rolling 
-	 * stock like its comments, its reviews and so on.
-	 * </p>
-	 * <p>
-	 * If a logged user exists then the view includes the {@code WishList} list 
-	 * for the provided user.
-	 * </p>
-	 * 
-	 * @param slug the {@code RollingStock} slug
-	 * @param loggedUser the currently logged user; it might be {@code null}
-	 * @return a view if {@code RollingStock} if found; {@code null} otherwise
-	 */
-	RollingStockView findRollingStockView(String slug, Account loggedUser);
-	
-	/**
-	 * Creates a new {@code RollingStock}.
-	 * @param rs the  {@code RollingStock} to be created
-	 */
-	void createNew(RollingStock rs);
-	
-	/**
-	 * Saves the {@code RollingStock} changes.
-	 * <p>
-	 * The provided {@code RollingStock} must have a value for the id.
-	 * </p>
-	 * @param rs the {@code RollingStock} to be saved
-	 */
-	void save(RollingStock rs);
+    /**
+     * Finds the {@code RollingStock} with the provided slug.
+     *
+     * @param slug the slug
+     * @return a {@code RollingStock} if found; {@code null} otherwise
+     * @see com.trenako.entities.RollingStock#getSlug()
+     */
+    RollingStock findBySlug(String slug);
 
-	/**
-	 * Delete the {@code RollingStock}.
-	 * @param rs the {@code RollingStock} to be removed
-	 */
-	void remove(RollingStock rs);
+    /**
+     * Finds the {@code RollingStock} with the provided slug and fills its view.
+     * <p>
+     * A {@code RollingStock} view contains also other information for the rolling
+     * stock like its comments, its reviews and so on.
+     * </p>
+     * <p>
+     * If a logged user exists then the view includes the {@code WishList} list
+     * for the provided user.
+     * </p>
+     *
+     * @param slug       the {@code RollingStock} slug
+     * @param loggedUser the currently logged user; it might be {@code null}
+     * @return a view if {@code RollingStock} if found; {@code null} otherwise
+     */
+    RollingStockView findRollingStockView(String slug, Account loggedUser);
+
+    /**
+     * Creates a new {@code RollingStock}.
+     *
+     * @param rs the  {@code RollingStock} to be created
+     */
+    void createNew(RollingStock rs);
+
+    /**
+     * Saves the {@code RollingStock} changes.
+     * <p>
+     * The provided {@code RollingStock} must have a value for the id.
+     * </p>
+     *
+     * @param rs the {@code RollingStock} to be saved
+     */
+    void save(RollingStock rs);
+
+    /**
+     * Delete the {@code RollingStock}.
+     *
+     * @param rs the {@code RollingStock} to be removed
+     */
+    void remove(RollingStock rs);
 }

@@ -23,34 +23,33 @@ import org.bson.types.ObjectId;
 import com.trenako.entities.Scale;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class ScalePropertyEditor extends PropertyEditorSupport {
-	private final boolean allowEmpty;
-	
-	/**
-	 * Creates a new {@code ScalePropertyEditor}.
-	 * @param allowEmpty if empty strings should be allowed
-	 */
-	public ScalePropertyEditor(boolean allowEmpty) {
-		this.allowEmpty = allowEmpty;
-	}
-	
-	@Override
-	public void setAsText(String text) throws IllegalArgumentException {
-		if (allowEmpty && StringUtils.isBlank(text)) {
-			setValue(null);
-			return;
-		}
-		
-		if (!ObjectId.isValid(text)) {
-			throw new IllegalArgumentException(text + " is not a valid ObjecId");
-		}
-		
-		ObjectId id = new ObjectId(text);
-		setValue(new Scale(id));
-	}
+    private final boolean allowEmpty;
+
+    /**
+     * Creates a new {@code ScalePropertyEditor}.
+     *
+     * @param allowEmpty if empty strings should be allowed
+     */
+    public ScalePropertyEditor(boolean allowEmpty) {
+        this.allowEmpty = allowEmpty;
+    }
+
+    @Override
+    public void setAsText(String text) throws IllegalArgumentException {
+        if (allowEmpty && StringUtils.isBlank(text)) {
+            setValue(null);
+            return;
+        }
+
+        if (!ObjectId.isValid(text)) {
+            throw new IllegalArgumentException(text + " is not a valid ObjectId");
+        }
+
+        ObjectId id = new ObjectId(text);
+        setValue(new Scale(id));
+    }
 
 }

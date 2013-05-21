@@ -4,34 +4,34 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
 
-<!-- Configure ContextLoaderListener to use AnnotationConfigWebApplicationContext
-    	 instead of the default XmlWebApplicationContext -->
-	<context-param>
-    	<param-name>contextClass</param-name>
-    	<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
-	</context-param>
+    <!-- Configure ContextLoaderListener to use AnnotationConfigWebApplicationContext
+             instead of the default XmlWebApplicationContext -->
+    <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </context-param>
 
-	<!-- Configuration locations must consist of one or more comma- or space-delimited
-		 fully-qualified @Configuration classes. Fully-qualified packages may also be
-		 specified for component-scanning -->
-	<context-param>
-    	<param-name>contextConfigLocation</param-name>
-    	<param-value>com.trenako.web.config</param-value>
-	</context-param>
+    <!-- Configuration locations must consist of one or more comma- or space-delimited
+         fully-qualified @Configuration classes. Fully-qualified packages may also be
+         specified for component-scanning -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>com.trenako.web.config</param-value>
+    </context-param>
 
-	<!-- Activate the spring profile to use -->
-	<context-param>
-		<param-name>contextInitializerClasses</param-name>
-		<param-value>com.trenako.web.config.ContextProfileInitializer</param-value>
-	</context-param>
+    <!-- Activate the spring profile to use -->
+    <context-param>
+        <param-name>contextInitializerClasses</param-name>
+        <param-value>com.trenako.web.config.ContextProfileInitializer</param-value>
+    </context-param>
 
-	<!-- Spring Security -->
- 	<filter>
+    <!-- Spring Security -->
+    <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
-    
-	<!-- Enables use of HTTP methods PUT and DELETE -->
+
+    <!-- Enables use of HTTP methods PUT and DELETE -->
     <filter>
         <filter-name>httpMethod</filter-name>
         <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
@@ -41,7 +41,7 @@
         <filter-name>sitemesh</filter-name>
         <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
     </filter>
-    
+
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
@@ -59,41 +59,41 @@
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
-	<error-page>
+    <error-page>
         <exception-type>java.lang.Exception</exception-type>
         <location>/error/server-error</location>
     </error-page>
     <error-page>
-    	<error-code>404</error-code>
-    	<location>/error/notfound</location>
+        <error-code>404</error-code>
+        <location>/error/notfound</location>
     </error-page>
 
-	<!-- Bootstrap the root application context as usual using ContextLoaderListener -->
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
+    <!-- Bootstrap the root application context as usual using ContextLoaderListener -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
-	<servlet>
-		<servlet-name>appServlet</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		
-		<!-- Configure DispatcherServlet to use AnnotationConfigWebApplicationContext
-			 instead of the default XmlWebApplicationContext -->
-		<init-param>
-          	<param-name>contextClass</param-name>
-          	<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
-      	</init-param>
-		<!-- Again, config locations must consist of one or more comma- or space-delimited
-			 and fully-qualified @Configuration classes -->
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>com.trenako.web.config.WebConfig</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+    <servlet>
+        <servlet-name>appServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 
-	<servlet-mapping>
-		<servlet-name>appServlet</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
+        <!-- Configure DispatcherServlet to use AnnotationConfigWebApplicationContext
+             instead of the default XmlWebApplicationContext -->
+        <init-param>
+            <param-name>contextClass</param-name>
+            <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+        </init-param>
+        <!-- Again, config locations must consist of one or more comma- or space-delimited
+             and fully-qualified @Configuration classes -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>com.trenako.web.config.WebConfig</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 </web-app>

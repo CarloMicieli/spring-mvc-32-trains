@@ -31,20 +31,19 @@ import com.trenako.validation.LocalizedFieldValidator;
 
 /**
  * Java annotation for localized fields.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {FIELD, METHOD, PARAMETER})
 @Constraint(validatedBy = LocalizedFieldValidator.class)
 @Documented
 public @interface ContainsDefault {
-	String message() default "{com.trenako.containsDefault.invalid}";
+    String message() default "{com.trenako.containsDefault.invalid}";
 
-	Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default { };
-	
-	Class<?>[] providedType() default { String.class } ;
+    Class<? extends Payload>[] payload() default {};
+
+    Class<?>[] providedType() default {String.class};
 }

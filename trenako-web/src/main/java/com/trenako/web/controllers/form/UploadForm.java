@@ -26,98 +26,100 @@ import com.trenako.web.images.validation.Image;
 
 /**
  * It represents a web form for files upload.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class UploadForm {
-	@NotNull
-	private String entity;
+    @NotNull
+    private String entity;
 
-	@NotNull
-	private String slug;
+    @NotNull
+    private String slug;
 
-	@Image(message = "upload.file.notValid")
-	private MultipartFile file;	
-	
-	/**
-	 * Creates a new empty {@code UploadForm}.
-	 */	
-	public UploadForm() {
-	}
-	
-	/**
-	 * Creates a new {@code UploadForm}.
-	 *
-	 * @param entity the upload entity name
-	 * @param slug the upload slug
-	 * @param file the uploaded file
-	 *
-	 */
-	public UploadForm(String entity, String slug, MultipartFile file) {
-		this.entity = entity;
-		this.slug = slug;
-		this.file = file;
-	}
-	
-	public String getEntity() {
-		return entity;
-	}
+    @Image(message = "upload.file.notValid")
+    private MultipartFile file;
 
-	public void setEntity(String entity) {
-		this.entity = entity;
-	}
+    /**
+     * Creates a new empty {@code UploadForm}.
+     */
+    public UploadForm() {
+    }
 
-	public String getSlug() {
-		return slug;
-	}
+    /**
+     * Creates a new {@code UploadForm}.
+     *
+     * @param entity the upload entity name
+     * @param slug   the upload slug
+     * @param file   the uploaded file
+     */
+    public UploadForm(String entity, String slug, MultipartFile file) {
+        this.entity = entity;
+        this.slug = slug;
+        this.file = file;
+    }
 
-	public void setSlug(String slug) {
-		this.slug = slug;
-	}
+    public String getEntity() {
+        return entity;
+    }
 
-	public MultipartFile getFile() {
-		return file;
-	}
+    public void setEntity(String entity) {
+        this.entity = entity;
+    }
 
-	public void setFile(MultipartFile file) {
-		this.file = file;
-	}
+    public String getSlug() {
+        return slug;
+    }
 
-	/**
-	 * Checks whether the current upload is empty.
-	 * @return {@code true} if empty; {@code false} otherwise
-	 */
-	public boolean isEmpty() {
-		if (file == null) return true;
-		return file.isEmpty();
-	}
-	
-	/**
-	 * Builds a new {@code ImageRequest} from the current form values.
-	 * @return a new {@code ImageRequest} 
-	 */
-	public ImageRequest buildImageRequest() {
-		return new ImageRequest(getEntity(), getSlug());
-	}
-	
-	/**
-	 * Builds a new {@code UploadRequest} from the current form values.
-	 * @return a new {@code UploadRequest} 
-	 */	
-	public UploadRequest buildUploadRequest() {
-		return new UploadRequest(getEntity(), getSlug(), getFile());
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof UploadForm)) return false;
-		
-		UploadForm other = (UploadForm) obj;
-		return new EqualsBuilder()
-			.append(this.entity, other.entity)
-			.append(this.slug, other.slug)
-			.append(this.file, other.file)
-			.isEquals();
-	}
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    /**
+     * Checks whether the current upload is empty.
+     *
+     * @return {@code true} if empty; {@code false} otherwise
+     */
+    public boolean isEmpty() {
+        if (file == null) return true;
+        return file.isEmpty();
+    }
+
+    /**
+     * Builds a new {@code ImageRequest} from the current form values.
+     *
+     * @return a new {@code ImageRequest}
+     */
+    public ImageRequest buildImageRequest() {
+        return new ImageRequest(getEntity(), getSlug());
+    }
+
+    /**
+     * Builds a new {@code UploadRequest} from the current form values.
+     *
+     * @return a new {@code UploadRequest}
+     */
+    public UploadRequest buildUploadRequest() {
+        return new UploadRequest(getEntity(), getSlug(), getFile());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof UploadForm)) return false;
+
+        UploadForm other = (UploadForm) obj;
+        return new EqualsBuilder()
+                .append(this.entity, other.entity)
+                .append(this.slug, other.slug)
+                .append(this.file, other.file)
+                .isEquals();
+    }
 }

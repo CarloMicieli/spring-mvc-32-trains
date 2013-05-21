@@ -24,18 +24,18 @@ import com.mongodb.DBObject;
 
 /**
  * Converter from {@code LocalizedField} to {@code DBObject} during writing operations.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class LocalizedFieldWriteConverter<T> implements Converter<LocalizedField<T>, DBObject> {
 
-	@Override
-	public DBObject convert(LocalizedField<T> source) {
-		BasicDBObject dbo = new BasicDBObject();
-		for (Map.Entry<String, T> entry : source.entrySet()) {
-			dbo.append(entry.getKey(), entry.getValue());
-		}
-		
-		return dbo;
-	}
+    @Override
+    public DBObject convert(LocalizedField<T> source) {
+        BasicDBObject dbo = new BasicDBObject();
+        for (Map.Entry<String, T> entry : source.entrySet()) {
+            dbo.append(entry.getKey(), entry.getValue());
+        }
+
+        return dbo;
+    }
 }

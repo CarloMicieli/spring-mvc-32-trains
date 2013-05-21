@@ -22,106 +22,105 @@ import org.springframework.data.domain.Page;
 
 /**
  * It represents a page links builder.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class PageLinksBuilder<T> {
-	public static int DEFAULT_MAX_LINKED_PAGES = 10;
-	public static int DEFAULT_PAGE_SIZE = 25;
+    public static int DEFAULT_MAX_LINKED_PAGES = 10;
+    public static int DEFAULT_PAGE_SIZE = 25;
 
-	public PageLinksBuilder(Page<T> page) {
-		this(page.getContent(), page.getNumberOfElements(), page.getTotalPages()); 
-	}
-	
-	public PageLinksBuilder(List<T> data, long nrOfElements, int page) {
-		this(data, nrOfElements, page, DEFAULT_PAGE_SIZE);
-	}
+    public PageLinksBuilder(Page<T> page) {
+        this(page.getContent(), page.getNumberOfElements(), page.getTotalPages());
+    }
 
-	public PageLinksBuilder(List<T> data, long nrOfElements, int page, int pageSize) {
-		if (pageSize<=0)
-			throw new IllegalArgumentException();
+    public PageLinksBuilder(List<T> data, long nrOfElements, int page) {
+        this(data, nrOfElements, page, DEFAULT_PAGE_SIZE);
+    }
 
-		this.data = data;
-		this.page = page;
-		this.pageSize = pageSize;
-		this.nrOfElements = nrOfElements;
+    public PageLinksBuilder(List<T> data, long nrOfElements, int page, int pageSize) {
+        if (pageSize <= 0)
+            throw new IllegalArgumentException();
 
-		this.pageCount = calculateNumberOfPages(nrOfElements, pageSize);
-		this.links = initLinks();
+        this.data = data;
+        this.page = page;
+        this.pageSize = pageSize;
+        this.nrOfElements = nrOfElements;
 
-		this.firstPageLink = Math.max(1, getPage() - (DEFAULT_MAX_LINKED_PAGES / 2) - 1);
-		this.lastPageLink = Math.min(getFirstPageLink() + DEFAULT_MAX_LINKED_PAGES - 1, getPageCount());
-	}
+        this.pageCount = calculateNumberOfPages(nrOfElements, pageSize);
+        this.links = initLinks();
 
-	private List<Integer> links;
-	private List<T> data;
-	private int page;
-	private int pageSize;
-	private int pageCount;
-	private long nrOfElements;
-	private int firstPageLink;
-	private int lastPageLink;
+        this.firstPageLink = Math.max(1, getPage() - (DEFAULT_MAX_LINKED_PAGES / 2) - 1);
+        this.lastPageLink = Math.min(getFirstPageLink() + DEFAULT_MAX_LINKED_PAGES - 1, getPageCount());
+    }
 
-	private int calculateNumberOfPages(long nrOfElements, int pageSize) {
-		double d = Math.ceil((double)nrOfElements / pageSize);
-		return (int)d;
-	}
+    private List<Integer> links;
+    private List<T> data;
+    private int page;
+    private int pageSize;
+    private int pageCount;
+    private long nrOfElements;
+    private int firstPageLink;
+    private int lastPageLink;
 
-	private List<Integer> initLinks() {
-		List<Integer> l = new ArrayList<Integer>();
+    private int calculateNumberOfPages(long nrOfElements, int pageSize) {
+        double d = Math.ceil((double) nrOfElements / pageSize);
+        return (int) d;
+    }
 
-		for (int i=1; i<=getPageCount(); i++)
-			l.add(i);
+    private List<Integer> initLinks() {
+        List<Integer> l = new ArrayList<>();
 
-		return l;
-	}
+        for (int i = 1; i <= getPageCount(); i++)
+            l.add(i);
 
-	public List<T> getData() {
-		return data;
-	}
+        return l;
+    }
 
-	public int getPageCount() {
-		return pageCount;
-	}
+    public List<T> getData() {
+        return data;
+    }
 
-	public int getPage() {
-		return page;
-	}
+    public int getPageCount() {
+        return pageCount;
+    }
 
-	public int getPageSize() {
-		return pageSize;
-	}
+    public int getPage() {
+        return page;
+    }
 
-	public long getNrOfElements() {
-		return nrOfElements;
-	}
+    public int getPageSize() {
+        return pageSize;
+    }
 
-	public boolean isLastPage() {
-		return getPage()==getPageCount();
-	}
+    public long getNrOfElements() {
+        return nrOfElements;
+    }
 
-	public boolean isFirstPage() {
-		return getPage()==1;
-	}
+    public boolean isLastPage() {
+        return getPage() == getPageCount();
+    }
 
-	public int getFirstPageLink() {		
-		return firstPageLink;
-	}
+    public boolean isFirstPage() {
+        return getPage() == 1;
+    }
 
-	public int getLastPageLink() {
-		return lastPageLink;
-	}
+    public int getFirstPageLink() {
+        return firstPageLink;
+    }
 
-	public List<Integer> getPageLinks() {
-		return links.subList(getFirstPageLink() - 1, getLastPageLink());
-	}
+    public int getLastPageLink() {
+        return lastPageLink;
+    }
 
-	public boolean showPreviousLink() {
-		return getPage() > 1;
-	}
+    public List<Integer> getPageLinks() {
+        return links.subList(getFirstPageLink() - 1, getLastPageLink());
+    }
 
-	public boolean showNextLink() {
-		return getPage() < getPageCount();
-	}
+    public boolean showPreviousLink() {
+        return getPage() > 1;
+    }
+
+    public boolean showNextLink() {
+        return getPage() < getPageCount();
+    }
 }

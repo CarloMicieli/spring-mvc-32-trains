@@ -24,37 +24,34 @@ import com.trenako.results.RangeRequest;
 
 /**
  * It represents a {@code Query} builder for range requests.
- * 
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class RollingStockQueryBuilder {
 
-	/**
-	 * Builds a new query applying the range request to the 
-	 * provided selection criteria.
-	 * 
-	 * @param criteria the selection {@code Criteria}
-	 * @param range the range information
-	 * @return a {@code Query}
-	 */
-	public static Query buildQuery(Criteria criteria, RangeRequest range) {
-		String prop = range.getSortProperty();
-		
-		if (range.getSince() != null && range.getMax() != null) {
-			criteria.and(prop).lt(range.getSince()).gt(range.getMax());
-		}
-		else if (range.getSince() != null) {
-			criteria.and(prop).lt(range.getSince());
-		}
-		else if (range.getMax() != null) {
-			criteria.and(prop).gt(range.getMax());
-		}
-		
-		final Query q = query(criteria);
-		q.limit(range.getSize() + 1);
-		q.with(range.getSort());
-		
-		return q;
-	}
+    /**
+     * Builds a new query applying the range request to the
+     * provided selection criteria.
+     *
+     * @param criteria the selection {@code Criteria}
+     * @param range    the range information
+     * @return a {@code Query}
+     */
+    public static Query buildQuery(Criteria criteria, RangeRequest range) {
+        String prop = range.getSortProperty();
+
+        if (range.getSince() != null && range.getMax() != null) {
+            criteria.and(prop).lt(range.getSince()).gt(range.getMax());
+        } else if (range.getSince() != null) {
+            criteria.and(prop).lt(range.getSince());
+        } else if (range.getMax() != null) {
+            criteria.and(prop).gt(range.getMax());
+        }
+
+        final Query q = query(criteria);
+        q.limit(range.getSize() + 1);
+        q.with(range.getSort());
+
+        return q;
+    }
 }

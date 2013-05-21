@@ -24,28 +24,29 @@ import com.trenako.mapping.WeakDbRef;
 
 /**
  * Custom {@code PropertyEditor} for fields with {@link WeakDbRef} type.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class WeakDbRefPropertyEditor extends PropertyEditorSupport {
-	
-	private final boolean allowEmpty;
-	
-	/**
-	 * Creates a new {@code WeakDbRefPropertyEditor}.
-	 * @param allowEmpty if empty strings should be allowed
-	 */
-	public WeakDbRefPropertyEditor(boolean allowEmpty) {
-		this.allowEmpty = allowEmpty;
-	}
-	
-	@Override
-	public void setAsText(String text) throws IllegalArgumentException {
-		if (allowEmpty && StringUtils.isBlank(text)) {
-			setValue(null);
-			return;
-		}
 
-		setValue(WeakDbRef.buildFromSlug(text, DbReferenceable.class));
-	}	
+    private final boolean allowEmpty;
+
+    /**
+     * Creates a new {@code WeakDbRefPropertyEditor}.
+     *
+     * @param allowEmpty if empty strings should be allowed
+     */
+    public WeakDbRefPropertyEditor(boolean allowEmpty) {
+        this.allowEmpty = allowEmpty;
+    }
+
+    @Override
+    public void setAsText(String text) throws IllegalArgumentException {
+        if (allowEmpty && StringUtils.isBlank(text)) {
+            setValue(null);
+            return;
+        }
+
+        setValue(WeakDbRef.buildFromSlug(text, DbReferenceable.class));
+    }
 }

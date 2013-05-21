@@ -21,19 +21,17 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 /**
- * 
- * @author Carlo Micieli
- *
  * @param <T>
+ * @author Carlo Micieli
  */
 public class WeakDbRefWriteConverter<T extends DbReferenceable> implements Converter<WeakDbRef<T>, DBObject> {
 
-	@Override
-	public DBObject convert(WeakDbRef<T> source) {
-		BasicDBObject dbo = new BasicDBObject();
-		dbo.put("slug", source.getSlug());
-		dbo.put("label", source.getLabel());
-		return dbo;
-	}
+    @Override
+    public DBObject convert(WeakDbRef<T> source) {
+        BasicDBObject dbo = new BasicDBObject();
+        dbo.put("slug", source.getSlug());
+        dbo.put("label", source.getLabel());
+        return dbo;
+    }
 
 }

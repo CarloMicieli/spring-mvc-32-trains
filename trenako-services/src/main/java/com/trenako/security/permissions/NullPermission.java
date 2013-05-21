@@ -19,13 +19,13 @@ import com.trenako.entities.Account;
 
 /**
  * It represents a permission that always evaluate to {@code true}.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class NullPermission extends Permission {
 
-	@Override
-	public boolean evaluate(Account user, Object targetObj, Object permissionType) {
-		return true;
-	}
+    @Override
+    public boolean evaluate(Account user, Object targetObj, Object permissionType) {
+        return true;
+    }
 }

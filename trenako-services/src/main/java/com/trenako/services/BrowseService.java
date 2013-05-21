@@ -29,87 +29,99 @@ import com.trenako.values.PowerMethod;
 
 /**
  * It represents a service for the rolling stocks browsing.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface BrowseService {
 
-	/**
-	 * Returns the list of model railway {@code Era}.
-	 * @return the eras list
-	 */
-	Iterable<LocalizedEnum<Era>> eras();
-	
-	/**
-	 * Returns the list of model railway {@code Category}.
-	 * @return the categories list
-	 */
-	Iterable<LocalizedEnum<Category>> categories();
-	
-	/**
-	 * Returns the list of model railway {@code PowerMethod}.
-	 * @return the power methods list
-	 */
-	Iterable<LocalizedEnum<PowerMethod>> powerMethods();
-	
-	/**
-	 * Returns the list of model railway {@code Scale}.
-	 * @return the scales list
-	 */
-	Iterable<Scale> scales();
-	
-	/**
-	 * Returns the list of {@code Railway}.
-	 * @return the scales list
-	 */
-	Iterable<Railway> railways();
+    /**
+     * Returns the list of model railway {@code Era}.
+     *
+     * @return the eras list
+     */
+    Iterable<LocalizedEnum<Era>> eras();
 
-	/**
-	 * Returns the list of model railway {@code Brand}.
-	 * @return the brands list
-	 */
-	Iterable<Brand> brands();
-	
-	/**
-	 * Returns the {@code RollingStock} list according the provided search criteria.
-	 * @param sc the search criteria
-	 * @param range the {@code RangeRequest} information
-	 * @return a {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByCriteria(SearchRequest sc, RangeRequest range);
+    /**
+     * Returns the list of model railway {@code Category}.
+     *
+     * @return the categories list
+     */
+    Iterable<LocalizedEnum<Category>> categories();
 
-	/**
-	 * Returns the {@code Brand} with the provided slug.
-	 * @param slug the slug
-	 * @return a {@code Brand} if found; {@code null} otherwise
-	 */
-	Brand findBrand(String slug);
-	
-	/**
-	 * Returns the {@code Railway} with the provided slug.
-	 * @param slug the slug
-	 * @return a {@code Railway} if found; {@code null} otherwise
-	 */
-	Railway findRailway(String slug);
-	
-	/**
-	 * Returns the {@code Scale} with the provided slug.
-	 * @param slug the slug
-	 * @return a {@code Scale} if found; {@code null} otherwise
-	 */
-	Scale findScale(String slug);
-	
-	/**
-	 * Returns the {@code Category} with the provided slug.
-	 * @param slug the slug
-	 * @return a {@code Category} if found; {@code null} otherwise
-	 */
-	LocalizedEnum<Category> findCategory(String slug);
-	
-	/**
-	 * Returns the {@code Era} with the provided slug.
-	 * @param slug the slug
-	 * @return a {@code Era} if found; {@code null} otherwise
-	 */
-	LocalizedEnum<Era> findEra(String slug);
+    /**
+     * Returns the list of model railway {@code PowerMethod}.
+     *
+     * @return the power methods list
+     */
+    Iterable<LocalizedEnum<PowerMethod>> powerMethods();
+
+    /**
+     * Returns the list of model railway {@code Scale}.
+     *
+     * @return the scales list
+     */
+    Iterable<Scale> scales();
+
+    /**
+     * Returns the list of {@code Railway}.
+     *
+     * @return the scales list
+     */
+    Iterable<Railway> railways();
+
+    /**
+     * Returns the list of model railway {@code Brand}.
+     *
+     * @return the brands list
+     */
+    Iterable<Brand> brands();
+
+    /**
+     * Returns the {@code RollingStock} list according the provided search criteria.
+     *
+     * @param sc    the search criteria
+     * @param range the {@code RangeRequest} information
+     * @return a {@code RollingStock} list
+     */
+    PaginatedResults<RollingStock> findByCriteria(SearchRequest sc, RangeRequest range);
+
+    /**
+     * Returns the {@code Brand} with the provided slug.
+     *
+     * @param slug the slug
+     * @return a {@code Brand} if found; {@code null} otherwise
+     */
+    Brand findBrand(String slug);
+
+    /**
+     * Returns the {@code Railway} with the provided slug.
+     *
+     * @param slug the slug
+     * @return a {@code Railway} if found; {@code null} otherwise
+     */
+    Railway findRailway(String slug);
+
+    /**
+     * Returns the {@code Scale} with the provided slug.
+     *
+     * @param slug the slug
+     * @return a {@code Scale} if found; {@code null} otherwise
+     */
+    Scale findScale(String slug);
+
+    /**
+     * Returns the {@code Category} with the provided slug.
+     *
+     * @param slug the slug
+     * @return a {@code Category} if found; {@code null} otherwise
+     */
+    LocalizedEnum<Category> findCategory(String slug);
+
+    /**
+     * Returns the {@code Era} with the provided slug.
+     *
+     * @param slug the slug
+     * @return a {@code Era} if found; {@code null} otherwise
+     */
+    LocalizedEnum<Era> findEra(String slug);
 }

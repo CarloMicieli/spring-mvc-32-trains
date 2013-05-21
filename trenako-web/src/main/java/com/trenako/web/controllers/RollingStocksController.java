@@ -57,161 +57,159 @@ import static com.trenako.web.controllers.ControllerMessage.*;
 
 /**
  * It represents the rolling stocks management controller.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Controller
 @RequestMapping("/rollingstocks")
 public class RollingStocksController {
 
-	private final static Logger log = LoggerFactory.getLogger("com.trenako.web");
-	
-	private UserContext secContext;
-	
-	private final RollingStocksService service;
-	private final FormValuesService valuesService;
-	private final WebImageService imgService;
-	
-	final static ControllerMessage ROLLING_STOCK_CREATED_MSG = success("rollingStock.created.message");
-	final static ControllerMessage ROLLING_STOCK_SAVED_MSG = success("rollingStock.saved.message");
-	final static ControllerMessage ROLLING_STOCK_DELETED_MSG = success("rollingStock.deleted.message");
-	final static ControllerMessage ROLLING_STOCK_DUPLICATED_VALUE_MSG = error("rollingStock.duplicated.value.message");
-	final static ControllerMessage ROLLING_STOCK_DATABASE_ERROR_MSG = error("rollingStock.database.error.message");
-	
-	/**
-	 * Creates a new {@code RollingStocksController}.
-	 * @param service the service to manage rolling stocks
-	 * @param valuesService the service to fill the form drop down lists
-	 * @param imgService the service for the upload files
-	 */
-	@Autowired
-	public RollingStocksController(RollingStocksService service, 
-			FormValuesService valuesService,
-			WebImageService imgService) {
-		this.service = service;
-		this.valuesService = valuesService;
-		this.imgService = imgService;
-	}
-	
-	@Autowired(required = false) 
-	public void setUserContext(UserContext secContext) {
-		this.secContext = secContext;
-	}
-	
-	// registers the custom property editors
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(WeakDbRef.class, new WeakDbRefPropertyEditor(true));
-		binder.registerCustomEditor(DeliveryDate.class, new DeliveryDatePropertyEditor(true));
-	}
-	
-	@RequestMapping(value = "/{slug}", method = RequestMethod.GET)
-	public String show(@PathVariable("slug") String slug, ModelMap model) {
-		
-		Account loggedUser = UserContext.authenticatedUser(secContext);
-		RollingStockView rsView = service.findRollingStockView(slug, loggedUser);
-		if (rsView == null) {
-			throw new NotFoundException();
-		}
-		
-		CommentForm form = CommentForm.newForm(rsView.getRs(), secContext);
-		if (form != null) {
-			model.addAttribute("commentForm", form);
-		}
-		
-		model.addAttribute("result", rsView);
-		return "rollingstock/show";
-	}
-	
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String createNew(ModelMap model) {
-		model.addAttribute(newForm(new RollingStock(), valuesService));
-		return "rollingstock/new";
-	}
+    private final static Logger log = LoggerFactory.getLogger("com.trenako.web");
 
-	@RequestMapping(method = RequestMethod.POST)	
-	public String create(@ModelAttribute @Valid RollingStockForm form, 
-			BindingResult bindingResult,
-			ModelMap model,
-			RedirectAttributes redirectAtts) {
-		
-		MultipartFile file = form.getFile();
-		RollingStock rs = form.buildRollingStock(valuesService, secContext, new Date());
-		
-		if (bindingResult.hasErrors()) {
-			model.addAttribute(rejectForm(form, valuesService));
-			return "rollingstock/new";
-		}
-		
-		try {
-			service.createNew(rs);
-			if (!file.isEmpty()) {
-				imgService.saveImageWithThumb(UploadRequest.create(rs, file), 100);
-			}
-	
-			redirectAtts.addFlashAttribute("message", ROLLING_STOCK_CREATED_MSG);
-			redirectAtts.addAttribute("slug", rs.getSlug());
-			return "redirect:/rollingstocks/{slug}";
-		}
-		catch (DuplicateKeyException duplEx) {
-			log.error(duplEx.toString());
-			model.addAttribute(newForm(rs, valuesService));
-			model.addAttribute("message", ROLLING_STOCK_DUPLICATED_VALUE_MSG);
-			return "rollingstock/new";
-		}
-		catch (DataAccessException dataEx) {
-			log.error(dataEx.toString());
-			model.addAttribute(newForm(rs, valuesService));
-			model.addAttribute("message", ROLLING_STOCK_DATABASE_ERROR_MSG);
-			return "rollingstock/new";
-		}
-	}
+    private UserContext secContext;
 
-	@RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
-	public String editForm(@PathVariable("slug") String slug, ModelMap model) {
-		RollingStock rs = service.findBySlug(slug);
-		if (rs == null) {
-			throw new NotFoundException();
-		}
-		
-		model.addAttribute(newForm(rs, valuesService));
-		return "rollingstock/edit";
-	}
+    private final RollingStocksService service;
+    private final FormValuesService valuesService;
+    private final WebImageService imgService;
 
-	@RequestMapping(method = RequestMethod.PUT)
-	public String save(@ModelAttribute @Valid RollingStockForm form, 
-			BindingResult bindingResult,
-			ModelMap model,
-			RedirectAttributes redirectAtts) {
-		
-		RollingStock rs = form.buildRollingStock(valuesService, secContext, new Date());
-		
-		if (bindingResult.hasErrors()) {
-			model.addAttribute(newForm(rs, valuesService));
-			return "rollingstock/edit";
-		}
-			
-		try {
-			service.save(rs);
-	
-			redirectAtts.addFlashAttribute("message", ROLLING_STOCK_SAVED_MSG);
-			redirectAtts.addAttribute("slug", rs.getSlug());
-			return "redirect:/rollingstocks/{slug}";
-		}
-		catch (DataAccessException dataEx) {
-			log.error(dataEx.toString());
-			model.addAttribute(newForm(rs, valuesService));
-			model.addAttribute("message", ROLLING_STOCK_DATABASE_ERROR_MSG);
-			return "rollingstock/edit";
-		}
-	}
+    final static ControllerMessage ROLLING_STOCK_CREATED_MSG = success("rollingStock.created.message");
+    final static ControllerMessage ROLLING_STOCK_SAVED_MSG = success("rollingStock.saved.message");
+    final static ControllerMessage ROLLING_STOCK_DELETED_MSG = success("rollingStock.deleted.message");
+    final static ControllerMessage ROLLING_STOCK_DUPLICATED_VALUE_MSG = error("rollingStock.duplicated.value.message");
+    final static ControllerMessage ROLLING_STOCK_DATABASE_ERROR_MSG = error("rollingStock.database.error.message");
 
-	@RequestMapping(method = RequestMethod.DELETE)
-	public String delete(@ModelAttribute RollingStock rs, 
-			RedirectAttributes redirectAtts) {
-		
-		service.remove(rs);
-		redirectAtts.addFlashAttribute("message", ROLLING_STOCK_DELETED_MSG);
-		return "redirect:/rs";
-	}
+    /**
+     * Creates a new {@code RollingStocksController}.
+     *
+     * @param service       the service to manage rolling stocks
+     * @param valuesService the service to fill the form drop down lists
+     * @param imgService    the service for the upload files
+     */
+    @Autowired
+    public RollingStocksController(RollingStocksService service,
+                                   FormValuesService valuesService,
+                                   WebImageService imgService) {
+        this.service = service;
+        this.valuesService = valuesService;
+        this.imgService = imgService;
+    }
+
+    @Autowired(required = false)
+    public void setUserContext(UserContext secContext) {
+        this.secContext = secContext;
+    }
+
+    // registers the custom property editors
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(WeakDbRef.class, new WeakDbRefPropertyEditor(true));
+        binder.registerCustomEditor(DeliveryDate.class, new DeliveryDatePropertyEditor(true));
+    }
+
+    @RequestMapping(value = "/{slug}", method = RequestMethod.GET)
+    public String show(@PathVariable("slug") String slug, ModelMap model) {
+
+        Account loggedUser = UserContext.authenticatedUser(secContext);
+        RollingStockView rsView = service.findRollingStockView(slug, loggedUser);
+        if (rsView == null) {
+            throw new NotFoundException();
+        }
+
+        CommentForm form = CommentForm.newForm(rsView.getRs(), secContext);
+        if (form != null) {
+            model.addAttribute("commentForm", form);
+        }
+
+        model.addAttribute("result", rsView);
+        return "rollingstock/show";
+    }
+
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String createNew(ModelMap model) {
+        model.addAttribute(newForm(new RollingStock(), valuesService));
+        return "rollingstock/new";
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public String create(@ModelAttribute @Valid RollingStockForm form,
+                         BindingResult bindingResult,
+                         ModelMap model,
+                         RedirectAttributes redirectAtts) {
+
+        MultipartFile file = form.getFile();
+        RollingStock rs = form.buildRollingStock(valuesService, secContext, new Date());
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute(rejectForm(form, valuesService));
+            return "rollingstock/new";
+        }
+
+        try {
+            service.createNew(rs);
+            if (!file.isEmpty()) {
+                imgService.saveImageWithThumb(UploadRequest.create(rs, file), 100);
+            }
+
+            redirectAtts.addFlashAttribute("message", ROLLING_STOCK_CREATED_MSG);
+            redirectAtts.addAttribute("slug", rs.getSlug());
+            return "redirect:/rollingstocks/{slug}";
+        } catch (DuplicateKeyException duplEx) {
+            log.error(duplEx.toString());
+            model.addAttribute(newForm(rs, valuesService));
+            model.addAttribute("message", ROLLING_STOCK_DUPLICATED_VALUE_MSG);
+            return "rollingstock/new";
+        } catch (DataAccessException dataEx) {
+            log.error(dataEx.toString());
+            model.addAttribute(newForm(rs, valuesService));
+            model.addAttribute("message", ROLLING_STOCK_DATABASE_ERROR_MSG);
+            return "rollingstock/new";
+        }
+    }
+
+    @RequestMapping(value = "/{slug}/edit", method = RequestMethod.GET)
+    public String editForm(@PathVariable("slug") String slug, ModelMap model) {
+        RollingStock rs = service.findBySlug(slug);
+        if (rs == null) {
+            throw new NotFoundException();
+        }
+
+        model.addAttribute(newForm(rs, valuesService));
+        return "rollingstock/edit";
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public String save(@ModelAttribute @Valid RollingStockForm form,
+                       BindingResult bindingResult,
+                       ModelMap model,
+                       RedirectAttributes redirectAtts) {
+
+        RollingStock rs = form.buildRollingStock(valuesService, secContext, new Date());
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute(newForm(rs, valuesService));
+            return "rollingstock/edit";
+        }
+
+        try {
+            service.save(rs);
+
+            redirectAtts.addFlashAttribute("message", ROLLING_STOCK_SAVED_MSG);
+            redirectAtts.addAttribute("slug", rs.getSlug());
+            return "redirect:/rollingstocks/{slug}";
+        } catch (DataAccessException dataEx) {
+            log.error(dataEx.toString());
+            model.addAttribute(newForm(rs, valuesService));
+            model.addAttribute("message", ROLLING_STOCK_DATABASE_ERROR_MSG);
+            return "rollingstock/edit";
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    public String delete(@ModelAttribute RollingStock rs,
+                         RedirectAttributes redirectAtts) {
+
+        service.remove(rs);
+        redirectAtts.addFlashAttribute("message", ROLLING_STOCK_DELETED_MSG);
+        return "redirect:/rs";
+    }
 }

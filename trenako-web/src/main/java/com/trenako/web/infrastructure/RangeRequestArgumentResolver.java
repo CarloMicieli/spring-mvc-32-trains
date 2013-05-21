@@ -39,111 +39,111 @@ import com.trenako.results.RangeRequest.RangeTypes;
 
 /**
  * It represents a web request resolver for {@code RangeRequest}.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public class RangeRequestArgumentResolver implements HandlerMethodArgumentResolver {
-	private static final Object UNRESOLVED = new Object();
-	private static final RangeRequest DEFAULT_RANGE_REQUEST = new RangeRequest(); 
-	private final RangeRequest failbackRequest;
-	
-	/**
-	 * Creates an empty {@code RangeRequestArgumentResolver}.
-	 */
-	public RangeRequestArgumentResolver() {
-		this(DEFAULT_RANGE_REQUEST);
-	}
-	
-	/**
-	 * Creates a new {@code RangeRequestArgumentResolver}.
-	 * @param failbackRequest a failback request
-	 */
-	public RangeRequestArgumentResolver(RangeRequest failbackRequest) {
-		this.failbackRequest = failbackRequest;
-	}
-	
-	@Override
-	public Object resolveArgument(MethodParameter param,
-			ModelAndViewContainer mavContainer, 
-			NativeWebRequest webRequest,
-			WebDataBinderFactory webBinder) throws Exception {
+    private static final Object UNRESOLVED = new Object();
+    private static final RangeRequest DEFAULT_RANGE_REQUEST = new RangeRequest();
+    private final RangeRequest failbackRequest;
 
-		if (param.getParameterType().equals(RangeRequest.class)) {
-			
-			RangeRequest rangeRequest = new RangeRequest(
-					this.failbackRequest.getSort(), 
-					this.failbackRequest.getSize(), 
-					null,
-					null);
-			ServletRequest request = 
-					(ServletRequest) webRequest.getNativeRequest();
-			
-			PropertyValues propValues = 
-					new ServletRequestParameterPropertyValues(request);
-			
-			WebDataBinder wdb = 
-					webBinder.createBinder(webRequest, rangeRequest, "");
-			wdb.registerCustomEditor(Sort.class, new SortPropertyEditor(propValues));
-			wdb.bind(propValues);
-			
-			if (rangeRequest.getRangeType() == RangeTypes.DATES) {
-				parseSinceDate(rangeRequest);
-				parseMaxDate(rangeRequest);
-			}
-						
-			return rangeRequest;
-		}
-		
-		return UNRESOLVED;
-	}
+    /**
+     * Creates an empty {@code RangeRequestArgumentResolver}.
+     */
+    public RangeRequestArgumentResolver() {
+        this(DEFAULT_RANGE_REQUEST);
+    }
 
-	private void parseSinceDate(RangeRequest rangeRequest) {
-		Object o = rangeRequest.getSince();
-		rangeRequest.setSince(parseDate(o)); 
-	}
-	
-	private void parseMaxDate(RangeRequest rangeRequest) {
-		Object o = rangeRequest.getMax();
-		rangeRequest.setMax(parseDate(o)); 
-	}
-	
-	private Date parseDate(Object since) {
-		if (since == null) return null;
-		
-		try {
-			return DateUtils.parseDate(since.toString(), 
-					DateFormatUtils.ISO_DATETIME_FORMAT.getPattern());
-		}
-		catch (Exception e) {
-			return null;
-		}
-	}
-	
-	@Override
-	public boolean supportsParameter(MethodParameter par) {
-		Class<?> paramType = par.getParameterType();
-		return RangeRequest.class.isAssignableFrom(paramType);
-	}
-	
-	/**
-	 * A {@code PropertyEditor} to process the order for the sort criteria.
-	 * @author Carlo Micieli
-	 *
-	 */
-	private static class SortPropertyEditor extends PropertyEditorSupport {
-		private final PropertyValues values;
-		
-		public SortPropertyEditor(PropertyValues values) {
-			this.values = values;
-		}
-		
-		@Override
-		public void setAsText(String text) throws IllegalArgumentException {
-			PropertyValue rawOrder = values.getPropertyValue(RangeRequest.ORDER_NAME);
-	           Direction order = null == rawOrder 
-	        		   ? Direction.ASC : Direction.fromString(rawOrder.getValue().toString());
-	 
-	           setValue(new Sort(order, text));
-		}
-	}
+    /**
+     * Creates a new {@code RangeRequestArgumentResolver}.
+     *
+     * @param failbackRequest a failback request
+     */
+    public RangeRequestArgumentResolver(RangeRequest failbackRequest) {
+        this.failbackRequest = failbackRequest;
+    }
+
+    @Override
+    public Object resolveArgument(MethodParameter param,
+                                  ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest,
+                                  WebDataBinderFactory webBinder) throws Exception {
+
+        if (param.getParameterType().equals(RangeRequest.class)) {
+
+            RangeRequest rangeRequest = new RangeRequest(
+                    this.failbackRequest.getSort(),
+                    this.failbackRequest.getSize(),
+                    null,
+                    null);
+            ServletRequest request =
+                    (ServletRequest) webRequest.getNativeRequest();
+
+            PropertyValues propValues =
+                    new ServletRequestParameterPropertyValues(request);
+
+            WebDataBinder wdb =
+                    webBinder.createBinder(webRequest, rangeRequest, "");
+            wdb.registerCustomEditor(Sort.class, new SortPropertyEditor(propValues));
+            wdb.bind(propValues);
+
+            if (rangeRequest.getRangeType() == RangeTypes.DATES) {
+                parseSinceDate(rangeRequest);
+                parseMaxDate(rangeRequest);
+            }
+
+            return rangeRequest;
+        }
+
+        return UNRESOLVED;
+    }
+
+    private void parseSinceDate(RangeRequest rangeRequest) {
+        Object o = rangeRequest.getSince();
+        rangeRequest.setSince(parseDate(o));
+    }
+
+    private void parseMaxDate(RangeRequest rangeRequest) {
+        Object o = rangeRequest.getMax();
+        rangeRequest.setMax(parseDate(o));
+    }
+
+    private Date parseDate(Object since) {
+        if (since == null) return null;
+
+        try {
+            return DateUtils.parseDate(since.toString(),
+                    DateFormatUtils.ISO_DATETIME_FORMAT.getPattern());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean supportsParameter(MethodParameter par) {
+        Class<?> paramType = par.getParameterType();
+        return RangeRequest.class.isAssignableFrom(paramType);
+    }
+
+    /**
+     * A {@code PropertyEditor} to process the order for the sort criteria.
+     *
+     * @author Carlo Micieli
+     */
+    private static class SortPropertyEditor extends PropertyEditorSupport {
+        private final PropertyValues values;
+
+        public SortPropertyEditor(PropertyValues values) {
+            this.values = values;
+        }
+
+        @Override
+        public void setAsText(String text) throws IllegalArgumentException {
+            PropertyValue rawOrder = values.getPropertyValue(RangeRequest.ORDER_NAME);
+            Direction order = null == rawOrder
+                    ? Direction.ASC : Direction.fromString(rawOrder.getValue().toString());
+
+            setValue(new Sort(order, text));
+        }
+    }
 }

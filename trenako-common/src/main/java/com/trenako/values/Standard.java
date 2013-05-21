@@ -20,40 +20,40 @@ import java.util.Collections;
 
 /**
  * It represents the model railway standards enumeration.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public enum Standard {
-	/**
-	 * {@code NEM}: these standards are published by the European 
-	 * federation of national model railway associations ({@code MOROP}).
-	 */
-	NEM,
-	
-	/**
-	 * {@code NMRA}: these standards are published by the North
-	 * American model railroad association.
-	 */
-	NMRA,
-	
-	/**
-	 * {@code British}: these standards are widely used by the 
-	 * British model railways.
-	 */
-	BRITISH,
+    /**
+     * {@code NEM}: these standards are published by the European
+     * federation of national model railway associations ({@code MOROP}).
+     */
+    NEM,
 
-	/**
-	 * {@code Japanese}: these standards are widely used by the 
-	 * Japanese model railways.
-	 */
-	JAPANESE;
+    /**
+     * {@code NMRA}: these standards are published by the North
+     * American model railroad association.
+     */
+    NMRA,
 
-	public String label() {
-		return name().toLowerCase().replace('_', '-');
-	}
-	
-	public static Iterable<String> labels() {
-		return Collections.unmodifiableList(
-				Arrays.asList(NEM.label(), NMRA.label(), BRITISH.label(), JAPANESE.label()));
-	}
+    /**
+     * {@code British}: these standards are widely used by the
+     * British model railways.
+     */
+    BRITISH,
+
+    /**
+     * {@code Japanese}: these standards are widely used by the
+     * Japanese model railways.
+     */
+    JAPANESE;
+
+    public String label() {
+        return name().toLowerCase().replace('_', '-');
+    }
+
+    public static Iterable<String> labels() {
+        return Collections.unmodifiableList(
+                Arrays.asList(NEM.label(), NMRA.label(), BRITISH.label(), JAPANESE.label()));
+    }
 }

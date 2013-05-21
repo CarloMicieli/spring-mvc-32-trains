@@ -21,22 +21,20 @@ import java.util.Map;
 import com.trenako.mapping.LocalizedField;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class LocalizedFieldPropertyEditor extends PropertyEditorSupport {
-	@Override
-	public void setValue(Object obj) {
-		if (obj == null) {
-			setValue(null);
-		}
-		
-		if (obj.getClass().isAssignableFrom(Map.class)) {
-			@SuppressWarnings("unchecked")
-			Map<String, ?> values = (Map<String, ?>) obj;
-			LocalizedField<?> field = LocalizedField.localize(values);
-			setValue(field);
-		}
-	}
+    @Override
+    public void setValue(Object obj) {
+        if (obj == null) {
+            setValue(null);
+        }
+
+        if (obj.getClass().isAssignableFrom(Map.class)) {
+            @SuppressWarnings("unchecked")
+            Map<String, ?> values = (Map<String, ?>) obj;
+            LocalizedField<?> field = LocalizedField.localize(values);
+            setValue(field);
+        }
+    }
 }

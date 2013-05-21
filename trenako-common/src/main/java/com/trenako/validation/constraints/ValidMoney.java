@@ -31,17 +31,17 @@ import com.trenako.validation.MoneyValidator;
 
 /**
  * Java annotation for {@code Money} validation.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {FIELD, METHOD, PARAMETER})
 @Constraint(validatedBy = MoneyValidator.class)
 @Documented
 public @interface ValidMoney {
-	String message() default "{com.trenako.money.invalid}";
+    String message() default "{com.trenako.money.invalid}";
 
-	Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

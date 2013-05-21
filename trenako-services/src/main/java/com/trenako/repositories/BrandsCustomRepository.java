@@ -19,16 +19,15 @@ import com.trenako.entities.Brand;
 import com.trenako.entities.Scale;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public interface BrandsCustomRepository {
 
-	/**
-	 * Adds a new {@code Scale} to the provided {@code Brand}.
-	 * @param brand the {@code Brand} to be updated
-	 * @param scale the {@code Scale} to be added
-	 */
-	void updateScales(Brand brand, Scale scale);
+    /**
+     * Adds a new {@code Scale} to the provided {@code Brand}.
+     *
+     * @param brand the {@code Brand} to be updated
+     * @param scale the {@code Scale} to be added
+     */
+    void updateScales(Brand brand, Scale scale);
 }

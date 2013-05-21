@@ -32,91 +32,93 @@ import com.trenako.services.FormValuesService;
 import com.trenako.web.images.validation.Image;
 
 /**
- * It represents the web form for brands. 
- * @author Carlo Micieli
+ * It represents the web form for brands.
  *
+ * @author Carlo Micieli
  */
 public class BrandForm {
 
-	private final static Map<String, String> COUNTRIES = AppGlobals.countries();
-	
-	private FormValuesService service;
-	
-	@Valid
-	private Brand brand;
-	
-	@Image(message = "brand.logo.notValid")
-	private MultipartFile file;
+    private final static Map<String, String> COUNTRIES = AppGlobals.countries();
 
-	/**
-	 * Creates an empty {@code BrandForm}.
-	 */
-	public BrandForm() {
-		this(new Brand(), null);
-	}
-	
-	private BrandForm(Brand brand, FormValuesService formService) {
-		this.brand = brand;
-		this.service = formService;
-	}
-	
-	public static BrandForm newForm(Brand brand, FormValuesService formService) {
-		return new BrandForm(brand, formService);
-	}
-	
-	public static BrandForm rejectedForm(BrandForm form, FormValuesService formService) {
-		form.service = formService;
-		return form;
-	}
-	
-	public Brand getBrand() {
-		return brand;
-	}
-	
-	public void setBrand(Brand brand) {
-		this.brand = brand;
-	}
+    private FormValuesService service;
 
-	public MultipartFile getFile() {
-		return file;
-	}
+    @Valid
+    private Brand brand;
 
-	public void setFile(MultipartFile file) {
-		this.file = file;
-	}
+    @Image(message = "brand.logo.notValid")
+    private MultipartFile file;
 
-	/**
-	 * Returns the countries list.
-	 * @return the countries list
-	 */
-	public Map<String, String> getCountriesList() {
-		return COUNTRIES;
-	}
+    /**
+     * Creates an empty {@code BrandForm}.
+     */
+    public BrandForm() {
+        this(new Brand(), null);
+    }
 
-	/**
-	 * Returns the scales list.
-	 * @return the scale list
-	 */
-	public Iterable<String> getScalesList() {
-		if (service == null) {
-			return Collections.emptyList();
-		}
-		
-		List<String> scaleNames = new ArrayList<String>();
-		for (Scale s : service.scales()) {
-			scaleNames.add(s.getSlug());
-		}
-		return scaleNames;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof BrandForm)) return false;
-		
-		BrandForm other = (BrandForm) obj;
-		return new EqualsBuilder()
-			.append(this.brand, other.brand)
-			.isEquals();
-	}
+    private BrandForm(Brand brand, FormValuesService formService) {
+        this.brand = brand;
+        this.service = formService;
+    }
+
+    public static BrandForm newForm(Brand brand, FormValuesService formService) {
+        return new BrandForm(brand, formService);
+    }
+
+    public static BrandForm rejectedForm(BrandForm form, FormValuesService formService) {
+        form.service = formService;
+        return form;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    /**
+     * Returns the countries list.
+     *
+     * @return the countries list
+     */
+    public Map<String, String> getCountriesList() {
+        return COUNTRIES;
+    }
+
+    /**
+     * Returns the scales list.
+     *
+     * @return the scale list
+     */
+    public Iterable<String> getScalesList() {
+        if (service == null) {
+            return Collections.emptyList();
+        }
+
+        List<String> scaleNames = new ArrayList<String>();
+        for (Scale s : service.scales()) {
+            scaleNames.add(s.getSlug());
+        }
+        return scaleNames;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof BrandForm)) return false;
+
+        BrandForm other = (BrandForm) obj;
+        return new EqualsBuilder()
+                .append(this.brand, other.brand)
+                .isEquals();
+    }
 }

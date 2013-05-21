@@ -26,41 +26,44 @@ import org.springframework.util.Assert;
 
 /**
  * It converts a string to a "slug".
- * 
+ *
  * @see <a href="http://www.codecodex.com/wiki/Generate_a_url_slug#Java">Original implementation</a>
  */
 public class Slug {
-	private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");  
-	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");  
+    private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
+    private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
 
-	private Slug() {}
-	
-	/**
-	 * Encodes the provided String as {@code slug}.
-	 * @param input the String to be encoded
-	 * @return the slug
-	 */
-	public static String encode(String input) {
-		Assert.notNull(input, "The input string must be not null");
+    private Slug() {
+    }
 
-		String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");  
-		String normalized = Normalizer.normalize(nowhitespace, Form.NFD);  
-		String slug = NONLATIN.matcher(normalized).replaceAll("");  
-		return slug.toLowerCase(Locale.ENGLISH); 
-	}
-	
-	/**
-	 * Encodes the provided Date as {@code slug}.
-	 * @param date the date to be encoded
-	 * @return the slug
-	 */
-	public static String encode(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		return new StringBuilder(sdf.format(date)).toString();
-	}
-	
-	public static String encodeFull(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
-		return new StringBuilder(sdf.format(date)).toString();
-	}
+    /**
+     * Encodes the provided String as {@code slug}.
+     *
+     * @param input the String to be encoded
+     * @return the slug
+     */
+    public static String encode(String input) {
+        Assert.notNull(input, "The input string must be not null");
+
+        String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
+        String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
+        String slug = NONLATIN.matcher(normalized).replaceAll("");
+        return slug.toLowerCase(Locale.ENGLISH);
+    }
+
+    /**
+     * Encodes the provided Date as {@code slug}.
+     *
+     * @param date the date to be encoded
+     * @return the slug
+     */
+    public static String encode(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return new StringBuilder(sdf.format(date)).toString();
+    }
+
+    public static String encodeFull(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
+        return new StringBuilder(sdf.format(date)).toString();
+    }
 }

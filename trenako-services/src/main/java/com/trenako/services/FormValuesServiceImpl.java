@@ -37,88 +37,89 @@ import com.trenako.values.LocalizedEnum;
 import com.trenako.values.PowerMethod;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Service("formValuesService")
 public class FormValuesServiceImpl implements FormValuesService {
 
-	private @Autowired(required = false) MessageSource messageSource;
-	
-	private final BrandsRepository brands;
-	private final RailwaysRepository railways;
-	private final ScalesRepository scales;
-	
-	private final static Sort BY_NAME_SORT_ORDER = new Sort(Direction.ASC, "name");
-	private final static Sort SCALES_SORT_ORDER = new Sort(new Sort.Order(Direction.ASC, "ratio"), new Sort.Order(Direction.DESC, "gauge"));
-	
-	/**
-	 * Creates a new {@code FormValuesServiceImpl}
-	 * @param brands the {@code Brand} repository
-	 * @param railways the {@code Railway} repository
-	 * @param scales the {@code Scale} repository
-	 */
-	@Autowired
-	public FormValuesServiceImpl(
-			BrandsRepository brands,
-			RailwaysRepository railways,
-			ScalesRepository scales) {
-		this.brands = brands;
-		this.railways = railways;
-		this.scales = scales;
-	}
-	
+    private
+    @Autowired(required = false)
+    MessageSource messageSource;
 
-	@Override
-	public Iterable<Brand> brands() {
-		return brands.findAll(BY_NAME_SORT_ORDER);
-	}
+    private final BrandsRepository brands;
+    private final RailwaysRepository railways;
+    private final ScalesRepository scales;
 
-	@Override
-	public Iterable<Railway> railways() {
-		return railways.findAll(BY_NAME_SORT_ORDER);
-	}
+    private final static Sort BY_NAME_SORT_ORDER = new Sort(Direction.ASC, "name");
+    private final static Sort SCALES_SORT_ORDER = new Sort(new Sort.Order(Direction.ASC, "ratio"), new Sort.Order(Direction.DESC, "gauge"));
 
-	@Override
-	public Iterable<Scale> scales() {
-		return scales.findAll(SCALES_SORT_ORDER);
-	}
+    /**
+     * Creates a new {@code FormValuesServiceImpl}
+     *
+     * @param brands   the {@code Brand} repository
+     * @param railways the {@code Railway} repository
+     * @param scales   the {@code Scale} repository
+     */
+    @Autowired
+    public FormValuesServiceImpl(
+            BrandsRepository brands,
+            RailwaysRepository railways,
+            ScalesRepository scales) {
+        this.brands = brands;
+        this.railways = railways;
+        this.scales = scales;
+    }
 
-	@Override
-	public Iterable<LocalizedEnum<Category>> categories() {
-		return LocalizedEnum.list(Category.class, messageSource, null);
-	}
 
-	@Override
-	public Iterable<LocalizedEnum<Era>> eras() {
-		return LocalizedEnum.list(Era.class, messageSource, null);
-	}
+    @Override
+    public Iterable<Brand> brands() {
+        return brands.findAll(BY_NAME_SORT_ORDER);
+    }
 
-	@Override
-	public Iterable<LocalizedEnum<PowerMethod>> powerMethods() {
-		return LocalizedEnum.list(PowerMethod.class, messageSource, null);
-	}
+    @Override
+    public Iterable<Railway> railways() {
+        return railways.findAll(BY_NAME_SORT_ORDER);
+    }
 
-	@Override
-	public Iterable<DeliveryDate> deliveryDates() {
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
-		return DeliveryDate.list(2000, year - 1, year, year + 1);
-	}
-	
-	@Override
-	public Brand getBrand(String brandSlug) {
-		return brands.findBySlug(brandSlug);
-	}
+    @Override
+    public Iterable<Scale> scales() {
+        return scales.findAll(SCALES_SORT_ORDER);
+    }
 
-	@Override
-	public Scale getScale(String scaleSlug) {
-		return scales.findBySlug(scaleSlug);
-	}
+    @Override
+    public Iterable<LocalizedEnum<Category>> categories() {
+        return LocalizedEnum.list(Category.class, messageSource, null);
+    }
 
-	@Override
-	public Railway getRailway(String railwaySlug) {
-		return railways.findBySlug(railwaySlug);
-	}
+    @Override
+    public Iterable<LocalizedEnum<Era>> eras() {
+        return LocalizedEnum.list(Era.class, messageSource, null);
+    }
+
+    @Override
+    public Iterable<LocalizedEnum<PowerMethod>> powerMethods() {
+        return LocalizedEnum.list(PowerMethod.class, messageSource, null);
+    }
+
+    @Override
+    public Iterable<DeliveryDate> deliveryDates() {
+        Calendar calendar = new GregorianCalendar();
+        int year = calendar.get(Calendar.YEAR);
+        return DeliveryDate.list(2000, year - 1, year, year + 1);
+    }
+
+    @Override
+    public Brand getBrand(String brandSlug) {
+        return brands.findBySlug(brandSlug);
+    }
+
+    @Override
+    public Scale getScale(String scaleSlug) {
+        return scales.findBySlug(scaleSlug);
+    }
+
+    @Override
+    public Railway getRailway(String railwaySlug) {
+        return railways.findBySlug(railwaySlug);
+    }
 }

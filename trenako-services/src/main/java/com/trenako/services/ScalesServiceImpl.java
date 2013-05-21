@@ -26,47 +26,47 @@ import com.trenako.repositories.ScalesRepository;
 
 /**
  * A concrete implementation for the scales service for mongodb.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("scalesService")
 public class ScalesServiceImpl implements ScalesService {
-	
-	private ScalesRepository repo;
-	
-	@Autowired
-	public ScalesServiceImpl(ScalesRepository repo) {
-		this.repo = repo;
-	}
-	
-	@Override
-	public Scale findById(ObjectId id) {
-		return repo.findOne(id);
-	}
-		
-	@Override
-	public Scale findByName(String name) {
-		return repo.findByName(name);
-	}
-	
-	@Override
-	public Page<Scale> findAll(Pageable paging) {
-		return repo.findAll(paging);
-	}
-	
-	@Override
-	public Scale findBySlug(String slug) {
-		return repo.findBySlug(slug);
-	}
-	
-	@Override
-	public void save(Scale brand) {
-		repo.save(brand);
-	}
-	
-	@Override
-	public void remove(Scale brand) {
-		repo.delete(brand);
-	}
+
+    private ScalesRepository repo;
+
+    @Autowired
+    public ScalesServiceImpl(ScalesRepository repo) {
+        this.repo = repo;
+    }
+
+    @Override
+    public Scale findById(ObjectId id) {
+        return repo.findOne(id);
+    }
+
+    @Override
+    public Scale findByName(String name) {
+        return repo.findByName(name);
+    }
+
+    @Override
+    public Page<Scale> findAll(Pageable paging) {
+        return repo.findAll(paging);
+    }
+
+    @Override
+    public Scale findBySlug(String slug) {
+        return repo.findBySlug(slug);
+    }
+
+    @Override
+    public void save(Scale brand) {
+        repo.save(brand);
+    }
+
+    @Override
+    public void remove(Scale brand) {
+        repo.delete(brand);
+    }
 
 }

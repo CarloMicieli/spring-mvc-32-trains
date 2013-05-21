@@ -26,57 +26,55 @@ import com.trenako.entities.Option;
 import com.trenako.web.images.validation.Image;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class OptionForm {
 
-	@Valid
-	private Option option;
-	
-	@Image(message = "option.image.notValid")
-	private MultipartFile file;
-	
-	public OptionForm() {
-		option = new Option();
-	}
-	
-	public static OptionForm newForm() {
-		return new OptionForm();
-	}
+    @Valid
+    private Option option;
 
-	public Option getOption() {
-		return option;
-	}
+    @Image(message = "option.image.notValid")
+    private MultipartFile file;
 
-	public void setOption(Option option) {
-		this.option = option;
-	}
+    public OptionForm() {
+        option = new Option();
+    }
 
-	public MultipartFile getFile() {
-		return file;
-	}
+    public static OptionForm newForm() {
+        return new OptionForm();
+    }
 
-	public void setFile(MultipartFile file) {
-		this.file = file;
-	}
-	
-	public Option buildOption() throws IOException {
-		return new Option(getOption().getName(), 
-				getOption().getFamily(),
-				getFile().getBytes());
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof OptionForm)) return false;
-		
-		OptionForm other = (OptionForm) obj;
-		return new EqualsBuilder()
-			.append(this.option, other.option)
-			.append(this.file, other.file)
-			.isEquals();
-	}
+    public Option getOption() {
+        return option;
+    }
+
+    public void setOption(Option option) {
+        this.option = option;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public Option buildOption() throws IOException {
+        return new Option(getOption().getName(),
+                getOption().getFamily(),
+                getFile().getBytes());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof OptionForm)) return false;
+
+        OptionForm other = (OptionForm) obj;
+        return new EqualsBuilder()
+                .append(this.option, other.option)
+                .append(this.file, other.file)
+                .isEquals();
+    }
 }

@@ -20,38 +20,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 public class Maps {
-	private Maps() {
-	}
-	
-	/**
-	 * Builds an immutable {@code Map} with the provided single pair of key/value.
-	 * @param key the key
-	 * @param value the value
-	 * @return a map
-	 */
-	public static <K, V> Map<K, V> map(K key, V value) {
-		Map<K, V> m = new HashMap<K, V>(1);
-		m.put(key, value);
-		return Collections.unmodifiableMap(m);
-	}
-	
-	/**
-	 * Builds an immutable {@code Map} with two pairs of key/value.
-	 * @param key1 the first key
-	 * @param value1 the first value
-	 * @param key2 the second key
-	 * @param value2 the second value
-	 * @return a map
-	 */
-	public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2) {
-		Map<K, V> m = new HashMap<K, V>(2);
-		m.put(key1, value1);
-		m.put(key2, value2);
-		return Collections.unmodifiableMap(m);
-	}
+    private Maps() {
+    }
+
+    /**
+     * Builds an immutable {@code Map} with the provided single pair of key/value.
+     *
+     * @param key   the key
+     * @param value the value
+     * @return a map
+     */
+    public static <K, V> Map<K, V> map(K key, V value) {
+        Map<K, V> m = new HashMap<>(1);
+        m.put(key, value);
+        return Collections.unmodifiableMap(m);
+    }
+
+    /**
+     * Builds an immutable {@code Map} with two pairs of key/value.
+     *
+     * @param key1   the first key
+     * @param value1 the first value
+     * @param key2   the second key
+     * @param value2 the second value
+     * @return a map
+     */
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2) {
+        Map<K, V> m = new HashMap<>(2);
+        m.put(key1, value1);
+        m.put(key2, value2);
+        return Collections.unmodifiableMap(m);
+    }
 }

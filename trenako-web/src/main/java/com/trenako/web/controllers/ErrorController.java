@@ -27,47 +27,44 @@ import org.springframework.web.servlet.ModelAndView;
 import com.trenako.web.infrastructure.LogUtils;
 
 /**
- * 
  * @author Carlo Micieli
- *
  */
 @Controller
 @RequestMapping("/error")
 public class ErrorController {
 
-	private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
-	
-	@RequestMapping(value = "/denied")
-	public String denied() {
-		return "error/denied";
-	}
-	
-	@RequestMapping(value = "/notfound")
-	public String notFound() {
-		return "error/notfound";
-	}
-	
-	@RequestMapping(value = "/server-error")
-	public ModelAndView resolveException(HttpServletRequest request) {
-		Exception ex = (Exception) request.getAttribute("javax.servlet.error.exception");
-		LogUtils.logException(log, ex);
-		
-		if (isLocalhost(request)) {
-			String error = ExceptionUtils.getStackTrace(ex);
-			ModelAndView debugView = new ModelAndView("error/debug");
-			debugView.addObject("error", error);
-			debugView.addObject("request", request);
-			return debugView;
-		}
-		else {
-			return new ModelAndView("error/error");
-		}
-	}
+    private static final Logger log = LoggerFactory.getLogger("com.trenako.web");
 
-	private final static boolean isLocalhost(HttpServletRequest request) {
-		if (request == null) return false;
-	
-		return request.getRemoteAddr().equals("localhost") || 
-			request.getRemoteAddr().equals("127.0.0.1");
-	}
+    @RequestMapping(value = "/denied")
+    public String denied() {
+        return "error/denied";
+    }
+
+    @RequestMapping(value = "/notfound")
+    public String notFound() {
+        return "error/notfound";
+    }
+
+    @RequestMapping(value = "/server-error")
+    public ModelAndView resolveException(HttpServletRequest request) {
+        Exception ex = (Exception) request.getAttribute("javax.servlet.error.exception");
+        LogUtils.logException(log, ex);
+
+        if (isLocalhost(request)) {
+            String error = ExceptionUtils.getStackTrace(ex);
+            ModelAndView debugView = new ModelAndView("error/debug");
+            debugView.addObject("error", error);
+            debugView.addObject("request", request);
+            return debugView;
+        } else {
+            return new ModelAndView("error/error");
+        }
+    }
+
+    private final static boolean isLocalhost(HttpServletRequest request) {
+        if (request == null) return false;
+
+        return request.getRemoteAddr().equals("localhost") ||
+                request.getRemoteAddr().equals("127.0.0.1");
+    }
 }

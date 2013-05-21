@@ -25,39 +25,39 @@ import com.trenako.validation.constraints.ContainsDefault;
 
 /**
  * It represents a validator for {@code LocalizedField} values.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
-public class LocalizedFieldValidator 
-	implements ConstraintValidator<ContainsDefault, LocalizedField<?>> {
+public class LocalizedFieldValidator
+        implements ConstraintValidator<ContainsDefault, LocalizedField<?>> {
 
-	Class<?>[] clazz;
-	
-	// for testing
-	<T> void setProvidedType(Class<T> providedType) {
-		this.clazz = new Class<?>[] { providedType };
-	}
-	
-	@Override
-	public void initialize(ContainsDefault annotation) {
-		clazz = annotation.providedType();
-	}
+    Class<?>[] clazz;
 
-	@Override
-	public boolean isValid(LocalizedField<?> value, ConstraintValidatorContext context) {
-		if (value == null) {
-			return true;
-		}
-		
-		if (!value.containsDefault()) {
-			return false;
-		}
-		
-		if (clazz[0].equals(String.class)) {
-			return !StringUtils.isBlank(value.getDefault().toString());
-		}
-		
-		return true;
-	}
+    // for testing
+    <T> void setProvidedType(Class<T> providedType) {
+        this.clazz = new Class<?>[]{providedType};
+    }
+
+    @Override
+    public void initialize(ContainsDefault annotation) {
+        clazz = annotation.providedType();
+    }
+
+    @Override
+    public boolean isValid(LocalizedField<?> value, ConstraintValidatorContext context) {
+        if (value == null) {
+            return true;
+        }
+
+        if (!value.containsDefault()) {
+            return false;
+        }
+
+        if (clazz[0].equals(String.class)) {
+            return !StringUtils.isBlank(value.getDefault().toString());
+        }
+
+        return true;
+    }
 
 }

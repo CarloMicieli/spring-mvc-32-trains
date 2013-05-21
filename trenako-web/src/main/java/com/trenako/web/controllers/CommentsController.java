@@ -39,58 +39,59 @@ import com.trenako.web.editors.WeakDbRefPropertyEditor;
 
 /**
  * It represents the controller for rolling stock comments.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Controller
 @RequestMapping("/rollingstocks/{slug}/comments")
 public class CommentsController {
 
-	private final CommentsService service;
-	private final RollingStocksService rsService;
-	
-	final static ControllerMessage COMMENT_POSTED_MSG = ControllerMessage.success("comment.posted.message");
-	
-	// for testing
-	private Date now;
-	protected void setTimestamp(Date now) {
-		this.now = now;
-	}
+    private final CommentsService service;
+    private final RollingStocksService rsService;
 
-	private Date now() {
-		if (now == null) {
-			return new Date();
-		}
-		return now;
-	}
-	
-	@Autowired
-	public CommentsController(CommentsService service, RollingStocksService rsService) {
-		this.service = service;
-		this.rsService = rsService;
-	}
-	
-	// registers the custom property editors
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(WeakDbRef.class, new WeakDbRefPropertyEditor(true));
-	}
+    final static ControllerMessage COMMENT_POSTED_MSG = ControllerMessage.success("comment.posted.message");
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String postComment(@ModelAttribute @Valid CommentForm commentForm,
-			BindingResult bindingResult,
-			ModelMap model,
-			RedirectAttributes redirectAtts) {
-		
-		if (bindingResult.hasErrors()) {
-			model.addAttribute(commentForm);
-			return "redirect:/rollingstocks/{slug}";
-		}
-		
-		RollingStock rs = rsService.findBySlug(commentForm.getRsSlug());
-		service.postComment(rs, commentForm.buildComment(now()));
-		
-		COMMENT_POSTED_MSG.appendToRedirect(redirectAtts);
-		return "redirect:/rollingstocks/{slug}";
-	}
+    // for testing
+    private Date now;
+
+    protected void setTimestamp(Date now) {
+        this.now = now;
+    }
+
+    private Date now() {
+        if (now == null) {
+            return new Date();
+        }
+        return now;
+    }
+
+    @Autowired
+    public CommentsController(CommentsService service, RollingStocksService rsService) {
+        this.service = service;
+        this.rsService = rsService;
+    }
+
+    // registers the custom property editors
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(WeakDbRef.class, new WeakDbRefPropertyEditor(true));
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public String postComment(@ModelAttribute @Valid CommentForm commentForm,
+                              BindingResult bindingResult,
+                              ModelMap model,
+                              RedirectAttributes redirectAtts) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute(commentForm);
+            return "redirect:/rollingstocks/{slug}";
+        }
+
+        RollingStock rs = rsService.findBySlug(commentForm.getRsSlug());
+        service.postComment(rs, commentForm.buildComment(now()));
+
+        COMMENT_POSTED_MSG.appendToRedirect(redirectAtts);
+        return "redirect:/rollingstocks/{slug}";
+    }
 }

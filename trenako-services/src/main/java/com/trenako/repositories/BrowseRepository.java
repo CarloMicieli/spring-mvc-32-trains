@@ -25,50 +25,56 @@ import com.trenako.results.RangeRequest;
 
 /**
  * It represents the repository for the rolling stocks browsing.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface BrowseRepository {
 
-	/**
-	 * Returns the list of {@code Brand}s.
-	 * @return a list of {@code Brand}s
-	 */
-	Iterable<Brand> getBrands();
+    /**
+     * Returns the list of {@code Brand}s.
+     *
+     * @return a list of {@code Brand}s
+     */
+    Iterable<Brand> getBrands();
 
-	/**
-	 * Returns the list of {@code Scale}s.
-	 * @return a list of {@code Scale}s
-	 */
-	Iterable<Scale> getScales();
+    /**
+     * Returns the list of {@code Scale}s.
+     *
+     * @return a list of {@code Scale}s
+     */
+    Iterable<Scale> getScales();
 
-	/**
-	 * Returns the list of {@code Railway}s.
-	 * @return a list of {@code Railway}s
-	 */
-	Iterable<Railway> getRailways();
-	
-	/**
-	 * Returns the {@code RollingStock} list according the provided search criteria.
-	 * @param sc the search criteria
-	 * @param range the {@code RangeRequest} information
-	 * @return a {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range);
-	
-	/**
-	 * Returns the {@code RollingStock} list with the provided tag.
-	 * @param tag the tag value
-	 * @param range the {@code RangeRequest} information
-	 * @return a {@code RollingStock} list
-	 */
-	PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range);
-	
-	/**
-	 * Returns the entity with the provided {@code slug}.
-	 * @param slug the entity slug
-	 * @param providedType the entity type
-	 * @return the entity if found; {@code null} otherwise
-	 */
-	<T> T findBySlug(String slug, Class<T> providedType);
+    /**
+     * Returns the list of {@code Railway}s.
+     *
+     * @return a list of {@code Railway}s
+     */
+    Iterable<Railway> getRailways();
+
+    /**
+     * Returns the {@code RollingStock} list according the provided search criteria.
+     *
+     * @param sc    the search criteria
+     * @param range the {@code RangeRequest} information
+     * @return a {@code RollingStock} list
+     */
+    PaginatedResults<RollingStock> findByCriteria(SearchCriteria sc, RangeRequest range);
+
+    /**
+     * Returns the {@code RollingStock} list with the provided tag.
+     *
+     * @param tag   the tag value
+     * @param range the {@code RangeRequest} information
+     * @return a {@code RollingStock} list
+     */
+    PaginatedResults<RollingStock> findByTag(String tag, RangeRequest range);
+
+    /**
+     * Returns the entity with the provided {@code slug}.
+     *
+     * @param slug         the entity slug
+     * @param providedType the entity type
+     * @return the entity if found; {@code null} otherwise
+     */
+    <T> T findBySlug(String slug, Class<T> providedType);
 }

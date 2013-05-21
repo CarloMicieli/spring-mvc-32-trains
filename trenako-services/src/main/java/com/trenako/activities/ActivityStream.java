@@ -25,64 +25,72 @@ import com.trenako.entities.WishListItem;
 
 /**
  * The interface for the {@code Activity} stream.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 public interface ActivityStream {
 
-	/**
-	 * Records a new {@code Activity} for a user comment.
-	 * @param rs the rolling stock
-	 * @param comment the comment
-	 */
-	void comment(RollingStock rs, Comment comment);
+    /**
+     * Records a new {@code Activity} for a user comment.
+     *
+     * @param rs      the rolling stock
+     * @param comment the comment
+     */
+    void comment(RollingStock rs, Comment comment);
 
-	/**
-	 * Records a new {@code Activity} for a user review.
-	 * @param rs the rolling stock
-	 * @param review the review
-	 */
-	void review(RollingStock rs, Review review);
-	
-	/**
-	 * Records a new {@code Activity} for the rolling stock creation.
-	 * @param rs the rolling stock
-	 */
-	void createRollingStock(RollingStock rs);
-	
-	/**
-	 * Records a new {@code Activity} for the rolling stock modification.
-	 * @param rs the rolling stock
-	 */	
-	void changeRollingStock(RollingStock rs);
-	
-	/**
-	 * Records a new {@code Activity} for the rolling stock added to wish lists.
-	 * @param wishList the wish list
-	 * @param item the wish list item
-	 */
-	void wishList(WishList wishList, WishListItem item);
-	
-	/**
-	 * Records a new {@code Activity} for the rolling stock added to collections.
-	 * @param owner the collection owner
-	 * @param item the collection item
-	 */	
-	void collection(Account owner, CollectionItem item);
+    /**
+     * Records a new {@code Activity} for a user review.
+     *
+     * @param rs     the rolling stock
+     * @param review the review
+     */
+    void review(RollingStock rs, Review review);
 
-	/**
-	 * Returns at most {@code numberOfItems} elements from the activity stream.
-	 * @param numberOfItems the max number of returned items
-	 * @return the {@code Activity} list
-	 */
-	Iterable<Activity> recentActivity(int numberOfItems);
+    /**
+     * Records a new {@code Activity} for the rolling stock creation.
+     *
+     * @param rs the rolling stock
+     */
+    void createRollingStock(RollingStock rs);
 
-	/**
-	 * Returns at most {@code numberOfItems} elements from the activity stream
-	 * for the provided user.
-	 * @param user the user
-	 * @param numberOfItems the max number of returned items
-	 * @return the {@code Activity} list
-	 */
-	Iterable<Activity> userActivity(Account user, int numberOfItems);
+    /**
+     * Records a new {@code Activity} for the rolling stock modification.
+     *
+     * @param rs the rolling stock
+     */
+    void changeRollingStock(RollingStock rs);
+
+    /**
+     * Records a new {@code Activity} for the rolling stock added to wish lists.
+     *
+     * @param wishList the wish list
+     * @param item     the wish list item
+     */
+    void wishList(WishList wishList, WishListItem item);
+
+    /**
+     * Records a new {@code Activity} for the rolling stock added to collections.
+     *
+     * @param owner the collection owner
+     * @param item  the collection item
+     */
+    void collection(Account owner, CollectionItem item);
+
+    /**
+     * Returns at most {@code numberOfItems} elements from the activity stream.
+     *
+     * @param numberOfItems the max number of returned items
+     * @return the {@code Activity} list
+     */
+    Iterable<Activity> recentActivity(int numberOfItems);
+
+    /**
+     * Returns at most {@code numberOfItems} elements from the activity stream
+     * for the provided user.
+     *
+     * @param user          the user
+     * @param numberOfItems the max number of returned items
+     * @return the {@code Activity} list
+     */
+    Iterable<Activity> userActivity(Account user, int numberOfItems);
 }

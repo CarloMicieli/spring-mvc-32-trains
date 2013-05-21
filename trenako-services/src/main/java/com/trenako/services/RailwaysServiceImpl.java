@@ -26,51 +26,51 @@ import com.trenako.repositories.RailwaysRepository;
 
 /**
  * A concrete implementation for the railways service for mongodb.
- * @author Carlo Micieli
  *
+ * @author Carlo Micieli
  */
 @Service("railwaysService")
 public class RailwaysServiceImpl implements RailwaysService {
-	
-	private final RailwaysRepository repo;
-	
-	@Autowired
-	public RailwaysServiceImpl(RailwaysRepository repo) {
-		this.repo = repo;
-	}
-	
-	@Override
-	public Railway findById(ObjectId id) {
-		return repo.findOne(id);
-	}
-	
-	@Override
-	public Railway findByName(String name) {
-		return repo.findByName(name);
-	}
-	
-	@Override
-	public Iterable<Railway> findByCountry(String country) {
-		return repo.findByCountryOrderByNameAsc(country);
-	}
-	
-	@Override
-	public void save(Railway railway) {
-		repo.save(railway);
-	}
-	
-	@Override
-	public void remove(Railway railway) {
-		repo.delete(railway);
-	}
 
-	@Override
-	public Page<Railway> findAll(Pageable paging) {
-		return repo.findAll(paging);
-	}
+    private final RailwaysRepository repo;
 
-	@Override
-	public Railway findBySlug(String slug) {
-		return repo.findBySlug(slug);
-	}	
+    @Autowired
+    public RailwaysServiceImpl(RailwaysRepository repo) {
+        this.repo = repo;
+    }
+
+    @Override
+    public Railway findById(ObjectId id) {
+        return repo.findOne(id);
+    }
+
+    @Override
+    public Railway findByName(String name) {
+        return repo.findByName(name);
+    }
+
+    @Override
+    public Iterable<Railway> findByCountry(String country) {
+        return repo.findByCountryOrderByNameAsc(country);
+    }
+
+    @Override
+    public void save(Railway railway) {
+        repo.save(railway);
+    }
+
+    @Override
+    public void remove(Railway railway) {
+        repo.delete(railway);
+    }
+
+    @Override
+    public Page<Railway> findAll(Pageable paging) {
+        return repo.findAll(paging);
+    }
+
+    @Override
+    public Railway findBySlug(String slug) {
+        return repo.findBySlug(slug);
+    }
 }
