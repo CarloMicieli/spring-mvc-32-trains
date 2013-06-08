@@ -1,6 +1,8 @@
 language: java
 jdk:
   - openjdk7
+services:
+  - mongodb
 
 # drop db
 before_script:
