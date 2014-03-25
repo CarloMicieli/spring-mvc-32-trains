@@ -42,6 +42,7 @@ allprojects {
     test {
         testLogging {
 	        exceptionFormat = 'full'
+			events 'skipped', 'failed'
 		}
 	}
 

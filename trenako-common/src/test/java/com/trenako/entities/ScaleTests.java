@@ -133,7 +133,7 @@ public class ScaleTests {
 		assertEquals(870, s.getRatio());
 		assertEquals(1650, s.getGauge());
 		assertEquals(true, s.isNarrow());
-		assertEquals("[dc, ac]", s.getPowerMethods().toString());
+		assertEquals("[ac, dc]", s.getPowerMethods().toString());
 	}
 	
 	@Test
@@ -141,7 +141,7 @@ public class ScaleTests {
 		Scale x = new Scale.Builder("H0").build();
 		x.setStandards(new HashSet<String>(Arrays.asList(Standard.NEM.toString(), Standard.NMRA.toString())));
 		assertEquals(2, x.getStandards().size());
-		assertEquals("[NMRA, NEM]", x.getStandardsList());
+		assertEquals("[NEM, NMRA]", x.getStandardsList());
 	}
 	
 	@Test

@@ -212,7 +212,7 @@ class ScalesServiceSpecification extends MongoSpecification {
 		savedDoc.gauge == 900
 		savedDoc.narrow == false
 		savedDoc.slug == 'h0m'
-		savedDoc.powerMethods == ['dc', 'ac']
+		savedDoc.powerMethods == ['ac', 'dc']
 		savedDoc.standards == ['NEM']
 		savedDoc.description.en == 'H0m description'
 	}

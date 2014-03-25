@@ -237,7 +237,7 @@ class BrandsServiceSpecification extends MongoSpecification {
 		brand.emailAddress == 'mail@brawa.de'
 		brand.website == 'http://www.brawa.de'
 		brand.address == [streetAddress: 'Uferstraße 26-28', postalCode: '73625', city: 'Remshalden', country: 'Germany']
-		brand.scales == ['n', 'h0']
+		brand.scales == ['h0', 'n']
 		brand.description == [en: 'Brawa description'] 
 		brand.industrial == true
 		
